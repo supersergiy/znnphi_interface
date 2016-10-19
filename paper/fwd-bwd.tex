@@ -43,8 +43,168 @@
   The result the computation of the fwd-bwd algorithm is $B$ sets of
   $F$ (or $F'$) $N$--dimensional images that can be represented as a
   $N+2$ dimensional tensor.  Computing the value of each element of
-  the tensor is independent.  We divide this tensor into smaller
-  tensor by slicing it along different directions.
+  the tensor is independent.  We assume that both $F$ and $F'$ are
+  divisible by $S$, where $S$ is the width of the vector register.  On
+  AVX2 enabled CPUs, $S$ is 8, and on AVX512, $S$ equals to 16.  This
+  is reasonable as all state of the art networks for both registration
+  and segmentation have both $F$ and $F'$ being a large multiple of
+  $2$~\cite{krizhevsky2012imagenet, ronneberger2015u,
+    simonyan2014very, sermanet2013overfeat, long2015fully,
+    tran2015learning, ji20133d, maturana_iros_2015,
+    maturana_icra_2014}.  An arbitrary number of images is supported
+  by simply adding zero--initialized dummy images.  As both $F$ and
+  $F'$ are relatively large, this would not introduce much
+  computational overhead.  In further notation we will have $F =
+  \alpha S$ and $F' = \alpha' S$.
+
+  Our algorithm consists of a stack primitives with increasing
+  complexity.  Each more complex primitives uses the less complex ones
+  to perform more complex computation.  Before describing the details
+  of each primitive, we list the primitives in the increasing order of
+  complexity toghether with main motivation and goal for each one.
+
+  \begin{enumerate}
+  \item {\bf Sub--image primitive} -- a primitive that computes $S^2$
+    convolutions on $S$ small images producing $S$ small images of
+    size $R_D, R_H, R_W$.  The goal of this primitive is to
+    efficiently re--use data in the register file as well as data in
+    L1 cache.  The techinque used by the primitive is known as
+    register blocking.
+  \item {\bf Full image primitive} -- a primitive that computes $S^2$
+    convolutions on $S$ images of an arbitrary size, producing $S$
+    output images.  The primitives optimally divides the computation
+    into small blocks for which the previous primitive is used.  The
+    division and order of computation is designed for efficient use of
+    hardware pre--fetching.
+  \item {\bf Sub--layer primitive} -- a primitive that computes
+    $\alpha_0'S$ images by performing $\alpha_0 \alpha_0' S^2$
+    convolutions on $\alpha_0 S$ images.  The primitive is designed to
+    efficiently utilize higher levels of cache (L2, L3).
+  \item {\bf Full layer primitive} -- a static scheduler that divides
+    the computation into above primitives and assigns each available
+    core one or more such primitives.  The goal is to evenly divide
+    the computation among available cores.
+  \end{enumerate}
+
+  We proceed to describe each primitive in details.
+
+  \subsubsection{Lowest--level primitive}
+
+  \begin{algorithm}
+    {\footnotesize
+      \begin{codebox}
+        \Procname{$\proc{Fwd-Bwd-Subtask} \langle \Theta, R_D, R_H, R_W, W_D, W_H, W_W \rangle(i,w,o,\theta)$}
+        \li \kw{simd register} $oreg[R_D][R_H][R_W]$
+        \li \kw{simd register} $wreg$
+        \li \If $\Theta$ \Comment Static if
+        \li \Then $oreg[:][:][:][:] \gets \theta$ \Comment Load bias
+        \li \Else
+        \li       $oreg[:][:][:][:] \gets \proc{LOAD}(o[:][:][:][:])$
+        \End \li \kw{end if}
+        \li \kw{for} $k_d \gets 0 \To W_D-1$
+        \li   \Do \kw{for} $k_h \gets 0 \To W_H-1$
+        \li      \Do \kw{for} $k_w \gets 0 \To W_W-1$
+        \li         \Do \kw{for} $s \gets 0 \To S - 1$ \Comment Partially unrolled
+        \li         \Do $wreg \gets w[k_d][k_h][k_w][s][:]$
+        \li \kw{for} $d \gets 0 \To R_D-1$ \Comment Fully unrolled
+        \li   \Do \kw{for} $h \gets 0 \To R_H-1$ \Comment Fully unrolled
+        \li      \Do \kw{for} $w \gets 0 \To R_W-1$ \Comment Fully unrolled
+        \li         \Do $oreg[d][h][w] \gets oreg[d][h][w]$
+        \li             $+ wreg * i[d+k_d][h+k_h][w+k_w][s]$
+        \End \li \kw{end for} $w$
+        \End \li \kw{end for} $h$
+        \End \li \kw{end for} $d$
+        \End \li \kw{end for} $s$
+        \End \li \kw{end for} $k_w$
+        \End \li \kw{end for} $k_h$
+        \End \li \kw{end for} $k_d$
+      \end{codebox}
+    \caption{The finest granularity primitive that computes a
+      sub--image of size $R_D \times R_H \times R_W$ of $S$ images by
+      performing $S^2$ convolutions on $S$ input images with a kernel
+      of size $W_D \times W_H \times W_W$.}
+    \label{alg:serial-forward-subtask}
+    }
+  \end{algorithm}
+
+  The lowest level primitive is shown in
+  Algorithm~\ref{alg:serial-forward-subtask}.  The arguments inside
+  the angled brackets are known during compile--time, while the
+  arguments inside the parenthesis are provided during run--time.
+  This means that the same function with different compile--time
+  arguments will be separately compiled and optimized by the compiler.
+  This is easily implemented using C++ templates.  Depending on the
+  argument $\Theta$, the result of the convolution will be either
+  accumulated to a given image, or the provided bias $\theta$ will be
+  added to the result.
+
+  In order for variables $oreg$ and $wreg$ to be stored in the
+  register file, we need $R_D \times R_H \times R_W + 1$ to be smaller
+  or equal to the number of available registers.  In C++ we have now
+  way of explicitly telling the compiler to use registers, but instead
+  we use regular vector variables (\texttt{\_\_m256} and
+  \texttt{\_\_m512}) rather expect the compiler to automatically
+  generate code that uses the register file.  As there are no more
+  vector variables used in the function, this is an easy job for the
+  compiler.  In lines 16--17, all values inside one vector register
+  are multiplied by a scalar value and accumulated to another vector
+  register.  On AVX512 this can be achieved by a single FMA
+  instruction, while on AVX2 CPU, the scalar value has to be loaded
+  into an auxiliary register before performing the fused
+  multiply--add.  As AVX512 CPUs have $32$ vector registers, this
+  limits $R_D \times R_H \times R_W$ to $31$.  On the other side, due
+  to need for auxiliary registers, on AVX2 CPUs the product is limited
+  to $7$.  This is because we need $7$ extra auxiliary registers, plus
+  one or storing $wreg$ while having $16$ available registers.
+
+  The innermost loop over $S$ ensures efficient reuse of $L1$ cache.
+  This is because the first pass through the loop will ensure that all
+  cache--lines containing all elements for subsequent loops are in L1
+  cache.  Most of these values will already be in $L1$ from the
+  previous iterations of the outermost three loops.  Specifically,
+  total of $(R_D+W_D-1) \times (R_H+W_D-1) \times (R_W+W_W-1)$ vector
+  values have to be fetched to $L1$, which used exactly $S \times R_D
+  \times R_H \times R_W \times W_D \times W_H \times W_W$ times.  The
+  cache hit rate increases as the sizes of both the image and the
+  kernel increase.  The cache miss rate can be thus approximated to
+  $\frac{1}{S \times W_D \times W_H \times W_W}$.  Which is very low
+  for even tiny kernels.  Cache misses are further reduced by hardware
+  pre--fetching.
+
+  \subsubsection{Full image convolution}
+
+  Our next primitive performs $S^2$ convolution on $S$ images of an
+  arbitrary size, producing $S$ output images of size $I_D \times I_H
+  \times I_W$.  This is done by dividing the output images into small
+  sub--images and using the primitive described above.  The size of
+  each sub--image should be maximized, but is subject to constraints
+  described above.  We prefer division into sub--images with large
+  values of the least significant dimension, such that the adjacent
+  pixels are adjacent in memory, thus benefit from hardware
+  pre--fetching.  In most case, we will split the image into
+  sub--images of size $1 \times 1 \times R$, where $R$ is the number
+  of available registers as described above.  This is because the
+  least significant dimension of the image is typically much larger
+  than $R$.  Alternatively, we will try the subdivision into $1 \times
+  2 \times \floor{R/2}$, etc...  Note that in most cases we will not
+  be able to subdivide the image into equal parts.  This case is
+  handled by instantiating extra primitives of smaller sizes, such
+  that the image is fully covered.  This will result in the image
+  covered in tiles, not all of them will have the same size.  However,
+  we will have an optimally compiled code for each of them.
+
+  The computation is then performed tile by tile, sliding along the
+  least significant direction first, then the second least
+  significant, etc...  This order of computation has multiple
+  benefits.  First, it can benefit from hardware pre--fetching.
+  Secondly, accessing contiguous data minimizes possible cache
+  associativity conflicts, thus allowing us to store more data in the
+  higher levels of cache, which can be reused as we slide along the
+  more significant dimensions.
+
+  \subsubsection{Sub--layer computation}
+
+
 
   \subsection{Problem subdivision}
 
@@ -107,35 +267,6 @@
   use a set of auxiliary registers to first load the data from $L1$.
   We do not implement the two different cases, instead we let the
   compiler optimize the code for the specific architecture.
-
-  \begin{algorithm}
-    {\footnotesize
-      \begin{codebox}
-        \Procname{$\proc{ForwardTask} \langle B, O_D, O_H, O_W, W_D, W_H, W_W \rangle(i,w,o,b)$}
-        \li \kw{simd register} $oreg[D][H][W]$
-        \li \kw{simd register} $wreg$
-        \li \If $B$ \Comment Static if
-        \li \Then $oreg[:][:][:][:] \gets b$ \Comment Load bias
-        \li \Else
-        \li       $oreg[:][:][:][:] \gets \proc{LOAD}(o[:][:][:][:])$
-        \End \li \kw{end if}
-        \li \kw{for} $k_d \gets 0 \To W_D-1$
-        \li   \Do \kw{for} $k_h \gets 0 \To W_H-1$
-        \li      \Do \kw{for} $k_w \gets 0 \To W_W-1$
-        \li         \Do \kw{for} $s \gets 0 \To \kw{simd-width} - 1$
-        \li         \Do $wreg \gets w[k_d][k_h][k_w][s][:]$
-        \li \kw{unrolled for} $d \gets 0 \To O_D-1$
-        \li   \Do \kw{unrolled for} $h \gets 0 \To O_H-1$
-        \li      \Do \kw{unrolled for} $w \gets 0 \To O_W-1$
-        \li         \Do $oreg[d][h][w] \gets oreg[d][h][w]$
-        \li             $+ wreg * i[d+k_d][h+k_h][w+k_w][s]$
-        \End \End \End
-        \End \End \End \End
-      \end{codebox}
-    \caption{Serial forward.}
-    \label{alg:serial-forward-subtask}
-    }
-  \end{algorithm}
 
   The algorithm that computes a $S$ sub--images of size $\mathcal{D}
   \times \mathcal{H} \times \mathcal{W}$ is given

@@ -96,7 +96,7 @@
 \setlength{\pdfpageheight}{\paperheight}
 \setlength{\pdfpagewidth}{\paperwidth}
 
-\title{Compile--time Optimized and Statically Scheduled N--D ConvNet
+\title{Compile--Time Optimized and Statically Scheduled N--D ConvNet
   Primitives for Multi--Core and Many--Core (Xeon Phi) CPUs }
 %\thispagestyle{empty}
 
@@ -137,6 +137,8 @@
   architecture.  It introduces zero runtime overhead and minimal
   synchronization overhead.
 
+  Mention how generic they are and ND
+
   Our serial primitives achieve very high utilization (75-95\%) of the
   hardware, while our parallel algorithm attains 50-90\% utilization
   on 64+ core machines.
@@ -147,25 +149,6 @@
   Finally, for 3D networks we show competitive performances to the
   latest cuDNN and latest GPU hardware, even though the GPU has higher
   FLOPS.
-
-
-  Ideas
-  1) Compile time optimized, leveraging the compiler for optimal serial code
-
-  2) Static scheduling
-
-  Points
-  1) Portable + future generations
-
-  2) Support N-D primitives
-
-  3) Similar performances regardless of the layer shape
-
-  4) Depending on the layer, results are either competative, or
-     superior to the state of the art alternatives (MKL2017)
-
-  5) Cache oblivious
-
 
 
 \end{abstract}

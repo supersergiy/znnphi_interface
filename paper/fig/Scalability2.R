@@ -78,3 +78,6 @@ do_plot('d3d', 'fwd', 'skylake', 128)
 
 do_plot('d3d', 'upd', 'haswell', 2.5*32)
 do_plot('d3d', 'fwd', 'haswell', 2.5*32)
+
+do_plot('d3d', 'fwd', 'knl', 1.1*64)
+

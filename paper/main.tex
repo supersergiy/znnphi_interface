@@ -1,0 +1,190 @@
+%\documentclass[10pt,twocolumn]{article}
+\tolerance=10000
+
+\documentclass[10pt, conference, compsocconf]{./IEEEtran/IEEEtran}
+%\documentclass[conference,compsoc]{IEEEtran}
+
+% \documentclass{article}
+
+% \usepackage[final]{nips_2016}
+
+%\usepackage[utf8]{inputenc} % allow utf-8 input
+%\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+%\usepackage{microtype}      % microtypography
+\usepackage{listings}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{eqnarray}
+\usepackage{mathtools}
+\usepackage{lipsum}
+\usepackage{adjustbox}
+%\usepackage{array}
+\usepackage{booktabs}
+\usepackage{multirow}
+
+\lstset { %
+    language=C++,
+    backgroundcolor=\color{black!5}, % set backgroundcolor
+    basicstyle=\scriptsize,% basic font setting
+    numbers=right,                    % where to put the line-numbers; possible values are (none, left, right)
+    numberstyle=\tiny\color{black},
+}
+
+\newcolumntype{R}[2]{%
+    >{\adjustbox{angle=#1,lap=\width-(#2)}\bgroup}%
+    l%
+    <{\egroup}%
+}
+\newcommand*\rot[1]{\rotatebox[origin=c]{90}{#1}}
+
+
+\usepackage{ifthen}
+\usepackage{color}
+\usepackage{xcolor}
+%\usepackage{sourcecodepro}
+%\usepackage{overpic}
+\usepackage[]{algorithm}
+\usepackage{clrscode4e}
+%\usepackage{xspace}
+%\usepackage[small,compact]{titlesec}
+\usepackage[small]{caption}
+\usepackage{subcaption}
+\usepackage{url}
+
+%\usepackage[pdftex]{graphicx}
+
+
+%\usepackage{inconsolata}
+%\usepackage{zi4}
+%\usepackage[T1]{fontenc}
+%\usepackage{pifont}
+%\usepackage{algorithm}
+%\usepackage[noend]{algpseudocode}
+%\usepackage{multicol}
+%\usepackage{hyperref}
+
+
+\newboolean{showcomments}
+\setboolean{showcomments}{true}
+
+\ifthenelse{\boolean{showcomments}}
+           { \newcommand{\mynote}[3] {
+               \fbox{\bfseries\sffamily\scriptsize#1}
+                    {\small$\blacktriangleright$\textsf{\emph{\color{#3}{#2}}}$\blacktriangleleft$}}}
+           { \newcommand{\mynote}[3]{}}
+
+\newcommand{\aleks}[1]{\mynote{Aleks}{#1}{violet}}
+\newcommand{\seung}[1]{\mynote{Seung}{#1}{blue}}
+\newcommand{\kisuk}[1]{\mynote{Kisuk}{#1}{green}}
+
+\newcommand{\remove}[1]{}
+
+
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+\DeclarePairedDelimiter{\angled}{\langle}{\rangle}
+
+
+\begin{document}
+
+\special{papersize=8.5in,11in}
+\setlength{\pdfpageheight}{\paperheight}
+\setlength{\pdfpagewidth}{\paperwidth}
+
+\title{Compile--time Optimized and Statically Scheduled N--D ConvNet
+  Primitives for Multi--Core and Many--Core (Xeon Phi) CPUs }
+%\thispagestyle{empty}
+
+
+\author{\IEEEauthorblockN{Aleksandar Zlateski\IEEEauthorrefmark{1}, H
+    Sebastian Seung\IEEEauthorrefmark{2}} \IEEEauthorblockA{Princeton
+    Neuroscience Institute\\ and Computer Science
+    Department\\ Princeton University\\ Princeton, NJ 08540
+    USA\\ \IEEEauthorrefmark{1}{\tt zlateski@princeton.edu},
+    \IEEEauthorrefmark{2}{\tt sseung@princeton.edu}}} \maketitle
+
+
+
+\begin{abstract}
+
+  With the increasing computation power of hardware, convolutional
+  networks (ConvNets), branded as deep--learning, became the most
+  popular approach to computer vision.  Vast majority of the
+  computation performed during both training and using trained ConvNet
+  consist of convolutions with small kernels.  Being capable of more
+  FLOPs/s, GPUs have been a hardware of choice
+
+  As the CPUs are closing the FLOPs gap, it is important to have an
+  efficient CPU algorithm.  We propose a novel parrallel and
+  vectorized algorithm for the convolutional layers.  Our algorithm is
+  designed to be agnostic to both the ConvNet architecture and the CPU
+  capabilities and cache sizes.
+
+  To achieve high utilization, we assume that the network architecture
+  will be known at compile--time.  Our serial algorithm divides the
+  computation into small sub--tasks designed to be easily optimized by
+  the compiler so that they utilize the FMA hardware and the register
+  file.  The sub--tasks are executed in an order that maximizes cache
+  reuse.  We parallelize the algorithm by statically scheduling tasks
+  to be executed by each core.  Our novel compile--time recursive
+  scheduling algorithm is capable of dividing the computation evenly
+  among an arbitrary number of cores, regardless of the network
+  architecture.  It introduces zero runtime overhead and minimal
+  synchronization overhead.
+
+  Our serial primitives achieve very high utilization (75-95\%) of the
+  hardware, while our parallel algorithm attains 50-90\% utilization
+  on 64+ core machines.
+
+  We benchmark our primitives on the state of the art ConvNets.  For
+  object detection networks we perform marginally better on Xeon and
+  marginally worse on KNL.  For segmentation our approach is superior.
+  Finally, for 3D networks we show competitive performances to the
+  latest cuDNN and latest GPU hardware, even though the GPU has higher
+  FLOPS.
+
+
+  Ideas
+  1) Compile time optimized, leveraging the compiler for optimal serial code
+
+  2) Static scheduling
+
+  Points
+  1) Portable + future generations
+
+  2) Support N-D primitives
+
+  3) Similar performances regardless of the layer shape
+
+  4) Depending on the layer, results are either competative, or
+     superior to the state of the art alternatives (MKL2017)
+
+  5) Cache oblivious
+
+
+
+\end{abstract}
+\setlength{\belowcaptionskip}{-15pt}
+
+\input{introduction}
+\input{convlayer}
+\input{static}
+\input{fwd-bwd}
+\input{upd}
+\input{serial}
+\input{scheduler}
+\input{benchmarks}
+\input{conclusion}
+%\input{1dconvnet}
+
+%\clearpage
+{\small
+\bibliography{IEEEabrv,znnphi}
+\bibliographystyle{./IEEEtran/IEEEtranBST/IEEEtran}
+}
+\end{document}

@@ -1,0 +1,88 @@
+\section{Convolutional layers}
+
+  We begin by describing the computation performed during the forward,
+  backward and the update pass of a convolutional layer.
+
+  In the forward pass of a convolutional layer a tuple of $f$ images
+  are transformed into another tuple of $f'$ images.  We want to
+  process a batch of $S$ inputs to yield a batch of $S$ outputs, via
+  \[
+  O_{s,j} = \sum_{i=1}^f w_{ji}\ast I_{s,i}
+  \]
+
+  for $1 \le s \le S$ and $1 \le j \le f'$.  Here $I_{s,i}$ is the
+  $i^{th}$ image of the $s^{th}$ input in the batch, and $O_{s,j}$ is
+  the $j^{th}$ image of the $s^{th}$ output in the batch, and $w_{ji}$
+  is the kernel from the $i^{th}$ image in an input tuple to the
+  $j^{th}$ image in an output tuple.
+
+  We will assume 3D images and kernels.  If $I_{s,i}$ has size
+  $\vec{n} = \angled{n_x, n_y, n_z}$ and $w_{ji}$ has size $\vec{k} =
+  \angled{k_x,k_y,k_z}$, then we can regard $I$ as a 5D tensor of size
+  $S \times f \times n_x \times n_y \times n_z$, $w$ as a 5D tensor of
+  size $f' \times f \times k_x \times k_y \times k_z$, and $O$ as a 5D
+  tensor of size $S \times f' \times n_x' \times n_y' \times n_z'$,
+  where $\vec{n}' = \vec{n} - \vec{k} + \vec{1}$.
+
+  We will refer to the sizes of the 5D tensors $I$ and $O$ as input
+  and output shape, respectively.  The relationship between input
+  shape and output shape depends on kernel size as in
+  Table~\ref{table:layers_complexity}.
+
+
+
+  The forward pass processes
+
+\subsection{Data layout}
+
+  Both the input and output of both the forward pass and backward pass
+  of an $N$--dimensional convolutional layer can be represented as
+  $(N+2)$ dimensional tensor.  The pixel at $(x_1,x_2,\dots,x_N)$ of
+  $c^{th}$ image in the batch $b$ is located at
+  $(b,c,x_1,x_2,\dots,x_N)$
+
+  Similarly, the kernels can also be represented as $(N+2)$
+  dimensional tensor, where the $(x_1,x_2,\dots,x_N)$ element of the kernel
+
+  To efficiently use FMA instructions we use data layout as proposed
+  in~\cite{jeffers2016knl, cpu-myth}, except that we generalize it for
+  N--dimensional case.
+
+  Instead of using $(N+2)$ dimensional tensor for the input/output
+  images we use a $(N+3)$ dimensional tensor such that the element
+  $(b,c,x_1,x_2,\dots,x_N)$ of the original tensor is mapped to an
+  element $(b,\floor{c/S},x_1,x_2,\dots,x_N,c \mod S + 1)$.  This new
+  tensor size of $B \times \floor{C/S} \times X_1 \times X_2 \times
+  \dots \times X_N \times S$.
+
+  $S$ denotes the length of the CPU's SIMD register in terms of number
+  of floats it can store.  This is one of very few parameters required
+  to specify when compiling our code for different CPUs.  In the case
+  of Haswell and Skylake $S$ equals to $8$ and the Knights Landing has
+  $S=16$.  Note that when $C$ is not divisible by $S$, the new tensor
+  will have more elements, and thus require more memory than the
+  original tensor.  However, nearly all modern ConvNets~\aleks{Cite
+    alex-net, googlelenet, oxfordnet} have $C$ as a multiple of $16$.
+
+  $1/2$ aleksa $\mod$
+
+
+
+  \[
+  O_{b,j} = \sum_{i=1}^f I_{b,i} \ast w_{ji}
+  \]
+
+  And for the backward pass
+
+  \[
+  \frac{\partial L}{\partial I_{b,i}} = \sum_{j=1}^{f'}
+  \frac{\partial L}{\partial O_{b,j}} \star w_{ji}
+  \]
+
+  Update
+
+
+  \[
+  \frac{\partial L}{\partial w_{j,i}} = \sum_{b=1}^B I_{b,i} \ast
+    \frac{\partial L}{\partial O_{b,j}}
+  \]

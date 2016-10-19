@@ -1,0 +1,21 @@
+
+\section{Optimized serial algorithm}
+
+  In order to maximally utilize a single core we need to make sure
+  that the CPU is using the FMA units all the time (when available) or
+  performing the SIMD instructions.
+
+  We need
+
+  \begin{enumerate}
+  \item Cache blocking
+  \item Register blocking
+  \item Loop unrolling
+  \item FMA/SIMD utilization
+  \end{enumerate}
+
+
+
+
+
+%  \lstinputlisting[language=C++]{loop.cpp}

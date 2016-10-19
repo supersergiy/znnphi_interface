@@ -1,0 +1,46 @@
+\section{Conclusion and remarks}
+
+
+\subsection{Implementation details}
+
+  Note that the ease of implementing the algorithm (under XXX lines of
+  code, where XXX is very small \aleks{don't forget the CPPCON'17}).
+  Publicly available.  GCC beats ICC for regular Xeon by up to 5\%
+  (and takes much much less time).  ICC beats GCC by 2x for KNL.  We
+  expect improved performances as the compilers get better.
+
+  \aleks{maybe try clang++, but probably not enough time for that}
+
+  \aleks{remember to mention that we don't measure cache hits because
+    measuring on a single architecture wouldn't say anything about how
+    general our approach is}
+
+\subsection{List of assumptions and design decisions}
+
+  We prefer hardware pre--fetching over manual cache optimizations.
+  For this reason we prefer larger input images.
+
+  We prefer blocking in the least significant directions to avoid
+  associativity conflicts, this relieves us of data alignment issues.
+  Hardware pre--fetching comes handy here as well.
+
+  We only assume small amount of L1 data cache.
+
+  We assume presence of L2 and possibly L3, but design the algorithm
+  to be oblivious to the size of the cache available.
+
+  We assume presence of L1 instruction cache, and leverage the
+  compiler to properly assemble the code.  By having all threads run
+  the same code we leverage possible sharing of L1 instruction and L2
+  cache (that stores the instructions).
+
+  We contribute to the compiler community, and expect our results to
+  improve as AVX512 compilers improve.
+
+  This is just to see how much page estate will the references
+  take~\cite{zlateski2016znn, zlateski2016znni, cpu-myth, idlf,
+    mkl-dnn, neonnervana, hadjis2015shallow, chetlur2014cudnn,
+    szegedy2015going, jeffers2016knl, ronneberger2015u,
+    jeffers2015high, simonyan2014very, krizhevsky2012imagenet,
+    sermanet2013overfeat, lee2015recursive, jain2007supervised,
+    jia2014caffe, reinders2007intel, viebke2015potential}

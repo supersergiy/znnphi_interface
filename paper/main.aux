@@ -1,0 +1,118 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{hadjis2015shallow}
+\citation{chetlur2014cudnn}
+\citation{szegedy2015going}
+\providecommand \oddpage@label [2]{}
+\@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}{section.1}}
+\citation{zlateski2016znn}
+\citation{zlateski2016znni}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {I-A}}GPUs vs CPUs}{2}{subsection.1.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {I-B}}Mulit--core vs Many--core}{2}{subsection.1.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {I-C}}Motivation}{2}{subsection.1.3}}
+\@writefile{toc}{\contentsline {section}{\numberline {II}Convolutional layers}{2}{section.2}}
+\citation{jeffers2016knl}
+\citation{cpu-myth}
+\citation{reinders2007intel}
+\citation{willhalm2008putting}
+\citation{jeffers2015high}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-A}}Data layout}{3}{subsection.2.1}}
+\@writefile{toc}{\contentsline {section}{\numberline {III}Static scheduling}{3}{section.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-A}}Implementation details}{3}{subsection.3.1}}
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Forward and backward propagation}{3}{section.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}}Algorithm overview}{4}{subsection.4.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}}Problem subdivision}{4}{subsection.4.2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Computing the values of $F'=3$ channels of 2D images of size $4 \times 3$ using $T=2$ threads. The three columns represent three stages. The dark blue/red represent the values computed by the cores 1/2 during that stage.\relax }}{4}{figure.caption.1}}
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:problem-subdivision}{{1}{4}{Computing the values of $F'=3$ channels of 2D images of size $4 \times 3$ using $T=2$ threads. The three columns represent three stages. The dark blue/red represent the values computed by the cores 1/2 during that stage.\relax }{figure.caption.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}}Serial algorithm}{4}{subsection.4.3}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Serial forward.\relax }}{4}{algorithm.1}}
+\newlabel{alg:serial-forward-subtask}{{1}{4}{Serial forward.\relax }{algorithm.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Cache oblivious compuitation.\relax }}{5}{figure.caption.2}}
+\newlabel{fig:full-exec}{{2}{5}{Cache oblivious compuitation.\relax }{figure.caption.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-D}}Cache oblivious computation}{5}{subsection.4.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-E}}Parallel execution}{5}{subsection.4.5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-F}}Serial algorithm}{5}{subsection.4.6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-G}}Cache, etc...}{5}{subsection.4.7}}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Update phase}{6}{section.5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-A}}Serial algorithm}{6}{subsection.5.1}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Serial update subtask.\relax }}{6}{algorithm.2}}
+\newlabel{alg:serial-update-subtask}{{2}{6}{Serial update subtask.\relax }{algorithm.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Decomposing a convolution.\relax }}{6}{figure.caption.3}}
+\newlabel{fig:conv-decomposition}{{3}{6}{Decomposing a convolution.\relax }{figure.caption.3}{}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces Serial update task.\relax }}{6}{algorithm.3}}
+\newlabel{alg:serial-update-task}{{3}{6}{Serial update task.\relax }{algorithm.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-B}}Parallel execution}{6}{subsection.5.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Optimized serial algorithm}{6}{section.6}}
+\citation{zlateski2016znn}
+\citation{zlateski2016znni}
+\citation{cpu-myth}
+\citation{idlf}
+\citation{mkl-dnn}
+\citation{neonnervana}
+\citation{hadjis2015shallow}
+\citation{chetlur2014cudnn}
+\citation{szegedy2015going}
+\citation{jeffers2016knl}
+\citation{ronneberger2015u}
+\citation{jeffers2015high}
+\citation{simonyan2014very}
+\citation{krizhevsky2012imagenet}
+\citation{sermanet2013overfeat}
+\citation{lee2015recursive}
+\citation{jain2007supervised}
+\citation{jia2014caffe}
+\citation{reinders2007intel}
+\citation{viebke2015potential}
+\bibdata{IEEEabrv,znnphi}
+\bibcite{hadjis2015shallow}{1}
+\bibcite{chetlur2014cudnn}{2}
+\@writefile{toc}{\contentsline {section}{\numberline {VII}Static scheduler}{7}{section.7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {VII-A}}Meta--algorithm}{7}{subsection.7.1}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {4}{\ignorespaces Multi-core algorithm for a convolutional layer using direct convolution.\relax }}{7}{algorithm.4}}
+\newlabel{alg:cpu_direct}{{4}{7}{Multi-core algorithm for a convolutional layer using direct convolution.\relax }{algorithm.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {VIII}Benchmarks}{7}{section.8}}
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Machines used for the benchmarks\relax }}{7}{table.caption.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {VIII-A}}Experimental setup}{7}{subsection.8.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {VIII-B}}Benchmarked networks}{7}{subsection.8.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {IX}Conclusion and remarks}{7}{section.9}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IX-A}}Implementation details}{7}{subsection.9.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IX-B}}List of assumptions and design decisions}{7}{subsection.9.2}}
+\bibcite{szegedy2015going}{3}
+\bibcite{zlateski2016znn}{4}
+\bibcite{zlateski2016znni}{5}
+\bibcite{jeffers2016knl}{6}
+\bibcite{cpu-myth}{7}
+\bibcite{reinders2007intel}{8}
+\bibcite{willhalm2008putting}{9}
+\bibcite{jeffers2015high}{10}
+\bibcite{idlf}{11}
+\bibcite{mkl-dnn}{12}
+\bibcite{neonnervana}{13}
+\bibcite{ronneberger2015u}{14}
+\bibcite{simonyan2014very}{15}
+\bibcite{krizhevsky2012imagenet}{16}
+\bibcite{sermanet2013overfeat}{17}
+\bibcite{lee2015recursive}{18}
+\bibcite{jain2007supervised}{19}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Some caption\relax }}{8}{figure.caption.5}}
+\@writefile{toc}{\contentsline {section}{References}{8}{section*.6}}
+\bibcite{jia2014caffe}{20}
+\bibcite{viebke2015potential}{21}
+\bibstyle{./IEEEtran/IEEEtranBST/IEEEtran}

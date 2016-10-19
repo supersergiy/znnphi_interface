@@ -1,0 +1,29 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{GPUs vs CPUs}{section.1}% 2
+\BOOKMARK [2][-]{subsection.1.2}{Mulit\205core vs Many\205core}{section.1}% 3
+\BOOKMARK [2][-]{subsection.1.3}{Motivation}{section.1}% 4
+\BOOKMARK [1][-]{section.2}{Convolutional layers}{}% 5
+\BOOKMARK [2][-]{subsection.2.1}{Data layout}{section.2}% 6
+\BOOKMARK [1][-]{section.3}{Static scheduling}{}% 7
+\BOOKMARK [2][-]{subsection.3.1}{Implementation details}{section.3}% 8
+\BOOKMARK [1][-]{section.4}{Forward and backward propagation}{}% 9
+\BOOKMARK [2][-]{subsection.4.1}{Algorithm overview}{section.4}% 10
+\BOOKMARK [2][-]{subsection.4.2}{Problem subdivision}{section.4}% 11
+\BOOKMARK [2][-]{subsection.4.3}{Serial algorithm}{section.4}% 12
+\BOOKMARK [2][-]{subsection.4.4}{Cache oblivious computation}{section.4}% 13
+\BOOKMARK [2][-]{subsection.4.5}{Parallel execution}{section.4}% 14
+\BOOKMARK [2][-]{subsection.4.6}{Serial algorithm}{section.4}% 15
+\BOOKMARK [2][-]{subsection.4.7}{Cache, etc...}{section.4}% 16
+\BOOKMARK [1][-]{section.5}{Update phase}{}% 17
+\BOOKMARK [2][-]{subsection.5.1}{Serial algorithm}{section.5}% 18
+\BOOKMARK [2][-]{subsection.5.2}{Parallel execution}{section.5}% 19
+\BOOKMARK [1][-]{section.6}{Optimized serial algorithm}{}% 20
+\BOOKMARK [1][-]{section.7}{Static scheduler}{}% 21
+\BOOKMARK [2][-]{subsection.7.1}{Meta\205algorithm}{section.7}% 22
+\BOOKMARK [1][-]{section.8}{Benchmarks}{}% 23
+\BOOKMARK [2][-]{subsection.8.1}{Experimental setup}{section.8}% 24
+\BOOKMARK [2][-]{subsection.8.2}{Benchmarked networks}{section.8}% 25
+\BOOKMARK [1][-]{section.9}{Conclusion and remarks}{}% 26
+\BOOKMARK [2][-]{subsection.9.1}{Implementation details}{section.9}% 27
+\BOOKMARK [2][-]{subsection.9.2}{List of assumptions and design decisions}{section.9}% 28
+\BOOKMARK [1][-]{section*.6}{References}{}% 29

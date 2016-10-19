@@ -1,5 +1,52 @@
 \section{Update phase}
 
+  Similarly as in the fwd--bwd algorithm, our update phase algorithm
+  consists of the following stack of primitives.
+
+  In the update phase, each of the $F$ input images from the previous
+  forward pass is convolved with each of the $F'$ gradients with
+  respect to the output obtained during the backward pass to produce
+  $S^2$ gradients with respect to the kernel weights each of size $W_D
+  \times W_H \times W_W$ -- the size of the kernel.  For simplicity,
+  we will refer to the input images as simply ``images'', to the
+  gradients with respect to the output as output gradients as simply
+  ``gradients'', and gradients with respect to the kernel weights as
+  ``kernel gradients''.
+
+  \begin{enumerate}
+    \item {\bf Sub--kernel primitive} -- a primitive that computes a
+      convolution of each of $R_S$ images of size $R_D \times R_H
+      \times (W_W + R_W - 1)$ by $S$ gradients of size $1 \times 1
+      \times W_W$ to produce and accumulate the results of $R_S \times
+      S$ kernel gradients of size $R_D \times R_W \times R_H$.  As in
+      the fwd--bwd case, this primitive is optimized for efficiently
+      reusing the register file as well as $L1$ cache.
+    \item {\bf Full kernel primitive} -- a primitive that computes
+      $S^2$ kernel gradients by convolving each of $S$ images with $S$
+      gradients.
+    \item {\bf Sub--layer primitive} -- a primitive that computes
+      $\alpha \times \beta \times S^2$ kernel gradients by convolving
+      each of $\alpha S$ images with $\beta S$ gradients.
+    \item {\bf Full layer primitive} -- parallelized primitive that
+      divides the computation into a set of previous primitives and
+      statically schedules execution.  As described below, this
+      primitive might need to contain an extra parallelized reduction
+      step, which is also statically scheduled.
+  \end{enumerate}
+
+
+  {\bf Sub--kernel primitive} \quad
+
+
+
+
+
+
+
+
+
+
+
 
 
   As in the fwd-bwd case, we will describe the details of the

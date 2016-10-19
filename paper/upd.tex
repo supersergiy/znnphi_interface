@@ -1,5 +1,7 @@
 \section{Update phase}
 
+
+
   As in the fwd-bwd case, we will describe the details of the
   algorithm for the case of 3D images.
   \subsection{Serial algorithm}
@@ -24,11 +26,9 @@
         \li $oreg[:][:][:][:][:] \gets \proc{LOAD}(r[:][:][:][:][:])$
         \li \For $i \gets 0 \To W-1$ \Comment Partially unrolled
         \li   \Do $wreg \gets \proc{LOAD}(b[1][1][w][:])$
-        \li       $\proc{PREFETCH-TO-L1}(b[1][1][w+1][:])$
         \li   \For $d \gets 0 \To R_D-1$ \Comment Fully unrolled
         \li   \Do \For $h \gets 0 \To R_H-1$  \Comment Fully unrolled
         \li   \Do \For $w \gets 0 \To R_W-1$  \Comment Fully unrolled
-        \li       \Do $\proc{PREFETCH-TO-L1}(a[d][h][w+i+1][:])$
         \li       \For $f \gets 0 \To R_F-1$   \Comment Fully unrolled
         \li   \Do $oreg[d][h][w][f] \gets \proc{FMADD}($
         \li   \Do $wreg,$
@@ -78,35 +78,35 @@
   \times R_F$ first over the output images, then the least significant
   dimension, and so on.
 
-  \begin{algorithm}
-    {\footnotesize
-      \begin{codebox}
-        \Procname{$\proc{Update-Task} \langle I_D, I_H, I_W, O_D, O_H, O_W \rangle(a,b,r)$}
-        \li $\angled{K_D,K_H,K_W} \gets \angled{I_D-O_D+1,I_H-O_H+1,I_W-O_W+1}$
-        \li $\angled{R_D,R_H,R_W,R_F} \gets \proc{Decompose}(K_D,K_H,K_W,S)$
-        \li \For $d \gets 0 \To O_D-1$
-        \li   \Do \For $h \gets 0 \To O_H-1$
-        \li     \Do \For $r_d \gets 0 \To K_D/R_D-1 \kw{ by } K_D/R_D$
-        \li       \Do \For $r_h \gets 0 \To K_H/R_H-1 \kw{ by } K_H/R_H$
-        \li          \Do \For $r_w \gets 0 \To K_W/R_W-1 \kw{ by } K_W/R_W$
-        \li            \Do \For $r_f \gets 0 \To S/R_F-1 \kw{ by } S/R_F$
-        \li \Do $\proc{Update-Subtask}\langle R_D,R_H,R_W,O_W,R_F\rangle ($
-        \li \Do $a[d+r_d,R_D][h+r_h,R_H][r_w,O_W][:],$
-        \li     $b[d][h][:][r_f,R_F],$
-        \li     $r[r_d,R_D][r_h,R_H][r_w,R_W][r_f,R_F][:])$
-        \End
-        \End \li \kw{end for} $r_f$
-        \End \li \kw{end for} $r_w$
-        \End \li \kw{end for} $r_h$
-        \End \li \kw{end for} $r_d$
-        \End \li \kw{end for} $h$
-        \End \li \kw{end for} $d$
+  %% \begin{algorithm}
+  %%   {\footnotesize
+  %%     \begin{codebox}
+  %%       \Procname{$\proc{Update-Task} \langle I_D, I_H, I_W, O_D, O_H, O_W \rangle(a,b,r)$}
+  %%       \li $\angled{K_D,K_H,K_W} \gets \angled{I_D-O_D+1,I_H-O_H+1,I_W-O_W+1}$
+  %%       \li $\angled{R_D,R_H,R_W,R_F} \gets \proc{Decompose}(K_D,K_H,K_W,S)$
+  %%       \li \For $d \gets 0 \To O_D-1$
+  %%       \li   \Do \For $h \gets 0 \To O_H-1$
+  %%       \li     \Do \For $r_d \gets 0 \To K_D/R_D-1 \kw{ by } K_D/R_D$
+  %%       \li       \Do \For $r_h \gets 0 \To K_H/R_H-1 \kw{ by } K_H/R_H$
+  %%       \li          \Do \For $r_w \gets 0 \To K_W/R_W-1 \kw{ by } K_W/R_W$
+  %%       \li            \Do \For $r_f \gets 0 \To S/R_F-1 \kw{ by } S/R_F$
+  %%       \li \Do $\proc{Update-Subtask}\langle R_D,R_H,R_W,O_W,R_F\rangle ($
+  %%       \li \Do $a[d+r_d,R_D][h+r_h,R_H][r_w,O_W][:],$
+  %%       \li     $b[d][h][:][r_f,R_F],$
+  %%       \li     $r[r_d,R_D][r_h,R_H][r_w,R_W][r_f,R_F][:])$
+  %%       \End
+  %%       \End \li \kw{end for} $r_f$
+  %%       \End \li \kw{end for} $r_w$
+  %%       \End \li \kw{end for} $r_h$
+  %%       \End \li \kw{end for} $r_d$
+  %%       \End \li \kw{end for} $h$
+  %%       \End \li \kw{end for} $d$
 
-      \end{codebox}
-    \caption{Serial update task.}
-    \label{alg:serial-update-task}
-    }
-  \end{algorithm}
+  %%     \end{codebox}
+  %%   \caption{Serial update task.}
+  %%   \label{alg:serial-update-task}
+  %%   }
+  %% \end{algorithm}
 
   \begin{figure}
     \begin{center}

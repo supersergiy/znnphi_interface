@@ -77,8 +77,8 @@
     division and order of computation is designed for efficient use of
     hardware pre--fetching.
   \item {\bf Sub--layer primitive} -- a primitive that computes
-    $\alpha_0'S$ images by performing $\alpha_0 \alpha_0' S^2$
-    convolutions on $\alpha_0 S$ images.  The primitive is designed to
+    $\beta S$ images by performing $\alpha \beta S^2$
+    convolutions on $\alpha S$ images.  The primitive is designed to
     efficiently utilize higher levels of cache (L2, L3).
   \item {\bf Full layer primitive} -- a static scheduler that divides
     the computation into above primitives and assigns each available
@@ -87,8 +87,6 @@
   \end{enumerate}
 
   We proceed to describe each primitive in details.
-
-  \subsubsection{Lowest--level primitive}
 
   \begin{algorithm}
     {\footnotesize
@@ -109,8 +107,10 @@
         \li \kw{for} $d \gets 0 \To R_D-1$ \Comment Fully unrolled
         \li   \Do \kw{for} $h \gets 0 \To R_H-1$ \Comment Fully unrolled
         \li      \Do \kw{for} $w \gets 0 \To R_W-1$ \Comment Fully unrolled
-        \li         \Do $oreg[d][h][w] \gets oreg[d][h][w]$
-        \li             $+ wreg * i[d+k_d][h+k_h][w+k_w][s]$
+        \li         \Do $oreg[d][h][w] \gets \proc{FMADD}($
+        \li   \Do $wreg,$
+        \li       $\proc{EXLOAD}(i[d+k_d][h+k_h][w+k_w][s]),$
+        \li       $oreg[d][h][w][f])$
         \End \li \kw{end for} $w$
         \End \li \kw{end for} $h$
         \End \li \kw{end for} $d$
@@ -118,6 +118,7 @@
         \End \li \kw{end for} $k_w$
         \End \li \kw{end for} $k_h$
         \End \li \kw{end for} $k_d$
+        \li $o[:][:][:][:] \gets \proc{STORE}(oreg[:][:][:][:])$
       \end{codebox}
     \caption{The finest granularity primitive that computes a
       sub--image of size $R_D \times R_H \times R_W$ of $S$ images by
@@ -127,8 +128,8 @@
     }
   \end{algorithm}
 
-  The lowest level primitive is shown in
-  Algorithm~\ref{alg:serial-forward-subtask}.  The arguments inside
+  {\bf Sub--image primitive} \quad The lowest level primitive is shown
+  in Algorithm~\ref{alg:serial-forward-subtask}.  The arguments inside
   the angled brackets are known during compile--time, while the
   arguments inside the parenthesis are provided during run--time.
   This means that the same function with different compile--time
@@ -146,16 +147,18 @@
   \texttt{\_\_m512}) rather expect the compiler to automatically
   generate code that uses the register file.  As there are no more
   vector variables used in the function, this is an easy job for the
-  compiler.  In lines 16--17, all values inside one vector register
+  compiler.  In lines 16--18, all values inside one vector register
   are multiplied by a scalar value and accumulated to another vector
-  register.  On AVX512 this can be achieved by a single FMA
-  instruction, while on AVX2 CPU, the scalar value has to be loaded
-  into an auxiliary register before performing the fused
-  multiply--add.  As AVX512 CPUs have $32$ vector registers, this
-  limits $R_D \times R_H \times R_W$ to $31$.  On the other side, due
-  to need for auxiliary registers, on AVX2 CPUs the product is limited
-  to $7$.  This is because we need $7$ extra auxiliary registers, plus
-  one or storing $wreg$ while having $16$ available registers.
+  register (The procedure $\proc{EXLOAD}$ loads a scalar value to all
+  $S$ locations in the vector register).  On AVX512 this two
+  operations can be achieved by a single FMA instruction, while on
+  AVX2 CPU, the scalar value has to be loaded into an auxiliary
+  register before performing the fused multiply--add.  As AVX512 CPUs
+  have $32$ vector registers, this limits $R_D \times R_H \times R_W$
+  to $31$.  On the other side, due to need for auxiliary registers, on
+  AVX2 CPUs the product is limited to $7$.  This is because we need
+  $7$ extra auxiliary registers, plus one or storing $wreg$ while
+  having $16$ available registers.
 
   The innermost loop over $S$ ensures efficient reuse of $L1$ cache.
   This is because the first pass through the loop will ensure that all
@@ -171,27 +174,26 @@
   for even tiny kernels.  Cache misses are further reduced by hardware
   pre--fetching.
 
-  \subsubsection{Full image convolution}
-
-  Our next primitive performs $S^2$ convolution on $S$ images of an
-  arbitrary size, producing $S$ output images of size $I_D \times I_H
-  \times I_W$.  This is done by dividing the output images into small
-  sub--images and using the primitive described above.  The size of
-  each sub--image should be maximized, but is subject to constraints
-  described above.  We prefer division into sub--images with large
-  values of the least significant dimension, such that the adjacent
-  pixels are adjacent in memory, thus benefit from hardware
-  pre--fetching.  In most case, we will split the image into
-  sub--images of size $1 \times 1 \times R$, where $R$ is the number
-  of available registers as described above.  This is because the
-  least significant dimension of the image is typically much larger
-  than $R$.  Alternatively, we will try the subdivision into $1 \times
-  2 \times \floor{R/2}$, etc...  Note that in most cases we will not
-  be able to subdivide the image into equal parts.  This case is
-  handled by instantiating extra primitives of smaller sizes, such
-  that the image is fully covered.  This will result in the image
-  covered in tiles, not all of them will have the same size.  However,
-  we will have an optimally compiled code for each of them.
+  {\bf Full image primitive} \quad Our next primitive performs $S^2$
+  convolution on $S$ images of an arbitrary size, producing $S$ output
+  images of size $I_D \times I_H \times I_W$.  This is done by
+  dividing the output images into small sub--images and using the
+  primitive described above.  The size of each sub--image should be
+  maximized, but is subject to constraints described above.  We prefer
+  division into sub--images with large values of the least significant
+  dimension, such that the adjacent pixels are adjacent in memory,
+  thus benefit from hardware pre--fetching.  In most case, we will
+  split the image into sub--images of size $1 \times 1 \times R$,
+  where $R$ is the number of available registers as described above.
+  This is because the least significant dimension of the image is
+  typically much larger than $R$.  Alternatively, we will try the
+  subdivision into $1 \times 2 \times \floor{R/2}$, etc...  Note that
+  in most cases we will not be able to subdivide the image into equal
+  parts.  This case is handled by instantiating extra primitives of
+  smaller sizes, such that the image is fully covered.  This will
+  result in the image covered in tiles, not all of them will have the
+  same size.  However, we will have an optimally compiled code for
+  each of them.
 
   The computation is then performed tile by tile, sliding along the
   least significant direction first, then the second least
@@ -202,22 +204,103 @@
   higher levels of cache, which can be reused as we slide along the
   more significant dimensions.
 
-  \subsubsection{Sub--layer computation}
+  {\bf Sub--layer primitive} \quad The next primitive considers all
+  $\alpha S$ input images and computes the values of $\beta S$ ($\beta
+  \le \alpha'$) output sub-images of size $I_D \times I_H \times I_W$
+  by performing $\alpha \beta S^2$ convolutions.  This is achieved by
+  invoking $\alpha \beta$ {\bf full image primitives} described above.
 
+  \begin{figure}
+    \begin{center}
+      \includegraphics[width=0.8\linewidth]{fig/serialexec}
+    \end{center}
+    \caption{The recursive computation done by sub--layer primitive.
+      Two levels of recursion are shown, each requiring less cache. }
+    \label{fig:full-exec}
+  \end{figure}
 
+  This primitive is designed to efficiently use higher levels of cache
+  when available, by ensuring that the order of {\bf full image
+    primitives} are executed in a cache--friendly way.  This is
+  achieved in a recursive fashion, where each successive recursive
+  step requires half the memory of the previous step to fit the whole
+  working set inside the cache.  Two levels of recursion are shown for
+  the case of $\alpha = \beta = 4$ is shown on
+  Fig.~\ref{fig:full-exec}.  In the first step (first row in
+  Fig.~\ref{fig:full-exec}), both the number of input and output
+  images are divided in half.  The next recursive step (second row in
+  Fig.~\ref{fig:full-exec}) is then applied for all 4 possible
+  subdivisions.  Note how the second level of recursion requires
+  storage for 2 input and 2 output images in order to fit the whole
+  working set inside cache, while the first level requires twice as
+  much.  The order in which the 4 recursive problems are solved
+  further increases cache reuse.  In the case when $\alpha \ge 2\beta$
+  or $\beta \ge 2\alpha$ a simpler recursive step is performed, by
+  dividing only the input/output images in half and solving two
+  recursive sub--problems.
 
-  \subsection{Problem subdivision}
+  {\bf Full layer primitive} \quad Our last primitive divides the
+  computation of $B$ sets of $\alpha' S$ output images into sets of
+  sub--layer primitives.  Each of $T$ available threads is statically
+  scheduled to execute one or more such primitives.
 
-  To compute all the values of the output
-  tensor using $T$ threads, we would like to divide the tensor into
-  $T$ sub--tensors of equal size.  Such sub--division is not
-  guaranteed to exist.
+  The main goal of the primitive is to equally divide the work among
+  the $T$ threads such that once invoked they all finish roughly at
+  the same time.  As described above, the $B$ sets of $\alpha'S$
+  output images of size $D \times H \times W$ can regarded as a $5D$
+  tensor of size $B \times (\alpha'S) \times D \times H \times W$.
+  Again, we take a recursive approach to our static scheduling
+  algorithm.  The input to our algorithm is a set of $T$ threads, and
+  a $5D$ tensor of values that has to be computed.
 
-  To equalize the amount of work done by each thread, we propose a
-  recursive subdivision approach.  We first divide the problem into
-  $T$ equal sub--tensors, with a possible remainder.  Each of the
-  threads computes the values of a single such sub--tensor.  The
-  remaining sub--tensor is then computed in a similar fashion.
+  For the base case of our algorithm, when $T=1$, the values of the
+  $5D$ tensor is scheduled on the given core to be executed by $B$
+  sub--layer primitives described above.
+
+  Our algorithm has two different recursive steps.  The first version
+  of the recursive step first finds the smallest prime $p$ that
+  divides $T$.  It then divides the set of $T$ threads into $p$ sets
+  of $T/p$ threads, and the $5D$ tensor into $p$ equal sub--tensors by
+  slicing it along the highest significant dimension that has a size
+  of at least $p$.  It then recursively solves the $p$ problems for
+  each set of $T/p$ threads and each equally sized sub--tensor.  If no
+  dimension of the tensor is larger or equal than $p$, we apply the
+  base case on an arbitrary available thread.  If the dimension of the
+  tensor along which the splicing was performed is not divisible by
+  $p$, another recursive problem is solved for all $T$ threads and the
+  remaining sub--tensor.  Note that the size of the sub--tensor of
+  each recursive sub--problem has at least $p$ times less elements.
+  The rationale behind this step is that we will have each set of
+  $T/p$ threads solving problems of exactly the same size.  As we
+  expect them to be done roughly at the same time, when they can all
+  work on computing the remaining values.
+
+  As our previous primitives assume computation of multiple of $S$
+  images, splicing along the second most significant dimension (of
+  size $\alpha'S$) is done only when $\alpha' \ge p$.
+
+  Note that in the recursive call for the remaining of the tensor, the
+  value of $T$ doesn't decrease.  Thus, depth of recursion can reach
+  up to $\log_2 E$, where $E$ is the number of elements in the $5D$
+  tensor, which can be very large.  As the scheduling is done during
+  compile--time, this can significantly increase the compile time, and
+  create ``code bloat'', as primitives of many different sizes might
+  have to be compiled.
+
+  To prevent this we introduce the second version of the recursive
+  step, which is applied when the number of elements of the $5D$
+  tensor is smaller than $\epsilon$ times the number of elements of
+  the original tensor.  In this case we divide the tensor along the
+  most significant dimension larger than $T$ into $T$ sub--tensors,
+  some of which are larger than others, after which $T$ base cases are
+  applied and the work is scheduled on the $T$ threads.  The basic
+  idea is that once computation required for the sub--tensor is small
+  compared to the overall computation required for the layer, we can
+  allow for some cores to do a bit more work than others without
+  hurting overall performances.  In our implementation we picked
+  $\epsilon$ to be $0.008$, which limits the recursion to maximal
+  depth of $7$ while not allowing any single core to perform more then
+  $1\%$ more work than other cores.
 
   \begin{figure}
     \begin{center}
@@ -226,181 +309,39 @@
     \caption{Computing the values of $F'=3$ channels of 2D images of
       size $4 \times 3$ using $T=2$ threads.  The three columns
       represent three stages.  The dark blue/red represent the values
-      computed by the cores 1/2 during that stage.}
+      scheduled to be computed by $1^{st}/2^{nd}$ core.}
     \label{fig:problem-subdivision}
   \end{figure}
 
-  An example of such sub--division is shown on
-  Fig~\ref{fig:problem-subdivision}.  Note that each thread ends up
-  computing the same amount of output voxels.  Furthermore, at each
-  stage, each thread is solving the same \emph{Problem}, just with
-  different data (SIMD).
+  An example of such scheduling for the special case of $B=1$, $F'=3$
+  and $S=1$ and 2D images of size $4 \times 3$ is shown on
+  Fig.~\ref{fig:problem-subdivision}.
 
-  In each stage of the computation, each of the threads computes the
-  values of the assigned sub--tensor in a serial fashion.  For that we
-  need an efficient serial algorithm that can compute the values of an
-  arbitrary sub--tensor.  It is improtatnt to first understand our
-  serial algorithm, as it will introduce some restrictions on the
-  problem sub--division.
+  There are multiple benefits of our approach.  First, note that all
+  the cores perform exactly the same computation.  When using multiple
+  virtual threads per physical core, each thread can benefit from $L1$
+  instruction cache.  Additionally, when multiple threads compute
+  different images of the layer (as in the first step in
+  Fig.~\ref{fig:problem-subdivision}), they access the elements of the
+  input images in exactly the same order.  This will yield high hit
+  rate of the higher levels of cache shared between cores.
 
-  \subsection{Serial algorithm}
+  \subsection{Input image padding}
 
-  Our serial algorithm computes $\mathcal{B} \le B$ sets of
-  $\mathcal{F}' \le F'$ images each of size $\mathcal{D} \times
-  \mathcal{H} \times \mathcal{W}$ ($\mathcal{D} \le D$, $\mathcal{H}
-  \le H$, $\mathcal{W} \le W$).
+  As mentioned before, in order to be usable for the backward pass,
+  our primitive has to support either implicit or explicit zero
+  padding of input images.  When the input images are large, and
+  kernels small, explicit zero padding of the input image only
+  slightly increases the computational cost.  However, as the images
+  get smaller this overhead can become significant.
 
-  We take a divide and conquer approach to the serial algorithm.  We
-  first divide the algorithm into primitives that performs $S^2$
-  convolutions on $S$ input images, accumulating the result into $S$
-  output images.  These primitives are further divided into
-  sub--primitives that compute a small number of pixels of each of the
-  $S$ output images.
+  Additionally, once might consider a hybrid approach, where along
+  some directions the input is explicitly padded, while along the
+  other we perform implicit computation.
 
-  We first describe the most basic building block of our algorithm.
-  The main goal of this primitive is to efficiently utilize the vector
-  units as well as $L1$ cache.  We design the primitive so that it
-  consists mainly of fused multiply--add instructions where two of the
-  input arguments are stored in registers, and the third one is in
-  $L1$ cache.  For the case of KNL, a single instructions can be used
-  to perform such operation, whereas with AVX2 capable CPUs we need to
-  use a set of auxiliary registers to first load the data from $L1$.
-  We do not implement the two different cases, instead we let the
-  compiler optimize the code for the specific architecture.
-
-  The algorithm that computes a $S$ sub--images of size $\mathcal{D}
-  \times \mathcal{H} \times \mathcal{W}$ is given
-  on~\ref{alg:serial-forward-subtask}.  It consists of three main
-  stages.  First, it loads the current values for the pixel values to
-  the register file, then it performs a convolution with the
-  corresponding kernels and input images, and finally stores the
-  results back to memory.
-
-  The convolution loop first goes over all kernel values, loading each
-  of them into a register.  That value is then multiplied with the
-  appropriate pixels from $S$ input images and accumulated to the
-  registers containing the output set of pixels.
-
-  The innermost loop over $S$ ensures efficient reuse of $L1$ cache.
-  Mainly, it loops over $D \times H \times W$ pixels of $S$ images.
-  As the L1 cache is larger than the number of registers times $S$, we
-  expect that the consequent loops over $S$ will be guaranteed to have
-  the value in L1 cache.
-
-  This will however depend on the shape of $D \times H \times W$.  The
-  main restriction of the shape is that it has to fit into the
-  register file.  For the case of KNL we set the max size of elements
-  to be 31 (as we need an extra register for the kernel values, and we
-  have total of 32 registers).  For the case of AVX2, we set it to be
-  at most 7.  This is because we need as many auxiliary registers to
-  load input image pixels, as well as an extra for the kernel values
-  (and we have 16 registers in total).
-
-  We also prefer higher values for the least significant dimensions
-  ($W$ in this case).  There are two main for this design choice
-  which we discuss in sections.... They are hardware prefetching,
-  cache associativity conflicts.
-
-  The actual implementation of the primitive uses regular variables
-  and it expect the compiler to assemble the code that uses the
-  register file, as well as to optimally unroll the innermost loops.
-  It turns out that both ICC and GCC produce the same optimal code as
-  expected for AVX2, whereas only ICC produces optimal code for
-  AVX512.  For AVX512, GCC fails to use the braadcast-fmadd
-  instructions.
-
-  We combined these, lowest level, primitives to compute $S^2$
-  convolutions of $S$ input images by combining the primitives
-  described above.  Each of the $S$ output images will be split into
-  blocks of size at most $O_D \times O_H \times O_W$, and the
-  computation will be performed by computing one block at the time.
-  Note that not all the blocks will have the same size (in the case
-  when the output image size is not divisible by the register blocking
-  size).  By utilizing the C++'s template programming we will have a
-  separate functions for computing blocks of different sizes.
-
-  We prefer computing the blocks adjacent to the least significant
-  dimension (in order to utilize the L2 cache and hardware prefetching
-  \aleks{elaborate}.
-
-  \subsection{Cache oblivious computation}
-
-
-  \begin{figure}
-    \begin{center}
-      \includegraphics[width=0.8\linewidth]{fig/serialexec}
-    \end{center}
-    \caption{Cache oblivious compuitation.}
-    \label{fig:full-exec}
-  \end{figure}
-
-
-  For each set of
-
-  Given the primitive described above, we attempt to compute all $B
-  \times \beta S \times D \times H \times W$ values in the following
-  way.
-
-  Given the primitives that perform the forward pass on $S$ input
-  images and accumulate the result to $S$ output images, given $S^2$
-  convolution kernels, we design a cache oblivious algorithm that
-  performs the forward pass of an arbitrary number of input/output
-  images.
-
-
-  \subsection{Parallel execution}
-
-  Our strategy for is relatively simple and is created during compile
-  time.
-
-  The main idea behind our static scheduling algorithm is to have all
-  threads execute the same code, thus having the same number of
-  operations/FLOPS to execute.
-
-  To achieve this, we recursively divide the problem and assign a set
-  of threads to execute a sub--problem.  To divide the problem among
-  $T$ threads, we consider the smallest prime $P$ that divides $T$.
-  We divide the problem into $P$ equal sub--problems, and recursively
-  schedule the sub--problems to each of $T/P$ sub-threads.  If the
-  problem can not be divided in exactly $P$ parts, we divide it into
-  $P$ parts + a smaller remainder.  The remainder is then also
-  recursively scheduled on all $T$ threads.
-
-  All scheduling and code generation is done during compile--time with
-  the magic of C++ templates.  Thus each sub--problem get's optimally
-  compiled and optimized.
-
-  The obvious advantage of such approach is that, by executing the
-  exact same code, threads that share any level of cache, can leverage
-  the caching of the instructions.  Other advantages are non--obvious,
-  to understand them, we need to see how the problem gets recursively
-  divided.  For simplicity, we will assume that the number of
-  available threads is a power of $2$, the same approach can be taken
-  for an arbitrary number of available threads.  However, in practice,
-  best divisions can be obtained if $T$ is a product of small primes.
-  Our implementation limits $T$ to be product of $2,3,5$ and $7$.
-
-
-  \subsection{Serial algorithm}
-
-  In this section we describe both the serial vectorized approach to
-  computing the forward and backward pass as well as a parallel
-  algorithm that combines these serial primitives.
-
-  As described before, we keep two copies of the kernels in two
-  different memory layouts, one suitable for both the forward and
-  backward pass computation.  Our algorithm is supports implicit zero
-  padding, hence both the forward and backward pass can be computed
-  using the same algorithm.
-
-  \subsection{Cache, etc...}
-
-  In order to be portable, our algorithm doesn't assume any specific
-  size of available caches.  However it assumes that small $L1$ data
-  cache is present, able to fit $2 \times S \times R$ floats.  $R$
-  represents the number of available SIMD registers.  This is true for
-  all commercially available CPUs.
-
-  Also, we assume presence of higher levels of cache (L2,L3), however,
-  our algorithm is oblivious to the size of the cache.  Having more
-  cache will, however improve the performances of the algorithm.
+  We support implicit padding along an arbitrary of dimensions by
+  modifying the lines 8--10 of
+  Algorithm~\ref{alg:serial-forward-subtask}.  Instead of looping over
+  all possible kernel offsets, for each invocation of the primitive,
+  we provide additional runtime parameters, a pre--computed limits,
+  for which the kernels offset are valid.

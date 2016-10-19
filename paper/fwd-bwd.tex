@@ -80,10 +80,11 @@
     $\beta S$ images by performing $\alpha \beta S^2$
     convolutions on $\alpha S$ images.  The primitive is designed to
     efficiently utilize higher levels of cache (L2, L3).
-  \item {\bf Full layer primitive} -- a static scheduler that divides
-    the computation into above primitives and assigns each available
-    core one or more such primitives.  The goal is to evenly divide
-    the computation among available cores.
+  \item {\bf Full layer primitive} -- parallelized and statically
+    scheduled primitive that divides the computation into above
+    primitive and assigns each available core one or more such
+    primitives.  The goal is to evenly divide the computation among
+    available cores.
   \end{enumerate}
 
   We proceed to describe each primitive in details.

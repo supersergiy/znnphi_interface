@@ -1,21 +1,12 @@
-%\documentclass[10pt,twocolumn]{article}
 \tolerance=10000
 
-\documentclass[10pt, conference, compsocconf]{./IEEEtran/IEEEtran}
-%\documentclass[conference,compsoc]{IEEEtran}
-
-% \documentclass{article}
-
-% \usepackage[final]{nips_2016}
-
-%\usepackage[utf8]{inputenc} % allow utf-8 input
-%\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\documentclass[conference]{./IEEEtran/IEEEtran}
 \usepackage{hyperref}       % hyperlinks
 \usepackage{url}            % simple URL typesetting
+\usepackage{breakurl}
 \usepackage{booktabs}       % professional-quality tables
 \usepackage{amsfonts}       % blackboard math symbols
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
-%\usepackage{microtype}      % microtypography
 \usepackage{listings}
 \usepackage{amssymb}
 \usepackage{amsmath}
@@ -23,51 +14,20 @@
 \usepackage{mathtools}
 \usepackage{lipsum}
 \usepackage{adjustbox}
-%\usepackage{array}
 \usepackage{booktabs}
 \usepackage{multirow}
+\def\UrlBreaks{\do\/\do-}
 
-\lstset { %
-    language=C++,
-    backgroundcolor=\color{black!5}, % set backgroundcolor
-    basicstyle=\scriptsize,% basic font setting
-    numbers=right,                    % where to put the line-numbers; possible values are (none, left, right)
-    numberstyle=\tiny\color{black},
-}
-
-\newcolumntype{R}[2]{%
-    >{\adjustbox{angle=#1,lap=\width-(#2)}\bgroup}%
-    l%
-    <{\egroup}%
-}
 \newcommand*\rot[1]{\rotatebox[origin=c]{90}{#1}}
-
 
 \usepackage{ifthen}
 \usepackage{color}
 \usepackage{xcolor}
-%\usepackage{sourcecodepro}
-%\usepackage{overpic}
 \usepackage[]{algorithm}
 \usepackage{clrscode4e}
-%\usepackage{xspace}
-%\usepackage[small,compact]{titlesec}
 \usepackage[small]{caption}
 \usepackage{subcaption}
 \usepackage{url}
-
-%\usepackage[pdftex]{graphicx}
-
-
-%\usepackage{inconsolata}
-%\usepackage{zi4}
-%\usepackage[T1]{fontenc}
-%\usepackage{pifont}
-%\usepackage{algorithm}
-%\usepackage[noend]{algpseudocode}
-%\usepackage{multicol}
-%\usepackage{hyperref}
-
 
 \newboolean{showcomments}
 \setboolean{showcomments}{true}
@@ -98,7 +58,6 @@
 
 \title{Compile--Time Optimized and Statically Scheduled N--D ConvNet
   Primitives for Multi--Core and Many--Core (Xeon Phi) CPUs }
-%\thispagestyle{empty}
 
 
 \author{\IEEEauthorblockN{Aleksandar Zlateski\IEEEauthorrefmark{1}, H
@@ -140,7 +99,7 @@
   implementation (MKL2017), while it greatly outperforms for image
   segmentation ConvNets.  Finally, for 3D networks we show competitive
   performances to the latest cuDNN libraries running on latest GPU
-  hardware with only half FLOPS available.
+  hardware, while having only half the FLOPS available.
 
 \end{abstract}
 \setlength{\belowcaptionskip}{-15pt}
@@ -156,9 +115,7 @@
 \input{conclusion}
 %\input{1dconvnet}
 
-%\clearpage
-{\small
-\bibliography{IEEEabrv,znnphi}
+\clearpage
 \bibliographystyle{./IEEEtran/IEEEtranBST/IEEEtran}
-}
+\bibliography{IEEEabrv,znnphi}
 \end{document}

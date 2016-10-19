@@ -16,6 +16,21 @@
   is the kernel from the $i^{th}$ image in an input tuple to the
   $j^{th}$ image in an output tuple.
 
+
+  And for the backward pass
+
+  \[
+  \frac{\partial L}{\partial I_{b,i}} = \sum_{j=1}^{f'}
+  \frac{\partial L}{\partial O_{b,j}} \star w_{ji}
+  \]
+
+  Update
+
+  \[
+  \frac{\partial L}{\partial w_{j,i}} = \sum_{b=1}^B I_{b,i} \ast
+    \frac{\partial L}{\partial O_{b,j}}
+  \]
+
   We will assume 3D images and kernels.  If $I_{s,i}$ has size
   $\vec{n} = \angled{n_x, n_y, n_z}$ and $w_{ji}$ has size $\vec{k} =
   \angled{k_x,k_y,k_z}$, then we can regard $I$ as a 5D tensor of size
@@ -29,9 +44,6 @@
   shape and output shape depends on kernel size as in
   Table~\ref{table:layers_complexity}.
 
-
-
-  The forward pass processes
 
 \subsection{Data layout}
 
@@ -63,26 +75,3 @@
   will have more elements, and thus require more memory than the
   original tensor.  However, nearly all modern ConvNets~\aleks{Cite
     alex-net, googlelenet, oxfordnet} have $C$ as a multiple of $16$.
-
-  $1/2$ aleksa $\mod$
-
-
-
-  \[
-  O_{b,j} = \sum_{i=1}^f I_{b,i} \ast w_{ji}
-  \]
-
-  And for the backward pass
-
-  \[
-  \frac{\partial L}{\partial I_{b,i}} = \sum_{j=1}^{f'}
-  \frac{\partial L}{\partial O_{b,j}} \star w_{ji}
-  \]
-
-  Update
-
-
-  \[
-  \frac{\partial L}{\partial w_{j,i}} = \sum_{b=1}^B I_{b,i} \ast
-    \frac{\partial L}{\partial O_{b,j}}
-  \]

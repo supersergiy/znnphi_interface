@@ -1,61 +1,42 @@
 \section{Forward and backward propagation}
 
-  There are two main differences between the forward and backward pass
-  computation.  While the forward pass computes convolutions, the
-  backward pass computes cross--correlations.  Performing a
-  cross--correlation is equivalent to performing a convolution with
-  kernel that is reflected along all dimensions.  Secondly, during the
-  forward pass the convolution is performed only for locations where
-  the kernel is fully contained inside the image\footnote{This is
-    known as a \texttt{valid} convolution in MATLAB.}.  Thus, the
-  output image has dimensions smaller or equal to the input image.  In
-  the backward pass, \texttt{full} convolution/cross--correlation is
-  performed.  Image size increases because an output voxel exists
-  whenever the sliding window has some overlap with the input image.
-
-  Given an algorithm for the forward pass, a backward pass can be
-  implemented by (1) reflecting the kernels along all directions, thus
-  converting cross--correlation to convolution, and (2) zero--padding
-  the input image such that \texttt{valid} convolution becomes
-  \texttt{full} convolution.
+  As highlighted in Section~\ref{sec-conv-labels}, the forward pass
+  algorithm can be used for the backward pass if we (1) reflecting the
+  kernels along all directions, thus converting convolution to
+  cross--correlation, and (2) zero--pad the input image such that
+  \texttt{valid} cross--correlation becomes \texttt{full}
+  cross--correlation.
 
   We propose an algorithm for the forward pass that can handle an
   arbitrary zero padding of input image, thus the same algorithm can
-  be used for the backward pass.  We assume that two copies of kernels
-  are stored - original and reflected.  Both sets of kernels will be
-  updated during the update phase.  This is reasonable because the
-  memory required for kernels is typically much smaller than the
-  memory required for the images.  Updating both sets of kernels
-  instead of just one introduces very little overhead for the update
-  phase, while allowing the reuse of the same algorithm for both the
-  forward and backward computation.
+  be used for the backward pass with no overhead.  As previously
+  stated, we assume that two copies of kernels are stored - original
+  and reflected.  This is reasonable because the memory required for
+  kernels is typically much smaller than the memory required for the
+  images.
 
   We will refer to the algorithm as the fwd-bwd algorithm.  Also,
   we'll refer to both the input/output images of the forward pass and
-  the input/output gradients of the backward pass as
-  \emph{input/output images}.  For simplicity, we will describe the
-  details of the algorithm for the special case of 3D images.  Higher
-  dimensions require adding an additional for loop in all of our
-  primitives.
+  the output/input gradients of the backward pass as
+  \emph{input/output images}.
 
   \subsection{Algorithm overview}
 
-  The result the computation of the fwd-bwd algorithm is $B$ sets of
-  $F$ (or $F'$) $N$--dimensional images that can be represented as a
-  $N+2$ dimensional tensor.  Computing the value of each element of
-  the tensor is independent.  We assume that both $F$ and $F'$ are
-  divisible by $S$, where $S$ is the width of the vector register.  On
-  AVX2 enabled CPUs, $S$ is 8, and on AVX512, $S$ equals to 16.  This
-  is reasonable as all state of the art networks for both registration
-  and segmentation have both $F$ and $F'$ being a large multiple of
-  $2$~\cite{krizhevsky2012imagenet, ronneberger2015u,
+  For our fwd--bwd algorithm, we will assume that both $F$ and $F'$
+  are divisible by $S$, where $S$ is the width of the vector register.
+  On AVX2 enabled CPUs, $S$ is 8, and on AVX512, $S$ equals to 16.
+  This is reasonable as all state of the art networks for both
+  registration and segmentation have both $F$ and $F'$ being a large
+  multiple of $2$~\cite{krizhevsky2012imagenet, ronneberger2015u,
     simonyan2014very, sermanet2013overfeat, long2015fully,
     tran2015learning, ji20133d, maturana_iros_2015,
     maturana_icra_2014}.  An arbitrary number of images is supported
   by simply adding zero--initialized dummy images.  As both $F$ and
   $F'$ are relatively large, this would not introduce much
   computational overhead.  In further notation we will have $F =
-  \alpha S$ and $F' = \alpha' S$.
+  \alpha S$ and $F' = \alpha' S$.  In our public repo, however, we
+  also provide the implementation for this specific case that has no
+  overhead.
 
   Our algorithm consists of a stack primitives with increasing
   complexity.  Each more complex primitives uses the less complex ones

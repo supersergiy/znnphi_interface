@@ -1,4 +1,5 @@
 \section{Convolutional layers}
+\label{sec-conv-layers}
 
   We quickly summarize the computation performed by the convolutional
   layers.  In the forward propagation pass of a convolutional layer a
@@ -68,14 +69,20 @@
   backward pass.
 
   We will assume 3D images and kernels, even though our approach is
-  generalizable to ND images.  If $I_{b,i}$ has size $\vec{N} =
-  \angled{N_x, N_y, N_z}$ and $W_{ji}$ has size $\vec{K} =
-  \angled{K_x,K_y,K_z}$, then we can regard $I$ and $GI$ as a 5D
-  tensors of size $B \times F \times N_x \times N_y \times N_z$, $W$
-  and $GW$ as a 5D tensor of size $F' \times F \times K_x \times K_y
-  \times K_z$, and $I'$ and $GI'$ as a 5D tensor of size $B \times F'
-  \times N_x' \times N_y' \times N_z'$, where $\vec{N}' = \vec{N} -
-  \vec{K} + \vec{1}$.
+  generalizable to ND images.  The choice of 3D was made because we
+  believe that it provides enough insight to the reader to recognize
+  the patterns in our algorithms' design, allowing him to extend the
+  algorithms to an arbitrary number of dimensions.  We think that
+  describing the generic algorithm would make the..... FINISH THIS
+
+
+  If $I_{b,i}$ has size $\vec{N} = \angled{N_x, N_y, N_z}$ and
+  $W_{ji}$ has size $\vec{K} = \angled{K_x,K_y,K_z}$, then we can
+  regard $I$ and $GI$ as a 5D tensors of size $B \times F \times N_x
+  \times N_y \times N_z$, $W$ and $GW$ as a 5D tensor of size $F'
+  \times F \times K_x \times K_y \times K_z$, and $I'$ and $GI'$ as a
+  5D tensor of size $B \times F' \times N_x' \times N_y' \times N_z'$,
+  where $\vec{N}' = \vec{N} - \vec{K} + \vec{1}$.
 
 \section{Problem definition and motivation}
 

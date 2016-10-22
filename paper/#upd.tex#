@@ -128,7 +128,7 @@
    {\bf Full kernel primitive} computes $S^2$ kernel gradients by
    cross--correlating each of $S$ images with $S$ gradients.  The
    computation is performed in two steps.  First, the gradients are
-   split into sub--gradients of size $1 \times 1 \times I_X'$.  The
+   split into sub--gradients of size $1 \times 1 \times X$.  The
    result is then obtained as the sum of cross--correlations of each
    of the sub--gradients with an appropriate sub--image, as depicted
    on Fig~\ref{conv-decomposition} (middle column).

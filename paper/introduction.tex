@@ -18,6 +18,14 @@
   are surprised to see that the GPU implementations have higher
   utilization of the \% FLOPs/s available, compared to the CPU.
 
+  The amount of computation required by the convolutional layers of a
+  ConvNet grows as a square of the number of channels (images).  In
+  contrast, other types of layers require linear amount of operations
+  per output image.  State of the art networks have convolutional
+  layers with anywhere from $64$ to $1024$ images.  This means that
+  $98.5\%$ up to $99.9\%$ of the computation is in the convolutional
+  layers.  It is therefore most important to speed up these layers.
+
   Reducing convolution to matrix multiplication has been a popular
   approach due to the availability of highly efficient matrix
   multiplication routines.  This approach has, however, both a
@@ -65,71 +73,25 @@
   suggests that ConvNets with smaller kernels, and larger number of
   layers perform better on nearly all problems. (Cite).
 
-  \subsection{GPUs vs CPUs}
+  %% \subsection{GPUs vs CPUs}
 
-  GPUs have streaming multiprocessors, while the CPUs have in--order,
-  memory coherent cores.
+  %% GPUs have streaming multiprocessors, while the CPUs have in--order,
+  %% memory coherent cores.
 
-  GPUs model is so called SIMT (single instruction multiple
-  threads)... dwell on it..
+  %% GPUs model is so called SIMT (single instruction multiple
+  %% threads)... dwell on it..
 
-  CPUs on the other side have a complex structure of many cores and
-  virtual cores, many cache layers and each core capable of performing
-  SIMD instructions on up to 16 floating point numbers.
+  %% CPUs on the other side have a complex structure of many cores and
+  %% virtual cores, many cache layers and each core capable of performing
+  %% SIMD instructions on up to 16 floating point numbers.
 
-  In this paper we are not trying to answer the GPU vs CPU question,
-  but rather propose an algorithm and implementation for ConvNet
-  primitives that can utilize very high percentage of the theoretical
-  peak performance of both many--core (Xeon Phi) and multi--core
-  (Xeon) CPUs.  As shown later, our algorithm performs well on
-  multi--chip systems as well.
+  %% In this paper we are not trying to answer the GPU vs CPU question,
+  %% but rather propose an algorithm and implementation for ConvNet
+  %% primitives that can utilize very high percentage of the theoretical
+  %% peak performance of both many--core (Xeon Phi) and multi--core
+  %% (Xeon) CPUs.  As shown later, our algorithm performs well on
+  %% multi--chip systems as well.
 
-  \subsection{Mulit--core vs Many--core}
+  %% \subsection{Mulit--core vs Many--core}
 
-  Explain the differences NUMA, caches, etc..
-
-  \subsection{Motivation}
-
-  Modern CPUs can achieve high performances under very special
-  circumstances.  Mainly, each core of modern CPUs has up to two FMA
-  vector units that are capable of performing $2S$ floating point
-  instructions per cycle.  Here, $S$ is the width of the vector
-  register (how many floating point numbers fit inside the register).
-  The peak performace of a single core is then reached when, in each
-  cycle, all available FMA units perform a fused multiply--add
-  operation whith the input stored in the register file.
-  Additionally, each CPU has a different latency of the FMA units.
-  This means that the result of the computation is not immidiately
-  available, but rather after $c$ cycles, where $c$ is the latency of
-  the unit.  To fully utilize the $n$ FMA units, a program must
-  continiously issue FMA instructions such that no $nc$ consecutive
-  instructions are dependent (a result of one instruction is an input
-  for some other one).  Modern compilers are aware of these
-  limitations, and will try to assemble the code in the most optimal
-  way.
-
-  Loading data from memory to a register introduces an additional
-  overhead.  Thus, to achieve high performance, one must minimize such
-  data transfers and re--use data in the register file as much as
-  possible.  Furthermore, fast loading of data from memory requires
-  additional constraints.  Fast loading $S$ values into a vector
-  register requires the values to be consecutive and properly aligned
-  in memory.
-
-  Efficiently utilizing CPUs with multiple cores introduce an
-  additional constraint.  In order to fully utilize all available
-  cores, they must perform independent computation and minimize
-  synchronization.  A core shouldn't wait for a result computed by
-  another core.
-
-  Because of these constraints, the naive way of computing
-  convolutions is very inefficient.  Designing an algorithm that
-  follows all the constraints is challenging.  To design such
-  algorithm, we are motivated by the following two principles.  First,
-  we divide computation into small sub--tasks.  We provide a
-  relatively simple implementation for each task so that the compiler
-  can generate optimal machine code.  Secondly, the computation will
-  be evenly distributed among the available cores, such that each core
-  does an equal amount of work.  This minimal synchronization is
-  necessary and each core can start and ends the computation at the
-  same time.
+  %% Explain the differences NUMA, caches, etc..

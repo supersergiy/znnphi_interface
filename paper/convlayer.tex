@@ -1,77 +1,205 @@
 \section{Convolutional layers}
 
-  We begin by describing the computation performed during the forward,
-  backward and the update pass of a convolutional layer.
-
-  In the forward pass of a convolutional layer a tuple of $f$ images
-  are transformed into another tuple of $f'$ images.  We want to
-  process a batch of $S$ inputs to yield a batch of $S$ outputs, via
+  We quickly summarize the computation performed by the convolutional
+  layers.  In the forward propagation pass of a convolutional layer a
+  tuple of $F$ images are transformed into another tuple of $F'$
+  images.  We want to process a batch of $B$ inputs to yield a batch
+  of $B$ outputs, via
   \[
-  O_{s,j} = \sum_{i=1}^f w_{ji}\ast I_{s,i}
+  I'_{b,j} = \sum_{i=1}^F I_{b,i} \star W_{ji}
   \]
-
-  for $1 \le s \le S$ and $1 \le j \le f'$.  Here $I_{s,i}$ is the
-  $i^{th}$ image of the $s^{th}$ input in the batch, and $O_{s,j}$ is
-  the $j^{th}$ image of the $s^{th}$ output in the batch, and $w_{ji}$
+  for $1 \le b \le B$ and $1 \le j \le F'$.  Here $I_{b,i}$ is the
+  $i^{th}$ image of the $b^{th}$ input in the batch, and $I'_{b,j}$ is
+  the $j^{th}$ image of the $b^{th}$ output in the batch, and $W_{ji}$
   is the kernel from the $i^{th}$ image in an input tuple to the
   $j^{th}$ image in an output tuple.
 
-
-  And for the backward pass
-
+  In the backward propagation pass, a tuple of $F'$ gradients of the
+  loss with respect to the outputs are transformed into a tuple of $F$
+  gradients of the loss with respect to the input.  We process a batch
+  of $B$ tuples, via
   \[
   \frac{\partial L}{\partial I_{b,i}} = \sum_{j=1}^{f'}
-  \frac{\partial L}{\partial O_{b,j}} \star w_{ji}
+  \frac{\partial L}{\partial I'_{b,j}} \ast W_{ji}
   \]
+  for $1 \le b \le B$ and $1 \le i \le F$.  Here $\frac{\partial
+    L}{\partial I'_{b,j}}$ is the $j^{th}$ gradient of the loss with
+  respect to the output of the $b^{th}$ input in the batch, and
+  $\frac{\partial L}{\partial I_{b,i}}$ is the $i^{th}$ gradient of
+  the loss with respect to the input of the $b^{th}$ input in the
+  batch.
 
-  Update
-
+  Finally, in the update phase, the gradients of the loss with respect
+  to the kernels are computed via,
   \[
-  \frac{\partial L}{\partial w_{j,i}} = \sum_{b=1}^B I_{b,i} \ast
-    \frac{\partial L}{\partial O_{b,j}}
+  \frac{\partial L}{\partial W_{j,i}} = \sum_{b=1}^B
+  \frac{\partial L}{\partial I'_{b,j}}  \star I_{b,i}
   \]
+  for $1 \le i \le F$ and $1 \le j \le F'$.
 
-  We will assume 3D images and kernels.  If $I_{s,i}$ has size
-  $\vec{n} = \angled{n_x, n_y, n_z}$ and $w_{ji}$ has size $\vec{k} =
-  \angled{k_x,k_y,k_z}$, then we can regard $I$ as a 5D tensor of size
-  $S \times f \times n_x \times n_y \times n_z$, $w$ as a 5D tensor of
-  size $f' \times f \times k_x \times k_y \times k_z$, and $O$ as a 5D
-  tensor of size $S \times f' \times n_x' \times n_y' \times n_z'$,
-  where $\vec{n}' = \vec{n} - \vec{k} + \vec{1}$.
+  In the forward pass and the update phase, so called \texttt{valid}
+  discrete cross--correlation is performed.  The output of a
+  \texttt{valid} cross--correlation $A \star B$ is computed only for
+  the locations where $A$ is fully contained in $B$ or vice versa.
+  For instance, if the input image has size $n^3$ and the kernel has
+  size $k^3$, then the output image has size $n'^3 = (n-k+1)^3$.  In
+  the backward pass \texttt{full} discrete convolution is performed.
+  The output is calculated for all locations of the kernel that have
+  some overlap with the input.
 
-  We will refer to the sizes of the 5D tensors $I$ and $O$ as input
-  and output shape, respectively.  The relationship between input
-  shape and output shape depends on kernel size as in
-  Table~\ref{table:layers_complexity}.
+  Here, we focus on computing these convolutions and
+  cross--correlations efficiently.  No further knowledge of the roles
+  of the values computed during the three passes are required to
+  understand the problem and the contributions in this paper.
 
+  Gradients of the loss with respect to the input/output/kernels are
+  as well $N$--dimensional images of the same size as the
+  input/output/kernels.  For simplicity, in the rest of the writeup we
+  will refer to them simply as input/output/kernel gradients and use
+  notation of $GI, GI', GW$.
 
-\subsection{Data layout}
+  Convolving of an image $I$ with a kernel $W$ is equivalent to
+  cross--correlating it with the transposed kernel ($W^T$).  A
+  transposed $N$--dimensional image is an image that is reflected
+  along all $N$ dimensions.  Performing \texttt{full}
+  cross--correlation (or convolution) can be accomplished by
+  performing \texttt{valid} convolution on a zero--padded image.
+  Thus, same algorithm can be used for both the forward and the
+  backward pass.
 
-  Both the input and output of both the forward pass and backward pass
-  of an $N$--dimensional convolutional layer can be represented as
-  $(N+2)$ dimensional tensor.  The pixel at $(x_1,x_2,\dots,x_N)$ of
-  $c^{th}$ image in the batch $b$ is located at
-  $(b,c,x_1,x_2,\dots,x_N)$
+  We will assume 3D images and kernels, even though our approach is
+  generalizable to ND images.  If $I_{b,i}$ has size $\vec{N} =
+  \angled{N_x, N_y, N_z}$ and $W_{ji}$ has size $\vec{K} =
+  \angled{K_x,K_y,K_z}$, then we can regard $I$ and $GI$ as a 5D
+  tensors of size $B \times F \times N_x \times N_y \times N_z$, $W$
+  and $GW$ as a 5D tensor of size $F' \times F \times K_x \times K_y
+  \times K_z$, and $I'$ and $GI'$ as a 5D tensor of size $B \times F'
+  \times N_x' \times N_y' \times N_z'$, where $\vec{N}' = \vec{N} -
+  \vec{K} + \vec{1}$.
 
-  Similarly, the kernels can also be represented as $(N+2)$
-  dimensional tensor, where the $(x_1,x_2,\dots,x_N)$ element of the kernel
+\section{Problem definition and motivation}
+
+  Each element $I'(b,f',n_x',n_y',n_z')$ of the tensor computed via
+  {\footnotesize
+  \[
+  \sum_{f} \sum_{k_x} \sum_{k_y} \sum_{k_z}
+  I(b,f,x+k_x,y+k_y,z+k_z) \cdot W(f',f,k_x,k_y,k_z)
+  \]
+  } Computing all the output images can be easily implemented as 9
+  nested loops over $b,f',n_x',n_y',n_z',f,k_x,k_y,k_z$, with an
+  arbitrary nesting order.  In the innermost loop, one multiplication
+  and one addition is performed.  Thus, we need total of
+  $2BFF'N_x'N_y'N_z'K_zK_yK_z$ floating point operations (FLOPs) to
+  compute the result.  We implemented such approach in C++ and
+  measured the speed of the implementation in GFLOPS (Giga FLOPS per
+  second) by dividing the FLOPs required by the time taken to perform
+  the computation.  While running on a CPU core capable of $80$
+  GFLOPS, the average measured speed was $0.87$ GFLOPS -- less than
+  $1.1\%$ utilization.  The code was compiled using all optimization
+  switches including the ones enabling AVX2 and FMA that were
+  available.
+
+  This come as no surprise, as modern CPUs can achieve high
+  performances only under very special circumstances.  Mainly, each
+  core of modern CPUs has up to two FMA vector units each of which is
+  capable of performing $2S$ floating point instructions per cycle via
+  a fused multiply--add operation ($y = a\cdot x + b$).  Here, $S$ is
+  the width of the vector register (how many floating point numbers
+  fit inside the register).  The peak performance of a single core is
+  then reached when, in each cycle, all available FMA units perform a
+  fused multiply--add operation with the input stored in the register
+  file.  Additionally, each CPU has a different latency of the FMA
+  units.  This means that the result of the computation is not
+  immediately available, but rather after $l$ cycles, where $l$ is the
+  latency of the unit.  To fully utilize the $n$ FMA units, a program
+  must continuously issue FMA instructions such that no $nc$
+  consecutive instructions are dependent (a result of one instruction
+  is an input for some other one).  Modern compilers are aware of
+  these limitations, and will try to assemble the code in the most
+  optimal way.
+
+  Loading data from memory to a register introduces an additional
+  overhead.  Thus, to achieve high performance, one must minimize such
+  data transfers and re--use data in the register file as much as
+  possible.  Furthermore, to speedup the loading of data from memory
+  to the register requires the data to be properly aligned in memory.
+
+  Our first motivation comes from the fact that there is a room of $90
+  \times$ improvement of the serial algorithm over the naive approach.
+  A bit about the solution for the serial algo.
+
+  Efficiently utilizing CPUs with multiple cores introduce an
+  additional constraint.  In order to fully utilize all available
+  cores, they must perform independent computation and minimize
+  synchronization.  A core shouldn't wait for a result computed by
+  another core.
+
+  Because of these constraints, the naive way of computing
+  convolutions is very inefficient.  Designing an algorithm that
+  follows all the constraints is challenging.  To design such
+  algorithm, we are motivated by the following two principles.  First,
+  we divide computation into small sub--tasks.  We provide a
+  relatively simple implementation for each task so that the compiler
+  can generate optimal machine code.  Secondly, the computation will
+  be evenly distributed among the available cores, such that each core
+  does an equal amount of work.  This minimal synchronization is
+  necessary and each core can start and ends the computation at the
+  same time.
+
+  A bit about the motivation and solution of the parallel algo
+
+\section{Data layout and notation}
 
   To efficiently use FMA instructions we use data layout as proposed
   in~\cite{jeffers2016knl, cpu-myth}, except that we generalize it for
-  N--dimensional case.
+  N--dimensional case.  {\bf We encourage the reader to get a good
+    understanding of our data layout before proceeding to the next
+    section.}
 
-  Instead of using $(N+2)$ dimensional tensor for the input/output
-  images we use a $(N+3)$ dimensional tensor such that the element
-  $(b,c,x_1,x_2,\dots,x_N)$ of the original tensor is mapped to an
-  element $(b,\floor{c/S},x_1,x_2,\dots,x_N,c \mod S + 1)$.  This new
-  tensor size of $B \times \floor{C/S} \times X_1 \times X_2 \times
-  \dots \times X_N \times S$.
+  All the tensors are stored as row--major multi--dimensional, packed
+  an properly aligned arrays in memory.  To distinguish memory arrays
+  from tensors we will use lower letters to refer to them, and C++
+  like syntax to refer to a particular element.
 
-  $S$ denotes the length of the CPU's SIMD register in terms of number
-  of floats it can store.  This is one of very few parameters required
-  to specify when compiling our code for different CPUs.  In the case
-  of Haswell and Skylake $S$ equals to $8$ and the Knights Landing has
-  $S=16$.  Note that when $C$ is not divisible by $S$, the new tensor
-  will have more elements, and thus require more memory than the
-  original tensor.  However, nearly all modern ConvNets~\aleks{Cite
-    alex-net, googlelenet, oxfordnet} have $C$ as a multiple of $16$.
+  {\bf Image and their gradient tensors} are stored as 6--dimensional
+  arrays in memory.  An image tensor of size $B \times F \times X
+  \times Y \times Z$ is stored as an array of size $B \times
+  \ceil{F/S} \times X \times Y \times Z \times S$.  Here $S$ is the
+  size of the CPU's vector register.  An tensor element $I(b,f,x,y,z)$
+  corresponds to the array element
+  $i\sqb{b}\sqb{\floor{f/S}}\sqb{x}\sqb{y}\sqb{z}\sqb{f\mod S}$
+
+  We maintain two copies of the {\bf kernel tensor} in memory -- a
+  regular and transposed form.  For a kernel tensor of size $F' \times
+  F \times K_x \times K_y \times K_z$ both memory arrays have size
+  $\ceil{F'/S} \times \ceil{F/S} \times K_X \times K_Y \times K_Z
+  \times S \times S$.  A tensor element $W(f',f,k_x,k_y,k_z)$ is
+  stored in $w\sqb{\floor{f'/S}}
+  \sqb{\floor{f/S}}\sqb{k_x}\sqb{k_y}\sqb{k_z}\sqb{f\mod S}\sqb{f'
+    \mod S}$ in one of the arrays, and in $w^T\sqb{\floor{f'/S}}
+  \sqb{\floor{f/S}}\sqb{K_x-k_x}\sqb{K_y-k_y}\sqb{K_z-k_z}\sqb{f'\mod
+    S}\sqb{f\mod S}$
+
+  Whenever the kernel tensors are updated, both representation in
+  memory are modified.  This introduces a negligible overhead, as
+  updating kernel tensors counts as a miniscule part of the total
+  computation.  Having two copies, however, allows us to reuse the
+  same algorithm for the forward and backward propagation.
+
+  The kernel gradients computed during the update phase are stored
+  only in the transposed form.
+
+  Locating a memory array element in the linear address space is done
+  by providing ``strides'' for each dimension and the location of the
+  origin (address element at $[0][0]\dots[0]$).  A stride represents
+  the linear distance in memory between two adjacent element along
+  that dimension.  Given the strides, one can easily represent a
+  sub--array by providing a new origin -- zeroth element of the
+  sub--array.
+
+  We will use a term sub--tensor to refer to a subset of a tensor with
+  the same number or less dimensions.  The memory representation of a
+  sub--tensor is then just represented as an additional pointer to the
+  new origin inside the memory array representing the original array.
+  Thus, any mention of sub--tensors and sub--arrays doesn't imply any
+  memory copying.

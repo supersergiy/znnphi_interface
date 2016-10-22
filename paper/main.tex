@@ -29,6 +29,8 @@
 \usepackage{subcaption}
 \usepackage{url}
 
+\captionsetup[algorithm]{font=footnotesize}
+
 \newboolean{showcomments}
 \setboolean{showcomments}{true}
 
@@ -48,6 +50,7 @@
 \DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
 \DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
 \DeclarePairedDelimiter{\angled}{\langle}{\rangle}
+\DeclarePairedDelimiter{\sqb}{\big[}{\big]}
 
 
 \begin{document}
@@ -99,7 +102,7 @@
   of half the FLOPS of the GPU.
 
 \end{abstract}
-\setlength{\belowcaptionskip}{-15pt}
+\setlength{\belowcaptionskip}{-10pt}
 
 \input{introduction}
 \input{convlayer}

@@ -80,4 +80,14 @@ do_plot('d3d', 'upd', 'haswell', 2.5*32)
 do_plot('d3d', 'fwd', 'haswell', 2.5*32)
 
 do_plot('d3d', 'fwd', 'knl', 1.1*64)
+do_plot('d3d', 'upd', 'knl', 1.1*64)
 
+
+do_plot('toy', 'upd', 'skylake', 128)
+do_plot('toy', 'fwd', 'skylake', 128)
+
+do_plot('toy', 'upd', 'haswell', 2.5*32)
+do_plot('toy', 'fwd', 'haswell', 2.5*32)
+
+do_plot('toy', 'fwd', 'knl', 1.1*64)
+do_plot('toy', 'upd', 'knl', 1.1*64)

@@ -1,6 +1,6 @@
 \section{Forward and backward propagation}
 
-  As highlighted in Section~\ref{sec-conv-labels}, the forward pass
+  As highlighted in Section~\ref{sec-conv-layers}, the forward pass
   algorithm can be used for the backward pass if we (1) reflecting the
   kernels along all directions, thus converting convolution to
   cross--correlation, and (2) zero--pad the input image such that
@@ -34,29 +34,29 @@
   by simply adding zero--initialized dummy images.  As both $F$ and
   $F'$ are relatively large, this would not introduce much
   computational overhead.  In further notation we will have $F =
-  \alpha S$ and $F' = \alpha' S$.  In our public repo, however, we
-  also provide the implementation for this specific case that has no
-  overhead.
+  \alpha S$ and $F' = \alpha' S$.  In our public repository, however,
+  we also provide the implementation for this specific case that has
+  no overhead.
 
   Our algorithm consists of a stack primitives with increasing
   complexity.  Each more complex primitives uses the less complex ones
   to perform more complex computation.  Before describing the details
   of each primitive, we list the primitives in the increasing order of
-  complexity toghether with main motivation and goal for each one.
+  complexity together with main motivation and goal for each one.
 
   \begin{enumerate}
   \item {\bf Sub--image primitive} -- a primitive that computes $S^2$
     convolutions on $S$ small images producing $S$ small images of
-    size $R_z, R_y, R_x$.  The goal of this primitive is to
+    size $R_x, R_y, R_z$.  The goal of this primitive is to
     efficiently re--use data in the register file as well as data in
     L1 cache.  The techinque used by the primitive is known as
     register blocking.
   \item {\bf Full image primitive} -- a primitive that computes $S^2$
-    convolutions on $S$ images of an arbitrary size, producing $S$
-    output images.  The primitives optimally divides the computation
-    into small blocks for which the previous primitive is used.  The
-    division and order of computation is designed for efficient use of
-    hardware pre--fetching.
+    convolutions on $S$ input images of an arbitrary size, producing
+    $S$ output images.  The primitives optimally divides the
+    computation into small blocks for which the previous primitive is
+    used.  The division and order of computation is designed for
+    efficient use of hardware pre--fetching.
   \item {\bf Sub--layer primitive} -- a primitive that computes
     $\beta S$ images by performing $\alpha \beta S^2$
     convolutions on $\alpha S$ images.  The primitive is designed to
@@ -73,39 +73,39 @@
   \begin{algorithm}
     {\footnotesize
       \begin{codebox}
-        \Procname{$\proc{Fwd-Bwd-Subtask} \langle \Theta, R_z, R_y, R_x, K_z, K_y, K_x \rangle(i,w,o,\theta)$}
-        \li \kw{simd float} $oreg[R_z][R_y][R_x]$
+        \Procname{$\proc{Fwd-Bwd-Subtask} \langle \Theta, R_x, R_y, R_x, K_x, K_y, K_z \rangle(i,w,o,\theta)$}
+        \li \kw{simd float} $oreg[R_x][R_y][R_z]$
         \li \kw{simd float} $wreg$
         \li \If $\Theta$ \Comment Static if
         \li \Then $oreg[:][:][:][:] \gets \theta$ \Comment Load bias
         \li \Else
         \li       $oreg[:][:][:][:] \gets \proc{LOAD}(o[:][:][:][:])$
         \End \li \kw{end if}
-        \li \kw{for} $k_z \gets 0 \To K_z-1$
+        \li \kw{for} $k_x \gets 0 \To K_x-1$
         \li   \Do \kw{for} $k_y \gets 0 \To K_y-1$
-        \li      \Do \kw{for} $k_x \gets 0 \To K_x-1$
-        \li         \Do \kw{for} $s \gets 0 \To S - 1$ \Comment Partially unrolled
-        \li         \Do $wreg \gets w[k_z][k_y][k_x][s][:]$
-        \li \kw{for} $z \gets 0 \To R_z-1$ \Comment Fully unrolled
+        \li      \Do \kw{for} $k_z \gets 0 \To K_z-1$
+        \li         \Do \kw{for} $f \gets 0 \To S - 1$ \Comment Partially unrolled
+        \li         \Do $wreg \gets w[k_x][k_y][k_z][f][:]$
+        \li \kw{for} $x \gets 0 \To R_x-1$ \Comment Fully unrolled
         \li   \Do \kw{for} $y \gets 0 \To R_y-1$ \Comment Fully unrolled
-        \li      \Do \kw{for} $x \gets 0 \To R_x-1$ \Comment Fully unrolled
-        \li         \Do $oreg[z][y][x] \gets \proc{FMADD}($
+        \li      \Do \kw{for} $z \gets 0 \To R_z-1$ \Comment Fully unrolled
+        \li         \Do $oreg[x][y][z][:] \gets \proc{FMADD}($
         \li       $wreg,$
-        \li       $\proc{EXLOAD}(i[z+k_z][y+k_y][x+k_x][s]),$
-        \li       $oreg[z][y][x][f])$
-        \End \li \kw{end for} $x$
-        \End \li \kw{end for} $y$
+        \li       $\proc{EXLOAD}(i[x+k_x][y+k_y][z+k_z][f]),$
+        \li       $oreg[x][y][z][:])$
         \End \li \kw{end for} $z$
-        \End \li \kw{end for} $s$
-        \End \li \kw{end for} $k_x$
-        \End \li \kw{end for} $k_y$
+        \End \li \kw{end for} $y$
+        \End \li \kw{end for} $x$
+        \End \li \kw{end for} $f$
         \End \li \kw{end for} $k_z$
+        \End \li \kw{end for} $k_y$
+        \End \li \kw{end for} $k_x$
         \li $o[:][:][:][:] \gets \proc{STORE}(oreg[:][:][:][:])$
       \end{codebox}
     \caption{The finest granularity primitive that computes a
-      sub--image of size $R_z \times R_y \times R_x$ of $S$ images by
-      performing $S^2$ convolutions on $S$ input images with a kernel
-      of size $K_z \times K_y \times K_x$.}
+      sub--image of size $R_x \times R_y \times R_z$ of $S$ images by
+      performing $S^2$ convolutions on $S$ input images with kernels
+      of size $K_x \times K_y \times K_z$.}
     \label{alg:serial-forward-subtask}
     }
   \end{algorithm}
@@ -116,23 +116,38 @@
   arguments inside the parenthesis are provided during run--time.
   This means that the same function with different compile--time
   arguments will be separately compiled and optimized by the compiler.
-  This is easily implemented using C++ templates.  Depending on the
+  With the loop bounds known during the compile time, the compiler is
+  able to perform loop unrolling as commented in the pseudocode.  This
+  is easily implemented using C++ templates.  Depending on the
   argument $\Theta$, the result of the convolution will be either
   accumulated to an image $o$, or the provided bias $\theta$ will be
   added to the result and the sum will be stored at $o$.
 
-  \begin{equation*}
-    O(b,f',z,y,x) = \sum_{f=0}^{F-1} \sum_{k_z=0}^{K_z-1}
-    \sum_{k_y=0}^{K_y-1} \sum_{k_x=0}^{K_x-1} I(b,f,z+k_z,y+k_y,z+k_x) \cdot W(f',f,k_z,k_y,k_x)
-  \end{equation*}
-
+  Taking into account the data layout and Equation~\ref{eqn:forward},
+  each value of the memory array $o[r_x][r_y][r_z][f']$ is computed
+  via
   {\footnotesize
-    \[
-    o[z][y][x][f'] = \sum_{s=0}^{S-1} \sum_{i=0}^{K_z-1}
-    \sum_{j=0}^{K_y-1} \sum_{k=0}^{K_x-1} i[z+i][y+j][x+k][s] \cdot
-    w[i][j][k][s][f']
-    \]
-  }
+  \[
+  \sum_{f} \sum_{k_x} \sum_{k_y} \sum_{k_z}
+  i[r_x+k_x][r_y+k_y][r_z+k_z][f] \cdot w[k_x][k_y][k_z][f][f']
+  \]
+  } Our data layout allows for natural vectorization over $f'$.  Such
+  that $S$ results $o[r_x][r_y][r_z][:]$ are computed by replacing the
+  scalar product to a scalar--vector product
+  {\footnotesize
+  \[
+  \sum_{f} \sum_{k_x} \sum_{k_y} \sum_{k_z}
+  i[r_x+k_x][r_y+k_y][r_z+k_z][f] \cdot w[k_x][k_y][k_z][f][:]
+  \]
+  } We recognize that the values $w[k_x][k_y][k_z][f][:]$ are used for
+  computing all $o[r_x][r_y][r_z][:]$ and reorder the computation such
+  that once $w[k_x][k_y][k_z][:]$ is loaded (line 12) from memory, it
+  is maximally re--used.
+
+  To allow the compiler to generate the code that uses register file
+  for storing
+
+
 
 
   Each element of $oreg$ contains $S$ values representing the values

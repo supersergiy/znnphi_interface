@@ -1,5 +1,4 @@
-\section{Convolutional layers}
-\label{sec-conv-layers}
+\section{Convolutional layers} \label{sec-conv-layers}
 
   We quickly summarize the computation performed by the convolutional
   layers.  In the forward propagation pass of a convolutional layer a
@@ -88,10 +87,11 @@
 
   Each element $I'(b,f',n_x',n_y',n_z')$ of the tensor computed via
   {\footnotesize
-  \[
+  \begin{equation}
   \sum_{f} \sum_{k_x} \sum_{k_y} \sum_{k_z}
-  I(b,f,x+k_x,y+k_y,z+k_z) \cdot W(f',f,k_x,k_y,k_z)
-  \]
+  I(b,f,n_x+k_x,n_y+k_y,n_z+k_z) \cdot W(f',f,k_x,k_y,k_z)
+  \label{eqn:forward}
+  \end{equation}
   } Computing all the output images can be easily implemented as 9
   nested loops over $b,f',n_x',n_y',n_z',f,k_x,k_y,k_z$, with an
   arbitrary nesting order.  In the innermost loop, one multiplication

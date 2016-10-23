@@ -203,7 +203,7 @@
 
   {\bf Full image primitive} \quad Our next primitive performs $S^2$
   convolution on $S$ images of an arbitrary size, producing $S$ output
-  images of size $I_z \times I_y \times I_x$.  This is done by
+  images of size $N_x' \times N_y' \times N_z'$.  This is done by
   dividing the output images into small sub--images
   (Fig~\ref{fig:conv-division} and using the primitive described
   above.  The size of each sub--image should be maximized, but is

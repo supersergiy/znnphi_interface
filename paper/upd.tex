@@ -1,30 +1,29 @@
 \section{Update phase}
 
-  %% \begin{figure*}
-  %%   \begin{minipage}[t][][b]{0.4\textwidth}
-  %%     \begin{center}
-  %%       \includegraphics[width=0.97\linewidth]{fig/static2}
-  %%     \end{center}
-  %%     \caption{Computing the values of $F'=3$ channels of 2D images of
-  %%       size $4 \times 3$ using $T=2$ threads.  The three columns
-  %%       represent three stages.  The dark blue/red represent the values
-  %%       scheduled to be computed by $1^{st}/2^{nd}$ core.}
-  %%     \label{fig:problem-subdivision}
-  %%   \end{minipage}
-  %%   \hspace{1ex}
-  %%   \begin{minipage}[t][][b]{0.50\textwidth}
-  %%     \resizebox{\textwidth}{!}{%
-  %%       \centering
-  %%       \includegraphics[width=0.87\linewidth]{fig/update2}
-  %%     }
-  %%     %\vspace{4.0ex}
-  %%     \caption{Decomposing cross--correlation.}
-  %%     \label{fig:conv-decomposition}
-  %%   \end{minipage}
-  %% \end{figure*}
+  While the forward and backward pass perform cross--correlations and
+  convolutions with a relatively large image with a small kernel
+  producing another relatively large image, the cross--correlations
+  performed during the update phase are performed on a large image
+  with another large image resulting in a small image.
 
-  Similarly as in the fwd--bwd algorithm, our update phase algorithm
+  The main difference between the cross--correlations performed during
+  the fwd-bwd pass and the update phase is that
+
+Similarly as in the fwd--bwd algorithm, our update phase algorithm
   consists of the following stack of primitives.
+
+  Instead of computing
+  \[
+  \frac{\partial L}{\partial W_{j,i}} = \sum_{b=1}^B
+  \frac{\partial L}{\partial I'_{b,j}}  \star I_{b,i}
+  \]
+  we compute
+  \[
+  \Bigg( \frac{\partial L}{\partial W_{j,i}} \Bigg)^T = \sum_{b=1}^B
+  I_{b,i} \star \frac{\partial L}{\partial I'_{b,j}}
+  \]
+
+  That is the $GW^T$ tensor.
 
   In the update phase, each of the $F$ input images from the previous
   forward pass is cross--correlated with each of the $F'$ gradients
@@ -62,28 +61,32 @@
   \begin{algorithm}
     {\footnotesize
       \begin{codebox}
-        \Procname{$\proc{Update-Subtask} \langle R_Z, R_Y, R_X, X, R_S \rangle(a,b,r)$}
-        \li \kw{simd register} $oreg[R_Z][R_Y][R_X][R_S]$
+        \Procname{$\proc{Update-Subtask} \langle R_x, R_y, R_z, Z, R_s \rangle(i,og,wg^T)$}
+        \li \kw{simd register} $oreg[R_x][R_y][R_z][R_s]$
         \li \kw{simd register} $wreg$
-        \li \For $s_0 \gets 0 \To S/R_S - 1$
-        \li \Do $oreg[:][:][:][:][:] \gets \proc{LOAD}(r[:][:][:][:][:])$
-        \li \For $i \gets 0 \To X-1$ \Comment Partially unrolled
-        \li   \Do $wreg \gets \proc{LOAD}(b[1][1][i][:])$
-        \li   \For $z \gets 0 \To R_Z-1$ \Comment Fully unrolled
-        \li   \Do \For $y \gets 0 \To R_Y-1$  \Comment Fully unrolled
-        \li   \Do \For $x \gets 0 \To R_X-1$  \Comment Fully unrolled
+        \li \For $s_0 \gets 0 \To S/R_s - 1$
+        \li \Do $oreg[:][:][:][s_0R_s:s_0R_s+R_s-1][:] \gets$
+        \li   \Do $\proc{LOAD}(wg^T[:][:][:][s_0R_s:s_0R_s+R_s-1][:])$
+        \End
+        \li \For $z_g \gets 0 \To Z-1$ \Comment Partially unrolled
+        \li   \Do $wreg \gets \proc{LOAD}(og[1][1][z_g][:])$
+        \li   \For $x \gets 0 \To R_x-1$ \Comment Fully unrolled
+        \li   \Do \For $y \gets 0 \To R_y-1$  \Comment Fully unrolled
+        \li   \Do \For $z \gets 0 \To R_z-1$  \Comment Fully unrolled
         \li   \Do \For $s_1 \gets 0 \To R_S-1$   \Comment Fully unrolled
-        \li   \Do $oreg[z][y][x][s_0 \cdot R_S + s] \gets \proc{FMADD}($
+        \li   \Do $oreg[x][y][z][s_0 \cdot R_s + s] \gets \proc{FMADD}($
         \li   \Do $wreg,$
-        \li       $\proc{EXLOAD}(a[z][y][x+i][s_0 \cdot R_S + s]),$
-        \li       $oreg[z][y][x][])$
+        \li       $\proc{EXLOAD}(i[x][y][z+i][s_0 \cdot R_s + s]),$
+        \li       $oreg[x][y][z][])$
         \End
         \End \li \kw{end for} $s$
         \End \li \kw{end for} $x$
         \End \li \kw{end for} $y$
         \End \li \kw{end for} $z$
         \End \li \kw{end for} $i$
-        \li $r[:][:][:][:][:] \gets \proc{STORE}(oreg[:][:][:][:][:])$
+        \li $wg^T[:][:][:][s_0R_s:s_0R_s+R_s-1][:] \gets$
+        \li \Do $\proc{STORE}(oreg[:][:][:][s_0R_s:s_0R_s+R_s-1][:])$
+        \End
         \End \li \kw{end for} $s_0$
       \end{codebox}
     \caption{Serial update subtask.}
@@ -92,30 +95,31 @@
   \end{algorithm}
 
   {\bf Sub--kernel primitive} \quad The lowest level primitive is
-  shown in Algorithm~\ref{alg:serial-update-subtask}.  Each of the $S$
-  images of size $R_Z \times R_Y \times (R_X + X - 1)$ stored in $a$
-  are convolved with $S$ images of size $1 \times 1 \times X$ stored
-  in $b$.  $R_S$ input images are considered at the time
-
-  The result is then accumulated into $r$.  As in the
-  fwd--bwd case we only allow $R_Z, R_Y, R_X$ and $R_S$ of certain
-  size such that the $oreg$ can fit inside the register file.  The 4
-  innermost loop are designed to maximize $L1$ cache hits, which can
-  be approximated to $\frac{1}{R_Z \times R_Y \times R_X \times R_S}
-  \approx \frac{1}{S}$.  This is higher than in the fwd--bwd case,
-  however, the loop over $i$ ensures predictable memory access
-  pattern, allowing for hardware pre--fetching.  Additional $L1$ reuse
-  is ensured by the next primitive.
-
-  {\bf Full kernel primitive} \quad Or next primitive computes $S^2$
-  cross--correlations of $S$ arbitrary sized images with $S$
-  gradients, to produce $S^2$ kernel gradients.  A cross--correlation
-  can be decomposed into sum of more cross--correlations by dividing
-  the correlation kernel into sub--images.  One such decomposition is
-  shown on Fig.~\ref{conv-decomposition}.  In the first the $S$
-  gradients of size $G_Z \times G_Y \times G_X$ are decomposed into
-  $G_Z \times G_Y$ sub--gradients.  The result is then obtained as the
-  sum of cross--correlation of $S$
+  shown in Algorithm~\ref{alg:serial-update-subtask}.  Following the
+  same principles as in the fwd-bwd pass' sub--kernel primitive we
+  vectorize the computation of $wg^T[r_x][r_y][r_z][f][f']$ computed
+  via {\small
+  \[
+  \sum_{z}
+  a[r_x][r_y][r_z+z][f] \cdot b[r_x][r_y][r_z][f']
+  \]
+  } such that the values of $wg^T[r_x][r_y][r_z][f][:]$ are computed
+  via {\small
+  \[
+  \sum_{z}
+  a[r_x][r_y][r_z+z][f] \cdot b[r_x][r_y][r_z][:]
+  \]
+  } Again, we recognize the reuse of $og[r_x][r_y][r_z][:]$ and
+  re--order the loops appropriately.  In order to allow in--register
+  computation, same constraints are imposed on $R_x \times R_y \times
+  R_z \times R_s$ -- Maximal of $31$ for AVX512 and $8$ for SSE4, AVX
+  and AVX2.  Additionally we allow only values for $R_s$ that divide
+  $S$.  In order for the working set to fit inside the $L1$ cache, $Z$
+  should be sufficiently small.  The number of bytes required for the
+  working set equals $4S(R_xR_y+1)(R_z+Z-1)$.  For a given choice of
+  $R_x, R_y$ and $R_z$, and given size of $L1$ cache, we
+  conservatively choose $Z$ so that no more than half the cache is
+  required for the working set.
 
    \begin{figure}
      \centering
@@ -125,10 +129,42 @@
      \label{fig:conv-decomposition}
    \end{figure}
 
-   {\bf Full kernel primitive} computes $S^2$ kernel gradients by
-   cross--correlating each of $S$ images with $S$ gradients.  The
-   computation is performed in two steps.  First, the gradients are
-   split into sub--gradients of size $1 \times 1 \times I_X'$.  The
-   result is then obtained as the sum of cross--correlations of each
-   of the sub--gradients with an appropriate sub--image, as depicted
-   on Fig~\ref{conv-decomposition} (middle column).
+  {\bf Full kernel primitive} computes $S^2$ kernel gradients by
+  cross--correlating each of $S$ images with $S$ gradients.  The
+  computation is performed in two steps.  First, the gradients are
+  split into sub--gradients of size $1 \times 1 \times Z$.  The result
+  is then obtained as the sum of cross--correlations of each of the
+  sub--gradients with an appropriate sub--image, as depicted on
+  Fig~\ref{conv-decomposition} (middle column).  The
+  cross--correlation of each sub--gradient is further split into
+  sub--kernel primitives (right column on
+  Fig.~\ref{conv-decomposition}.  We choose the $R_x, R_y, R_z$ and
+  $R_s$ to maximize the register--file utilization, but subject to the
+  limits described above.  Further, we require that $R_x, R_y$ and
+  $R_z$ divide $K_x, K_y$ and $K_z$ respectively.  Note that this can
+  always be accomplished be setting $R_x=R_y=R_z$ and $R_s=S$.
+  However this choice might not be optimal.  For example, when $K_z=3$
+  on AVX512 CPU, we could pick $R_s=8$ and $R_z=3$, which utilizes
+  $24$ registers, which is better than choosing $R_z=1$ and
+  $R_s=S=16$.  The optimal division is the one for which $R_x \times
+  R_y \times R_z \times R_s$ is maximized.  When more combinations are
+  possible, we prefer ones with large values of $R_s$, then $R_z$
+  etc...  The value for $Z$ is then obtained using as described above.
+
+  The computation is performed by iterating over the least significant
+  dimension, then second least significant, etc..
+
+  {\bf Sub--layer primitive} performs $\beta S \beta' S$
+  cross--correlation.  Each of $\beta S$ input images is
+  cross--correlated with each of $\beta'S$ output gradients to produce
+  $\beta S \beta' S$ kernel gradients.  This primitive is designed for
+  maximal reuse of higher levels of cache.  To achieve that, the
+  computation is performed in the same fashion as in the fwd--bwd
+  sub--layer primitive (Fig.~\ref{fig:full-exec}).
+
+  {\bf Full layer primitive} \quad The main goal of the primitive is
+  to parallelize the computation over $T$ available threads.  In
+  contrast to the fwd--bwd full layer primitive where each thread can
+  execute multiple sub--layer primitives, here we assign exactly one
+  sub--layer primitive to each thread.  Each thread then executes the
+  primitive on the subset of $B$ input--image output--gradient pairs.

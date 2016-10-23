@@ -1,0 +1,55 @@
+\section{Data layout and notation}
+
+  To efficiently use FMA instructions we use data layout as proposed
+  in~\cite{jeffers2016knl, cpu-myth}, except that we generalize it for
+  N--dimensional case.  {\bf We encourage the reader to get a good
+    understanding of our data layout before proceeding to the next
+    section.}
+
+  All the tensors are stored as row--major multi--dimensional, packed
+  an properly aligned arrays in memory.  To distinguish memory arrays
+  from tensors we will use lower letters to refer to them, and C++
+  like syntax to refer to a particular element.
+
+  {\bf Image and their gradient tensors} are stored as 6--dimensional
+  arrays in memory.  An image tensor of size $B \times F \times X
+  \times Y \times Z$ is stored as an array of size $B \times
+  \ceil{F/S} \times X \times Y \times Z \times S$.  Here $S$ is the
+  size of the CPU's vector register.  An tensor element $I(b,f,x,y,z)$
+  corresponds to the array element
+  $i\sqb{b}\sqb{\floor{f/S}}\sqb{x}\sqb{y}\sqb{z}\sqb{f\mod S}$
+
+  We maintain two copies of the {\bf kernel tensor} in memory -- a
+  regular and transposed form.  For a kernel tensor of size $F' \times
+  F \times K_x \times K_y \times K_z$ both memory arrays have size
+  $\ceil{F'/S} \times \ceil{F/S} \times K_X \times K_Y \times K_Z
+  \times S \times S$.  A tensor element $W(f',f,k_x,k_y,k_z)$ is
+  stored in $w\sqb{\floor{f'/S}}
+  \sqb{\floor{f/S}}\sqb{k_x}\sqb{k_y}\sqb{k_z}\sqb{f\mod S}\sqb{f'
+    \mod S}$ in one of the arrays, and in $w^T\sqb{\floor{f'/S}}
+  \sqb{\floor{f/S}}\sqb{K_x-k_x}\sqb{K_y-k_y}\sqb{K_z-k_z}\sqb{f'\mod
+    S}\sqb{f\mod S}$
+
+  Whenever the kernel tensors are updated, both representation in
+  memory are modified.  This introduces a negligible overhead, as
+  updating kernel tensors counts as a miniscule part of the total
+  computation.  Having two copies, however, allows us to reuse the
+  same algorithm for the forward and backward propagation.
+
+  The kernel gradients ($GW$) tensor computed during the update phase
+  are stored only in the transposed form ($gw^T$).
+
+  Locating a memory array element in the linear address space is done
+  by providing ``strides'' for each dimension and the location of the
+  origin (address element at $[0][0]\dots[0]$).  A stride represents
+  the linear distance in memory between two adjacent element along
+  that dimension.  Given the strides, one can easily represent a
+  sub--array by providing a new origin -- zeroth element of the
+  sub--array.
+
+  We will use a term sub--tensor to refer to a subset of a tensor with
+  the same number or less dimensions.  The memory representation of a
+  sub--tensor is then just represented as an additional pointer to the
+  new origin inside the memory array representing the original array.
+  Thus, any mention of sub--tensors and sub--arrays doesn't imply any
+  memory copying.

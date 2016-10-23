@@ -168,3 +168,17 @@ Similarly as in the fwd--bwd algorithm, our update phase algorithm
   execute multiple sub--layer primitives, here we assign exactly one
   sub--layer primitive to each thread.  Each thread then executes the
   primitive on the subset of $B$ input--image output--gradient pairs.
+
+  The scheduling is done in two steps.  Let $P =
+  \proc{GCD}(T,\alpha\alpha')$, we first select $\beta$ and $\beta'$
+  such that they divide $\alpha$ and $\alpha'$ respectively, and
+  $\beta\beta'P = T$.  Out of all possible values we pick the one for
+  which $|\beta -\beta'|$ is minimized.  The threads are then also
+  divided into $P$ sets of $T/P$ threads, each of which will compute
+  $\beta\beta'S^2$ kernel gradients.
+
+  The assignment of kernel gradients to be computed by each of the
+  thread subset is done in the same recursive fashion.
+
+  In the second step, we consider each of the $P$ sets of $T/P$
+  threads

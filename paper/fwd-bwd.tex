@@ -352,7 +352,7 @@
   input images in exactly the same order.  This will yield high hit
   rate of the higher levels of cache shared between cores.
 
-  \subsection{Input image padding}
+  \subsection{Input image padding and strided convolution}
 
   As mentioned before, in order to be usable for the backward pass,
   our primitive has to support either implicit or explicit zero
@@ -366,8 +366,14 @@
   other we perform implicit computation.
 
   We support implicit padding along an arbitrary of dimensions by
-  modifying the lines 8--10 of
+  modifying the lines 8--11 of
   Algorithm~\ref{alg:serial-forward-subtask}.  Instead of looping over
   all possible kernel offsets, for each invocation of the primitive,
   we provide additional runtime parameters, a pre--computed limits,
   for which the kernels offset are valid.
+
+  Our algorithm can easily be modified to support strided convolution,
+  which is supported in our implementation.  This is accomplished by
+  simply modifying the line $18$ of
+  Algorithm~\ref{alg:serial-forward-subtask} to account for the
+  strides.

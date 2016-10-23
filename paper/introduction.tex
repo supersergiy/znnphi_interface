@@ -1,66 +1,77 @@
 \section{Introduction}
 
-  ConvNets had become... popular \mynote{seung}{intro about convnets}.
-  The argument of using CPUs or GPUs for deep learning had reached
-  almost religious proportions.  The GPUs, which are capable of more
-  FLOPs/s seem to win the battle by a large margin -- disproportional
-  to the FLOPs/s available to the two architectures.  We find this
-  absurd, as the CPUs have been around for much longer, and the CPU
-  programming model changes very little from a generation to the next.
-  On the other side, GPUs seem to change a lot.
+  In a popular benchmarking ``of all publicly accessible
+  implementations of convnets,''
+  (https://github.com/soumith/convnet-benchmarks) all performance
+  numbers are for GPUs, with none given for CPUs.  The popularity of
+  GPUs for deep learning has resulted from both hardware and software
+  advantages.  The hardware gap has narrowed recently, as the Knights
+  Landing (KNL) Xeon Phi CPU delivers more than 6 TFLOPS \cite{},
+  compared to the 11 TFLOPS rating of the Titan X Pascal GPU (all
+  FLOPS ratings are given for single precision arithmetic).
 
-  As the CPUs are closing the gap in terms of FLOPs/s performance.
-  Xeon Phi Knights Landing chips are capable of up to
-  6TFLOPs/s~\cite{}.  Upcoming Skylake server CPU's will be packing
-  $3.2$ TFLOPs/s per single chip, delivering up to $25.8$ TFLOPs/s on
-  an 8-way configuration~\cite{}.  We believe that the main battle
-  should be in harvesting the computational power of the hardware.  We
-  are surprised to see that the GPU implementations have higher
-  utilization of the \% FLOPs/s available, compared to the CPU.
+  There is also a software gap.  All the major deep learning
+  frameworks use the cuDNN library, which has been developed and
+  refined for several years and is already at version 5.  cuDNN
+  achieves close to 100\% utilization of available FLOPS, at least for
+  some select convolutional network (ConvNet) architectures (cite).
 
-  The amount of computation required by the convolutional layers of a
-  ConvNet grows as a square of the number of channels (images).  In
-  contrast, other types of layers require linear amount of operations
-  per output image.  State of the art networks have convolutional
-  layers with anywhere from $64$ to $1024$ images.  This means that
-  $98.5\%$ up to $99.9\%$ of the computation is in the convolutional
-  layers.  It is therefore most important to speed up these layers.
+  This paper focuses on CPU implementation of ConvNets that makes
+  efficient use of available FLOPS.  A ConvNet contains convolutional
+  and other kinds of layers.  A convolutional layer requires an amount
+  of computation that grows with the square of the number of channels
+  (images), whereas other kinds of layers scale linearly.  Therefore
+  almost all of the computation in a typical ConvNet resides in the
+  convolutional layers, which are the subject of the current paper.
+    
+  One approach is to optimize code by hand (cite). This can achieve
+  the highest efficiency of all approaches, but is time-consuming and
+  the speed-up does not generalize beyond the specific architecture.
+  In fact, many GPU and CPU deep learning implementations appear to
+  contain hand-optimized code for standard benchmark network
+  architectures, for which they achieve markedly higher efficiency
+  than is typical (cite evidence)
 
-  Reducing convolution to matrix multiplication has been a popular
-  approach due to the availability of highly efficient matrix
-  multiplication routines.  This approach has, however, both a
-  computational and memory overhead due to the requirement of creating
-  in--memory matrices.  Caffe con Troll (CCT)~\cite{hadjis2015shallow}
-  uses blas to perform convolutions -- we will compare us to them.
+  An alternative approach is to implement convolution using highly
+  efficient matrix multiplication libraries.  This provides speedup
+  for diverse ConvNet architectures, and has been applied to both
+  GPUs~\cite{chetlur2014cudnn} and CPUs ~\cite{hadjis2015shallow}.
+  But the efficiency of the approach suffers because of computational
+  and memory overhead due to the requirement of creating in--memory
+  matrices.
 
-  Initially, cuDNN~\cite{chetlur2014cudnn} took that approach,
-  however, it has since implemented more efficient direct convolution
-  algorithms.
-
-  Convolutional layers of a ConvNet are computationally dominating
-  both training and inference.  The forward and backward pass involve
-  a convolution of an image with a small kernel.  Typically ``valid''
-  dense convolution, possibly with strides is performed.  More
-  advanced types of convolutions can decomposed to a series of dense
-  convolutions~\cite{szegedy2015going}.
-
-  We propose a new approach.  We harvest the power of C++ templates to
-  create compile time primitives by harvesting the compiler.  Given
-  the specifications of the CPU, our meta--algorithms optimize and
-  vectorize single threaded code, as well as generate static
+  Intel has introduced a metaprogramming approach in its MKL-DNN
+  package.  Given a ConvNet architecture, the MKL-DNN software
+  generates optimized assembly code at run time.  The current package
+  is for Broadwell and Haswell CPUs, and it is unclear how easily it
+  generalizes to other CPUs including KNL.
+  
+  We propose a metaprogramming approach that aims to be general with
+  respect to both the ConvNet architecture and CPU.  We use C++
+  templates to create primitives at compile time.  Given the
+  specifications of the CPU, our meta--algorithms optimize and
+  vectorize single-threaded code, as well as generate static
   scheduling for parallelizing the computation over multiple cores.
+  Our approach tries to achieve generality by leveraging the power of
+  the compiler.
 
-  We show that our approach can utilize extremely high percentage of
-  the available FLOPS regardless of the CPU generation, as well as
-  have near linear scalability over the number of cores available.
-  The performances of our algorithms are competitive with the state of
-  the art hand optimized code for specific architectures.  Our code
-  yields better performances on the KNL compared to the state of the
-  art GPU implementations for 3D convolutional networks, even though
-  KNL has less FLOPS/s available.
+  We show that our approach can utilize high percentage of the
+  available FLOPS regardless of the CPU generation, as well as have
+  near linear scalability with the number of cores.  We are
+  competitive with state-of-the-art hand-optimized code for specific
+  architectures.  Our code yields better performances on KNL
+  compared to the state of the art GPU implementations for 3D
+  convolutional networks, even though KNL has less FLOPS/s available.
 
   We further demonstrate the power of our approach for inference only
   computation.
+
+%  Convolutional layers of a ConvNet are computationally dominating
+%  both training and inference.  The forward and backward pass involve
+%  convolution of an image with a small kernel.  Typically ``valid''
+%  dense convolution, possibly with strides is performed.  More
+%  advanced types of convolutions can decomposed to a series of dense
+%  convolutions~\cite{szegedy2015going}.
 
   Even though we provide an efficient, publicly available, open source
   implementation for popular ConvNet primitives, the goal of this

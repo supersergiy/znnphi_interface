@@ -95,3 +95,15 @@
   %% \subsection{Mulit--core vs Many--core}
 
   %% Explain the differences NUMA, caches, etc..
+
+
+  \aleks{Summarize and cite the text below}
+  A popular convolution implementation is to unroll the data until the
+  computation is in the form of a large matrix multiplication
+  (Chellapilla et al. (2006)). This is the strategy followed by many
+  implementors, since matrix multiplication is a well-tuned linear
+  algebra primitive available on virtually any platform. While it is
+  possible to provide instances of direct calculation that are faster
+  than matrix unrolling (e.g., for large S, Krizhevsky (2014)), it is
+  challenging to provide an implementation that is faster for more
+  than just a small subset of possible convolution problems.

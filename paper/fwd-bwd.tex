@@ -81,10 +81,10 @@
         \li \Else
         \li       $oreg[:][:][:][:] \gets \proc{LOAD}(o[:][:][:][:])$
         \End \li \kw{end if}
-        \li \kw{for} $k_x \gets 0 \To K_x-1$
-        \li   \Do \kw{for} $k_y \gets 0 \To K_y-1$
-        \li      \Do \kw{for} $k_z \gets 0 \To K_z-1$
-        \li         \Do \kw{for} $f \gets 0 \To S - 1$ \Comment Partially unrolled
+        \li \kw{for} $k_x \gets 0 \To K_x-1$ \Comment Partially unrolled
+        \li   \Do \kw{for} $k_y \gets 0 \To K_y-1$  \Comment Partially unrolled
+        \li     \Do \kw{for} $f \gets 0 \To S - 1$ \Comment Partially unrolled
+        \li       \Do \kw{for} $k_z \gets 0 \To K_z-1$  \Comment Conditionally unrolled
         \li         \Do $wreg \gets w[k_x][k_y][k_z][f][:]$
         \li \kw{for} $x \gets 0 \To R_x-1$ \Comment Fully unrolled
         \li   \Do \kw{for} $y \gets 0 \To R_y-1$ \Comment Fully unrolled
@@ -96,8 +96,8 @@
         \End \li \kw{end for} $z$
         \End \li \kw{end for} $y$
         \End \li \kw{end for} $x$
-        \End \li \kw{end for} $f$
         \End \li \kw{end for} $k_z$
+        \End \li \kw{end for} $f$
         \End \li \kw{end for} $k_y$
         \End \li \kw{end for} $k_x$
         \li $o[:][:][:][:] \gets \proc{STORE}(oreg[:][:][:][:])$
@@ -144,65 +144,52 @@
   that once $w[k_x][k_y][k_z][:]$ is loaded (line 12) from memory, it
   is maximally re--used.
 
-  To allow the compiler to generate the code that uses register file
-  for storing
+  Each iteration of the three innermost loops (lines 13-15) perform an
+  independent multiple--add operation (lines 16--19).  The procedure
+  $\proc{EXLOAD}$ loads a scalar value to all $S$ locations in a
+  vector register.  The procedure $\proc{FMADD}$ is implemented as a
+  CPU dependent macro, that either calls the fused multiple--add
+  intrinsic, when available (AVX2, AVX512), or vector multiplication
+  followed by a vector addition, when no fused multiple--add is
+  supported by the CPU (AVX, SSE4).  AVX512 supports an instruction
+  that performs fused multiple--add with the multiplication performed
+  by an in--memory scalar, therefore the operation in lines(16--19) is
+  transformed to a single instruction.
 
+  To maximize the utilization, we want to increase the number of
+  independent operations, thus prefer large values of $R_x \times R_y
+  \times R_z$.  However, we need to make sure that all the computation
+  is done using the register file -- $oreg$, $wreg$ and all possible
+  auxiliary variables fit into the register file.  AVX512 CPUs have 32
+  vector registers, and don't require auxiliary register for loading
+  the scalar value, the maximal limit for $R_x \times R_y \times R_z$
+  is 31.  SSE4, AVX and AVX2 capable CPUs require such auxiliary
+  registers, thus the situation becomes a bit more complex.
 
+  Note how the loop over $f$ comes before the loop over $k_z$.  As
+  $k_z \ge 2$ in convolutional layers, we expect the compiler to
+  unroll the loop over $k_z$ when auxiliary registers are required,
+  and reorder the load and multiply--add operations such that the
+  values loaded in the auxiliary registers are re--used.  As each
+  auxiliary register is re--used approximately $k_z$ times, we need
+  $k_z$ times less auxiliary registers than ones required by $oreg$.
+  As $k_z \ge 2$ we choose to use $8$ registers for $oreg$.  The
+  number of required auxiliary registers will be no greater than $4$.
+  This allows for $8$ different independent operations.  This choice
+  is very reasonable, as $8$ different independent operations allow
+  for the full utilization of the CPU in the worst case -- having two
+  FMA units with 4 cycle latency of operations.
 
-
-  Each element of $oreg$ contains $S$ values representing the values
-  at the same location of the $S$ output images.  A straight forward,
-  naive, implementation of cross correlation would loop over
-
-
-We need to limit the
-  size of $R_z \times R_y \times R_x$ so that the compiler uses the
-  register file for storing the $oreg$ array.  At the same time we
-  want to have a maximal possible size of $oreg$ as the three
-  innermost loops produce $R_z \times R_y \times R_x$ independent
-  operations.  The maximal size of the output image will depend on the
-  number of available registers on a specific CPU and whether we need
-  some auxiliary registers.
-
-
-
-  The $S$ computed output images are stored in the register file.
-
-
-  In order for variables $oreg$ and $wreg$ to be stored in the
-  register file, we need $R_z \times R_y \times R_x + 1$ to be smaller
-  or equal to the number of available registers.  In C++ we have now
-  way of explicitly telling the compiler to use registers, but instead
-  we use regular vector variables (\texttt{\_\_m256} and
-  \texttt{\_\_m512}) and expect the compiler to automatically generate
-  code that uses the register file.  As there are no more vector
-  variables used in the function, this is an easy job for the
-  compiler.  In lines 16--18, all values inside one vector register
-  are multiplied by a scalar value and accumulated to another vector
-  register (The procedure $\proc{EXLOAD}$ loads a scalar value to all
-  $S$ locations in the vector register).  On AVX512 this two
-  operations can be achieved by a single FMA instruction, while on
-  AVX2 CPU, the scalar value has to be loaded into an auxiliary
-  register before performing the fused multiply--add.  As AVX512 CPUs
-  have $32$ vector registers, this limits $R_z \times R_y \times R_x$
-  to $31$.  On the other side, due to need for auxiliary registers, on
-  AVX2 CPUs the product is limited to $7$.  This is because we need
-  $7$ extra auxiliary registers, plus one or storing $wreg$ while
-  having $16$ available registers.
-
-  The innermost loop over $S$ ensures efficient reuse of $L1$ cache.
-  This is because the first pass through the loop will ensure that all
-  cache--lines containing all elements for subsequent loops are in L1
-  cache.  Most of these values will already be in $L1$ from the
-  previous iterations of the outermost three loops.  Specifically,
-  total of $(R_z+K_z-1) \times (R_y+K_z-1) \times (R_x+K_x-1)$ vector
-  values have to be fetched to $L1$, which used exactly $S \times R_z
-  \times R_y \times R_x \times K_z \times K_y \times K_x$ times.  The
-  cache hit rate increases as the sizes of both the image and the
-  kernel increase.  The cache miss rate can be thus approximated to
-  $\frac{1}{S \times K_z \times K_y \times K_x}$.  Which is very low
-  for even tiny kernels.  Cache misses are further reduced by hardware
-  pre--fetching.
+  The working set of the primitive is expected to fit inside the $L1$
+  cache, this is reasonable as the size of $R_x \times R_y \times R_z$
+  is very small.  The cache miss rate can be thus approximated to
+  $\frac{1}{C \times K_x \times K_y \times K_z}$, where $C$ is the
+  number of floats that fit inside the cache--line.  This value is
+  very low for even tiny kernels.  The regular memory access pattern
+  (linear along $z$ dimension) allows for further reduction in cache
+  misses due to hardware pre--fetching.  Measured cache hits averaged
+  to over $98\%$ of kernel sizes of $1 \times 2 \times 2$ or larger,
+  and any appropriate size of $R_x \times R_y \times R_z$.
 
   \begin{figure}
     \begin{center}

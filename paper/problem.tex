@@ -43,8 +43,7 @@
 
   At compile-time, the computation is also divided into independent
   sub--tasks, which are evenly distributed across the available
-  cores. Each core will start and end its work at roughly the same
-  time, so that minimal synchronization is necessary.  As we will see,
-  this enables efficient utilization of all cores.
-
-
+  cores. A single fork--join execution, allows for minimal
+  synchronization, while each core will starts and ends its work at
+  roughly the same time.  As we will see, this enables efficient
+  utilization of all cores.

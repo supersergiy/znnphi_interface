@@ -1,18 +1,15 @@
 \section{Static scheduling}
 
-  The common underlying theme of our forward/backward propagation as
-  well as update phase algorithms is static scheduling of the work for
-  each available core.  This allows us to minimize the synchronization
-  overhead by equally distributing the work and using a one or two
-  fork--join calls.
-
-  In order to fully utilize $N$ cores, we need to divide the work into
-  exactly $N$ independent parts that perform the same number of
-  operations.  Ideally, we would like all the cores to execute the
-  same code and have the same memory access patterns.  This approach
-  relies on having exclusive access to all the cores.  This is
-  reasonable as one can limit the number of cores used for the ConvNet
-  computation, while leaving some cores to the system.
+  The common underlying theme of our forward/backward propagation
+  algorithm as well as update algorithms is static scheduling of the
+  work for each available core.  In order to fully utilize $N$ cores,
+  we need to divide the work into exactly $N$ independent parts that
+  perform roughly the same number of operations.  Ideally all the
+  cores would execute the same code and have the same memory access
+  patterns.  This approach relies on having exclusive access to all
+  the cores.  This is reasonable as one can limit the number of cores
+  used for the ConvNet computation, while leaving some cores to the
+  system.
 
   There are multiple reasons why we choose this approach over the
   alternative, dynamic scheduling.  To efficiently utilize many cores

@@ -1,18 +1,26 @@
 \section{Conclusion and closing remarks}
 
-1) Good and consistent performances, portable, scalable
+  Based on the experiments conducted, we conclude that our
+  compile--time meta--programming approach to optimize ConvNets yields
+  very high utilization and near linear scalability over multiple
+  cores.  We show that leveraging the compiler can yield good
+  performances (except for KNL, where we except improvements a
+  compilers get better).
 
-2) Easy to implement few hundred lines of generous c++ templated code
+  Further, such approach is very easy to implement using C++
+  templates.  Our implementation, which is publicly available at
+  \url{https://github.com/seung-lab/znnphi-release} consist of around
+  1000 lines of C++ code for each of two algorithms.  The
+  implementation, however is not meant to be used as a final product.
+  Future work will include creating a production ready code, as well
+  as integrating the primitives into popular ConvNet frameworks such
+  as Caffe.
 
-3) Just scratched the surface, additional optimizations such as
-padding to avoid associativity conflicts, exhaustive search for optimal subdivisions, etc...
+  Additional benchmarks on AVX and SSE4 CPUs were performed but not
+  shown as these CPUs were capable of much less FLOPS.  In practice,
+  such CPUs would never be used for training ConvNets.  However, our
+  approach allows for
 
-4) Not as satisfied with KNL performaces, expect improvement as compilers improve?
-
-5) Provide open source implementation which should not be considered production ready
-
-6) Possible to include the primitives into caffe or other frameworks,
-by dynamic library compilation and loading.
 
 7) Very useful for inference, as the size of the input matters and
 CPUs have much more memory available (also beating ZNNi by a lot)
@@ -20,3 +28,9 @@ CPUs have much more memory available (also beating ZNNi by a lot)
 8) Applications using trained networks (our approach utilizes high
 percentage of FLOPS even on SSE4 and AVX, not shown in the experiments
 section).  This can be beneficial for consumer apps....
+
+
+  This is just scratching the surface, additional optimizations
+
+3) Just scratched the surface, additional optimizations such as
+padding to avoid associativity conflicts, exhaustive search for optimal subdivisions, etc...

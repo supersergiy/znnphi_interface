@@ -5,8 +5,8 @@
   with a small kernel producing another relatively large image, the
   cross--correlations performed during the update phase are performed
   on a large image with another large image resulting in a small
-  image. As in the propagation algorithm, our update phase algorithm
-  consists of the following stack of primitives.
+  image.  However, the algorithm closely resembles the propagation
+  algorithm, and consists of the following stack of primitives:
 
   \begin{enumerate}
     \item {\bf Sub--kernel primitive} computes a cross--correlation of
@@ -61,7 +61,7 @@
         \End
         \End \li \kw{end for} $s_0$
       \end{codebox}
-    \caption{Serial update subtask.}
+    \caption{Finest granularity update primitive.}
     \label{alg:serial-update-subtask}
     }
   \end{algorithm}
@@ -73,13 +73,13 @@
   via {\small
   \[
   \sum_{z}
-  a[r_x][r_y][r_z+z][f] \cdot b[r_x][r_y][r_z][f']
+  i[r_x][r_y][r_z+z][f] \cdot \hat{i}'[r_x][r_y][r_z][f']
   \]
   } such that the values of $\Delta w[r_x][r_y][r_z][f][:]$ are computed
   via {\small
   \[
   \sum_{z}
-  a[r_x][r_y][r_z+z][f] \cdot b[r_x][r_y][r_z][:]
+  i[r_x][r_y][r_z+z][f] \cdot \hat{i}'[r_x][r_y][r_z][:]
   \]
   } Again, we recognize the reuse of $\hat{i}'[r_x][r_y][r_z][:]$ and
   re--order the loops appropriately.  In order to allow in--register
@@ -93,11 +93,13 @@
   conservatively choose $Z$ so that no more than half the cache is
   required for the working set.
 
-   \begin{figure}
+  \begin{figure}
      \centering
      \includegraphics[width=0.99\linewidth]{fig/update2}
      \caption{An example of the {\bf full kernel primitive} and {\bf
-         full gradient primitive} for the special case of $S=1$,...}
+         full gradient primitive} for the special case of $S=1$,
+       $\vec{N}=\angled{1,6,6}$, $\vec{N}' = \angled{1,5,5}$ and
+       $\vec{K}=\angled{1,2,2}$.}
      \label{fig:conv-decomposition}
    \end{figure}
 
@@ -115,13 +117,14 @@
   limits described above.  Further, we require that $R_x, R_y$ and
   $R_z$ divide $K_x, K_y$ and $K_z$ respectively.  Note that this can
   always be accomplished be setting $R_x=R_y=R_z=1$ and $R_s=S$.
-  However this choice might not be optimal.  For example, when $K_z=3$
-  on AVX512 CPU, we could pick $R_s=8$ and $R_z=3$, which utilizes
-  $24$ registers, which is better than choosing $R_z=1$ and
+  However this choice might not be always optimal.  For example, when
+  $K_z=3$ on AVX512 CPU, we could pick $R_s=8$ and $R_z=3$, as it
+  utilizes $24$ registers, which is better than choosing $R_z=1$ and
   $R_s=S=16$.  The optimal division is the one for which $R_x \times
   R_y \times R_z \times R_s$ is maximized.  When more combinations are
-  possible, we prefer ones with large values of $R_s$, then $R_z$
-  etc...  The value for $Z$ is then obtained using as described above.
+  possible, we prefer ones with large values of $R_s$, then $R_z, R_y$
+  and finally $R_x$.  The choice of $R_x, R_y, R_z$ and $R_s$ will
+  determine the value of $Z$ as described above.
 
   The computation is performed by iterating over the least significant
   dimension, then second least significant, etc..
@@ -137,20 +140,21 @@
   {\bf Full layer primitive}, as in the propagation algorithm, divides
   the computation into sub--layer primitives which are scheduled for
   execution on $T$ threads.  In the propagation algorithm, all the
-  divisions were done by splitting the large output tensor, allowing
-  each thread to perform an independent computation.  As our update
-  sub--layer primitive always computes full kernel gradients, the only
-  sub--division into independently computer results is possible along
-  the two most significant dimensions of $\Delta W$ tensor.
+  divisions were done by splitting the relatively large output tensor,
+  thus allowing each thread to perform an independent computation.  As
+  our update sub--layer primitive always computes full kernel
+  gradients, the only sub--division into independently computer
+  results is possible along the two most significant dimensions of
+  $\Delta W$ tensor (of sizes $F'$ and $F$).
 
   Further division can be accomplished by dividing the computation
   over the input images and output gradients.  A division can be
-  performed across the batches $B$, such that each thread considers
-  only a subset of batches.  The resulting kernel gradients are then
-  computed by accumulating the result obtained by each thread.
-  Similarly, a division can be performed across the input image/output
-  gradient as in the case of the {\bf full kernel primitive}.  This
-  division also requires accumulating the results.
+  performed across the batches $B$, such that separate threads
+  consider only a subset of batches.  The resulting kernel gradients
+  are then computed by accumulating the result obtained by each
+  thread.  Similarly, a division can be performed by splitting the
+  input image/output gradient as in the case of the {\bf full kernel
+    primitive} (middle column of Fig.~\ref{fig:conv-decomposition}).
 
   To optimally divide the computation among threads we propose a two
   step scheduling algorithm.  In the first step, division along the
@@ -175,7 +179,7 @@
   When $T'>1$, we perform the division over input images and output
   gradients, creating a full layer primitive for each sub--problem.
   The division is performed in the same fashion as in the propagation
-  algorithm, preferring division over $B$, then over $N_x'$, $N_y'$
+  algorithm, preferring divisions over $B$, then over $N_x'$, $N_y'$
   and finally $N_z'$.  However, each of the $T'$ threads in the set
   will accumulate the computed kernel gradients of each primitive into
   a local tensor.
@@ -183,6 +187,8 @@
   The $T'$ tensors computed by each thread have to be then accumulated
   to obtain the final kernel gradient tensor.  This is accomplished by
   performing a reduction step after all threads in the set have
-  completed the execution. The reduction requires little computation
+  completed the execution.  The reduction requires little computation
   compared to the overall computation performed by the layer, and is
-  thus performed by a single thread in the set.
+  thus performed by a single thread in the set.  During the reduction
+  step both in--memory representations of the kernels are updated as
+  well.

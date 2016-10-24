@@ -3,13 +3,11 @@
   The common underlying theme of our forward/backward propagation
   algorithm as well as update algorithms is static scheduling of the
   work for each available core.  In order to fully utilize $N$ cores,
-  we need to divide the work into exactly $N$ independent parts that
-  perform roughly the same number of operations.  Ideally all the
-  cores would execute the same code and have the same memory access
-  patterns.  This approach relies on having exclusive access to all
-  the cores.  This is reasonable as one can limit the number of cores
-  used for the ConvNet computation, while leaving some cores to the
-  system.
+  we try to divide the work into exactly $N$ independent parts that
+  perform roughly the same amount of computation.  Our approach relies
+  on having exclusive access to all the cores.  This is reasonable as
+  one can limit the number of cores used for the ConvNet computation,
+  while leaving some cores to the system.
 
   There are multiple reasons why we choose this approach over the
   alternative, dynamic scheduling.  To efficiently utilize many cores
@@ -28,23 +26,23 @@
 
   \subsection{Implementation details}
 
-  We provide custom fork--join primitive.  The main thread of the
-  program is pinned to the core $0$ as described
-  in~\cite{jeffers2015high}. Additional $N-1$ threads are spawned and
-  pinned to cores $1$ to $N-1$.  The main thread continues with the
-  execution of the program, while the other threads block on a single
-  barrier.  On a CPU with $C$ cores and $H$ hyper--threads, $h^{th}$
-  hyper--thread of the $c^{th}$ core executes the thread number $c
-  \times H + h$, Note that this differs from the standard unix thread
-  assignment where the same core/hyper--thread is assigned to the
-  system thread with the id of $h * H + c$.  We choose this thread
-  assignment in order to have local threads execute on local, and
-  possibly the same physical core.  For multi--chip system, local
+  For optimal performance, we provide custom fork--join primitive.
+  (With the extra benefit of having our implementation dependency
+  free).  The main thread of the program is pinned to the core $0$ as
+  described in~\cite{jeffers2015high}. Additional $N-1$ threads are
+  spawned and pinned to cores $1$ to $N-1$.  The main thread continues
+  with the execution of the program, while the other threads block on
+  a single barrier.  On a CPU with $C$ cores and $H$ hyper--threads,
+  $h^{th}$ hyper--thread of the $c^{th}$ core executes the thread
+  number $c \times H + h$, Note that this differs from the standard
+  unix thread assignment where the same core/hyper--thread is assigned
+  to the system thread with the id of $h * H + c$.  We choose this
+  thread assignment in order to have local threads execute on local,
+  and possibly the same physical core.  For multi--chip system, local
   threads will be assigned to the same physical chip.
 
   On fork, threads $1$ to $N-1$ are unblocked to execute tasks $1$ to
   $N-1$, and the calling thread executes the task $0$.  After the
   execution of the task, each thread waits on a single barrier.  When
   all threads complete their task, the main thread continues with the
-  program execution, while the remaining $N-1$ threads block.  Our
-  implementation uses \texttt{pthreads}.
+  program execution, while the remaining $N-1$ threads block.

@@ -169,31 +169,22 @@
   \beta'S:A\beta'S+\beta'S-S,B \beta S: B\beta S + \beta S -S, :,:,:)$ is
   performed by the $A + B \alpha / \beta$-th set of $T'$ threads.
 
-  In the second step, we divide the computation of
+  In the second step, we divide the computation of each of
+  $\beta\beta'S^2$ kernel gradients among the $T'$ threads in the set.
+  When $T'$ equals $1$, the single thread in the set scheduled to
+  perform the whole computation using a full layer primitive.
 
-  When $T'$ equals $1$
+  When $T'>1$, we perform the division over input images and output
+  gradients, creating a full layer primitive for each sub--problem.
+  The division is performed in the same fashion as in the propagation
+  algorithm, preferring division over $B$, then over $N_x'$, $N_y'$
+  and finally $N_z'$.  However, each of the $T'$ threads in the set
+  will accumulate the computed kernel gradients of each primitive into
+  a local tensor.
 
-
-
-  In the case when $T' \neq 1$ a second division step is performed.  IT IS THE SAME!
-
-
-
-  In the second step, we consider each of the $P$ sets of $T'$
-  threads.  Kernel gradients to be computed by each subset is computed
-  by cross--correlating each of $\beta S$ input images with $\beta'S$
-  output gradients for each set of inputs in the batch of size $B$.
-
-  Further sub--division can be accomplished by dividing the
-  computation such that different threads process either different
-  sets in the batch or to process sub--images as depicted in the
-  middle column of Fig.~\ref{conv-decomposition}.  The final result is
-  then obtained by accumulating the result obtained by each thread.
-  This means that an additional ``reduction'' pass is necessary -- we
-  need to accumulate $T'$ results obtained by each of the threads.  As
-  we need to divide the problem into exactly $T'$ subproblems, the
-  recursive scheduling approach used for the propagation is not
-  possible.  Instead, to divide the problem as evenly as possible over
-  the $T'$ threads we perform the following recursive approach, that
-  is not guaranteed to divide the problem as evenly as in the fwd--bwd
-  case.
+  The $T'$ tensors computed by each thread have to be then accumulated
+  to obtain the final kernel gradient tensor.  This is accomplished by
+  performing a reduction step after all threads in the set have
+  completed the execution. The reduction requires little computation
+  compared to the overall computation performed by the layer, and is
+  thus performed by a single thread in the set.

@@ -51,9 +51,10 @@
   Another form of meta--programming, run--time meta--programming has
   been introduced by intel in its MKL-DNN package.  Given a ConvNet
   architecture, the MKL-DNN software generates optimized assembly code
-  at run time.  The part of the current package that is open--sourced
-  is for Broadwell and Haswell CPUs, and it is unclear how easily it
-  generalizes to other CPUs including KNL.
+  at run time.  The part of the current package that is
+  open--sourced~\cite{idlf,mkl-dnn} is for Broadwell and Haswell CPUs,
+  and it is unclear how easily it generalizes to other CPUs including
+  KNL.
 
   We propose another form of, compile--time, meta--programming
   approach that aims to be general with respect to both the ConvNet
@@ -82,9 +83,9 @@
   ~\cite{zlateski2016znn,zlateski2016znni} and the
   GPU~\cite{mathieu-iclr-14,vasilache2014fast}, however the evidence
   suggests that ConvNets with smaller kernels, and larger number of
-  layers perform better on nearly all problems~\cite{ronneberger2015u,
-    simonyan2014very, sermanet2013overfeat, long2015fully,
-    tran2015learning, ji20133d, maturana_iros_2015,
-    maturana_icra_2014}.
+  layers perform better on nearly all
+  problems~\cite{szegedy2015going,ronneberger2015u, simonyan2014very,
+    sermanet2013overfeat, long2015fully, tran2015learning, ji20133d,
+    maturana_iros_2015, maturana_icra_2014}.
 
   %% http://legion.stanford.edu/pdfs/bootcamp2014/10_metaprogramming.pdf

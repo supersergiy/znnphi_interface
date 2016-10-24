@@ -1,14 +1,14 @@
 \section{Forward and backward propagation}
 
-  As highlighted in Section~\ref{sec-conv-layers}, the forward
-  propagation algorithm can be used for the backward propagation if we
-  (1) reflect the kernels, thus converting convolution to
-  cross--correlation, and (2) zero--pad the input image such that
-  \texttt{valid} cross--correlation becomes \texttt{full}
+  Following the definitions in Section~\ref{sec-conv-layers}, the
+  forward propagation algorithm can be used for the backward
+  propagation if we (1) reflect the kernels, thus converting
+  convolution to cross--correlation, and (2) zero--pad the input image
+  such that \texttt{valid} cross--correlation becomes \texttt{full}
   cross--correlation.
 
   We propose an algorithm for the forward propagation that can handle
-  implicit zero--padding of the input images. Hence, the same
+  implicit zero--padding of the input images.  Hence, the same
   algorithm can be used for the backward propagation with no overhead.
   As previously stated, we assume that two copies of kernels are
   stored and maintained in memory - original and reflected.  This is
@@ -17,8 +17,9 @@
 
   We will refer to the algorithm as the \emph{propagation algorithm}.
   Also, we'll refer to both the input/output images of the forward
-  propagation and the output/input gradients of the backward
-  propagation as simply \emph{input/output images}.
+  propagation ($I$ and $I'$) and the output/input gradients of the
+  backward propagation ($\hat{I}$ and $\hat{I}'$) as simply
+  \emph{input/output images}.
 
   \subsection{Algorithm overview}
 
@@ -224,12 +225,11 @@
   higher levels of cache.  This values can be reused as we slide along
   the more significant dimensions.
 
-  {\bf Sub--layer primitive} \quad The next primitive considers all
-  $\alpha S$ input images and computes the values of $\beta S$ ($\beta
-  \le \alpha'$) output sub-images of size $N_x' \times N_y' \times
-  N_z'$ by performing $\alpha \beta S^2$ convolutions.  This is
-  achieved by invoking $\alpha \beta$ {\bf full image primitives}
-  described above.
+  {\bf Sub--layer primitive} considers all $\alpha S$ input images and
+  computes the values of $\beta S$ ($\beta \le \alpha'$) output
+  sub-images of size $N_x' \times N_y' \times N_z'$ by performing
+  $\alpha \beta S^2$ convolutions.  This is achieved by invoking
+  $\alpha \beta$ {\bf full image primitives} described above.
 
   \begin{figure}
     \begin{center}

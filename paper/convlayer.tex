@@ -16,13 +16,14 @@
   tuple of $F$ images into an output tuple of $F'$ images.  We want to
   process a batch of $B$ inputs to yield a batch of $B$ outputs, via
   \begin{equation}\label{eq:forward}
-  I'_{b,j} = \sum_{i=1}^F I_{b,i}\star W_{ji}
+  I'_{b,j} = \sum_{i=1}^F I_{b,i}\star W_{ji} + \theta_j
   \end{equation}
   for $1 \le b \le B$ and $1 \le j \le F'$.  Here $I_{b,i}$ is the
   $i^{th}$ image of the $b^{th}$ input in the batch, and $I'_{b,j}$ is
   the $j^{th}$ image of the $b^{th}$ output in the batch, and $W_{ji}$
   is the kernel from the $i^{th}$ image in an input tuple to the
-  $j^{th}$ image in an output tuple.
+  $j^{th}$ image in an output tuple.  Typically, a scalar ``bias''
+  $\theta_j$ is added to each pixel of the output image $j$.
 
   In the backward phase, a convolutional layer transforms a tuple of
   $F'$ images into a tuple of $F$ images.  We process a batch of $B$

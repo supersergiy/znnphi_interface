@@ -35,15 +35,15 @@
   \begin{algorithm}
     {\footnotesize
       \begin{codebox}
-        \Procname{$\proc{Update-Subtask} \langle R_x, R_y, R_z, Z, R_s \rangle(i,og,wg^T)$}
+        \Procname{$\proc{Update-Subtask} \langle R_x, R_y, R_z, Z, R_s \rangle(i,\hat{i}',\Delta w)$}
         \li \kw{simd register} $oreg[R_x][R_y][R_z][R_s]$
         \li \kw{simd register} $wreg$
         \li \For $s_0 \gets 0 \To S/R_s - 1$
         \li \Do $oreg[:][:][:][s_0R_s:s_0R_s+R_s-1][:] \gets$
-        \li   \Do $\proc{LOAD}(wg^T[:][:][:][s_0R_s:s_0R_s+R_s-1][:])$
+        \li   \Do $\proc{LOAD}(\Delta w[:][:][:][s_0R_s:s_0R_s+R_s-1][:])$
         \End
         \li \For $z_g \gets 0 \To Z-1$ \Comment Partially unrolled
-        \li   \Do $wreg \gets \proc{LOAD}(og[1][1][z_g][:])$
+        \li   \Do $wreg \gets \proc{LOAD}(\hat{i}'[1][1][z_g][:])$
         \li   \For $x \gets 0 \To R_x-1$ \Comment Fully unrolled
         \li   \Do \For $y \gets 0 \To R_y-1$  \Comment Fully unrolled
         \li   \Do \For $z \gets 0 \To R_z-1$  \Comment Fully unrolled
@@ -58,7 +58,7 @@
         \End \li \kw{end for} $y$
         \End \li \kw{end for} $z$
         \End \li \kw{end for} $i$
-        \li $wg^T[:][:][:][s_0R_s:s_0R_s+R_s-1][:] \gets$
+        \li $\Delta w[:][:][:][s_0R_s:s_0R_s+R_s-1][:] \gets$
         \li \Do $\proc{STORE}(oreg[:][:][:][s_0R_s:s_0R_s+R_s-1][:])$
         \End
         \End \li \kw{end for} $s_0$
@@ -71,19 +71,19 @@
   {\bf Sub--kernel primitive} \quad The lowest level primitive is
   shown in Algorithm~\ref{alg:serial-update-subtask}.  Following the
   same principles as in the propagation sub--kernel primitive we
-  vectorize the computation of $wg^T[r_x][r_y][r_z][f][f']$ computed
+  vectorize the computation of $\Delta w[r_x][r_y][r_z][f][f']$ computed
   via {\small
   \[
   \sum_{z}
   a[r_x][r_y][r_z+z][f] \cdot b[r_x][r_y][r_z][f']
   \]
-  } such that the values of $wg^T[r_x][r_y][r_z][f][:]$ are computed
+  } such that the values of $\Delta w[r_x][r_y][r_z][f][:]$ are computed
   via {\small
   \[
   \sum_{z}
   a[r_x][r_y][r_z+z][f] \cdot b[r_x][r_y][r_z][:]
   \]
-  } Again, we recognize the reuse of $og[r_x][r_y][r_z][:]$ and
+  } Again, we recognize the reuse of $\hat{i}'[r_x][r_y][r_z][:]$ and
   re--order the loops appropriately.  In order to allow in--register
   computation, same constraints are imposed on $R_x \times R_y \times
   R_z \times R_s$ -- Maximal of $31$ for AVX512 and $8$ for SSE4, AVX

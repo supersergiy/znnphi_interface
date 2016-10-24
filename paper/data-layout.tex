@@ -6,16 +6,16 @@
     our data layout before proceeding to the next section.}
 
   All the tensors are stored as row--major multi--dimensional, packed
-  an properly aligned arrays in memory.  To distinguish memory arrays
+  and properly aligned arrays in memory.  To distinguish memory arrays
   from tensors we will use lower letters to refer to them, and C++
   like syntax to refer to a particular element.
 
-  {\bf Image tensors} are stored as 6--dimensional
-  arrays in memory.  An image tensor of size $B \times F \times X
-  \times Y \times Z$ is stored as an array of size $B \times
-  \ceil{F/S} \times X \times Y \times Z \times S$.  Here $S$ is the
-  size of the CPU's vector register \aleks{details}.  A tensor element
-  $I(b,f,x,y,z)$ corresponds to the array element
+  {\bf Image tensors} are stored as 6--dimensional arrays in memory.
+  An image tensor of size $B \times F \times X \times Y \times Z$ is
+  stored as an array of size $B \times \ceil{F/S} \times X \times Y
+  \times Z \times S$.  Here $S$ is the size of the CPU's vector
+  register in floats (16 for AVX512, 8 for AVX, AVX2, and 4 for SSE4).
+  A tensor element $I(b,f,x,y,z)$ corresponds to the array element
   $i\sqb{b}\sqb{\floor{f/S}}\sqb{x}\sqb{y}\sqb{z}\sqb{f\mod S}$
 
   We maintain two copies of a {\bf kernel tensor} in memory -- a
@@ -25,7 +25,7 @@
   \times S \times S$.  A tensor element $W(f',f,k_x,k_y,k_z)$ is
   stored in $w\sqb{\floor{f'/S}}
   \sqb{\floor{f/S}}\sqb{k_x}\sqb{k_y}\sqb{k_z}\sqb{f\mod S}\sqb{f'
-    \mod S}$ in one of the arrays, and in $w^T\sqb{\floor{f'/S}}
+    \mod S}$ in one of the arrays, and in $\bar{w}\sqb{\floor{f'/S}}
   \sqb{\floor{f/S}}\sqb{K_x-k_x}\sqb{K_y-k_y}\sqb{K_z-k_z}\sqb{f'\mod
     S}\sqb{f\mod S}$
 
@@ -36,7 +36,7 @@
   same algorithm for the forward and backward phases.
 
   The kernel update tensor ($\Delta W$) of Eq. (\ref{eq:update}) is
-  stored only in the transposed form.
+  stored only in the regular form.
 
   Locating a memory array element in the linear address space is done
   by providing ``strides'' for each dimension and the location of the

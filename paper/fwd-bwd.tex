@@ -349,8 +349,6 @@
 
   \subsection{Input image padding and strided convolution}
 
-%% ALEKS HERE
-
   As mentioned before, in order to be usable for the backward pass,
   our primitive has to support either implicit or explicit zero
   padding of input images.  When the input images are large, and
@@ -358,16 +356,16 @@
   slightly increases the computational cost.  However, as the images
   get smaller this overhead can become significant.
 
-  Additionally, once might consider a hybrid approach, where along
-  some directions the input is explicitly padded, while along the
-  other we perform implicit computation.
-
   We support implicit padding along an arbitrary of dimensions by
   modifying the lines 8--11 of
   Algorithm~\ref{alg:serial-forward-subtask}.  Instead of looping over
   all possible kernel offsets, for each invocation of the primitive,
-  we provide additional runtime parameters, a pre--computed limits,
+  we provide additional run--time parameters, a pre--computed limits,
   for which the kernels offset are valid.
+
+  Additionally, once might consider a hybrid approach, where along
+  some directions the input is explicitly padded, while along the
+  other we perform implicit computation.
 
   Our algorithm can easily be modified to support strided convolution,
   which is supported in our implementation.  This is accomplished by

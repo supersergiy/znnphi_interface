@@ -142,7 +142,7 @@ Similarly as in the fwd--bwd algorithm, our update phase algorithm
   $R_s$ to maximize the register--file utilization, but subject to the
   limits described above.  Further, we require that $R_x, R_y$ and
   $R_z$ divide $K_x, K_y$ and $K_z$ respectively.  Note that this can
-  always be accomplished be setting $R_x=R_y=R_z$ and $R_s=S$.
+  always be accomplished be setting $R_x=R_y=R_z=1$ and $R_s=S$.
   However this choice might not be optimal.  For example, when $K_z=3$
   on AVX512 CPU, we could pick $R_s=8$ and $R_z=3$, which utilizes
   $24$ registers, which is better than choosing $R_z=1$ and
@@ -174,11 +174,28 @@ Similarly as in the fwd--bwd algorithm, our update phase algorithm
   such that they divide $\alpha$ and $\alpha'$ respectively, and
   $\beta\beta'P = T$.  Out of all possible values we pick the one for
   which $|\beta -\beta'|$ is minimized.  The threads are then also
-  divided into $P$ sets of $T/P$ threads, each of which will compute
-  $\beta\beta'S^2$ kernel gradients.
+  divided into $P$ sets of $T'=T/P$ threads, each of which will
+  compute $\beta\beta'S^2$ kernel gradients.
 
-  The assignment of kernel gradients to be computed by each of the
-  thread subset is done in the same recursive fashion.
+  The values of the kernel gradient tensor $GW^T(A
+  \beta':A\beta'+\beta'-1,B \beta: B\beta + \beta-1, :,:,:)$ is
+  performed by the $A + B \alpha / \beta$-th set of $T'$ threads.
 
-  In the second step, we consider each of the $P$ sets of $T/P$
-  threads
+  In the second step, we consider each of the $P$ sets of $T'$
+  threads.  Kernel gradients to be computed by each subset is computed
+  by cross--correlating each of $\beta S$ input images with $\beta'S$
+  output gradients for each set of inputs in the batch of size $B$.
+
+  Further sub--division can be accomplished by dividing the
+  computation such that different threads process either different
+  sets in the batch or to process sub--images as depicted in the
+  middle column of Fig.~\ref{conv-decomposition}.  The final result is
+  then obtained by accumulating the result obtained by each thread.
+  This means that an additional ``reduction'' pass is necessary -- we
+  need to accumulate $T'$ results obtained by each of the threads.  As
+  we need to divide the problem into exactly $T'$ subproblems, the
+  recursive scheduling approach used for the fwd-bwd pass is not
+  possible.  Instead, to divide the problem as evenly as possible over
+  the $T'$ threads we perform the following recursive approach, that
+  is not guaranteed to divide the problem as evenly as in the fwd--bwd
+  case.

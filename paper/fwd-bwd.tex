@@ -1,17 +1,17 @@
 \section{Forward and backward propagation}
 
   As highlighted in Section~\ref{sec-conv-layers}, the forward pass
-  algorithm can be used for the backward pass if we (1) reflecting the
-  kernels along all directions, thus converting convolution to
+  algorithm can be used for the backward pass if we (1) reflect the
+  kernels along all dimensions, thus converting convolution to
   cross--correlation, and (2) zero--pad the input image such that
   \texttt{valid} cross--correlation becomes \texttt{full}
   cross--correlation.
 
-  We propose an algorithm for the forward pass that can handle an
-  arbitrary zero padding of input image, thus the same algorithm can
-  be used for the backward pass with no overhead.  As previously
-  stated, we assume that two copies of kernels are stored - original
-  and reflected.  This is reasonable because the memory required for
+  We propose an algorithm for the forward pass that can handle
+  implicit zero padding of input image, thus the same algorithm can be
+  used for the backward pass with no overhead.  As previously stated,
+  we assume that two copies of kernels are stored - original and
+  reflected.  This is reasonable because the memory required for
   kernels is typically much smaller than the memory required for the
   images.
 
@@ -203,7 +203,7 @@
 
   {\bf Full image primitive} \quad Our next primitive performs $S^2$
   convolution on $S$ images of an arbitrary size, producing $S$ output
-  images of size $I_z \times I_y \times I_x$.  This is done by
+  images of size $N_x' \times N_y' \times N_z'$.  This is done by
   dividing the output images into small sub--images
   (Fig~\ref{fig:conv-division} and using the primitive described
   above.  The size of each sub--image should be maximized, but is
@@ -274,9 +274,9 @@
   The main goal of the primitive is to equally divide the work among
   the $T$ threads such that once invoked they all finish roughly at
   the same time.  As described above, the $B$ sets of $\alpha'S$
-  output images of size $D \times H \times W$ can regarded as a $5D$
-  tensor of size $B \times (\alpha'S) \times D \times H \times W$.
-  Again, we take a recursive approach to our static scheduling
+  output images of size $N_x' \times N_y' \times N_z'$ can regarded as
+  a $5D$ tensor of size $B \times (\alpha'S) \times D \times H \times
+  W$.  Again, we take a recursive approach to our static scheduling
   algorithm.  The input to our algorithm is a set of $T$ threads, and
   a $5D$ tensor of values that has to be computed.
 

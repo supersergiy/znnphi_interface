@@ -12,10 +12,9 @@
   \texttt{full}, meaning that the output is calculated for all
   possible overlapping configurations of $A$ and $B$.
 
-  In the forward phase, a convolutional layer
-  transforms an input tuple of $F$ images into an output tuple of $F'$
-  images.  We want to process a batch of $B$ inputs to yield a batch
-  of $B$ outputs, via
+  In the forward phase, a convolutional layer transforms an input
+  tuple of $F$ images into an output tuple of $F'$ images.  We want to
+  process a batch of $B$ inputs to yield a batch of $B$ outputs, via
   \begin{equation}\label{eq:forward}
   I'_{b,j} = \sum_{i=1}^F I_{b,i}\star W_{ji}
   \end{equation}
@@ -31,23 +30,26 @@
   \begin{equation}\label{eq:backward}
   \hat{I}_{b,i} = \sum_{j=1}^{F'} \hat{I}'_{b,j} \ast W_{ji}
   \end{equation}
-  for $1 \le b \le B$ and $1 \le i \le F$.  The meaning of
-  $\hat{I}$ (gradient of the loss function for the training) is not
-  important here.  All that matters is that $\hat{I}$ and $\hat{I}'$
+  for $1 \le b \le B$ and $1 \le i \le F$.  $\hat{I}$ and $\hat{I}'$
   are batches of image tuples with the same size as $I$ and $I'$ in
   Eq. (\ref{eq:forward}).
 
-  In the update phase, the kernels of the convolutional layer are
-  modified by
-  \[
+  In the update phase, we calculate the kernel updates for the
+  convolutional layer
+  \begin{equation}\label{eq:update}
   \Delta W_{j,i} = \sum_{b=1}^B I_{b,i} \star \hat{I}'_{b,j}
-  \]
-  for $1 \le i \le F$ and $1 \le j \le F'$.
+  \end{equation}
+  for $1 \le i \le F$ and $1 \le j \le F'$.  The kernel updates
+  $\Delta W_{j,i}$ are images of the same size as the kernels
+  $W_{j,i}$.
 
-  Here we focus on computing these convolutions and
-  cross--correlations efficiently.  No further knowledge of the roles
-  of the values computed during the three passes are required to
-  understand the problem and the contributions in this paper.
+  Here we focus on computing the convolutions and cross--correlations
+  of Eqs. (\ref{eq:forward})-(\ref{eq:update}) efficiently.  The
+  meanings of these equations in the context of backpropagation
+  learning are not required for understanding the contributions of
+  this paper.  (In brief, $\hat{I}$ is the gradient of the loss
+  function for learning with respect to $I$, and $\Delta W_{j,i}$ is
+  the direction along which the kernels are modified by the learning.)
 
 %  Gradients of the loss with respect to the input/output/kernels are
 %  as well $N$--dimensional images of the same size as the

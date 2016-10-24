@@ -1,26 +1,25 @@
 \section{Data layout and notation}
 
-  To efficiently use FMA instructions we use data layout as proposed
-  in~\cite{jeffers2016knl, cpu-myth}, except that we generalize it for
-  N--dimensional case.  {\bf We encourage the reader to get a good
-    understanding of our data layout before proceeding to the next
-    section.}
+  To efficiently use FMA instructions we generalize the data layout as
+  proposed in~\cite{jeffers2016knl, cpu-myth} to the $N$--dimensional
+  case.  {\bf We encourage the reader to get a good understanding of
+    our data layout before proceeding to the next section.}
 
   All the tensors are stored as row--major multi--dimensional, packed
   an properly aligned arrays in memory.  To distinguish memory arrays
   from tensors we will use lower letters to refer to them, and C++
   like syntax to refer to a particular element.
 
-  {\bf Image and their gradient tensors} are stored as 6--dimensional
+  {\bf Image tensors} are stored as 6--dimensional
   arrays in memory.  An image tensor of size $B \times F \times X
   \times Y \times Z$ is stored as an array of size $B \times
   \ceil{F/S} \times X \times Y \times Z \times S$.  Here $S$ is the
-  size of the CPU's vector register \aleks{details}.  An tensor element
+  size of the CPU's vector register \aleks{details}.  A tensor element
   $I(b,f,x,y,z)$ corresponds to the array element
   $i\sqb{b}\sqb{\floor{f/S}}\sqb{x}\sqb{y}\sqb{z}\sqb{f\mod S}$
 
-  We maintain two copies of the {\bf kernel tensor} in memory -- a
-  regular and transposed form.  For a kernel tensor of size $F' \times
+  We maintain two copies of a {\bf kernel tensor} in memory -- a
+  regular and reflected form.  For a kernel tensor of size $F' \times
   F \times K_x \times K_y \times K_z$ both memory arrays have size
   $\ceil{F'/S} \times \ceil{F/S} \times K_X \times K_Y \times K_Z
   \times S \times S$.  A tensor element $W(f',f,k_x,k_y,k_z)$ is
@@ -30,14 +29,14 @@
   \sqb{\floor{f/S}}\sqb{K_x-k_x}\sqb{K_y-k_y}\sqb{K_z-k_z}\sqb{f'\mod
     S}\sqb{f\mod S}$
 
-  Whenever the kernel tensors are updated, both representation in
-  memory are modified.  This introduces a negligible overhead, as
-  updating kernel tensors counts as a miniscule part of the total
+  Whenever a kernel tensor is updated, both representations in
+  memory are modified.  This introduces negligible overhead, as
+  updating kernel tensors counts as a minuscule part of the total
   computation.  Having two copies, however, allows us to reuse the
-  same algorithm for the forward and backward propagation.
+  same algorithm for the forward and backward phases.
 
-  The kernel gradients ($GW$) tensor computed during the update phase
-  are stored only in the transposed form ($gw^T$).
+  The kernel update tensor ($\Delta W$) of Eq. (\ref{eq:update}) is
+  stored only in the transposed form.
 
   Locating a memory array element in the linear address space is done
   by providing ``strides'' for each dimension and the location of the

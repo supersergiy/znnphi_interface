@@ -81,13 +81,11 @@
   paper is to point to the right direction for solving the problem,
   rather than giving the final ``optimized'' implementation.
 
-  Efficient, FFT--based, algorithms for training and inference of
-  ConvNets with larger kernels have been introduced for both the CPU
+  FFT--based algorithms for training and inference of
+  ConvNets have been introduced for both the CPU
   ~\cite{zlateski2016znn,zlateski2016znni} and the
-  GPU~\cite{mathieu-iclr-14,vasilache2014fast}, however the evidence
-  suggests that ConvNets with smaller kernels, and larger number of
-  layers perform better on nearly all
-  problems~\cite{szegedy2015going,ronneberger2015u, simonyan2014very,
+  GPU~\cite{mathieu-iclr-14,vasilache2014fast}.  These are only efficient for large kernel sizes, while small kernel sizes are currently much more popular
+  ~\cite{szegedy2015going,ronneberger2015u, simonyan2014very,
     sermanet2013overfeat, long2015fully, tran2015learning, ji20133d,
     maturana_iros_2015, maturana_icra_2014}.
 

@@ -203,7 +203,13 @@
 
   We compare the speed of our approach to several competing CPU
   implementations for 2D ConvNets, CcT~\cite{hadjis2015shallow},
-  MKL--DNN and MKL--2017.
+  MKL--DNN and MKL--2017.  We used the CcT version of Caffe for CcT,
+  as well as the latest Intel--Caffe fork for MKL-DNN and MKL-2017.
+  Caffe benchmarks report the cumulative time of the backward
+  propagation and update phase, so we report the numbers of our
+  approach in the same fashion.  This is reasonable as in practice the
+  backward pass and update phase are always performed one after the
+  other.
 
 % We are unable to compare the speed against
 %  ZNN~\cite{zlateski2016znn} as it doesn't support layer--wise
@@ -211,13 +217,7 @@
 %  Also, we don't expect ZNN to be competitive as it is optimized for
 %  large kernels.
 
-  The CcT version of Caffe was used for benchmarking CcT.  The latest
-  Intel--Caffe fork was compared separately for MKL-DNN and MKL-2017.
-  Caffe benchmarks report the cumulative time of the backward
-  propagation and update phase, so we report the numbers of our
-  approach in the same fashion.  This is reasonable as in practice the
-  backward pass and update phase are always performed one after the
-  other.
+  
 
   \begin{table} \centering
     \setlength\tabcolsep{2.5pt}
@@ -296,10 +296,26 @@
   4--way Haswell.
 
   \section{CPU vs. GPU for 3D convolutional layers}
+  While the CPU performance numbers given above are encouraging, they
+  still fall short of GPU performance numbers.  This is partially
+  because a state-of-the-art GPU has $2\times$ the FLOPS of a
+  state-of-the-art CPU (Table \ref{table:cpus}).  It is also because
+  cuDNN is highly optimized and often achieves extremely high
+  percentage utilization of available FLOPS.  This is especially the
+  case with popular benchmark architectures for object detection like
+  VGG-A.  Utilization is somewhat less for segmentation networks like
+  U-Net (data not shown).
+  
+  However, it turns out that our approach is competitive with GPUs for
+  3D convolutional layers.  For the comparison of Table
+  \ref{eq:GPUvsCPU}, we used direct cuDNNv5 calls from C++, and the
+  two latest generations of the Titan X GPU.  Surprisingly, our
+  approach applied to the 4--way Haswell machine gives performance
+  comparable to the Titan X Pascal.  This means that for 3D ConvNets
+  our approach can compensate for the lower theoretical FLOPS of the
+  Haswell machine (Table \ref{table:cpus}) by achieving higher
+  percentage utilization.
 
-  Finally, we compare the speed of 3D convolutional layers to state of
-  the art 3D primitives for the GPU.  We used direct cuDNNv5 calls
-  from C++, and the two latest generations of the Titan X GPU.
 
   \begin{table} \centering
     \setlength\tabcolsep{2.5pt}
@@ -317,5 +333,6 @@
       & C4b & 65.1  & 135.1 & 55.7  & {\bf 117.4} & {\bf 55.2}  & 131.2 & 85.3  & 196.1  \\
       \hline
     \end{tabular}
-    \caption{3D vs GPU}
+    \caption{GPU vs. CPU for 3D convolutional layers}
+    \label{eq:GPUvsCPU}
   \end{table}

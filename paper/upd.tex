@@ -6,34 +6,8 @@
   performed during the update phase are performed on a large image
   with another large image resulting in a small image.
 
-  The main difference between the cross--correlations performed during
-  the fwd-bwd pass and the update phase is that
-
-Similarly as in the fwd--bwd algorithm, our update phase algorithm
+  Similarly as in the propagation algorithm, our update phase algorithm
   consists of the following stack of primitives.
-
-  Instead of computing
-  \[
-  \frac{\partial L}{\partial W_{j,i}} = \sum_{b=1}^B
-  \frac{\partial L}{\partial I'_{b,j}}  \star I_{b,i}
-  \]
-  we compute
-  \[
-  \Bigg( \frac{\partial L}{\partial W_{j,i}} \Bigg)^T = \sum_{b=1}^B
-  I_{b,i} \star \frac{\partial L}{\partial I'_{b,j}}
-  \]
-
-  That is the $GW^T$ tensor.
-
-  In the update phase, each of the $F$ input images from the previous
-  forward pass is cross--correlated with each of the $F'$ gradients
-  with respect to the output obtained during the backward pass to
-  produce $S^2$ gradients with respect to the kernel weights each of
-  size $W_Z \times W_Y \times X$ -- the size of the kernel.  For
-  simplicity, we will refer to the input images as simply ``images'',
-  to the gradients with respect to the output as simply ``gradients'',
-  and gradients with respect to the kernel weights as ``kernel
-  gradients''.
 
   \begin{enumerate}
     \item {\bf Sub--kernel primitive} -- a primitive that computes a
@@ -41,7 +15,7 @@ Similarly as in the fwd--bwd algorithm, our update phase algorithm
       \times (X + R_X - 1)$ with $S$ gradients of size $1 \times 1
       \times X$ to produce and accumulate the results of $S^2$ kernel
       gradients of size $R_Z \times R_X \times R_Y$.  As in the
-      fwd--bwd case, this primitive is optimized for efficiently
+      propagation algorithm, this primitive is optimized for efficiently
       reusing the register file as well as $L1$ cache.
     \item {\bf Full kernel primitive} -- a primitive that computes
       cross--correlation of an arbitrary sized $S$ images with
@@ -96,7 +70,7 @@ Similarly as in the fwd--bwd algorithm, our update phase algorithm
 
   {\bf Sub--kernel primitive} \quad The lowest level primitive is
   shown in Algorithm~\ref{alg:serial-update-subtask}.  Following the
-  same principles as in the fwd-bwd pass' sub--kernel primitive we
+  same principles as in the propagation sub--kernel primitive we
   vectorize the computation of $wg^T[r_x][r_y][r_z][f][f']$ computed
   via {\small
   \[
@@ -159,12 +133,12 @@ Similarly as in the fwd--bwd algorithm, our update phase algorithm
   cross--correlated with each of $\beta'S$ output gradients to produce
   $\beta S \beta' S$ kernel gradients.  This primitive is designed for
   maximal reuse of higher levels of cache.  To achieve that, the
-  computation is performed in the same fashion as in the fwd--bwd
+  computation is performed in the same fashion as in the propagation
   sub--layer primitive (Fig.~\ref{fig:full-exec}).
 
   {\bf Full layer primitive} \quad The main goal of the primitive is
   to parallelize the computation over $T$ available threads.  In
-  contrast to the fwd--bwd full layer primitive where each thread can
+  contrast to the propagation full layer primitive where each thread can
   execute multiple sub--layer primitives, here we assign exactly one
   sub--layer primitive to each thread.  Each thread then executes the
   primitive on the subset of $B$ input--image output--gradient pairs.
@@ -194,7 +168,7 @@ Similarly as in the fwd--bwd algorithm, our update phase algorithm
   This means that an additional ``reduction'' pass is necessary -- we
   need to accumulate $T'$ results obtained by each of the threads.  As
   we need to divide the problem into exactly $T'$ subproblems, the
-  recursive scheduling approach used for the fwd-bwd pass is not
+  recursive scheduling approach used for the propagation is not
   possible.  Instead, to divide the problem as evenly as possible over
   the $T'$ threads we perform the following recursive approach, that
   is not guaranteed to divide the problem as evenly as in the fwd--bwd

@@ -6,7 +6,7 @@
   images.  We want to process a batch of $B$ inputs to yield a batch
   of $B$ outputs, via
   \begin{equation}\label{eq:forward}
-  I'_{b,j} = \sum_{i=1}^F I_{b,i}\star W_{ji} 
+  I'_{b,j} = \sum_{i=1}^F I_{b,i}\star W_{ji}
   \end{equation}
   for $1 \le b \le B$ and $1 \le j \le F'$.  Here $I_{b,i}$ is the
   $i^{th}$ image of the $b^{th}$ input in the batch, and $I'_{b,j}$ is
@@ -19,7 +19,7 @@
   tuples via
   \begin{equation}\label{eq:backward}
   \hat{I}_{b,i} = \sum_{j=1}^{F'} \hat{I}'_{b,j} \ast W_{ji}
-  \end{equation} 
+  \end{equation}
   for $1 \le b \le B$ and $1 \le i \le F$.  The meaning of the
   $\hat{I}$ (gradients of the loss function for the training) is not
   important here.  All that matters is that $\hat{I}$ and $\hat{I}'$
@@ -28,7 +28,7 @@
 
   In the update phase, the kernels are modified by
   \[
-  \Delta W_{j,i} = \sum_{b=1}^B\hat{I}'_{b,j}\star I_{b,i}
+  \Delta W_{j,i} = \sum_{b=1}^B I_{b,i} \star \hat{I}'_{b,j}
   \]
   for $1 \le i \le F$ and $1 \le j \le F'$.
 

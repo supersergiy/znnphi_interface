@@ -99,8 +99,8 @@
       \end{codebox}
     \caption{The finest granularity primitive that computes a
       sub--image of size $R_x \times R_y \times R_z$ of $S$ images by
-      performing $S^2$ convolutions on $S$ input images with kernels
-      of size $K_x \times K_y \times K_z$.}
+      performing $S^2$ cross--correlations on $S$ input images with
+      kernels of size $K_x \times K_y \times K_z$.}
     \label{alg:serial-forward-subtask}
     }
   \end{algorithm}
@@ -114,7 +114,7 @@
   (This is easily implemented using C++ templates).  With the loop
   bounds known during the compile time, the compiler is able to
   perform loop unrolling as commented in the pseudo--code.  Depending
-  on the argument $\Theta$, the result of the convolution will be
+  on the argument $\Theta$, the result of the cross--correlation will be
   either accumulated to an image $i'$, or the provided bias $\theta$
   will be added to each pixel of the resulting image.
 
@@ -196,7 +196,7 @@
     \label{fig:conv-division}
   \end{figure}
 
-  {\bf Full image primitive} performs $S^2$ convolution on $S$ images
+  {\bf Full image primitive} performs $S^2$ cross--correlations on $S$ images
   of an arbitrary size, producing $S$ output images of size $N_x'
   \times N_y' \times N_z'$.  This is done by dividing the output
   images into small sub--images (Fig~\ref{fig:conv-division} and using
@@ -228,7 +228,7 @@
   {\bf Sub--layer primitive} considers all $\alpha S$ input images and
   computes the values of $\beta S$ ($\beta \le \alpha'$) output
   sub-images of size $N_x' \times N_y' \times N_z'$ by performing
-  $\alpha \beta S^2$ convolutions.  This is achieved by invoking
+  $\alpha \beta S^2$ cross--correlations.  This is achieved by invoking
   $\alpha \beta$ {\bf full image primitives} described above.
 
   \begin{figure}
@@ -367,8 +367,8 @@
   some directions the input is explicitly padded, while along the
   other we perform implicit computation.
 
-  Our algorithm can easily be modified to support strided convolution,
-  which is supported in our implementation.  This is accomplished by
-  simply modifying the line $18$ of
-  Algorithm~\ref{alg:serial-forward-subtask} to account for the
-  strides.
+  Our algorithm can easily be modified to support strided
+  convolution/cross--correlation, which is supported in our
+  implementation.  This is accomplished by simply modifying the line
+  $18$ of Algorithm~\ref{alg:serial-forward-subtask} to account for
+  the strides.

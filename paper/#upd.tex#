@@ -61,7 +61,7 @@
         \End
         \End \li \kw{end for} $s_0$
       \end{codebox}
-    \caption{Serial update subtask.}
+    \caption{Finest granularity update primitive that computes .}
     \label{alg:serial-update-subtask}
     }
   \end{algorithm}

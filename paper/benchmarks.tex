@@ -1,10 +1,9 @@
 \section{Experiments}
 
-  In order to support the claim that our algorithm is agnostic to the
-  ConvNet architecture as well as hardware it is running on decide to
-  benchmark the convolutional layers of state of the art, top
-  performing networks used for -- (1) 2D object detection, (2) 2D
-  image segmentation and (3) spatiotemporal feature learning (3D)
+  For a variety of CPUs, we benchmarked the convolutional layers of
+  several state-of-the-art ConvNets used for (1) 2D object detection,
+  (2) 2D image segmentation, and (3) 3D spatiotemporal feature
+  learning.
 
   \begin{table} \centering
     \setlength\tabcolsep{2.5pt}
@@ -66,38 +65,33 @@
     \label{table:cpus}
   \end{table}
 
-  For the 2D object detection, we decide on VGG-A version of
-  OxfordNet~\cite{simonyan2014very} as one of the
-  ImageNet~\cite{imagenet_cvpr09,ILSVRC15}, winners that is also
-  commonly used for benchmarking different ConvNet
-  algorithms~\cite{imagenetwinners}.  For 2D image segmentation we
-  choose U--Net~\cite{ronneberger2015u}, a top performing network for
-  biomedical image segmentation.  The main difference between object
-  detection and segmentation Convnets is that the object detection
-  networks use ``batch training'' (multiple sets of inputs at the
-  time) with gradually downsampled images.  On the other side,
-  segmentation networks use fairly large images with $B=1$.  As for
-  our 3D network, we choose C3D~\cite{maturana_iros_2015} a state of
-  the art network for spatiotemporal feature learning.  For all the
-  networks, we focus on 5 most computationally expensive convolutional
-  layers, shown on Table~\ref{table:layers}.  As all chosen ConvNets
-  have kernel sizes of $3 \times 3$ or $3^3$ in the 3D case, we
-  benchmark some different kernel sizes.
+  The 2D object detection ConvNet was the VGG-A version of
+  OxfordNet~\cite{simonyan2014very}, an
+  ImageNet~\cite{imagenet_cvpr09,ILSVRC15} winner that is widely used
+  for speed benchmarks~\cite{imagenetwinners}.  The 2D image
+  segmentation ConvNet was U--Net~\cite{ronneberger2015u}, used for
+  biomedical image segmentation.  The object detection network uses
+  ``batch training'' (multiple sets of inputs at the time), and
+  gradually downsampled images.  The segmentation network uses rather
+  large images with $B=1$.  The 3D spatiotemporal feature learning
+  network was C3D~\cite{maturana_iros_2015}.  For each network, we
+  benchmarked the five most computationally expensive convolutional
+  layers (Table~\ref{table:layers}).
 
-  We include layers with non--traditional number of images (not power
-  of two).  For the 2D case we include two extra kernel sizes of $5
-  \times 5$ and $11 \times 11$, inspired by
-  AlexNet~\cite{krizhevsky2012imagenet}.  For the 3D case, we include
-  non--isotropic kernel size of $2 \times 3 \times 3$, inspired by
-  VD3D3D~\cite{lee2015recursive}, as well as one of $3 \times 5 \times
-  5$.
+  The above ConvNets use only kernel sizes of $3 \times 3$ or $3\times
+  3\times 3$, and the number of images in a layer is always a power of
+  two.  To make our benchmarks more general (see ``Toy'' of
+  Table~\ref{table:layers}), we also include layers with kernel sizes
+  $5 \times 5$ and $11 \times 11$, inspired by
+  AlexNet~\cite{krizhevsky2012imagenet}, kernel size $2 \times 3
+  \times 3$, inspired by VD2D3D~\cite{lee2015recursive}, and kernel
+  size $3 \times 5 \times 5$.  We also include layers with number of
+  images not equal to a power of two.
 
-  In addition, we benchmark each of the networks on three generatiopns
+  In addition, we benchmark each layer on three generations
   of Intel Xeon processors (Table~\ref{table:cpus}).  All the machines
   except the Skylake CPU were set to run at constant frequency (we did
-  not have root access to the Skylake machine).  In addition, we have
-  benchmarked the 3D network on the two latest generations of the
-  Titan X GPU.
+  not have root access to the Skylake machine). 
 
   \begin{figure*} \centering
     \small
@@ -162,76 +156,68 @@
   primitive such that it uses only $N$ of the available cores and $H$
   hyper--threads per core.  We then perform 10 iterations of (1)
   randomly initializing all the data and (2) running the algorithm.
-  We report the average time of running the second step.  The GPU
-  benchmarks were done in similar fashion and by direct cuDNNv5 calls
-  from C++.
-
+  We report the average time of running the second step.
+  
   Randomly initializing the data before each iteration is important,
   as it clears the CPU caches.  Thus, our measurements represent a
-  lower bound on the time required when performing a full network
-  training.  The speed of each primitive is then computed by dividing
-  the FLOPs required for the algorithm by time average runtime.  The
-  utilization is computed by dividing the speed of our algorithm (in
-  FLOPS) by the FLOPS deliverable by $N$ cores of the given CPU.
+  lower bound on the time required when the layer is part of a larger
+  network that is being trained.  The speed of each primitive is
+  computed by dividing the FLOPs required for the algorithm by
+  average runtime.  The utilization is computed by dividing the speed
+  of our algorithm (in FLOPS) by the FLOPS deliverable by $N$ cores of
+  the given CPU.
 
-  On our Skylake and Haswell machine we benchmarked our algorithm
+  For Skylake and Haswell, we benchmarked our algorithm
   using gcc-5.3, icc-16 and clang-3.9.  The measured times were within
   a couple of percent, with icc-16 being the slowest, and clang-3.9
-  being the fastest.  We choose to report the gcc-5.3 numbers.
+  being the fastest.  We report the gcc-5.3 numbers.
 
-  On the Xeon Phi, icc-16 and clang-3.9 performed equally well, with
+  For Xeon Phi, icc-16 and clang-3.9 performed equally well, with
   gcc-5.3 greatly under--performing.  Upon examining the generated
   assembly code, we noticed that gcc-5.3 failed to use the
   scalar--vector FMA instructions available.  The numbers reported are
-  the ones obtained by icc-16.
+  for icc-16.
 
   \subsection{CPU utilization and scalability}
 
-  To save space we demonstrate the utilization and scalability on a
-  single Figure.~\ref{fig:scalability}.  The $x$ axis represents the
-  number of cores used, and the $y$ axis represents the percentage of
-  utilization of the used cores.  A linear scalability is then
-  represented with a horizontal line.  For clarity, we don't show
-  points for different number of allowed hyper--threads per core.  We
-  only show the ones with the highest utilization, as practice,
-  optimal number of hyper--threads per core should be empirically
-  determined.  More hyper--threads per core can hide memory latency,
-  but will reduce effective cache sizes and might introduce cache
-  associativity conflicts.  In more than 90\% of the cases, the
-  optimal number of hyper--threads per core was $2$.
-
-  We see that in nearly all cases, a single core utilization is higher
+  Utilization and scalability are shown in Fig~\ref{fig:scalability}.
+  The $x$ axis represents the number of cores used, and the $y$ axis
+  represents the percentage of utilization of the used cores.  A
+  horizontal line would mean perfectly linear scalability.  For
+  simplicity, points are only shown for the optimal number
+  of hyper--threads per core, which was $2$ in more than 90\% of cases.
+  More hyper--threads per core can hide memory latency, but will
+  reduce effective cache sizes and might introduce cache associativity
+  conflicts.
+  
+  In nearly all cases, single core utilization is higher
   than 75\%.  As we were unable to limit the CPU frequency on the
   Skylake CPU used for benchmarks, the turbo--boost that was enabled
   resulted in utilization higher than 100\% when one or two cores out
   of four available were used.
 
-  The Fig.~\ref{fig:scalability} suggest that our algorithms scale
-  very well, with near linear scalability even for the multi--chip
-  system.
+  Fig.~\ref{fig:scalability} suggest that our algorithms scale very
+  well, with near linear scalability even for the multi--chip Haswell system.
 
-  \subsection{Performances of 2D convolutional layers}
+  \subsection{Comparison versus other CPU implementations}
 
-  We compare the speed of our approach to alternative CPU
-  implementations for 2D ConvNets.  Benchmarks are performed against
-  CcT~\cite{hadjis2015shallow}, MKL--DNN and MKL--2017, as currently
-  fastest available CPU implementations.  We are unable to compare the
-  speed against ZNN~\cite{zlateski2016znn} as it doesn't support
-  layer--wise computation, but rather parallelizes the whole training
-  algorithm.  Also, we don't expect ZNN to be competitive as it is
-  optimized for large kernels.
+  We compare the speed of our approach to several competing CPU
+  implementations for 2D ConvNets, CcT~\cite{hadjis2015shallow},
+  MKL--DNN and MKL--2017.
 
-  CcT version of caffe was used for benchmarking CcT.  The latest
-  intel--caffe fork compared separately for MKL-DNN and MKL-2017.
+% We are unable to compare the speed against
+%  ZNN~\cite{zlateski2016znn} as it doesn't support layer--wise
+%  computation, but rather parallelizes the whole training algorithm.
+%  Also, we don't expect ZNN to be competitive as it is optimized for
+%  large kernels.
+
+  The CcT version of Caffe was used for benchmarking CcT.  The latest
+  Intel--Caffe fork was compared separately for MKL-DNN and MKL-2017.
   Caffe benchmarks report the cumulative time of the backward
-  propagation and update phase, thus we report the numbers of our
+  propagation and update phase, so we report the numbers of our
   approach in the same fashion.  This is reasonable as in practice the
   backward pass and update phase are always performed one after the
   other.
-
-  Two of our three CPUs were used for the benchmarks.  With CcT
-  benchmarked only on our Haswell machine, as we were unable to
-  compile it on the Xeon Phi.
 
   \begin{table} \centering
     \setlength\tabcolsep{2.5pt}
@@ -261,12 +247,13 @@
     \label{table:2d-haswell}
   \end{table}
 
-  On the 4--way Haswell machine, our approach outperformed all
-  competitors (Table~\ref{table:2d-haswell}).  For the VGG--A network,
-  MKL--2017 had competitive performances (10-20\% slower for the
-  forward propagation, and 50\% slower for backward propagation +
-  update).  For the segmentation ConvNet layers, our approach greatly
-  outperformed the competitors, up to $20\times$ for the layer $C1b$.
+  On a 4--way Haswell machine, MKL--2017 was the best of the three
+  competitors (Table~\ref{table:2d-haswell}), and our approach
+  outperformed MKL--2017.  For VGG--A layers, MKL--2017 was not much
+  slower (only 10-20\% for forward propagation, and 50\% for backward
+  propagation + update).  For U-Net layers, our approach greatly
+  outperformed MKL--2017, with up to $20\times$ greater speed
+  for layer $C1b$ forward propagation.
 
   \begin{table} \centering
     \setlength\tabcolsep{2.5pt}
@@ -292,29 +279,27 @@
 
     \end{tabular}
     \caption{Benchmarks of the 2D layers against MKL-DNN and MKL-2017
-      on the Xeon Phi 7210 machine.}
+      on the Xeon Phi 7210 machine.  CcT was not included as it did not compile for Xeon Phi.}
     \label{table:2d-knl}
   \end{table}
 
-  Our approach achieved performances comparable to best performing
-  implementation (MKL-2017), for the VGG-A network
-  (Table~\ref{table:2d-knl}).  On benchmarked U--Net layers, our
-  approach greatly outperformed MKL-2017 on layers with fewer images.
-  The relative performances of MKL-2017 increases with the number of
-  images in the layer.  On the widest layer with 1024 images, MKL-2017
-  even slightly outperformed our approach.
+  For Xeon Phi, our approach was comparable to MKL-2017 for VGG-A
+  layers, with MKL-2017 having a slight edge
+  (Table~\ref{table:2d-knl}).  For U--Net layers, our approach was far
+  superior to MKL-2017 on layers with fewer images, and was only
+  slightly inferior on the widest layer with 1024 images.
 
-  The time required to train a ConvNet is roughly proportional to the
-  sum of time required for the forward propagation, backward
-  propagation and update of all the layers in the network.  We can
-  conclude that our approach is much more suitable for training
-  segmentation ConvNets.
+  To summarize, our approach is far superior to competitors for
+  training image segmentation architectures like U-Net.  For object
+  detection architectures like VGG-A, our approach is slightly
+  inferior to MKL-2017 for Xeon Phi KNL and slightly superior for
+  4--way Haswell.
 
-  \subsection{Performances of 3D convolutional layers vs GPU}
+  \section{CPU vs. GPU for 3D convolutional layers}
 
-  Finally, we compare the speed of 3D networks to state of the art 3D
-  primitives for the GPU.
-
+  Finally, we compare the speed of 3D convolutional layers to state of
+  the art 3D primitives for the GPU.  We used direct cuDNNv5 calls
+  from C++, and the two latest generations of the Titan X GPU.
 
   \begin{table} \centering
     \setlength\tabcolsep{2.5pt}

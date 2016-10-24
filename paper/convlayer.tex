@@ -1,39 +1,34 @@
 \section{Convolutional layers} \label{sec-conv-layers}
 
-  We quickly summarize the computation performed by the convolutional
-  layers.  In the forward propagation pass of a convolutional layer a
-  tuple of $F$ images are transformed into another tuple of $F'$
+  Here we summarize the computations performed by a single
+  convolutional layer.  In forward propagation, a convolutional layer
+  transforms an input tuple of $F$ images into an output tuple of $F'$
   images.  We want to process a batch of $B$ inputs to yield a batch
   of $B$ outputs, via
-  \[
-  I'_{b,j} = \sum_{i=1}^F I_{b,i} \star W_{ji}
-  \]
+  \begin{equation}\label{eq:forward}
+  I'_{b,j} = \sum_{i=1}^F I_{b,i}\star W_{ji} 
+  \end{equation}
   for $1 \le b \le B$ and $1 \le j \le F'$.  Here $I_{b,i}$ is the
   $i^{th}$ image of the $b^{th}$ input in the batch, and $I'_{b,j}$ is
   the $j^{th}$ image of the $b^{th}$ output in the batch, and $W_{ji}$
   is the kernel from the $i^{th}$ image in an input tuple to the
   $j^{th}$ image in an output tuple.
 
-  In the backward propagation pass, a tuple of $F'$ gradients of the
-  loss with respect to the outputs are transformed into a tuple of $F$
-  gradients of the loss with respect to the input.  We process a batch
-  of $B$ tuples, via
-  \[
-  \frac{\partial L}{\partial I_{b,i}} = \sum_{j=1}^{f'}
-  \frac{\partial L}{\partial I'_{b,j}} \ast W_{ji}
-  \]
-  for $1 \le b \le B$ and $1 \le i \le F$.  Here $\frac{\partial
-    L}{\partial I'_{b,j}}$ is the $j^{th}$ gradient of the loss with
-  respect to the output of the $b^{th}$ input in the batch, and
-  $\frac{\partial L}{\partial I_{b,i}}$ is the $i^{th}$ gradient of
-  the loss with respect to the input of the $b^{th}$ input in the
-  batch.
+  In backward propagation, a convolutional layer transforms a tuple of
+  $F'$ images into a tuple of $F$ images.  We process a batch of $B$
+  tuples via
+  \begin{equation}\label{eq:backward}
+  \hat{I}_{b,i} = \sum_{j=1}^{F'} \hat{I}'_{b,j} \ast W_{ji}
+  \end{equation} 
+  for $1 \le b \le B$ and $1 \le i \le F$.  The meaning of the
+  $\hat{I}$ (gradients of the loss function for the training) is not
+  important here.  All that matters is that $\hat{I}$ and $\hat{I}'$
+  are batches of image tuples with the same size as $I$ and $I'$ in
+  Eq. (\ref{eq:forward}).
 
-  Finally, in the update phase, the gradients of the loss with respect
-  to the kernels are computed via,
+  In the update phase, the kernels are modified by
   \[
-  \frac{\partial L}{\partial W_{j,i}} = \sum_{b=1}^B
-  \frac{\partial L}{\partial I'_{b,j}}  \star I_{b,i}
+  \Delta W_{j,i} = \sum_{b=1}^B\hat{I}'_{b,j}\star I_{b,i}
   \]
   for $1 \le i \le F$ and $1 \le j \le F'$.
 

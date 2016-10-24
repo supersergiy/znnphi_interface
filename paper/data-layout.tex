@@ -15,7 +15,7 @@
   arrays in memory.  An image tensor of size $B \times F \times X
   \times Y \times Z$ is stored as an array of size $B \times
   \ceil{F/S} \times X \times Y \times Z \times S$.  Here $S$ is the
-  size of the CPU's vector register \ales{details}.  An tensor element
+  size of the CPU's vector register \aleks{details}.  An tensor element
   $I(b,f,x,y,z)$ corresponds to the array element
   $i\sqb{b}\sqb{\floor{f/S}}\sqb{x}\sqb{y}\sqb{z}\sqb{f\mod S}$
 

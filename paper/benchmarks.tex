@@ -66,7 +66,6 @@
     \label{table:cpus}
   \end{table}
 
-
   For the 2D object detection, we decide on VGG-A version of
   OxfordNet~\cite{simonyan2014very} as one of the
   ImageNet~\cite{imagenet_cvpr09,ILSVRC15}, winners that is also
@@ -163,17 +162,28 @@
   primitive such that it uses only $N$ of the available cores and $H$
   hyper--threads per core.  We then perform 10 iterations of (1)
   randomly initializing all the data and (2) running the algorithm.
-  We report the average time of running the second step.
+  We report the average time of running the second step.  The GPU
+  benchmarks were done in similar fashion and by direct cuDNNv5 calls
+  from C++.
 
   Randomly initializing the data before each iteration is important,
   as it clears the CPU caches.  Thus, our measurements represent a
   lower bound on the time required when performing a full network
-  training.
+  training.  The speed of each primitive is then computed by dividing
+  the FLOPs required for the algorithm by time average runtime.  The
+  utilization is computed by dividing the speed of our algorithm (in
+  FLOPS) by the FLOPS deliverable by $N$ cores of the given CPU.
 
-  The speed of our primitives is then computed by dividing the FLOPs
-  required for the algorithm by time average runtime.  The utilization
-  is computed by dividing the speed of our algorithm (in FLOPS) by the
-  FLOPS deliverable by $N$ cores of the given CPU.
+  On our Skylake and Haswell machine we benchmarked our algorithm
+  using gcc-5.3, icc-16 and clang-3.9.  The measured times were within
+  a couple of percent, with icc-16 being the slowest, and clang-3.9
+  being the fastest.  We choose to report the gcc-5.3 numbers.
+
+  On the Xeon Phi, icc-16 and clang-3.9 performed equally well, with
+  gcc-5.3 greatly under--performing.  Upon examining the generated
+  assembly code, we noticed that gcc-5.3 failed to use the
+  scalar--vector FMA instructions available.  The numbers reported are
+  the ones obtained by icc-16.
 
   \subsection{CPU utilization and scalability}
 
@@ -181,15 +191,14 @@
   single Figure.~\ref{fig:scalability}.  The $x$ axis represents the
   number of cores used, and the $y$ axis represents the percentage of
   utilization of the used cores.  A linear scalability is then
-  represented with a straight line, with perfect scalability as a
-  horizontal line.  For clarity, we don't show points for different
-  number of allowed hyper--threads per core.  We only show the ones
-  with the highest utilization, as practice, optimal number of
-  hyper--threads per core should be empirically determined.  More
-  hyper--threads per core can hide memory latency, but will reduce
-  effective cache sizes and might introduce cache associativity
-  conflicts.  In more than 90\% of the cases, the optimal number of
-  hyper--threads per core was $2$.
+  represented with a horizontal line.  For clarity, we don't show
+  points for different number of allowed hyper--threads per core.  We
+  only show the ones with the highest utilization, as practice,
+  optimal number of hyper--threads per core should be empirically
+  determined.  More hyper--threads per core can hide memory latency,
+  but will reduce effective cache sizes and might introduce cache
+  associativity conflicts.  In more than 90\% of the cases, the
+  optimal number of hyper--threads per core was $2$.
 
   We see that in nearly all cases, a single core utilization is higher
   than 75\%.  As we were unable to limit the CPU frequency on the
@@ -197,28 +206,39 @@
   resulted in utilization higher than 100\% when one or two cores out
   of four available were used.
 
-
-
+  The Fig.~\ref{fig:scalability} suggest that our algorithms scale
+  very well, with near linear scalability even for the multi--chip
+  system.
 
   \subsection{Performances of 2D convolutional layers}
 
-  Secondly, we compare the speed of our approach to alternative 2D
-  primitives -- specifically CcT, MKL--DNN and MKL--2017.  We show
-  that our approach is competitive, over--performing the next bet
-  competitor by a small margin on Xeon and under--performing by a
-  small margin on the KNL for 2D object--detection.  However, for
-  semantical segmentation, we greatly outperform all competitors on
-  both Xeon and Xeon Phi.
+  We compare the speed of our approach to alternative CPU
+  implementations for 2D ConvNets.  Benchmarks are performed against
+  CcT~\cite{hadjis2015shallow}, MKL--DNN and MKL--2017, as currently
+  fastest available CPU implementations.  We are unable to compare the
+  speed against ZNN~\cite{zlateski2016znn} as it doesn't support
+  layer--wise computation, but rather parallelizes the whole training
+  algorithm.  Also, we don't expect ZNN to be competitive as it is
+  optimized for large kernels.
 
-  Finally, we compare the speed of 3D networks to state of the art 3D
-  primitives for the GPU.
+  CcT version of caffe was used for benchmarking CcT.  The latest
+  intel--caffe fork compared separately for MKL-DNN and MKL-2017.
+  Caffe benchmarks report the cumulative time of the backward
+  propagation and update phase, thus we report the numbers of our
+  approach in the same fashion.  This is reasonable as in practice the
+  backward pass and update phase are always performed one after the
+  other.
+
+  Two of our three CPUs were used for the benchmarks.  With CcT
+  benchmarked only on our Haswell machine, as we were unable to
+  compile it on the Xeon Phi.
 
   \begin{table} \centering
     \setlength\tabcolsep{2.5pt}
     \begin{tabular}{cr !{\vrule width0.8pt} rr|rr|rr|rr  }
       & & \multicolumn{2}{c|}{MKL-DNN} & \multicolumn{2}{c|}{MKL-2017}
-      & \multicolumn{2}{c|}{CcT} & \multicolumn{2}{c}{ZNNPhi} \\
-      &  & Fwd & Bwd & Fwd & Bwd& Fwd & Bwd& Fwd & Bwd \\
+      & \multicolumn{2}{c|}{CcT} & \multicolumn{2}{c}{Ours} \\
+      &  & Fwd & B+U & Fwd & B+U& Fwd & B+U& Fwd & B+U \\
       \hline
       \multirow{5}{*}{\rotatebox{90}{\textbf{VGG-A}}}
       & C2  & 79.1  & 196.4 & 43.8 & 99.3  & 141.2 & 317.8 & {\bf 33.4} & {\bf 60.4}  \\
@@ -229,27 +249,31 @@
       \hline
       \multirow{5}{*}{\rotatebox{90}{\textbf{U-Net}}}
       & C1b  & 257.44 & 494.93 & 183.16 & 195.86 & 1739 &  542 & {\bf 9.02} & {\bf 18.12} \\
-%%      & C2a  & 66.07  & 129.50 & 43.92  & 38.38  & 641  & 1199 & {\bf 3.80} & {\bf  8.51} \\
       & C2b  & 127.55 & 248.83 & 82.80  & 42.53  & 1052 & 1671 & {\bf 6.07} & {\bf 13.91} \\
-%%      & C3a  & 36.47  & 67.78  & 21.64  & 13.08  & 1032 & 1627 & {\bf 3.55} & {\bf  8.88} \\
       & C3b  & 66.17  & 126.35 & 38.48  & 25.20  & 2988 & 4645 & {\bf 5.47} & {\bf 13.41} \\
-%%      & C4a  & 21.04  & 40.69  & 11.50  & 13.80  & 693  & 1244 & {\bf 3.46} & {\bf  8.62} \\
       & C4b  & 53.89  & 90.54  & 18.66  & 26.90  & 2172 & 4033 & {\bf 5.16} & {\bf 13.21} \\
-%%      & C5a  & 11.49  & 36.59  & 5.38   & 9.98   & 899  & 1754 & {\bf 3.23} & {\bf  8.12} \\
       & C5b  & 19.34  & 77.86  & 9.24   & 22.09  & 1667 & 3198 & {\bf 4.35} & {\bf 11.23} \\
       \hline
 
     \end{tabular}
-    \caption{Haswell}
+    \caption{Benchmarks of the 2D layers against CcT, MKL-DNN and
+      MKL-2017 on the 4--way E7-8890v3 (Haswell) machine.}
+    \label{table:2d-haswell}
   \end{table}
 
+  On the 4--way Haswell machine, our approach outperformed all
+  competitors (Table~\ref{table:2d-haswell}).  For the VGG--A network,
+  MKL--2017 had competitive performances (10-20\% slower for the
+  forward propagation, and 50\% slower for backward propagation +
+  update).  For the segmentation ConvNet layers, our approach greatly
+  outperformed the competitors, up to $20\times$ for the layer $C1b$.
 
   \begin{table} \centering
     \setlength\tabcolsep{2.5pt}
     \begin{tabular}{cr !{\vrule width0.8pt} rr|rr|rr  }
       & & \multicolumn{2}{c|}{MKL-DNN} & \multicolumn{2}{c|}{MKL-2017}
-      & \multicolumn{2}{c}{ZNNPhi} \\
-      &  & Fwd & Bwd& Fwd & Bwd& Fwd & Bwd \\
+      & \multicolumn{2}{c}{Ours} \\
+      &  & Fwd & B+U& Fwd & B+U& Fwd & B+U \\
       \hline
       \multirow{5}{*}{\rotatebox{90}{\textbf{VGG-A}}}
       & C2  & 101.9 & 266.8 & {\bf 34.6} & 101.8 & 40.1 & {\bf  80.7}  \\
@@ -260,29 +284,45 @@
       \hline
       \multirow{5}{*}{\rotatebox{90}{\textbf{U-Net}}}
       & C1b  & 799.60 & 1603.93 & 141.01 & 61.96 & {\bf 9.89} & {\bf 21.81} \\
-%%      & C2a  & 195.82 & 410.73  & 41.90  & 19.20 & {\bf 5.27} & {\bf 11.19} \\
       & C2b  & 382.60 & 790.76  & 48.93  & 23.27 & {\bf 9.79} & {\bf 20.31} \\
-%%      & C3a  & 96.19  & 212.08  & 11.97  & 10.01 & {\bf 5.13} & {\bf  9.77} \\
       & C3b  & 187.08 & 421.61  & 23.10  & 16.84 & {\bf 8.50} & {\bf 16.71} \\
-%%      & C4a  & 48.05  & 110.39  & 5.60   & 23.26 & {\bf 4.44} & {\bf  9.32} \\
       & C4b  & 94.81  & 259.73  & 10.56  & 24.70 & {\bf 7.31} & {\bf 15.49} \\
-%%      & C5a  & 25.17  & 90.04   & {\bf 3.66}   & 8.70  & 3.81 & {\bf  8.34} \\
       & C5b  & 44.01  & 167.88  & {\bf 5.45}   & {\bf 10.84} & 6.01 & 12.33 \\
       \hline
 
     \end{tabular}
-    \caption{KNL}
+    \caption{Benchmarks of the 2D layers against MKL-DNN and MKL-2017
+      on the Xeon Phi 7210 machine.}
+    \label{table:2d-knl}
   \end{table}
 
+  Our approach achieved performances comparable to best performing
+  implementation (MKL-2017), for the VGG-A network
+  (Table~\ref{table:2d-knl}).  On benchmarked U--Net layers, our
+  approach greatly outperformed MKL-2017 on layers with fewer images.
+  The relative performances of MKL-2017 increases with the number of
+  images in the layer.  On the widest layer with 1024 images, MKL-2017
+  even slightly outperformed our approach.
+
+  The time required to train a ConvNet is roughly proportional to the
+  sum of time required for the forward propagation, backward
+  propagation and update of all the layers in the network.  We can
+  conclude that our approach is much more suitable for training
+  segmentation ConvNets.
+
   \subsection{Performances of 3D convolutional layers vs GPU}
+
+  Finally, we compare the speed of 3D networks to state of the art 3D
+  primitives for the GPU.
+
 
   \begin{table} \centering
     \setlength\tabcolsep{2.5pt}
     \begin{tabular}{cr !{\vrule width0.8pt} rr|rr !{\vrule width0.8pt} rr|rr  }
-      & & \multicolumn{4}{c !{\vrule width0.8pt} }{\textbf{cuDNNv5 (Titan X)}} & \multicolumn{4}{c}{\textbf{ZNNphi (Xeon)}} \\
+      & & \multicolumn{4}{c !{\vrule width0.8pt} }{\textbf{cuDNNv5 (Titan X)}} & \multicolumn{4}{c}{\textbf{Ours (Xeon)}} \\
       & & \multicolumn{2}{c|}{Maxwell} & \multicolumn{2}{c!{\vrule width0.8pt}}{Pascal}
       & \multicolumn{2}{c|}{Haswell} & \multicolumn{2}{c}{KNL} \\
-      &  & Fwd & Bwd & Fwd & Bwd& Fwd & Bwd& Fwd & Bwd \\
+      &  & Fwd & B+U & Fwd & B+U& Fwd & B+U& Fwd & B+U \\
       \hline
       \multirow{5}{*}{\rotatebox{90}{\textbf{C3D}}}
       & C2a & 186.8 & 370.3 & 168.0 & 336.0 & {\bf 147.6} & {\bf 325.2} & 218.1 & 456.3  \\

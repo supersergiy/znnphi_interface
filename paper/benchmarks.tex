@@ -100,8 +100,6 @@
   benchmarked the 3D network on the two latest generations of the
   Titan X GPU.
 
-  \subsection{CPU utilization and scalability}
-
   \begin{figure*} \centering
     \small
     \setlength\tabcolsep{0.5pt}
@@ -158,9 +156,49 @@
     \label{fig:scalability}
   \end{figure*}
 
-  First, we demonstrate the near--linear scalability of our approach,
-  regardless of the layer shape.  We show that our approach has the
-  same utilization for all of them.
+  \subsection{Benchmarking methodology}
+
+  We benchmark both the propagation and the update algorithm for each
+  layer on each CPU in the following way.  We compile the full layer
+  primitive such that it uses only $N$ of the available cores and $H$
+  hyper--threads per core.  We then perform 10 iterations of (1)
+  randomly initializing all the data and (2) running the algorithm.
+  We report the average time of running the second step.
+
+  Randomly initializing the data before each iteration is important,
+  as it clears the CPU caches.  Thus, our measurements represent a
+  lower bound on the time required when performing a full network
+  training.
+
+  The speed of our primitives is then computed by dividing the FLOPs
+  required for the algorithm by time average runtime.  The utilization
+  is computed by dividing the speed of our algorithm (in FLOPS) by the
+  FLOPS deliverable by $N$ cores of the given CPU.
+
+  \subsection{CPU utilization and scalability}
+
+  To save space we demonstrate the utilization and scalability on a
+  single Figure.~\ref{fig:scalability}.  The $x$ axis represents the
+  number of cores used, and the $y$ axis represents the percentage of
+  utilization of the used cores.  A linear scalability is then
+  represented with a straight line, with perfect scalability as a
+  horizontal line.  For clarity, we don't show points for different
+  number of allowed hyper--threads per core.  We only show the ones
+  with the highest utilization, as practice, optimal number of
+  hyper--threads per core should be empirically determined.  More
+  hyper--threads per core can hide memory latency, but will reduce
+  effective cache sizes and might introduce cache associativity
+  conflicts.  In more than 90\% of the cases, the optimal number of
+  hyper--threads per core was $2$.
+
+  We see that in nearly all cases, a single core utilization is higher
+  than 75\%.  As we were unable to limit the CPU frequency on the
+  Skylake CPU used for benchmarks, the turbo--boost that was enabled
+  resulted in utilization higher than 100\% when one or two cores out
+  of four available were used.
+
+
+
 
   \subsection{Performances of 2D convolutional layers}
 

@@ -1,7 +1,18 @@
 \section{Convolutional layers} \label{sec-conv-layers}
+  The convolution of two $N$-D images $A$ and $B$ will be written as
+  $A*B$.  The cross-correlation $A\star B$ will be defined as the
+  convolution $A\ast\bar{B}$, where $\bar{B}$ is the $N$-D
+  image obtained by reflecting $B$ in all $N$ directions (reflection
+  through the origin). We follow the convention that all
+  cross-correlations are \texttt{valid}, meaning that the output is
+  computed only for configurations in which $A$ is fully contained in
+  $B$ or vice versa.  For instance, if the input image has size $n^3$
+  and the kernel has size $k^3$, then the output image has size $n'^3
+  = (n-k+1)^3$.  We follow the convention that all convolutions are
+  \texttt{full}, meaning that the output is calculated for all
+  possible overlapping configurations of $A$ and $B$.
 
-  Here we summarize the computations performed by a single
-  convolutional layer.  In forward propagation, a convolutional layer
+  In the forward phase, a convolutional layer
   transforms an input tuple of $F$ images into an output tuple of $F'$
   images.  We want to process a batch of $B$ inputs to yield a batch
   of $B$ outputs, via
@@ -14,66 +25,49 @@
   is the kernel from the $i^{th}$ image in an input tuple to the
   $j^{th}$ image in an output tuple.
 
-  In backward propagation, a convolutional layer transforms a tuple of
+  In the backward phase, a convolutional layer transforms a tuple of
   $F'$ images into a tuple of $F$ images.  We process a batch of $B$
   tuples via
   \begin{equation}\label{eq:backward}
   \hat{I}_{b,i} = \sum_{j=1}^{F'} \hat{I}'_{b,j} \ast W_{ji}
   \end{equation}
-  for $1 \le b \le B$ and $1 \le i \le F$.  The meaning of the
-  $\hat{I}$ (gradients of the loss function for the training) is not
+  for $1 \le b \le B$ and $1 \le i \le F$.  The meaning of
+  $\hat{I}$ (gradient of the loss function for the training) is not
   important here.  All that matters is that $\hat{I}$ and $\hat{I}'$
   are batches of image tuples with the same size as $I$ and $I'$ in
   Eq. (\ref{eq:forward}).
 
-  In the update phase, the kernels are modified by
+  In the update phase, the kernels of the convolutional layer are
+  modified by
   \[
   \Delta W_{j,i} = \sum_{b=1}^B I_{b,i} \star \hat{I}'_{b,j}
   \]
   for $1 \le i \le F$ and $1 \le j \le F'$.
 
-  In the forward pass and the update phase, so called \texttt{valid}
-  discrete cross--correlation is performed.  The output of a
-  \texttt{valid} cross--correlation $A \star B$ is computed only for
-  the locations where $A$ is fully contained in $B$ or vice versa.
-  For instance, if the input image has size $n^3$ and the kernel has
-  size $k^3$, then the output image has size $n'^3 = (n-k+1)^3$.  In
-  the backward pass \texttt{full} discrete convolution is performed.
-  The output is calculated for all locations of the kernel that have
-  some overlap with the input.
-
-  Here, we focus on computing these convolutions and
+  Here we focus on computing these convolutions and
   cross--correlations efficiently.  No further knowledge of the roles
   of the values computed during the three passes are required to
   understand the problem and the contributions in this paper.
 
-  Gradients of the loss with respect to the input/output/kernels are
-  as well $N$--dimensional images of the same size as the
-  input/output/kernels.  For simplicity, in the rest of the writeup we
-  will refer to them simply as input/output/kernel gradients and use
-  notation of $GI, GI', GW$.
+%  Gradients of the loss with respect to the input/output/kernels are
+%  as well $N$--dimensional images of the same size as the
+%  input/output/kernels.  For simplicity, in the rest of the writeup we
+%  will refer to them simply as input/output/kernel gradients and use
+%  notation of $GI, GI', GW$.
 
-  Convolving of an image $I$ with a kernel $W$ is equivalent to
-  cross--correlating it with the transposed kernel ($W^T$).  A
-  transposed $N$--dimensional image is an image that is reflected
-  along all $N$ dimensions.  Performing \texttt{full}
-  cross--correlation (or convolution) can be accomplished by
-  performing \texttt{valid} convolution on a zero--padded image.
-  Thus, same algorithm can be used for both the forward and the
-  backward pass.
+%  Performing \texttt{full}
+%  cross--correlation (or convolution) can be accomplished by
+%  performing \texttt{valid} convolution on a zero--padded image.
+%  Thus, same algorithm can be used for both the forward and the
+%  backward pass.
 
-  We will assume 3D images and kernels, even though our approach is
-  generalizable to ND images.  The choice of 3D was made because we
-  believe that it provides enough insight to the reader to recognize
-  the patterns in our algorithms' design, allowing him to extend the
-  algorithms to an arbitrary number of dimensions.  We think that
-  describing the generic algorithm would make the..... FINISH THIS
-
-
+  For the sake of concreteness, we will assume 3D images and
+  kernels. The generalization to $N-D$ images should be
+  straightforward to the reader.
   If $I_{b,i}$ has size $\vec{N} = \angled{N_x, N_y, N_z}$ and
   $W_{ji}$ has size $\vec{K} = \angled{K_x,K_y,K_z}$, then we can
-  regard $I$ and $GI$ as a 5D tensors of size $B \times F \times N_x
-  \times N_y \times N_z$, $W$ and $GW$ as a 5D tensor of size $F'
-  \times F \times K_x \times K_y \times K_z$, and $I'$ and $GI'$ as a
-  5D tensor of size $B \times F' \times N_x' \times N_y' \times N_z'$,
+  regard $I$ and $\bar{I}$ as 5D tensors of size $B \times F \times N_x
+  \times N_y \times N_z$, $W$ and $\Delta W$ as 5D tensors of size $F'
+  \times F \times K_x \times K_y \times K_z$, and $I'$ and $\bar{I'}$ as
+  5D tensors of size $B \times F' \times N_x' \times N_y' \times N_z'$,
   where $\vec{N}' = \vec{N} - \vec{K} + \vec{1}$.

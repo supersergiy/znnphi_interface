@@ -136,7 +136,20 @@
   computation is performed in the same fashion as in the propagation
   sub--layer primitive (Fig.~\ref{fig:full-exec}).
 
-  {\bf Full layer primitive} \quad The main goal of the primitive is
+  {\bf Full layer primitive}, as in the propagation algorithm, divides
+  the computation into sub--layer primitives which are scheduled for
+  execution on $T$ threads.  In the propagation algorithm, all the
+  divisions were done by splitting the large output tensor, allowing
+  each thread to perform an independent computation.  In the update
+  phase, the computed $\Delta W$ tensor
+
+  $\hat{I}$ of size $B \times \alpha S \times N_x \times N_y \times
+  N_z$, $\hat{I}'$ of size $B \times \alpha' S \times N_x \times N_y
+  \times N_z$ to produce $\Delta W$ of size $\alpha' S \times \alpha S
+  \times K_x \times K_y \times K_z$
+
+
+  \quad The main goal of the primitive is
   to parallelize the computation over $T$ available threads.  In
   contrast to the propagation full layer primitive where each thread can
   execute multiple sub--layer primitives, here we assign exactly one
@@ -151,9 +164,13 @@
   divided into $P$ sets of $T'=T/P$ threads, each of which will
   compute $\beta\beta'S^2$ kernel gradients.
 
-  The values of the kernel gradient tensor $GW^T(A
+  The values of the kernel gradient tensor $\Delta W(A
   \beta':A\beta'+\beta'-1,B \beta: B\beta + \beta-1, :,:,:)$ is
   performed by the $A + B \alpha / \beta$-th set of $T'$ threads.
+
+  In the case when $T' \neq 1$ a second division step is performed.  IT IS THE SAME!
+
+
 
   In the second step, we consider each of the $P$ sets of $T'$
   threads.  Kernel gradients to be computed by each subset is computed

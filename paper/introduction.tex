@@ -6,15 +6,16 @@
   numbers are for GPUs, with none given for CPUs.  The popularity of
   GPUs for deep learning has resulted from both hardware and software
   advantages.  The hardware gap has narrowed recently, as the Knights
-  Landing (KNL) Xeon Phi CPU delivers more than 6 TFLOPS \cite{},
+  Landing (KNL) Xeon Phi CPU delivers 6 TFLOPS \cite{},
   compared to the 11 TFLOPS rating of the Titan X Pascal GPU (all
   FLOPS ratings are given for single precision arithmetic).
 
   There is also a software gap.  All the major deep learning
   frameworks use the cuDNN library, which has been developed and
   refined for several years and is already at version 5.  cuDNN
-  achieves close to 100\% utilization of available FLOPS, at least for
-  some select convolutional network (ConvNet) architectures (cite).
+  achieves extremely high percentage of utilization of available
+  FLOPS, at least for some select convolutional network (ConvNet)
+  architectures~\cite{imagenetwinners}.
 
   This paper focuses on CPU implementation of ConvNets that makes
   efficient use of available FLOPS.  A ConvNet contains convolutional
@@ -24,36 +25,44 @@
   almost all of the computation in a typical ConvNet resides in the
   convolutional layers, which are the subject of the current paper.
 
-  One approach is to optimize code by hand (cite). This can achieve
-  the highest efficiency of all approaches, but is time-consuming and
-  the speed-up does not generalize beyond the specific architecture.
-  In fact, many GPU and CPU deep learning implementations appear to
-  contain hand-optimized code for standard benchmark network
-  architectures, for which they achieve markedly higher efficiency
-  than is typical (cite evidence)
-
-  An alternative approach is to implement convolution using highly
-  efficient matrix multiplication libraries.  This provides speedup
-  for diverse ConvNet architectures, and has been applied to both
+  An highly popular approach is to implement convolution using highly
+  efficient matrix multiplication
+  libraries~\cite{chellapilla2006high}.  This provides speedup for
+  diverse ConvNet architectures, and has been applied to both
   GPUs~\cite{chetlur2014cudnn,neonnervana} and CPUs
   ~\cite{hadjis2015shallow}.  But the efficiency of the approach
   suffers because of computational and memory overhead due to the
   requirement of creating in--memory matrices.
 
-  Intel has introduced a JIT layer compilation approach in its MKL-DNN
-  package.  Given a ConvNet architecture, the MKL-DNN software
-  generates optimized assembly code at run time.  The current package
+  Another popular approach is to use meta--programming in various
+  forms.  One approach is to use offline meta--programming, where the
+  optimal primitives for solving a sub--problem are either optimized
+  by hand or by code generators.  This approach has been popularized
+  by FFTW~\cite{frigo1998fftw,frigo1999fftw} and adopted by some some
+  ConvNet frameworks~\cite{klockner2012pycuda,nervanagpu}.  This can
+  achieve the highest efficiency of all approaches, but is
+  time-consuming and the speed-up does not generalize beyond the
+  specific or similar architectures.  (just as FFTW is efficient only
+  for certain sizes).  In fact, many GPU and CPU deep learning
+  implementations appear to contain hand-optimized code for standard
+  benchmark network architectures, for which they achieve markedly
+  higher efficiency than is typical (not sure what to cite :()
+
+  Another form of meta--programming, run--time meta--programming has
+  been introduced by intel in its MKL-DNN package.  Given a ConvNet
+  architecture, the MKL-DNN software generates optimized assembly code
+  at run time.  The part of the current package that is open--sourced
   is for Broadwell and Haswell CPUs, and it is unclear how easily it
   generalizes to other CPUs including KNL.
 
-  We propose a metaprogramming approach that aims to be general with
-  respect to both the ConvNet architecture and CPU.  We use C++
-  templates to create primitives at compile time.  Given the
-  specifications of the CPU, our meta--algorithms optimize and
-  vectorize single-threaded code, as well as generate static
-  scheduling for parallelizing the computation over multiple cores.
-  Our approach tries to achieve generality by leveraging the power of
-  the compiler.
+  We propose another form of, compile--time, meta--programming
+  approach that aims to be general with respect to both the ConvNet
+  architecture and CPU.  We use C++ templates to create primitives at
+  compile time.  Given the specifications of the CPU, our
+  meta--algorithms optimize and vectorize single-threaded code, as
+  well as generate static scheduling for parallelizing the computation
+  over multiple cores.  Our approach tries to achieve generality by
+  leveraging the power of the compiler.
 
   We show that our approach can utilize high percentage of the
   available FLOPS regardless of the CPU generation, as well as have
@@ -63,61 +72,19 @@
   compared to the state of the art GPU implementations for 3D
   convolutional networks, even though KNL has less FLOPS/s available.
 
-  We further demonstrate the power of our approach for inference only
-  computation.
-
-%  Convolutional layers of a ConvNet are computationally dominating
-%  both training and inference.  The forward and backward pass involve
-%  convolution of an image with a small kernel.  Typically ``valid''
-%  dense convolution, possibly with strides is performed.  More
-%  advanced types of convolutions can decomposed to a series of dense
-%  convolutions~\cite{szegedy2015going}.
-
   Even though we provide an efficient, publicly available, open source
   implementation for popular ConvNet primitives, the goal of this
   paper is to point to the right direction for solving the problem,
   rather than giving the final ``optimized'' implementation.
 
-  Efficient algorithms for training and inference of ConvNets with
-  larger kernels have been introduced in
-  ~\cite{zlateski2016znn,zlateski2016znni}, however the evidence
+  Efficient, FFT--based, algorithms for training and inference of
+  ConvNets with larger kernels have been introduced for both the CPU
+  ~\cite{zlateski2016znn,zlateski2016znni} and the
+  GPU~\cite{mathieu-iclr-14,vasilache2014fast}, however the evidence
   suggests that ConvNets with smaller kernels, and larger number of
-  layers perform better on nearly all problems. (Cite).
-
-  %% \subsection{GPUs vs CPUs}
-
-  %% GPUs have streaming multiprocessors, while the CPUs have in--order,
-  %% memory coherent cores.
-
-  %% GPUs model is so called SIMT (single instruction multiple
-  %% threads)... dwell on it..
-
-  %% CPUs on the other side have a complex structure of many cores and
-  %% virtual cores, many cache layers and each core capable of performing
-  %% SIMD instructions on up to 16 floating point numbers.
-
-  %% In this paper we are not trying to answer the GPU vs CPU question,
-  %% but rather propose an algorithm and implementation for ConvNet
-  %% primitives that can utilize very high percentage of the theoretical
-  %% peak performance of both many--core (Xeon Phi) and multi--core
-  %% (Xeon) CPUs.  As shown later, our algorithm performs well on
-  %% multi--chip systems as well.
-
-  %% \subsection{Mulit--core vs Many--core}
-
-  %% Explain the differences NUMA, caches, etc..
-
-
-  \aleks{Summarize and cite the text below}
-  A popular convolution implementation is to unroll the data until the
-  computation is in the form of a large matrix multiplication
-  (Chellapilla et al. (2006)). This is the strategy followed by many
-  implementors, since matrix multiplication is a well-tuned linear
-  algebra primitive available on virtually any platform. While it is
-  possible to provide instances of direct calculation that are faster
-  than matrix unrolling (e.g., for large S, Krizhevsky (2014)), it is
-  challenging to provide an implementation that is faster for more
-  than just a small subset of possible convolution problems.
-
+  layers perform better on nearly all problems~\cite{ronneberger2015u,
+    simonyan2014very, sermanet2013overfeat, long2015fully,
+    tran2015learning, ji20133d, maturana_iros_2015,
+    maturana_icra_2014}.
 
   %% http://legion.stanford.edu/pdfs/bootcamp2014/10_metaprogramming.pdf

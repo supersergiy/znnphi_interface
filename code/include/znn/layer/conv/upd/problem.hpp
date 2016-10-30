@@ -1,10 +1,13 @@
 #pragma once
 
 #include "znn/types.hpp"
-#include <tuple>
 #include <iostream>
+#include <tuple>
 
-namespace znn { namespace phi {
+namespace znn
+{
+namespace phi
+{
 
 struct null_upd_problem_t
 {
@@ -12,11 +15,8 @@ struct null_upd_problem_t
     static const long_t ooffset = 0;
 };
 
-template< class ProblemSize,
-          class IShape,
-          class OShape,
-          long_t InputOffset  = 0,
-          long_t OutputOffset = 0 >
+template <class ProblemSize, class IShape, class OShape, long_t InputOffset = 0,
+          long_t OutputOffset = 0>
 struct upd_problem_t
 {
     using size   = ProblemSize;
@@ -27,18 +27,15 @@ struct upd_problem_t
     static const long_t ooffset = OutputOffset;
 };
 
-template< long_t D,
-          long_t H,
-          long_t W >
+template <long_t D, long_t H, long_t W>
 struct upd_problem_size_t
 {
-    static const long_t depth    = D;
-    static const long_t height   = H;
-    static const long_t width    = W;
+    static const long_t depth  = D;
+    static const long_t height = H;
+    static const long_t width  = W;
 };
 
-
-template< long_t D, long_t H, long_t W >
+template <long_t D, long_t H, long_t W>
 struct upd_ioshape_t
 {
     static const long_t depth  = D;
@@ -46,55 +43,46 @@ struct upd_ioshape_t
     static const long_t width  = W;
 };
 
-template< class, class >
+template <class, class>
 struct upd_problems_cat_t;
 
-template< class... As, class... Bs >
-struct upd_problems_cat_t< std::tuple<As...>, std::tuple<Bs...> >
+template <class... As, class... Bs>
+struct upd_problems_cat_t<std::tuple<As...>, std::tuple<Bs...>>
 {
-    using type = std::tuple<As...,Bs...>;
+    using type = std::tuple<As..., Bs...>;
 };
 
-template< class Problem >
+template <class Problem>
 struct upd_problem_printer
 {
     static void print()
     {
-        std::cout << "Size: " << Problem::size::depth
-                  << ' ' << Problem::size::height
-                  << ' ' << Problem::size::width
-                  << "   offsets: " << Problem::ioffset
-                  << ' ' << Problem::ooffset << "\n";
+        std::cout << "Size: " << Problem::size::depth << ' '
+                  << Problem::size::height << ' ' << Problem::size::width
+                  << "   offsets: " << Problem::ioffset << ' '
+                  << Problem::ooffset << "\n";
     }
 };
 
-template<>
+template <>
 struct upd_problem_printer<null_upd_problem_t>
 {
-    static void print()
-    {
-        std::cout << "NULL PROBLEM\n";
-    }
+    static void print() { std::cout << "NULL PROBLEM\n"; }
 };
 
-template< class... >
+template <class...>
 struct upd_problems_printer_h
 {
-    static void print()
-    {
-    }
+    static void print() {}
 };
 
-template< class A >
+template <class A>
 struct upd_problems_printer_h<A>
 {
-    static void print()
-    {
-        upd_problem_printer<A>::print();
-    }
+    static void print() { upd_problem_printer<A>::print(); }
 };
 
-template< class A, class... Rest >
+template <class A, class... Rest>
 struct upd_problems_printer_h<A, Rest...>
 {
     static void print()
@@ -104,17 +92,13 @@ struct upd_problems_printer_h<A, Rest...>
     }
 };
 
-
-template< class >
+template <class>
 struct upd_problems_printer;
 
-template< class... As >
-struct upd_problems_printer< std::tuple<As...> >
+template <class... As>
+struct upd_problems_printer<std::tuple<As...>>
 {
-    static void print()
-    {
-        upd_problems_printer_h<As...>::print();
-    }
+    static void print() { upd_problems_printer_h<As...>::print(); }
 };
 
 struct upd_problem_args
@@ -123,11 +107,12 @@ struct upd_problem_args
     long_t ooffset;
     long_t koffset;
 
-    upd_problem_args( long_t i, long_t o, long_t k )
+    upd_problem_args(long_t i, long_t o, long_t k)
         : ioffset(i)
         , ooffset(o)
         , koffset(k)
-    {}
+    {
+    }
 };
-
-}} // namespace znn:phi
+}
+} // namespace znn:phi

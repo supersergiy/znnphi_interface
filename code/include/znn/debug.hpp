@@ -2,5 +2,4 @@
 
 #include <iostream>
 
-#define PRINT_CONST( c )                        \
-    std::cout << #c << ": " << c << std::endl
+#define PRINT_CONST(c) std::cout << #c << ": " << c << std::endl

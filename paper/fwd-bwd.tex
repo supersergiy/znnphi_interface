@@ -166,12 +166,12 @@
   the compiler is expected to reorder the load and multiply--add
   operations such that the values loaded in the auxiliary registers
   are re--used.  As discussed above, to fully utilize the CPU we need
-  to issue $nc$ (number of FMA units times the instruction latency)
+  to issue $nl$ (number of FMA units times the instruction latency)
   independent consecutive instructions.  As each auxiliary register is
-  re--used approximately $k_z$ times, we need $nc/k_z$ auxiliary
+  re--used approximately $k_z$ times, we need $nl/k_z$ auxiliary
   registers to fully saturate the vector units.  As $k_z \ge 2$ we
   choose to use $10$ registers for $oreg$, allowing for $5$ auxiliary
-  registers.  This choice allows for saturating CPUs for which $nc \le
+  registers.  This choice allows for saturating CPUs for which $nl \le
   8$ which is true for all modern CPUs.
 
   The working set of the primitive is expected to fit inside the $L1$

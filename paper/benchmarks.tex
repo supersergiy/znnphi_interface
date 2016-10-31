@@ -24,7 +24,7 @@
       & C4b & 1  & 512 &  512 & $\angled{66,66}$   & $\angled{0,0}$ & $\angled{3,3}$ \\
       & C5b & 1  & 1024 &  1024 & $\angled{30,30}$ & $\angled{0,0}$ & $\angled{3,3}$ \\
       \hline
-      \multirow{5}{*}{\rotatebox{90}{\textbf{VGG-a}}}
+      \multirow{5}{*}{\rotatebox{90}{\textbf{C3D}}}
       & C2a & 32  & 64  &  128 & $\angled{16,56,56}$ & $\angled{1,1,1}$ & $\angled{3,3,3}$ \\
       & C3a & 32  & 128 &  256 & $\angled{8,28,28}$ & $\angled{1,1,1}$ & $\angled{3,3,3}$ \\
       & C3b & 32  & 256 &  256 & $\angled{8,28,28}$ & $\angled{1,1,1}$ & $\angled{3,3,3}$ \\
@@ -91,7 +91,7 @@
   In addition, we benchmark each layer on three generations
   of Intel Xeon processors (Table~\ref{table:cpus}).  All the machines
   except the Skylake CPU were set to run at constant frequency (we did
-  not have root access to the Skylake machine). 
+  not have root access to the Skylake machine).
 
   \begin{figure*} \centering
     \small
@@ -157,7 +157,7 @@
   hyper--threads per core.  We then perform 10 iterations of (1)
   randomly initializing all the data and (2) running the algorithm.
   We report the average time of running the second step.
-  
+
   Randomly initializing the data before each iteration is important,
   as it clears the CPU caches.  Thus, our measurements represent a
   lower bound on the time required when the layer is part of a larger
@@ -189,7 +189,7 @@
   More hyper--threads per core can hide memory latency, but will
   reduce effective cache sizes and might introduce cache associativity
   conflicts.
-  
+
   In nearly all cases, single core utilization is higher
   than 75\%.  As we were unable to limit the CPU frequency on the
   Skylake CPU used for benchmarks, the turbo--boost that was enabled
@@ -217,7 +217,7 @@
 %  Also, we don't expect ZNN to be competitive as it is optimized for
 %  large kernels.
 
-  
+
 
   \begin{table} \centering
     \setlength\tabcolsep{2.5pt}
@@ -305,7 +305,7 @@
   case with popular benchmark architectures for object detection like
   VGG-A.  Utilization is somewhat less for segmentation networks like
   U-Net (data not shown).
-  
+
   However, it turns out that our approach is competitive with GPUs for
   3D convolutional layers.  For the comparison of Table
   \ref{eq:GPUvsCPU}, we used direct cuDNNv5 calls from C++, and the

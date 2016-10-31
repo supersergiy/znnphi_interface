@@ -25,13 +25,13 @@ DATE    =       $(AT)date
 
 ifneq ($(strip $(ICC)),)
 	AVX_FLAGS 	= 	-DZNN_AVX -xAVX
-	AVX2_FLAGS 	=	-DZNN_AVX2 -xCORE-AVX2
+	AVX2_FLAGS 	=	-DZNN_AVX2 -march=core-avx2
 	AVX512_FLAGS	=	-DZNN_AVX512 -xMIC-AVX512
 	KNC_FLAGS	=	-DZNN_KNC -mmic
 else
 	AVX_FLAGS	=	-DZNN_AVX -mavx
 	AVX2_FLAGS	=	-DZNN_AVX2 -mavx2 -mfma
-	AVX512_FLAGS	=	-DZNN_AVX512 -mavx512f -mavx512pf -mfma
+	AVX512_FLAGS	=	-DZNN_AVX512 -mavx512f -mavx512pf -mavx512cd -mfma
 	KNC_FLAGS	=	-DZNN_AVX512 -mavx512f -mavx512pf -mfma
 endif
 
@@ -52,7 +52,7 @@ endif
 
 ifneq ($(strip $(ICC)),)
 	CXX 			=	$(AT)icpc $(STANDARD_FLAG)
-	OPTIMIZATION_FLAGS	=	-DNDEBUG -O3 -ipo -fp-model fast=2  -mkl=sequential -fno-rtti -fno-exceptions -funroll-loops -unroll100
+	OPTIMIZATION_FLAGS	=	-DNDEBUG -O3 -ipo -fp-model fast=2  -mkl=sequential -fno-rtti -fno-exceptions
 	CS_FLAGS		=	-mkl=sequential
 	CS_LD_FLAGS		=	-mkl=sequential  -static-intel
 else

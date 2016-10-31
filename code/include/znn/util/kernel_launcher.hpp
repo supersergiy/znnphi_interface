@@ -25,6 +25,7 @@ private:
     pthread_barrier_t      barrier;
     std::function<void()>* kernels;
     cpu_set_t              old_set_;
+    long_t                 num_threads_;
 
 private:
     void thread_loop(long_t id, long_t core)
@@ -64,6 +65,7 @@ private:
 public:
     kernel_launcher(long_t n_cpus, long_t n_hwt, long_t cpu_offset = 0)
         : kernels(nullptr)
+        , num_threads_(n_cpus * n_hwt)
     {
         sched_getaffinity(0, sizeof(old_set_), &old_set_);
 
@@ -111,6 +113,8 @@ public:
 
         pthread_barrier_wait(&barrier);
     }
+
+    long_t num_threads() const { return num_threads_; }
 
     ~kernel_launcher()
     {

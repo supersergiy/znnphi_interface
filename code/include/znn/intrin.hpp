@@ -38,8 +38,8 @@
 
 #define SIMD_FLOAT __m512
 
-#define SIMD_MAX_BLOCK 31
-#define SIMD_W_BLOCK 14
+#define SIMD_MAX_BLOCK 12
+#define SIMD_W_BLOCK 12
 
 #define SIMD_NUM_REGISTERS 32
 
@@ -123,6 +123,8 @@
 #define SIMD_MAX _mm256_max_ps
 
 #define SIMD_FLOAT __m256
+
+// TODO FIGURE OUT WHY ICC LIKES 7 AND GCC large numbers
 
 #define SIMD_MAX_BLOCK 7
 #define SIMD_W_BLOCK 7

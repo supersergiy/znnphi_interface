@@ -1,17 +1,59 @@
 #pragma once
 
-#include <ostream>
-#include <cstdint>
-#include <cstddef>
 #include <complex>
-#include <mutex>
-#include <memory>
+#include <cstddef>
+#include <cstdint>
 #include <functional>
+#include <iostream>
+#include <memory>
+#include <mutex>
+#include <ostream>
 #include <zi/vl/vl.hpp>
 
-#include <map>
 #include <list>
+#include <map>
 #include <vector>
+
+// GCC version
+#if defined(__GNUC__) && !defined(GCC_VERSION) && !defined(__clang__)
+#define GCC_VERSION                                                            \
+    ((__GNUC__)*10000 + (__GNUC_MINOR__)*100 + (__GNUC_PATCHLEVEL__))
+#endif
+
+// Clang version
+#if defined(__clang__)
+#define CLANG_VERSION                                                          \
+    ((__clang_major__)*10000 + (__clang_minor__)*100 + (__clang_patchlevel__))
+#endif
+
+// ICC version
+#if defined(__INTEL_COMPILER)
+#define ICC_VERSION __INTEL_COMPILER
+#endif
+
+inline void print_verson(int v)
+{
+    std::cout << (v / 10000) << "." << ((v % 10000) / 100) << "." << (v % 100);
+}
+
+inline void print_compiler_version()
+{
+#if defined(__INTEL_COMPILER)
+    std::cout << "icc " << __INTEL_COMPILER << " compat with ";
+#endif
+#if defined(__GNUC__) && !defined(__clang__)
+    std::cout << "gcc ";
+    print_verson(GCC_VERSION);
+#elif defined(__clang__)
+    std::cout << "clang ";
+    print_verson(CLANG_VERSION);
+#endif
+    std::cout << std::endl;
+}
+
+#define ZNN_PRAGMA(x)
+
+//_Pragma(#x)
 
 #define znn_inline __attribute__((always_inline)) inline
 

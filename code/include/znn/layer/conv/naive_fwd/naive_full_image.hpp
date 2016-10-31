@@ -9,21 +9,28 @@ namespace znn
 namespace phi
 {
 
-// kernel shape is
-// K[D][H][W][IN_FMAP][OUT_FMAP] with IN=OUT=16
+/*******************************************************************************
+/*
+/* Kernel shape is:
+/*      k[D][H][W][IN_FMAP][OUT_FMAP] with IN_FMAP=OUT_FMAP=SIMD_WIDTH
+/*
+/* input and output shapes are
+/*      i/o[D][H][W][FMAP] with FMAP=SIMD_WIDTH
+/*
+/* if FIRST
+/*      o[:][:][:][of] is initialized to b[of]
+/* for of in [0,SIMD_WIDTH), and then
+/* for all valid d, h, w, kd, kh, kw, if, of
+/*      o[d][h][w][of] += k[kd][kh][kw][if][of] * i[d+kd][h+kh][w+kw][if];
+/*
+*******************************************************************************/
 
-// input and output shapes are
-// Im[D][H][W][FMAP]
-
-// for all valid d, h, w, kd, kh, kw, if, of
-// Out[d][h][w][of] += K[kd][kh][kw][if][of] * In[d+kd][h+kh][w+kw][if];
-
-template <bool   FIRST,                // load or set to zero
-          long_t SW,                   // number of input featuremaps avx
+template <bool   FIRST,                // load or set to the bias
+          long_t IFMS,                 // number of input featuremaps
           class D, class H, class W,   // out size and in/out strides
           class CD, class CH, class CW // convolution params
           >
-class naive_fwd_work
+class naive_full_image
 {
 public:
     static void execute(float const* i, float* o, float const* k,
@@ -42,7 +49,7 @@ public:
                             o[ofd * D::os + ofh * H::os + ofw * W::os + ofm] =
                                 b[ofm];
                         }
-                        for (long_t ifm = 0; ifm < SW; ++ifm)
+                        for (long_t ifm = 0; ifm < IFMS; ++ifm)
                         {
                             for (long_t kd = 0; kd < CD::s; ++kd)
                             {
@@ -71,5 +78,5 @@ public:
         }
     }
 };
-}
-} // namespace znn:phi
+} // namespace phi
+} // namespace znn

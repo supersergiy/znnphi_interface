@@ -12,17 +12,24 @@ namespace znn
 namespace phi
 {
 
-// kernel shape is
-// K[D][H][W][IN_FMAP][OUT_FMAP] with IN=OUT=16
+/*******************************************************************************
+/*
+/* Kernel shape is:
+/*      k[D][H][W][IN_FMAP][OUT_FMAP] with IN_FMAP=OUT_FMAP=SIMD_WIDTH
+/*
+/* input and output shapes are
+/*      i/o[D][H][W][FMAP] with FMAP=SIMD_WIDTH
+/*
+/* if FIRST
+/*      o[:][:][:][of] is initialized to b[of]
+/* for of in [0,SIMD_WIDTH), and then
+/* for all valid d, h, w, kd, kh, kw, if, of
+/*      o[d][h][w][of] += k[kd][kh][kw][if][of] * i[d+kd][h+kh][w+kw][if];
+/*
+*******************************************************************************/
 
-// input and output shapes are
-// Im[D][H][W][FMAP]
-
-// for all valid d, h, w, kd, kh, kw, if, of
-// Out[d][h][w][of] += K[kd][kh][kw][if][of] * In[d+kd][h+kh][w+kw][if];
-
-template <bool   FIRST,                // load or set to zero
-          long_t SW,                   // number of input featuremaps avx
+template <bool   FIRST,                // load or set to the bias
+          long_t IFMS,                 // number of input featuremaps
           class D, class H, class W,   // out size and in/out strides
           class CD, class CH, class CW // convolution params
           >
@@ -32,20 +39,29 @@ private:
     using RB = fwd_blocking_t<D::s, H::s, W::s>;
 
 public:
+    // Special case when the number of blocked registers is zero,
+    // we need this to simplify the implementation, stressing the compiler
+    // as little as possible
     template <long_t RBD, long_t RBH, long_t RBW>
-    typename std::enable_if<RBD == 0 || RBH == 0 || RBW == 0, void>::type
+    static typename std::enable_if<RBD == 0 || RBH == 0 || RBW == 0, void>::type
     chunk(float const* __restrict, float* __restrict, float const* __restrict,
-          float const* __restrict) const
+          float const* __restrict)
     {
     }
 
+    // Special case when the blocking is only along the least significant
+    // dimension.  Turns out that having dummy loops (0 to 0) prevents both
+    // (older versions) GCC and ICC to optimally compile the code for large
+    // values of RBD*RBH*RBW. There might be a way to simpift the implementation
+    // by using some compiler switches. Not necessary for newer compilers
     template <long_t RBD, long_t RBH, long_t RBW>
-    typename std::enable_if<(RBD == 1) && (RBH == 1) && (RBW > 0), void>::type
+    static typename std::enable_if<(RBD == 1) && (RBH == 1) && (RBW > 0),
+                                   void>::type
     chunk(float const* __restrict i, float* __restrict o,
-          float const* __restrict k, float const* __restrict b) const
+          float const* __restrict k, float const* __restrict b)
 
     {
-        SIMD_FLOAT vout[RBW], vwt; // in registers
+        SIMD_FLOAT vout[RBW], vwt; // Expected to be in the register file
 
 #pragma unroll(RBW)
         for (long_t rbw = 0; rbw < RBW; ++rbw)
@@ -57,7 +73,7 @@ public:
 
             for (long_t kh = 0; kh < CH::s; ++kh)
 
-                for (long_t s = 0; s < SW; ++s)
+                for (long_t s = 0; s < IFMS; ++s)
 
                     for (long_t kw = 0; kw < CW::s; ++kw)
                     {
@@ -86,12 +102,13 @@ public:
         }
     }
 
+    // Generic case
     template <long_t RBD, long_t RBH, long_t RBW>
-    typename std::enable_if<((RBD > 1) || (RBH > 1)) && (RBD > 0) &&
-                                (RBH > 0) && (RBW > 0),
-                            void>::type
+    static typename std::enable_if<((RBD > 1) || (RBH > 1)) && (RBD > 0) &&
+                                       (RBH > 0) && (RBW > 0),
+                                   void>::type
     chunk(float const* __restrict i, float* __restrict o,
-          float const* __restrict k, float const* __restrict b) const
+          float const* __restrict k, float const* __restrict b)
 
     {
         SIMD_FLOAT vout[RBD][RBH][RBW], vwt; // in registers
@@ -111,7 +128,7 @@ public:
 
             for (long_t kh = 0; kh < CH::s; ++kh)
 
-                for (long_t s = 0; s < SW; ++s)
+                for (long_t s = 0; s < IFMS; ++s)
 
                     for (long_t kw = 0; kw < CW::s; ++kw)
                     {
@@ -156,14 +173,15 @@ public:
                 }
     }
 
-    long_t flops() const
+    static long_t flops()
     {
-        return CW::s * CH::s * CD::s * SW * D::s * H::s * W::s * SIMD_WIDTH * 2;
+        return CW::s * CH::s * CD::s * IFMS * D::s * H::s * W::s * SIMD_WIDTH *
+               2;
     }
 
     template <long_t DD, long_t HH>
-    void loopw(float const* __restrict i, float* __restrict o,
-               float const* __restrict k, float const* __restrict b) const
+    static void loopw(float const* __restrict i, float* __restrict o,
+                      float const* __restrict k, float const* __restrict b)
     {
         static const long_t FULL = W::s / RB::w;
         static const long_t PART = W::s % RB::w;
@@ -182,8 +200,8 @@ public:
     }
 
     template <long_t DD>
-    void             looph(float const* __restrict i, float* __restrict o,
-               float const* __restrict k, float const* __restrict b) const
+    static void      looph(float const* __restrict i, float* __restrict o,
+                      float const* __restrict k, float const* __restrict b)
     {
         static const long_t FULL = H::s / RB::h;
         static const long_t PART = H::s % RB::h;
@@ -201,8 +219,8 @@ public:
         }
     }
 
-    void loopd(float const* __restrict i, float* __restrict o,
-               float const* __restrict k, float const* __restrict b) const
+    static void loopd(float const* __restrict i, float* __restrict o,
+                      float const* __restrict k, float const* __restrict b)
     {
         static const long_t FULL = D::s / RB::d;
         static const long_t PART = D::s % RB::d;
@@ -221,14 +239,15 @@ public:
     }
 
 public:
-    void execute(float const* i, float* o, float const* k, float const* b) const
+    static execute(float const* i, float* o, float const* k, float const* b)
     {
         loopd(i, o, k, b);
-        // std::cout << "Work\n";
     }
 };
 
-template <bool FIRST,                  // load or set to zero
+// Help the compiler with a dummy special case.  Not necessary for correctness.
+template <bool   FIRST,                // load or set to zero
+          long_t IFMS,                 // number of input featuremaps
           class D, class H, class W,   // out size and in/out strides
           class CD, class CH, class CW // convolution params
           >
@@ -236,9 +255,9 @@ class fwd_work<FIRST, 0, D, H, W, CD, CH, CW>
 {
 
 public:
-    long_t flops() const { return 0; }
+    static long_t flops() { return 0; }
 
-    void execute(float const*, float*, float const*, float const*) const {}
+    static execute(float const*, float*, float const*, float const*) {}
 };
 }
 } // namespace znn:phi

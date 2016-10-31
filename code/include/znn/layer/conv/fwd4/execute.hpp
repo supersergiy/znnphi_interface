@@ -31,8 +31,9 @@ private:
     using ishape = typename Problem::shapes::input;
     using oshape = typename Problem::shapes::output;
 
-    static const long_t ifm_sets = (size::ifm + SIMD_WIDTH - 1) / SIMD_WIDTH;
-    static const long_t ofm_sets = Problem::size::ofm_sets;
+    static constexpr long_t ifm_sets =
+        (size::ifm + SIMD_WIDTH - 1) / SIMD_WIDTH;
+    static constexpr long_t ofm_sets = Problem::size::ofm_sets;
 
     using CD = conv_traits<wshape::depth, 1, 1>;
     using CH = conv_traits<wshape::height, 1, 1>;
@@ -47,10 +48,6 @@ private:
     using tail_t = fwd_work<(size::ifm < SIMD_WIDTH), (size::ifm % SIMD_WIDTH),
                             DT, HT, WT, CD, CH, CW>;
 
-    head_t head;
-    mid_t  mid;
-    tail_t tail;
-
     static const long_t W_NEXT_INPUT = wshape::depth * wshape::height *
                                        wshape::width * SIMD_WIDTH * SIMD_WIDTH;
 
@@ -64,7 +61,7 @@ private:
         if (size::ifm >= SIMD_WIDTH)
         {
             flops += head.flops();
-            head.execute(i, o, k, b);
+            head_t::execute(i, o, k, b);
             i += Problem::shapes::input::fm_set;
             k += wshape::depth * wshape::height * wshape::width * SIMD_WIDTH *
                  SIMD_WIDTH;
@@ -73,7 +70,7 @@ private:
         for (long_t x = 1; x < (size::ifm / SIMD_WIDTH); ++x)
         {
             flops += mid.flops();
-            mid.execute(i, o, k, b);
+            mid_t::execute(i, o, k, b);
             i += Problem::shapes::input::fm_set;
             k += wshape::depth * wshape::height * wshape::width * SIMD_WIDTH *
                  SIMD_WIDTH;
@@ -82,7 +79,7 @@ private:
         if (size::ifm % SIMD_WIDTH)
         {
             flops += tail.flops();
-            tail.execute(i, o, k, b);
+            tail_t::execute(i, o, k, b);
         }
 
         return flops;
@@ -169,14 +166,16 @@ private:
             {
                 for (long_t xo = 0; xo < ofms; ++xo)
                 {
-                    head.execute(i, o + xo * Problem::shapes::output::fm_set,
-                                 k + xo * W_NEXT_OUTPUT, b + xo * SIMD_WIDTH);
+                    head_t::execute(i, o + xo * Problem::shapes::output::fm_set,
+                                    k + xo * W_NEXT_OUTPUT,
+                                    b + xo * SIMD_WIDTH);
                     for (long_t xi = 1; xi < ifms; ++xi)
                     {
-                        mid.execute(i + xi * Problem::shapes::output::fm_set,
-                                    o + xo * Problem::shapes::output::fm_set,
-                                    k + xo * W_NEXT_OUTPUT + xi * W_NEXT_INPUT,
-                                    b + xo * SIMD_WIDTH);
+                        mid_t::execute(i + xi * Problem::shapes::output::fm_set,
+                                       o + xo * Problem::shapes::output::fm_set,
+                                       k + xo * W_NEXT_OUTPUT +
+                                           xi * W_NEXT_INPUT,
+                                       b + xo * SIMD_WIDTH);
                     }
                 }
             }
@@ -186,10 +185,11 @@ private:
                 {
                     for (long_t xi = 0; xi < ifms; ++xi)
                     {
-                        mid.execute(i + xi * Problem::shapes::output::fm_set,
-                                    o + xo * Problem::shapes::output::fm_set,
-                                    k + xo * W_NEXT_OUTPUT + xi * W_NEXT_INPUT,
-                                    b + xo * SIMD_WIDTH);
+                        mid_t::execute(i + xi * Problem::shapes::output::fm_set,
+                                       o + xo * Problem::shapes::output::fm_set,
+                                       k + xo * W_NEXT_OUTPUT +
+                                           xi * W_NEXT_INPUT,
+                                       b + xo * SIMD_WIDTH);
                     }
                 }
             }

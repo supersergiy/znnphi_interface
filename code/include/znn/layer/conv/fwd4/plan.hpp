@@ -65,11 +65,7 @@ public:
         }
     }
 
-    void execute()
-    {
-        launcher->launch(&(fns[0]));
-        // launcher->report();
-    }
+    void execute() { launcher->launch(&(fns[0])); }
 
     double gflops() const
     {

@@ -1,4 +1,4 @@
-#include "znn/bench/forward.hpp"
+#include "znn/bench/forward2.hpp"
 
 using namespace znn::phi;
 

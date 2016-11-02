@@ -13,7 +13,23 @@ namespace phi
 namespace propagation
 {
 
-template <bool   First,                   // load or set to bias
+/*******************************************************************************
+*
+* Kernel shape is:
+*      k[D][H][W][IN_FMAP][OUT_FMAP] with IN_FMAP=OUT_FMAP=SIMD_WIDTH
+*
+* input and output shapes are
+*      i/o[D][H][W][FMAP] with FMAP=SIMD_WIDTH
+*
+* if FIRST
+*      o[:][:][:][of] is initialized to b[of]
+* for of in [0,SIMD_WIDTH), and then
+* for all valid d, h, w, kd, kh, kw, if, of
+*      o[d][h][w][of] += k[kd][kh][kw][if][of] * i[d+kd][h+kh][w+kw][if];
+*
+*******************************************************************************/
+
+template <bool   Bias,                    // load or set to bias
           long_t IFMs,                    // number of input images
           class ID, class IH, class IW,   // image traits
           class CD, class CH, class CW,   // convolution traits
@@ -29,7 +45,7 @@ struct sub_image_dummy
     }
 };
 
-template <bool   First,                 // load or set to bias
+template <bool   Bias,                  // load or set to bias
           long_t IFMs,                  // number of input images
           class ID, class IH, class IW, // image traits
           class CD, class CH, class CW, // convolution traits
@@ -46,7 +62,7 @@ struct sub_image_1d
         for (long_t rw = 0; rw < RW; ++rw)
         {
             vout[rw] =
-                conditional_load_or_bias<First>(o + rw * IW::out_stride, b);
+                conditional_load_or_bias<Bias>(o + rw * IW::out_stride, b);
         }
 
         for (long_t kd = 0; kd < CD::size; ++kd)
@@ -90,7 +106,7 @@ struct sub_image_1d
     }
 };
 
-template <bool   First,                 // load or set to bias
+template <bool   Bias,                  // load or set to bias
           long_t IFMs,                  // number of input images
           class ID, class IH, class IW, // image traits
           class CD, class CH, class CW, // convolution traits
@@ -109,7 +125,7 @@ struct sub_image_2d
             ZNN_PRAGMA(unroll(RW))
             for (long_t rw = 0; rw < RW; ++rw)
             {
-                vout[rh][rw] = conditional_load_or_bias<First>(
+                vout[rh][rw] = conditional_load_or_bias<Bias>(
                     o + rh * IH::out_stride + rw * IW::out_stride, b);
             }
         }
@@ -165,7 +181,7 @@ struct sub_image_2d
     }
 };
 
-template <bool   First,                   // load or set to bias
+template <bool   Bias,                    // load or set to bias
           long_t IFMs,                    // number of input images
           class ID, class IH, class IW,   // image traits
           class CD, class CH, class CW,   // convolution traits
@@ -187,7 +203,7 @@ struct sub_image_3d
                 ZNN_PRAGMA(unroll(RW))
                 for (long_t rw = 0; rw < RW; ++rw)
                 {
-                    vout[rd][rh][rw] = conditional_load_or_bias<First>(
+                    vout[rd][rh][rw] = conditional_load_or_bias<Bias>(
                         o + rd * ID::out_stride + rh * IH::out_stride +
                             rw * IW::out_stride,
                         b);
@@ -256,7 +272,7 @@ struct sub_image_3d
     }
 };
 
-template <bool   First,                   // load or set to bias
+template <bool   Bias,                    // load or set to bias
           long_t IFMs,                    // number of input images
           class ID, class IH, class IW,   // image traits
           class CD, class CH, class CW,   // convolution traits
@@ -267,10 +283,10 @@ struct sub_image
           RD == 0 || RH == 0 || RW == 0, sub_image_dummy,
           std::conditional_t<
               RD == 1 && RH == 1,
-              sub_image_1d<First, IFMs, ID, IH, IW, CD, CH, CW, RW>,
-              std::conditional_t<RD == 1, sub_image_2d<First, IFMs, ID, IH, IW,
+              sub_image_1d<Bias, IFMs, ID, IH, IW, CD, CH, CW, RW>,
+              std::conditional_t<RD == 1, sub_image_2d<Bias, IFMs, ID, IH, IW,
                                                        CD, CH, CW, RH, RW>,
-                                 sub_image_3d<First, IFMs, ID, IH, IW, CD, CH,
+                                 sub_image_3d<Bias, IFMs, ID, IH, IW, CD, CH,
                                               CW, RD, RH, RW>>>>
 {
 };

@@ -1,0 +1,21 @@
+* Thursday 20
+  - Fwd/bwd, update & results writeup!
+* Friday 21
+  - Paper done
+  - Polish everythiung - read 2 hours for 15-20 minutes fixing the
+    writeup
+* Saturday 22
+  - CG work
+  - Finish the paper
+* Sunday 23
+  - Finish the paper
+
+
+- static.tex
+- review fwd-bwd.tex
+- review upd.tex
+
+- conclusions and remarks!
+
+static
+conclusion

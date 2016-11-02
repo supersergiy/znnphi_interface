@@ -1,9 +1,9 @@
 #pragma once
 
 #include "znn/layer/conv/propagation/executable.hpp"
-#include "znn/layer/conv/propagation/sub_layer.hpp"
 #include "znn/layer/conv/propagation/full_layer/problem.hpp"
 #include "znn/layer/conv/propagation/full_layer/split.hpp"
+#include "znn/layer/conv/propagation/sub_layer.hpp"
 
 #include <iostream>
 #include <type_traits>
@@ -25,14 +25,6 @@ private:
 public:
     static void schedule(long_t t, exec_vector& ev)
     {
-        // std::cout << "Scheduling on Thread " << t << " batch: " << sub::b_from
-        //           << "-" << sub::b_from + sub::b_len - 1
-        //           << " ofm: " << sub::ofm_from << "-"
-        //           << sub::ofm_from + sub::ofm_len - 1 << " d: " << sub::d_from
-        //           << "-" << sub::d_from + sub::d_len - 1
-        //           << " h: " << sub::h_from << "-"
-        //           << sub::h_from + sub::h_len - 1 << " w: " << sub::w_from
-        //           << "-" << sub::w_from + sub::w_len - 1 << "\n";
         ev[t].push_back(&sub_layer<P>::execute);
     }
 };

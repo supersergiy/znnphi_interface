@@ -51,9 +51,7 @@ inline void print_compiler_version()
     std::cout << std::endl;
 }
 
-#define ZNN_PRAGMA(x)
-
-//_Pragma(#x)
+#define ZNN_PRAGMA(x) _Pragma(#x)
 
 #define znn_inline __attribute__((always_inline)) inline
 

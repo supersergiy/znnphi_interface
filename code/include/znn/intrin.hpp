@@ -19,7 +19,7 @@
 #define SIMD_FLOAT __m512
 
 #define SIMD_MAX_BLOCK 31
-#define SIMD_W_BLOCK 14
+#define SIMD_W_BLOCK 12
 
 #define SIMD_NUM_REGISTERS 32
 

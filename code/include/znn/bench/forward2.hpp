@@ -58,11 +58,13 @@ double benchmark_single_forward(std::string const& lname = "layer")
 
     full_layer<Cores * HT, orig_prob> plan(&kl);
 
-    long_t iters = 5 * Cores;
+    long_t iters = 2;
     for (long_t i = 0; i < iters; ++i)
     {
         plan.execute(in.data(), out.data(), ker.data(), bi.data());
     }
+
+    std::cout << "ok real measurement" << std::endl;
 
     auto begin = std::chrono::high_resolution_clock::now();
 
@@ -148,61 +150,61 @@ void benchmark_forward(std::string const& lname = "layer")
 // #endif
 // #endif
 
-#if (ZNN_NUM_CORES >= 4)
-    benchmark_single_forward<4, 1, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
-    benchmark_single_forward<4, 2, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
-#if defined(ZNN_AVX512) || defined(ZNN_KNC)
-    benchmark_single_forward<4, 4, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
-#endif
-#endif
-
-// #if (ZNN_NUM_CORES>=6)
-//     benchmark_single_forward<6,1,B,IFM,OFM,ID,IHW,KD,KHW>( lname );
-//     benchmark_single_forward<6,2,B,IFM,OFM,ID,IHW,KD,KHW>( lname );
+// #if (ZNN_NUM_CORES >= 4)
+//     benchmark_single_forward<4, 1, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+//     benchmark_single_forward<4, 2, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
 // #if defined(ZNN_AVX512) || defined(ZNN_KNC)
-//     benchmark_single_forward<6,4,B,IFM,OFM,ID,IHW,KD,KHW>( lname );
+//     benchmark_single_forward<4, 4, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
 // #endif
 // #endif
 
-#if (ZNN_NUM_CORES >= 8)
-    benchmark_single_forward<8, 1, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
-    benchmark_single_forward<8, 2, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
-#if defined(ZNN_AVX512) || defined(ZNN_KNC)
-    benchmark_single_forward<8, 4, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
-#endif
-#endif
+// // #if (ZNN_NUM_CORES>=6)
+// //     benchmark_single_forward<6,1,B,IFM,OFM,ID,IHW,KD,KHW>( lname );
+// //     benchmark_single_forward<6,2,B,IFM,OFM,ID,IHW,KD,KHW>( lname );
+// // #if defined(ZNN_AVX512) || defined(ZNN_KNC)
+// //     benchmark_single_forward<6,4,B,IFM,OFM,ID,IHW,KD,KHW>( lname );
+// // #endif
+// // #endif
 
-#if (ZNN_NUM_CORES >= 16)
-    benchmark_single_forward<16, 1, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
-    benchmark_single_forward<16, 2, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
-#if defined(ZNN_AVX512) || defined(ZNN_KNC)
-    benchmark_single_forward<16, 4, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
-#endif
-#endif
+// #if (ZNN_NUM_CORES >= 8)
+//     benchmark_single_forward<8, 1, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+//     benchmark_single_forward<8, 2, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+// #if defined(ZNN_AVX512) || defined(ZNN_KNC)
+//     benchmark_single_forward<8, 4, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+// #endif
+// #endif
 
-#if ((ZNN_NUM_CORES >= 18) && ((ZNN_NUM_CORES % 18) == 0))
-    benchmark_single_forward<18, 1, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
-    benchmark_single_forward<18, 2, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
-#if defined(ZNN_AVX512) || defined(ZNN_KNC)
-    benchmark_single_forward<18, 4, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
-#endif
-#endif
+// #if (ZNN_NUM_CORES >= 16)
+//     benchmark_single_forward<16, 1, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+//     benchmark_single_forward<16, 2, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+// #if defined(ZNN_AVX512) || defined(ZNN_KNC)
+//     benchmark_single_forward<16, 4, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+// #endif
+// #endif
 
-#if (ZNN_NUM_CORES >= 32)
-    benchmark_single_forward<32, 1, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
-    benchmark_single_forward<32, 2, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
-#if defined(ZNN_AVX512) || defined(ZNN_KNC)
-    benchmark_single_forward<32, 4, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
-#endif
-#endif
+// #if ((ZNN_NUM_CORES >= 18) && ((ZNN_NUM_CORES % 18) == 0))
+//     benchmark_single_forward<18, 1, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+//     benchmark_single_forward<18, 2, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+// #if defined(ZNN_AVX512) || defined(ZNN_KNC)
+//     benchmark_single_forward<18, 4, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+// #endif
+// #endif
 
-#if ((ZNN_NUM_CORES >= 36) && ((ZNN_NUM_CORES % 18) == 0))
-    benchmark_single_forward<36, 1, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
-    benchmark_single_forward<36, 2, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
-#if defined(ZNN_AVX512) || defined(ZNN_KNC)
-    benchmark_single_forward<36, 4, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
-#endif
-#endif
+// #if (ZNN_NUM_CORES >= 32)
+//     benchmark_single_forward<32, 1, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+//     benchmark_single_forward<32, 2, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+// #if defined(ZNN_AVX512) || defined(ZNN_KNC)
+//     benchmark_single_forward<32, 4, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+// #endif
+// #endif
+
+// #if ((ZNN_NUM_CORES >= 36) && ((ZNN_NUM_CORES % 18) == 0))
+//     benchmark_single_forward<36, 1, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+//     benchmark_single_forward<36, 2, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+// #if defined(ZNN_AVX512) || defined(ZNN_KNC)
+//     benchmark_single_forward<36, 4, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+// #endif
+// #endif
 
 // // #if (ZNN_NUM_CORES>=54)
 // //     benchmark_single_forward<54,1,B,IFM,OFM,ID,IHW,KD,KHW>( lname );

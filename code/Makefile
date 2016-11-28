@@ -24,11 +24,13 @@ DATE    =       $(AT)date
 
 
 ifneq ($(strip $(ICC)),)
+	SSE_FLAGS	=	-DZNN_SSE -msse
 	AVX_FLAGS 	= 	-DZNN_AVX -xAVX
 	AVX2_FLAGS 	=	-DZNN_AVX2 -march=core-avx2
 	AVX512_FLAGS	=	-DZNN_AVX512 -xMIC-AVX512
 	KNC_FLAGS	=	-DZNN_KNC -mmic
 else
+	SSE_FLAGS	=	-DZNN_SSE -msse
 	AVX_FLAGS	=	-DZNN_AVX -mavx
 	AVX2_FLAGS	=	-DZNN_AVX2 -mavx2 -mfma
 	AVX512_FLAGS	=	-DZNN_AVX512 -mavx512f -mavx512pf -mavx512cd -mfma
@@ -108,6 +110,7 @@ endif
 
 
 OBJS		=	SRC=$(wildcard *.cpp)
+SSE_DEPS	=	$(patsubst %.cpp,$(BINDIR)/sse/obj/%.d,$(OBJS))
 AVX_DEPS	=	$(patsubst %.cpp,$(BINDIR)/avx/obj/%.d,$(OBJS))
 AVX2_DEPS	=	$(patsubst %.cpp,$(BINDIR)/avx2/obj/%.d,$(OBJS))
 AVX512_DEPS	=	$(patsubst %.cpp,$(BINDIR)/avx512/obj/%.d,$(OBJS))
@@ -116,6 +119,12 @@ KNC_DEPS	=	$(patsubst %.cpp,$(BINDIR)/knc/obj/%.d,$(OBJS))
 
 #OBJS = test3x.o test2x.o test1x.o test1.o lalu.o lala.o lala2.o bench_update_vgg_conv2.o bench_update_vgg_conv3.o  bench_update_vgg_conv4.o
 #DEPS =
+# dependency files for c++
+$(BINDIR)/sse/obj/%.d: ./%.cpp
+	$(ECHO) "[CXX] dependencies $<"
+	$(MKDIR) -p $(dir $@)
+	$(CXX) $(DEPFLAGS) $(SSE_FLAGS) -MF $@ $<
+
 # dependency files for c++
 $(BINDIR)/avx/obj/%.d: ./%.cpp
 	$(ECHO) "[CXX] dependencies $<"
@@ -139,6 +148,13 @@ $(BINDIR)/knc/obj/%.d: ./%.cpp
 	$(ECHO) "[CXX] dependencies $<"
 	$(MKDIR) -p $(dir $@)
 	$(CXX) $(DEPFLAGS) $(KNC_FLAGS) -MF $@ $<
+
+# c++
+$(BINDIR)/sse/obj/%.o: ./%.cpp
+	$(ECHO) "[CXX] compiling $<"
+	$(MKDIR) -p $(dir $@)
+	$(CXX) -c $(CXXFLAGS) $(SSE_FLAGS) -o $@ $<
+	$(MV) -f "$(@:.o=.T)" "$(@:.o=.d)"
 
 # c++
 $(BINDIR)/avx/obj/%.o: ./%.cpp
@@ -172,6 +188,12 @@ $(BINDIR)/knc/obj/%.o: ./%.cpp
 
 
 # c++
+$(BINDIR)/sse/obj/%.S: ./%.cpp
+	$(ECHO) "[CXX] compiling $<"
+	$(MKDIR) -p $(dir $@)
+	$(CXX) -S $(CXXFLAGS) $(SSE_FLAGS) -o $@ $<
+
+# c++
 $(BINDIR)/avx/obj/%.S: ./%.cpp
 	$(ECHO) "[CXX] compiling $<"
 	$(MKDIR) -p $(dir $@)
@@ -193,6 +215,11 @@ $(BINDIR)/knc/obj/%.S: ./%.cpp
 	$(ECHO) "[CXX] compiling $<"
 	$(MKDIR) -p $(dir $@)
 	$(CXX) -S $(CXXFLAGS) $(KNC_FLAGS) -o $@ $<
+
+$(BINDIR)/sse/%.bin: $(BINDIR)/sse/obj/%.o
+	$(ECHO) "[CXX] linking $^"
+	$(ECHO) $(CXX) $^ $(CXXLDFLAGS) $(AVX_FLAGS) -o $@
+	$(CXX) $^ $(CXXLDFLAGS) $(SSE_FLAGS) -o $@
 
 $(BINDIR)/avx/%.bin: $(BINDIR)/avx/obj/%.o
 	$(ECHO) "[CXX] linking $^"
@@ -234,6 +261,7 @@ clean:
 
 remake: clean all
 
+-include $(SSE_DEPS)
 -include $(AVX_DEPS)
 -include $(AVX2_DEPS)
 -include $(AVX512_DEPS)

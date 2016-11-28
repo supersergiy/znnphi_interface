@@ -20,12 +20,13 @@ private:
 public:
     static void print()
     {
-        std::cout << "Threads: " << P::threads << " batche: " << sub::b_from
-                  << "-" << (sub::b_from - sub::b_len - 1)
-                  << " batche: " << sub::d_from << "-"
-                  << (sub::d_from - sub::d_len - 1)
-                  << " batche: " << sub::h_from << "-"
-                  << (sub::h_from - sub::h_len - 1) << "\n";
+        std::cout << "Threads: " << P::threads << " batch: " << sub::b_from
+                  << "-" << (sub::b_from + sub::b_len - 1)
+                  << " depth: " << sub::d_from << "-"
+                  << (sub::d_from + sub::d_len - 1)
+                  << " height: " << sub::h_from << "-"
+                  << (sub::h_from + sub::h_len - 1) << " width: " << sub::w_from
+                  << "-" << (sub::w_from + sub::w_len - 1) << "\n";
     }
 };
 

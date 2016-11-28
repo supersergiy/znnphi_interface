@@ -14,11 +14,11 @@ namespace update
 template <class... Problems>
 using problems_t = std::tuple<Problems...>;
 
-template <class... Ts>
-using problem_cat_t = typename problem_cat<Ts...>::type;
-
 template <class...>
 struct problem_cat;
+
+template <class... Ts>
+using problem_cat_t = typename problem_cat<Ts...>::type;
 
 template <class... Problems>
 struct problem_cat<problems_t<Problems...>>

@@ -4,6 +4,7 @@
 #include "znn/layer/conv/propagation/full_layer/problem.hpp"
 #include "znn/layer/conv/propagation/full_layer/split.hpp"
 #include "znn/layer/conv/propagation/sub_layer.hpp"
+#include "znn/util/constexpr.hpp"
 
 #include <iostream>
 #include <type_traits>
@@ -67,17 +68,7 @@ struct scheduler
 private:
     using type = std::conditional_t<
         P::threads == 1, serial_scheduler<P>,
-        std::conditional_t<
-            (P::threads % 2) == 0, split_scheduler<P, 2>,
-            std::conditional_t<
-                (P::threads % 3) == 0, split_scheduler<P, 3>,
-                std::conditional_t<
-                    (P::threads % 5) == 0, split_scheduler<P, 5>,
-                    std::conditional_t<
-                        (P::threads % 7) == 0, split_scheduler<P, 7>,
-                        std::conditional_t<(P::threads % 11) == 0,
-                                           split_scheduler<P, 11>,
-                                           split_scheduler<P, P::threads>>>>>>>;
+        split_scheduler<P, smallest_prime_factor(P::threads)>>;
 
 public:
     static void schedule(long_t t, exec_vector& ev) { type::schedule(t, ev); }

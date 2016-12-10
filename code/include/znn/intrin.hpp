@@ -28,6 +28,17 @@
 
 #elif defined(ZNN_KNC)
 
+#include <type_traits>
+
+namespace std
+{
+template <bool B, class T, class F>
+using conditional_t = typename std::conditional<B, T, F>::type;
+
+template <bool B, class T = void>
+using enable_if_t = typename std::enable_if<B, T>::type;
+}
+
 #define SIMD_WIDTH 16
 
 #define SIMD_FMADD _mm512_fmadd_ps
@@ -42,7 +53,7 @@
 #define SIMD_FLOAT __m512
 
 #define SIMD_MAX_BLOCK 14
-#define SIMD_W_BLOCK 14
+#define SIMD_W_BLOCK 12
 
 #define SIMD_NUM_REGISTERS 32
 
@@ -53,7 +64,11 @@
 
 #define SIMD_WIDTH 8
 
+#define SIMD_MUL = _mm256_mul_ps
 #define SIMD_FMADD _mm256_fmadd_ps
+#define SIMD_FNMADD _mm256_fnmadd_ps
+#define SIMD_FMSUB _mm256_fmsub_ps
+#define SIMD_FNMSUB _mm256_fnmsub_ps
 #define SIMD_SET1 _mm256_set1_ps
 #define SIMD_LOAD _mm256_load_ps
 #define SIMD_STORE _mm256_store_ps

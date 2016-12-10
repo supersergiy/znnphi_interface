@@ -58,7 +58,7 @@ double benchmark_single_forward(std::string const& lname = "layer")
 
     full_layer<Cores * HT, orig_prob> plan(&kl);
 
-    long_t iters = 2;
+    long_t iters = 2 * Cores;
     for (long_t i = 0; i < iters; ++i)
     {
         plan.execute(in.data(), out.data(), ker.data(), bi.data());
@@ -150,13 +150,13 @@ void benchmark_forward(std::string const& lname = "layer")
 // #endif
 // #endif
 
-// #if (ZNN_NUM_CORES >= 4)
-//     benchmark_single_forward<4, 1, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
-//     benchmark_single_forward<4, 2, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
-// #if defined(ZNN_AVX512) || defined(ZNN_KNC)
-//     benchmark_single_forward<4, 4, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
-// #endif
-// #endif
+#if (ZNN_NUM_CORES >= 4)
+    benchmark_single_forward<4, 1, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+    benchmark_single_forward<4, 2, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+#if defined(ZNN_AVX512) || defined(ZNN_KNC)
+    benchmark_single_forward<4, 4, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+#endif
+#endif
 
 // // #if (ZNN_NUM_CORES>=6)
 // //     benchmark_single_forward<6,1,B,IFM,OFM,ID,IHW,KD,KHW>( lname );
@@ -247,8 +247,8 @@ void benchmark_forward(std::string const& lname = "layer")
 // #endif
 
 #if ((ZNN_NUM_CORES >= 72) && ((ZNN_NUM_CORES % 18) == 0))
-    benchmark_single_forward<72, 1, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
-    benchmark_single_forward<72, 2, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+//    benchmark_single_forward<72, 1, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+//    benchmark_single_forward<72, 2, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
 #if defined(ZNN_AVX512) || defined(ZNN_KNC)
     benchmark_single_forward<72, 4, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
 #endif

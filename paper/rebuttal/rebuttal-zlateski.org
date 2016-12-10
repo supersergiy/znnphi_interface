@@ -1,0 +1,130 @@
+We would like to thank the reviewers for extraordinary reviews.  We
+believe that addressing the issues brought up by the reviewers will
+make our paper much stronger.
+
+Unintentionally, we had mistakenly uploaded a working draft, instead
+of the final manuscript.  The missing references had been added and
+comments removed.
+
+We will release the source code (MIT license) upon publication.
+
+We agree with R1 that the difference between [25] and
+https://arxiv.org/pdf/1602.06709v1.pdf (both seem to be from the same
+authors) should be clearly captured.  [25] provides a vectorization
+method, and a guidelines for both serial and parallel algorithms.  It
+suggests specific register blocking for certain kernel sizes.
+
+The vectorization of our forward pass' lowest level primitive
+resembles the innermost loops of the serial algorithm in [25] - same
+vectorization but different order of computation is performed.  This
+is where the similarity ends.  Our lowest level update primitive has
+different blocking strategy.  Our serial algorithms performs
+computation in a sophisticated way that maximizes L2 and L3 cache hit
+rates.
+
+It is capable of choosing blocking sizes for an arbitrary
+N-dimensional kernel sizes, and statically orders the computation for
+maximal reuse of both L1 and higher level of caches.
+
+In a short paragraph on parallelization, a simple fork--join algorithm
+is proposed and only briefly analyzed for specific networks
+(p.566/567).  In contrast, our approach provides scaleable algorithm
+that can handle an arbitrary network topology and arbitrary kernel
+sizes.
+
+https://arxiv.org/pdf/1602.06709v1.pdf focuses on distributing
+training over multiple nodes.  It the same serial and parallel
+algorithms as in [25].
+
+
+R1:
+
+0) Intrinsics are indeed used (as described on page 4.).  We will make
+   that clearer.
+
+a) We will mention that MKL-DNN is only optimized for forward and
+   AVX2.
+
+b) Using 1 vs 2 threads depends on whether it is more beneficial to
+   hide latency or have more cache per thread available.  Many factors
+   contribute to whether latency or cache is more important, such as
+   blocking size, kernel sizes, etc...  For this reason, we decide to
+   empirically determine the optimal choice.
+
+c) Similar performances are obtained for both 7x7 and 5x5 of Googlenet
+and Resnet.  We'll add an extra "toy-layers" to cover that cases.
+
+d) Extra analysis will be added in the manuscript.  Generally NUMA
+contributes to the scalability for some cases on Haswell.  KNL has
+linear scalability in nearly all cases, with the exception of Unet
+update, which is due to low overall amount of computation and
+subdivision into non--equal size problems.
+
+- Authors disagree that GEMM scales better.  On our NUMA Haswell
+  machine GEMM scales worse.  On KNL our algorithm scales linearly in
+  nearly all cases, with the exception of UNet which can be considered
+  a hard case.  Similarly, GEMM has hard cases for which it doesn't
+  scale well (narrow matrices).
+
+- One of the strengths of our parallelization method is that no
+  special handling of NUMA is required.  The algorithm is designed to
+  take advantage of higher level caches when available.  Good
+  performances on our NUMA Haswell machine is due to efficient reuse
+  of L3 cache.
+
+
+e) Insufficient vectorization, not enough loop unrolling and lack of
+L3 cache all contribute to relatively lower utilization of KNL versus
+Haswell.  We expect the first two problems to be solved as compilers'
+optimization of KNL code matures.  We still expect CPUs with L3 cache
+to perform better.
+
+f) Such analysis would be useful, however MKL-DNN is under active
+development, and it promises to be as efficient as MKL2017.  Lack of
+clear documentation or publication on the exact approach render such
+analysis by the authors of this paper hard.  We hope MKL-DNN authors
+can perform such analysis.
+
+
+g) Our approach can be implemented using JIT (as in MKL-DNN), as well
+as with the c++ metaprogramming.  Moreover, our approach can be seen
+as a JIT approach as well, with C++ compiler doing the JIT
+compilation.
+
+However, Using c++ metaprogramming has multiple advantages.
+
+- Single source code can be compiled for various machines.  This makes
+  the code easier to maintain.  Porting to a new generation of a CPU
+  or different platform requires changing 6 macros and 3 constants.
+  Amazing work done by the compiler community will make sure the
+  instructions are optimally scheduled.  JIT proposed in [NNPACK, MKL]
+  is much harder to port without replicating much of the work done by
+  the compiler community - such as optimal register usage, instruction
+  scheduling, etc..
+
+h) Unfortunately NNPack is not scaleable to high number of cores.
+(experiments and direct conversation with the author).  The authors
+believe that winograd implementations can be beneficial for the
+forward pass of networks with specific kernel sizes; however
+comparisons to such specific algorithm is outside of the scope of this
+paper.
+
+i) We will publish results for DeepBench with after the release of the
+code.
+
+R2:
+
+1)
+
+2) While the utilization varies based on the network, the authors
+   believe that the overal utilization can be considered great,
+   especially for networks that are harder to paralellize as described
+   above.
+
+3) Our Haswell machine had 4 CPUs with total of 72 cores.  It was
+   capable of approximately 30% more FLOPS than our KNL machine (Table
+   II).
+
+
+We promise to work hard on improving the narrative, especially the
+paragraphs describing the details of the algorithm.

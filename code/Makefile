@@ -22,19 +22,25 @@ DATE    =       $(AT)date
 
 # compilers
 
+ifneq ($(strip $(TUNE)),)
+	ZNN_TUNE	=	-mtune=$(strip $(TUNE))
+else
+	ZNN_TUNE	=
+endif
+
 
 ifneq ($(strip $(ICC)),)
-	SSE_FLAGS	=	-DZNN_SSE -msse
-	AVX_FLAGS 	= 	-DZNN_AVX -xAVX
-	AVX2_FLAGS 	=	-DZNN_AVX2 -march=core-avx2
-	AVX512_FLAGS	=	-DZNN_AVX512 -xMIC-AVX512
-	KNC_FLAGS	=	-DZNN_KNC -mmic
+	SSE_FLAGS	=	-DZNN_SSE -msse $(ZNN_TUNE)
+	AVX_FLAGS 	= 	-DZNN_AVX -xAVX $(ZNN_TUNE)
+	AVX2_FLAGS 	=	-DZNN_AVX2 -march=core-avx2 $(ZNN_TUNE)
+	AVX512_FLAGS	=	-DZNN_AVX512 -xMIC-AVX512 $(ZNN_TUNE)
+	KNC_FLAGS	=	-DZNN_KNC -mmic $(ZNN_TUNE)
 else
-	SSE_FLAGS	=	-DZNN_SSE -msse
-	AVX_FLAGS	=	-DZNN_AVX -mavx
-	AVX2_FLAGS	=	-DZNN_AVX2 -mavx2 -mfma
-	AVX512_FLAGS	=	-DZNN_AVX512 -mavx512f -mavx512pf -mavx512cd -mfma
-	KNC_FLAGS	=	-DZNN_AVX512 -mavx512f -mavx512pf -mfma
+	SSE_FLAGS	=	-DZNN_SSE -msse $(ZNN_TUNE)
+	AVX_FLAGS	=	-DZNN_AVX -mavx $(ZNN_TUNE)
+	AVX2_FLAGS	=	-DZNN_AVX2 -mavx2 -mfma $(ZNN_TUNE)
+	AVX512_FLAGS	=	-DZNN_AVX512 -mavx512f -mavx512pf -mavx512cd -mfma $(ZNN_TUNE)
+	KNC_FLAGS	=	-DZNN_AVX512 -mavx512f -mavx512pf -mfma $(ZNN_TUNE)
 endif
 
 ifneq ($(strip $(CORES)),)

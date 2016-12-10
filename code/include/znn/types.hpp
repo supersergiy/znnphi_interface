@@ -9,7 +9,7 @@
 #include <mutex>
 #include <ostream>
 #include <zi/vl/vl.hpp>
-
+#include <complex>
 #include <list>
 #include <map>
 #include <vector>

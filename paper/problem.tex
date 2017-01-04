@@ -1,21 +1,17 @@
 \section{Problem definition and motivation}
 
-  To calculate Eq. (\ref{eq:forward}), we loop over each element
-  $I'(b,f',n_x',n_y',n_z')$ of the output tensor, and for each element
-  we compute the sum over $f$, $k_x$, $k_y$, and $k_z$ of the product
-  $I(b,f,n_x+k_x,n_y+k_y,n_z+k_z) W(f',f,k_x,k_y,k_z)$.  In all, the
-  computation requires 9 nested loops over the indices
-  $b,f',n_x',n_y',n_z',f,k_x,k_y,k_z$.  In the innermost loop, one
-  multiplication and one addition is performed.  Thus, the computation
-  requires a total of $2BFF'N_x'N_y'N_z'K_zK_yK_z$ floating point
-  operations (FLOPs).  We found that a naive C++ implementation
-  achieved only $0.87$ GFLOPS on a CPU core that was theoretically
-  capable of $80$ GFLOPS, which amounts to less than $1.1\%$
-  utilization.  The code was compiled using all relevant optimization
-  switches including the ones enabling AVX2 and FMA.
+  Calculating Eq. (\ref{eq:forward}) requires 9 nested loops over the
+  indices $b,f',n_x',n_y',n_z',f,k_x,k_y,k_z$, where the $n$ indices
+  specify locations in an output image and the $k$ indices specify
+  locations in a kernel.  In the innermost loop, one multiplication
+  and one addition is performed.  Thus, the computation requires a
+  total of $2BFF'N_x'N_y'N_z'K_zK_yK_z$ floating point operations
+  (FLOPs).  We found that a naive C++ implementation utilized less
+  than $1.1\%$ of a CPU core's theoretical maximum of $80$ GFLOPS.
+  The code was compiled using all relevant optimization switches
+  including the ones enabling AVX2 and FMA.
 
-  As we will see, it is possible to utilize the FLOPS of a single core
-  much more efficiently than the naive implementation.  Efficiency
+  Efficiency
   requires maximal utilization of the up to two FMA vector units per
   core.  Each FMA vector unit is capable of performing $2S$ floating
   point instructions per cycle via a fused multiply--add operation ($y
@@ -38,12 +34,13 @@
   speed up loading to the register.
 
   Since modern compilers are aware of the above constraints, our
-  strategy here is to write the computation in such a way that the
+  strategy is to write the computation in such a way that the
   compiler can optimize for efficient use of a single core.
 
-  At compile-time, the computation is also divided into independent
-  sub--tasks, which are evenly distributed across the available
-  cores. A single fork--join execution, allows for minimal
-  synchronization, while each core will starts and ends its work at
-  roughly the same time.  As we will see, this enables efficient
-  utilization of all cores.
+%%%%%% removed since this is covered in the scheduling section
+%  At compile-time, the computation is also divided into independent
+%  sub--tasks, which are evenly distributed across the available
+%  cores. A single fork--join execution, allows for minimal
+%  synchronization, while each core will starts and ends its work at
+%  roughly the same time.  As we will see, this enables efficient
+%  utilization of all cores.

@@ -16,40 +16,40 @@
   tuple of $F$ images into an output tuple of $F'$ images.  We want to
   process a batch of $B$ inputs to yield a batch of $B$ outputs, via
   \begin{equation}\label{eq:forward}
-  I'_{b,j} = \sum_{i=1}^F I_{b,i}\star W_{ji} + \theta_j
+  I'_{b,f'} = \sum_{f=1}^F I_{b,f}\star W_{f'f} + \theta_{f'}
   \end{equation}
-  for $1 \le b \le B$ and $1 \le j \le F'$.  Here $I_{b,i}$ is the
-  $i^{th}$ image of the $b^{th}$ input in the batch, and $I'_{b,j}$ is
-  the $j^{th}$ image of the $b^{th}$ output in the batch, and $W_{ji}$
-  is the kernel from the $i^{th}$ image in an input tuple to the
-  $j^{th}$ image in an output tuple.  Typically, a scalar ``bias''
-  $\theta_j$ is added to each pixel of the output image $j$.
+  for $1 \le b \le B$ and $1 \le f' \le F'$.  Here $I_{b,f}$ is the
+  $f$th image of the $b$th input in the batch, and $I'_{b,f'}$ is
+  the $f'$th image of the $b$th output in the batch, and $W_{f'f}$
+  is the kernel from the $f$th image in an input tuple to the
+  $f'$th image in an output tuple.  Typically, a scalar ``bias''
+  $\theta_{f'}$ is added to each pixel of the output image $f'$.
 
   In the backward phase, a convolutional layer transforms a tuple of
   $F'$ images into a tuple of $F$ images.  We process a batch of $B$
   tuples via
   \begin{equation}\label{eq:backward}
-  \hat{I}_{b,i} = \sum_{j=1}^{F'} \hat{I}'_{b,j} \ast W_{ji}
+  \hat{I}_{b,f} = \sum_{f'=1}^{F'} \hat{I}'_{b,f'} \ast W_{f'f}
   \end{equation}
-  for $1 \le b \le B$ and $1 \le i \le F$.  $\hat{I}$ and $\hat{I}'$
+  for $1 \le b \le B$ and $1 \le f \le F$.  $\hat{I}$ and $\hat{I}'$
   are batches of image tuples with the same size as $I$ and $I'$ in
   Eq. (\ref{eq:forward}).
 
   In the update phase, we calculate the kernel updates for the
   convolutional layer
   \begin{equation}\label{eq:update}
-  \Delta W_{j,i} = \sum_{b=1}^B I_{b,i} \star \hat{I}'_{b,j}
+  \Delta W_{f',f} = \sum_{b=1}^B I_{b,f} \star \hat{I}'_{b,f'}
   \end{equation}
-  for $1 \le i \le F$ and $1 \le j \le F'$.  The kernel updates
-  $\Delta W_{j,i}$ are images of the same size as the kernels
-  $W_{j,i}$.
+  for $1 \le f \le F$ and $1 \le f'\le F'$.  The kernel updates
+  $\Delta W_{f',f}$ are images of the same size as the kernels
+  $W_{f',f}$.
 
   Here we focus on computing the convolutions and cross--correlations
   of Eqs. (\ref{eq:forward})-(\ref{eq:update}) efficiently.  The
   meanings of these equations in the context of backpropagation
   learning are not required for understanding the contributions of
   this paper.  (In brief, $\hat{I}$ is the gradient of the loss
-  function for learning with respect to $I$, and $\Delta W_{j,i}$ is
+  function for learning with respect to $I$, and $\Delta W_{f',f}$ is
   the direction along which the kernels are modified by the learning.)
 
 %  Gradients of the loss with respect to the input/output/kernels are
@@ -65,10 +65,10 @@
 %  backward pass.
 
   For the sake of concreteness, we will assume 3D images and
-  kernels. The generalization to $N-D$ images should be
+  kernels. The generalization to $N$-D images should be
   straightforward to the reader.
-  If $I_{b,i}$ has size $\vec{N} = \angled{N_x, N_y, N_z}$ and
-  $W_{ji}$ has size $\vec{K} = \angled{K_x,K_y,K_z}$, then we can
+  If $I_{b,f}$ has size $\vec{N} = \angled{N_x, N_y, N_z}$ and
+  $W_{f'f}$ has size $\vec{K} = \angled{K_x,K_y,K_z}$, then we can
   regard $I$ and $\hat{I}$ as 5D tensors of size $B \times F \times N_x
   \times N_y \times N_z$, $W$ and $\Delta W$ as 5D tensors of size $F'
   \times F \times K_x \times K_y \times K_z$, and $I'$ and $\hat{I'}$ as

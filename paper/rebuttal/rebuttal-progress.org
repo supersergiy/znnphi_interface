@@ -26,20 +26,34 @@ https://arxiv.org/pdf/1602.06709v1.pdf focuses on distributing
 training over multiple nodes, using the same serial and parallel
 algorithms as in [25].
 
-0)Intrinsics are indeed used (see page 4).  We will make that clearer.
+** DONE ALL ABOVE
 
-a)We will mention that MKL-DNN is only optimized for forward and AVX2.
+* R1 questions
 
-b)1 vs 2 threads depends on whether it is more beneficial to hide
+** TODO 0)
+
+  Intrinsics are indeed used (see page 4).  We will make that clearer.
+
+** DONE a)
+
+  We will mention that MKL-DNN is only optimized for forward and AVX2.
+
+** DONE b)
+
+  1 vs 2 threads depends on whether it is more beneficial to hide
   latency or have more cache per thread available.  Here, many factors
   such as blocking size, kernel sizes, available cache, etc...  come
   in play.  For this reason, we empirically determine the optimal
   choice.
 
-c)Similar performances are obtained for 7x7/5x5 of GoogLeNet/Resnet.
+** TODO c)
+
+  Similar performances are obtained for 7x7/5x5 of GoogLeNet/Resnet.
   We'll add extra "toy-layers" to cover those cases.
 
-d)Extra analysis of the benchmarks will be added.  NUMA affects
+** DONE d)
+
+  Extra analysis of the benchmarks will be added.  NUMA affects
   scalability for some cases on Haswell.  KNL has linear scalability
   in nearly all cases, with the exception of Unet-update, which is due
   to relatively low amount of FLOPS required and subdivision into
@@ -54,17 +68,23 @@ d)Extra analysis of the benchmarks will be added.  NUMA affects
   special handling of NUMA is required.  Good performance was achieved
   with efficient utilization of L3.
 
-e)Insufficient vectorization, not enough loop unrolling and lack of L3
+** DONE e)
+
+  Insufficient vectorization, not enough loop unrolling and lack of L3
   all contribute to relatively lower utilization of KNL versus
   Haswell.  We expect the first two problems to be solved as
   compilers' optimization of KNL code matures.  We still expect CPUs
   with L3 to have higher utilization on average.
 
-f)Such analysis would be useful, but the MKL-DNN authors should do it.
+** TODO f)
+
+  Such analysis would be useful, but the MKL-DNN authors should do it.
   Lack of clear documentation or publication on the exact approach
   makes it harder for us to do the analysis.
 
-g)Our C++ metaprogramming approach could be regarded as a JIT approach
+** TODO g)
+
+  Our C++ metaprogramming approach could be regarded as a JIT approach
   as well, with the C++ compiler doing the JIT compilation.  Our
   approach has multiple advantages:
 
@@ -76,30 +96,44 @@ g)Our C++ metaprogramming approach could be regarded as a JIT approach
   of the work done by the compiler - such as optimal register usage,
   instruction scheduling, etc..
 
-h)NNPack is not scalable to high number of cores, based on our own
+** TODO h)
+
+  NNPack is not scalable to high number of cores, based on our own
   experiments and personal conversation with the NNPack author.
 
-i)We plan to publish results for DeepBench on different CPU
+** DONE i)
+
+  We plan to publish results for DeepBench on different CPU
   generations after the release of the code.
 
-R2 questions:
+* R2 questions
 
-1)Indeed convolution can be viewed as matrix multiplication.  However,
+** CANCELED 1)
+
+  Indeed convolution can be viewed as matrix multiplication.  However,
   a convolution matrix has a specific structure, which should be
   exploited to achieve higher efficiency.  This is why, for example,
   the GEMM approach has been superseded in recent cuDNN versions (2D
   convolution).
 
-2)UNet is the only architecture that is noticeably worse. Some of the
+** DONE 2)
+
+  UNet is the only architecture that is noticeably worse. Some of the
   reasons were given above and will be explained in the revised
   manuscript (with further analyses).
 
-3)Our Haswell machine had 4 CPUs with total of 72 cores.  It was
+** DONE 3)
+
+  Our Haswell machine had 4 CPUs with total of 72 cores.  It was
   capable of approximately 30% more FLOPS than our KNL machine
   (Tbl.2).
 
-R4 is correct that FFT/Winograd implementations can be effective for
-surprisingly small kernels.  Our previous FFT work was only effective
-for rather large kernels because we did not adequately exploit
-vectorization.  We plan to add vectorization but this is outside the
-scope of the current paper.
+* R4 questions
+
+** TODO
+
+  R4 is correct that FFT/Winograd implementations can be effective for
+  surprisingly small kernels.  Our previous FFT work was only
+  effective for rather large kernels because we did not adequately
+  exploit vectorization.  We plan to add vectorization but this is
+  outside the scope of the current paper.

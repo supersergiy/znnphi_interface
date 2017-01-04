@@ -186,30 +186,54 @@
   horizontal line would mean perfectly linear scalability.  For
   simplicity, points are only shown for the optimal number
   of hyper--threads per core, which was $2$ in more than 90\% of cases.
-  More hyper--threads per core can hide memory latency, but will
-  reduce effective cache sizes and might introduce cache associativity
-  conflicts.
 
-  In nearly all cases, single core utilization is higher
-  than 75\%.  As we were unable to limit the CPU frequency on the
-  Skylake CPU used for benchmarks, the turbo--boost that was enabled
-  resulted in utilization higher than 100\% when one or two cores out
-  of four available were used.
+  Theoretically, more hyper--threads per core can hide memory latency,
+  but will reduce effective cache sizes and might introduce cache
+  associativity conflicts.  In practice, many factors such as blocking
+  size, kernel sizes, available cache, etc...  come in play.  For this
+  reason, it is the best to empirically determine the optimal choice.
+
+  In nearly all cases, single core utilization is higher than 75\%.
+  As we were unable to limit the CPU frequency on the Skylake CPU used
+  for benchmarks, the turbo--boost that was enabled resulted in
+  utilization higher than 100\% when one or two cores out of four
+  available were used.
 
   Fig.~\ref{fig:scalability} suggest that our algorithms scale very
-  well, with near linear scalability even for the multi--chip Haswell system.
+  well, with near linear scalability even for the multi--chip Haswell
+  system.
+
+  With relatively small number of cores, the Skylake machine has both
+  high utilization for the serial algorithm, and linear scalability.
+  Both Skylake and Haswell had higher utilization for the serial
+  algorithm (1 core used).  Non--optimal ordering of vector
+  instructions, not enough loop unrolling, as well as lack of L3 cache
+  all contributed to lower CPU utilization.  While we expect the first
+  two problems to be solved as compilers for KNL mature, we still
+  expect a CPU with L3 cache to somehow outperform ones without it.
+
+  On the other side, we notice that the scalability is relatively
+  worse for the case of U--Net, which can be considered a hard case.
+  This is because the totall amount of computation required by U--Net
+  layers is relatively small, thus, even a single synchronization
+  point will affect the scalability.  This is especially pronounced
+  for the Haswell machine with 4 NUMA nodes.  Another reason for
+  relatively lower scalability is the fact that U--Net's batch size of
+  $1$ yields a subdivision into non--exactly--equal size problems.
 
   \subsection{Comparison versus other CPU implementations}
 
   We compare the speed of our approach to several competing CPU
   implementations for 2D ConvNets, CcT~\cite{hadjis2015shallow},
   MKL--DNN and MKL--2017.  We used the CcT version of Caffe for CcT,
-  as well as the latest Intel--Caffe fork for MKL-DNN and MKL-2017.
-  Caffe benchmarks report the cumulative time of the backward
-  propagation and update phase, so we report the numbers of our
-  approach in the same fashion.  This is reasonable as in practice the
-  backward pass and update phase are always performed one after the
-  other.
+  as well as the latest Intel--Caffe fork~\footnote{as of November
+    2017} for MKL-DNN and MKL-2017.  MKL-DNN provides only optimized
+  primitives for AVX2 and forward/backward propagation, and would
+  fallback to Caffe's default gemm method for other primitives.  Caffe
+  benchmarks report the cumulative time of the backward propagation
+  and update phase, so we report the numbers of our approach in the
+  same fashion.  This is reasonable as in practice the backward pass
+  and update phase are always performed one after the other.
 
 % We are unable to compare the speed against
 %  ZNN~\cite{zlateski2016znn} as it doesn't support layer--wise

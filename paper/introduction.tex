@@ -91,4 +91,35 @@
     sermanet2013overfeat, long2015fully, tran2015learning, ji20133d,
     maturana_iros_2015, maturana_icra_2014}.
 
+  \subsection{Related work}
+
+  Our approach adopts the memory layout proposed
+  in~\cite{chellapilla2006high,das2016distributed}, where
+  ``guidelines'', rather than complete algorithms are provided, for
+  both serial and parallel algorithms.  Our \emph{lowest-level}
+  primitive of the forward/backward propagation serial algorithm
+  employs the same vectorization strategy, but performs computation in
+  a different order.  This is where the similarity ends.  By using a
+  stack of primitives, our serial algorithm performs computation in a
+  nontrivial way that maximizes L2/L3 hit rate, but is oblivious to
+  the cache size.  While~\cite{chellapilla2006high} has to be manually
+  tuned for different kernel sizes, our approach is generic --
+  register and L1 blocking strategy is computed during compile-time
+  for an arbitrary N-dimensional image and kernel sizes.
+
+  Update algorithm in~\cite{chellapilla2006high} is derrived by
+  modifying their forward/backward propagation algorithm.  We propose
+  a new algorithm.
+
+  For parallelization strategy a simple fork--join method, where the
+  problem is divided into very fine--granularity tasks is described in
+  both ~\cite{chellapilla2006high} and~\cite{das2016distributed}.
+  This methods are suited only for specific networks, where the batch
+  size or the number of output images is large.  It does not scale
+  well for an arbitrary problem size and arbitrary number of cores.
+  Our statically scheduled approach scales to arbitrary network
+  topology and number of cores, by evenly dividing the work among
+  available cores.
+
+
   %% http://legion.stanford.edu/pdfs/bootcamp2014/10_metaprogramming.pdf

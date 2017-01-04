@@ -107,16 +107,12 @@
 
   {\bf Sub--image primitive} is shown in
   Algorithm~\ref{alg:serial-forward-subtask}.  The arguments inside
-  the angled brackets are known during compile--time, while the
-  arguments inside the parenthesis are provided during run--time.
-  This means that the same function with different compile--time
-  arguments will be separately compiled and optimized by the compiler
-  (This is easily implemented using C++ templates).  With the loop
-  bounds known during the compile time, the compiler is able to
-  perform loop unrolling as commented in the pseudo--code.  Depending
-  on the argument $\Theta$, the result of the cross--correlation will be
-  either accumulated to an image $i'$, or the provided bias $\theta$
-  will be added to each pixel of the resulting image.
+  the angle brackets are known during compile--time.  (This is easily
+  implemented using C++ templates).  The arguments are mostly loop
+  bounds, which enable the compiler to perform loop unrolling as
+  commented in the pseudo--code.  Another argument $\Theta$ specifies
+  whether the result of the cross--correlation will be accumulated to
+  an existing image $i'$, or to a bias $\theta$.
 
   Taking into account the data layout and Equation~\ref{eq:forward},
   each value of the memory array $i'[r_x][r_y][r_z][f']$ is computed
@@ -132,33 +128,29 @@
   \sum_{f} \sum_{k_x} \sum_{k_y} \sum_{k_z}
   i[r_x+k_x][r_y+k_y][r_z+k_z][f] \cdot w[k_x][k_y][k_z][f][:]
   \]
-  } We recognize that the values $w[k_x][k_y][k_z][f][:]$ are used for
+  }
+  We recognize that the values $w[k_x][k_y][k_z][f][:]$ are used for
   computing all $i'[r_x][r_y][r_z][:]$ and reorder the computation
   such that once $w[k_x][k_y][k_z][:]$ is loaded (line 12) from
   memory, it is maximally re--used.
-
-  Each iteration of the three innermost loops (lines 13-15) perform an
-  independent multiple--add operation (lines 16--19).  The procedure
+  
+  In the multiply--add operation of lines 16--19, the procedure
   $\proc{EXLOAD}$ loads a scalar value to all $S$ locations in a
-  vector register.  The procedure $\proc{FMADD}$ is implemented as a
-  CPU dependent macro, that either calls the fused multiple--add
-  intrinsic when available (AVX2, AVX512), or vector multiplication
-  followed by a vector addition, when no fused multiple--add is
-  supported by the CPU (AVX, SSE4).  AVX512 supports an instruction
-  that performs fused multiple--add with the multiplication performed
-  by an in--memory scalar, therefore the operation in lines(16--19) is
-  transformed to a single instruction.
+  vector register.  The CPU-dependent macro $\proc{FMADD}$ either
+  calls the fused multiply--add intrinsic (AVX2), or vector
+  multiplication followed by a vector addition (AVX, SSE4).  AVX512
+  supports a single instruction that performs fused multiply--add with
+  the multiplication performed by an in--memory scalar.
 
-  To maximize the utilization, we want to increase the number of
-  independent operations, thus prefer large values of $R_x \times R_y
-  \times R_z$.  However, we need to make sure that all the computation
-  is done using the register file -- $oreg$, $wreg$ and all possible
-  auxiliary variables fit into the register file.  AVX512 CPUs have 32
-  vector registers, and don't require auxiliary register for loading
-  the scalar value.  Thus the maximal limit for $R_x \times R_y \times
-  R_z$ is 31.  SSE4, AVX and AVX2 capable CPUs require such auxiliary
-  registers, therefore choosing the optimal limit requires a bit more
-  analysis.
+  Iterating the three innermost loops (lines 13-15) yields $R_x \times
+  R_y \times R_z$ independent multiply-add operations.  This number
+  should be large to maximize utilization. At the same time, $oreg$,
+  $wreg$ and all possible auxiliary variables should fit into the
+  register file.  For AVX512, $wreg$ takes one vector register leaving
+  31 others for $oreg$, so the maximal limit for $R_x \times R_y
+  \times R_z$ is 31.  SSE4, AVX, and AVX2 require auxiliary registers
+  for loading the scalar value, so choosing the maximal limit requires
+  a bit more analysis.
 
   Note how the loop over $f$ comes before the loop over $k_z$.  As
   $k_z \ge 2$ in convolutional layers, we expect the compiler to

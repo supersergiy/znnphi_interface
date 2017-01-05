@@ -142,42 +142,42 @@
   supports a single instruction that performs fused multiply--add with
   the multiplication performed by an in--memory scalar.
 
-  Iterating the three innermost loops (lines 13-15) yields $R_x \times
+  Iterating the three innermost loops (lines 13-15) yields $R\equiv R_x \times
   R_y \times R_z$ independent multiply-add operations.  This number
-  should be large to maximize utilization. At the same time, $oreg$,
-  $wreg$ and all possible auxiliary variables should fit into the
-  register file.  For AVX512, $wreg$ takes one vector register leaving
-  31 others for $oreg$, so the maximal limit for $R_x \times R_y
-  \times R_z$ is 31.  SSE4, AVX, and AVX2 require auxiliary registers
-  for loading the scalar value, so choosing the maximal limit requires
-  a bit more analysis.
+  should be large as dependencies can lead to idle FMA units due to
+  instruction latency. At the same time, $oreg$, $wreg$ and all
+  possible auxiliary variables should fit into the register file.  For
+  AVX512, $wreg$ takes one vector register leaving 31 others for
+  $oreg$, so the maximal limit for $R$ is 31.
+  SSE4, AVX, and AVX2 require auxiliary registers for loading the
+  scalar value, so choosing the maximal limit requires the following
+  analysis.
 
-  Note how the loop over $f$ comes before the loop over $k_z$.  As
-  $k_z \ge 2$ in convolutional layers, we expect the compiler to
-  unroll the loop over $k_z$.  When auxiliary registers are required,
-  the compiler is expected to reorder the load and multiply--add
-  operations such that the values loaded in the auxiliary registers
-  are re--used.  As discussed above, to fully utilize the CPU we need
-  to issue $nl$ (number of FMA units times the instruction latency)
-  independent consecutive instructions.  As each auxiliary register is
-  re--used approximately $k_z$ times, we need $nl/k_z$ auxiliary
-  registers to fully saturate the vector units.  As $k_z \ge 2$ we
-  choose to use $10$ registers for $oreg$, allowing for $5$ auxiliary
-  registers.  This choice allows for saturating CPUs for which $nl \le
-  8$ which is true for all modern CPUs.
+  Note how the loop over $f$ comes before the loop over $k_z$.  We
+  expect the compiler to unroll the loop over $k_z$.  When auxiliary
+  registers are required, the compiler is expected to reorder the load
+  and multiply--add operations such that the values loaded in the
+  auxiliary registers are re--used.  As discussed above, to fully
+  utilize the CPU we need to issue $nl$ (number of FMA units times the
+  instruction latency) independent consecutive instructions.  As each
+  auxiliary register is re--used approximately $K_z$ times, we need
+  $nl/K_z$ auxiliary registers to fully saturate the vector units.  We
+  can assume $K_z \ge 2$, as we set $K_x=1$ for 2D convolutions.
+  Therefore we choose $R = 10$ registers for
+  $oreg$. This choice requires no more than $5$ auxiliary registers to
+  saturate the vector units, and fits in the available 16 registers
+  (one register is devoted to $wreg$). Furthermore, $R$ is greater than $nl$, as $nl \le 8$ for all modern CPUs.
 
   The working set of the primitive is expected to fit inside the $L1$
-  cache.  This is a reasonable expectation as the size of $R_x \times
-  R_y \times R_z$ is very limited, and the kernel sizes are expected
+  cache.  This is a reasonable expectation as $R$ is just 10 or 31, and the kernel sizes are expected
   to be small.  The cache miss rate can be thus approximated to
-  $\frac{1}{C \times K_x \times K_y \times K_z}$, where $C$ is the
+  $(C \times K_x \times K_y \times K_z)^{-1}$, where $C$ is the
   number of floats that fit inside the cache--line (typically $C$ =
   16).  This value is very low for even tiny kernels.  The regular
   memory access pattern (linear along $z$ dimension) allows for
   further reduction in cache misses due to hardware pre--fetching.
   Measured cache hits averaged to over $98\%$ of kernel sizes of $1
-  \times 2 \times 2$ or larger, and any appropriate size of $R_x
-  \times R_y \times R_z$.
+  \times 2 \times 2$ or larger, and any appropriate size of $R$.
 
   \begin{figure}
     \begin{center}
@@ -191,15 +191,14 @@
   {\bf Full image primitive} performs $S^2$ cross--correlations on $S$ images
   of an arbitrary size, producing $S$ output images of size $N_x'
   \times N_y' \times N_z'$.  This is done by dividing the output
-  images into small sub--images (Fig~\ref{fig:conv-division} and using
-  the primitive described above.  The size of each sub--image should
+  images into sub--images (Fig~\ref{fig:conv-division} and applying
+  the sub--image primitive.  The size of each sub--image should
   be maximized, but is subject to constraints described above.  We
-  prefer division into sub--images with large values of the least
-  significant dimension, such that the adjacent pixels are adjacent in
+  prefer division into sub--images with large values of $R_z$, such that the adjacent pixels are adjacent in
   memory, thus benefit from hardware pre--fetching.  As the image
   dimensions are typically larger than $R$ (number of registers
-  available for $oreg$, as described above), in most case, the image
-  will be split into sub--images of size $1 \times 1 \times R$.
+  available for $oreg$, as described above), the image
+  will typically be split into sub--images of size $1 \times 1 \times R$.
   Alternatively, we will try the subdivision into $1 \times 2 \times
   \floor{R/2}$, etc...  Note that in most cases we will not be able to
   subdivide the image into equal parts.  This is handled by
@@ -208,14 +207,12 @@
   which will have the same size.  However, we will have an optimally
   compiled code for each of them.
 
-  The computation is then performed tile by tile, sliding along the
-  least significant direction first, then the second least
-  significant, etc...  This order of computation has multiple
-  benefits.  First, it can benefit from hardware pre--fetching.
-  Secondly, accessing contiguous data minimizes possible cache
-  associativity conflicts, allowing us to store more data in the
-  higher levels of cache.  This values can be reused as we slide along
-  the more significant dimensions.
+  The computation is then performed tile by tile, sliding along $z$
+  first, then $y$, and then $x$.  This order of computation has
+  multiple benefits.  First, it can benefit from hardware
+  pre--fetching.  Secondly, accessing contiguous data minimizes
+  possible cache associativity conflicts, allowing us to store and reuse more
+  data in the higher levels of cache. 
 
   {\bf Sub--layer primitive} considers all $\alpha S$ input images and
   computes the values of $\beta S$ ($\beta \le \alpha'$) output

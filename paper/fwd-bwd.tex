@@ -45,7 +45,7 @@
 
   \begin{enumerate}
   \item {\bf Sub--image primitive} computes $S^2$ convolutions on $S$
-    small images producing $S$ small images of size $R_x, R_y, R_z$.
+    input sub--images producing $S$ output sub--images of size $R_x\times R_y\times R_z$.
     The goal of this primitive is to efficiently re--use data in the
     register file as well as data in L1 cache.  The technique used by
     the primitive is known as register blocking.
@@ -116,19 +116,22 @@
 
   Taking into account the data layout and Equation~\ref{eq:forward},
   each value of the memory array $i'[r_x][r_y][r_z][f']$ is computed
-  via {\footnotesize
+  via
+  {\footnotesize
   \[
-  \sum_{f} \sum_{k_x} \sum_{k_y} \sum_{k_z}
-  i[r_x+k_x][r_y+k_y][r_z+k_z][f] \cdot w[k_x][k_y][k_z][f][f']
-  \]
-  } Our data layout allows for natural vectorization over $f'$.  $S$
+    \sum_{f} \sum_{k_x} \sum_{k_y} \sum_{k_z}
+    i[r_x+k_x][r_y+k_y][r_z+k_z][f] \cdot w[k_x][k_y][k_z][f][f']
+    \]
+    }
+  Our data layout allows for natural vectorization over $f'$.  $S$
   results $i'[r_x][r_y][r_z][:]$ are computed by replacing the scalar
-  product to a scalar--vector product {\footnotesize
+  product to a scalar--vector product
+{\footnotesize
   \[
   \sum_{f} \sum_{k_x} \sum_{k_y} \sum_{k_z}
   i[r_x+k_x][r_y+k_y][r_z+k_z][f] \cdot w[k_x][k_y][k_z][f][:]
   \]
-  }
+}
   We recognize that the values $w[k_x][k_y][k_z][f][:]$ are used for
   computing all $i'[r_x][r_y][r_z][:]$ and reorder the computation
   such that once $w[k_x][k_y][k_z][:]$ is loaded (line 12) from
@@ -153,20 +156,23 @@
   scalar value, so choosing the maximal limit requires the following
   analysis.
 
-  Note how the loop over $f$ comes before the loop over $k_z$.  We
-  expect the compiler to unroll the loop over $k_z$.  When auxiliary
-  registers are required, the compiler is expected to reorder the load
-  and multiply--add operations such that the values loaded in the
+  Note how the loop over $f$ comes before the loop over $k_z$.  (This
+  is the novelty relative to the guidelines suggested in
+  Refs. ~\cite{chellapilla2006high,das2016distributed}.) We expect the
+  compiler to unroll the loop over $k_z$.  When auxiliary registers
+  are required, the compiler is expected to reorder the load and
+  multiply--add operations such that the values loaded in the
   auxiliary registers are re--used.  As discussed above, to fully
   utilize the CPU we need to issue $nl$ (number of FMA units times the
   instruction latency) independent consecutive instructions.  As each
   auxiliary register is re--used approximately $K_z$ times, we need
   $nl/K_z$ auxiliary registers to fully saturate the vector units.  We
   can assume $K_z \ge 2$, as we set $K_x=1$ for 2D convolutions.
-  Therefore we choose $R = 10$ registers for
+  Therefore $R = 10$ is the maximal number of registers devoted to
   $oreg$. This choice requires no more than $5$ auxiliary registers to
   saturate the vector units, and fits in the available 16 registers
-  (one register is devoted to $wreg$). Furthermore, $R$ is greater than $nl$, as $nl \le 8$ for all modern CPUs.
+  (one register is devoted to $wreg$). Furthermore, $R$ is greater
+  than $nl$, as $nl \le 8$ for all modern CPUs.
 
   The working set of the primitive is expected to fit inside the $L1$
   cache.  This is a reasonable expectation as $R$ is just 10 or 31, and the kernel sizes are expected
@@ -199,12 +205,12 @@
   dimensions are typically larger than $R$ (number of registers
   available for $oreg$, as described above), the image
   will typically be split into sub--images of size $1 \times 1 \times R$.
-  Alternatively, we will try the subdivision into $1 \times 2 \times
-  \floor{R/2}$, etc...  Note that in most cases we will not be able to
-  subdivide the image into equal parts.  This is handled by
+  For a small image, the subimages could be $1 \times 2 \times
+  \floor{R/2}$, etc.  In most cases we will not be able to
+  subdivide the image into exactly equal parts.  This is handled by
   instantiating separate primitives for different sub--image sizes.
   This will result in the image fully covered in tiles, not all of
-  which will have the same size.  However, we will have an optimally
+  which will have the same size (Fig. 1).  However, we will have an optimally
   compiled code for each of them.
 
   The computation is then performed tile by tile, sliding along $z$
@@ -346,7 +352,7 @@
   get smaller this overhead can become significant.
 
   We support implicit padding along an arbitrary of dimensions by
-  modifying the lines 8--11 of
+  modifying lines 8--11 of
   Algorithm~\ref{alg:serial-forward-subtask}.  Instead of looping over
   all possible kernel offsets, for each invocation of the primitive,
   we provide additional run--time parameters, a pre--computed limits,

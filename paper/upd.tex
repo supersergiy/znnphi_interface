@@ -1,13 +1,16 @@
 \section{Update phase}
 
-  While the forward and backward propagation perform
-  cross--correlations and convolutions with a relatively large image
-  with a small kernel producing another relatively large image, the
-  cross--correlations performed during the update phase are performed
-  on a large image with another large image resulting in a small
-  image.  However, the algorithm closely resembles the propagation
-  algorithm, and consists of the following stack of primitives:
-
+The main computation in the update phase is {\tt valid}
+cross-correlation between an image of forward propagation and an image
+of backward propagation. We will refer to these as image and gradient,
+respectively.  This cross-correlation could be done with an approach
+similar to Algorithm \ref{alg:serial-forward-subtask} for forward and
+backward propagation, which is the strategy suggested in
+Refs. ~\cite{chellapilla2006high,das2016distributed}.  However, the
+output of the update is an image with the same size as the kernel,
+which is typically very small.  In this regime, the sub-image
+primitive may not be efficient.  Therefore, we take a different
+approach, defining the following stack of primitives:
   \begin{enumerate}
     \item {\bf Sub--kernel primitive} computes a cross--correlation of
       each of $S$ images of size $R_x \times R_y \times (Z + R_z - 1)$
@@ -84,7 +87,7 @@
   } Again, we recognize the reuse of $\hat{i}'[r_x][r_y][r_z][:]$ and
   re--order the loops appropriately.  In order to allow in--register
   computation, same constraints are imposed on $R_x \times R_y \times
-  R_z \times R_s$ -- Maximal of $31$ for AVX512 and $8$ for SSE4, AVX
+  R_z \times R_s$ -- Maximal of $31$ for AVX512 and $10$ for SSE4, AVX
   and AVX2.  Additionally we allow only values for $R_s$ that divide
   $S$.  In order for the working set to fit inside the $L1$ cache, $Z$
   should be sufficiently small.  The number of bytes required for the
@@ -112,11 +115,11 @@
   Fig~\ref{fig:conv-decomposition} (middle column).  The
   cross--correlation of each sub--gradient is further split into
   sub--kernel primitives (right column on
-  Fig.~\ref{fig:conv-decomposition}.  We choose the $R_x, R_y, R_z$ and
-  $R_s$ to maximize the register--file utilization, but subject to the
-  limits described above.  Further, we require that $R_x, R_y$ and
+  Fig.~\ref{fig:conv-decomposition}.  We choose the $R_x, R_y, R_z$
+  and $R_s$ to maximize the register--file utilization, but subject to
+  the limits described above.  Further, we require that $R_x, R_y$ and
   $R_z$ divide $K_x, K_y$ and $K_z$ respectively.  Note that this can
-  always be accomplished be setting $R_x=R_y=R_z=1$ and $R_s=S$.
+  always be accomplished by setting $R_x=R_y=R_z=1$ and $R_s=S$.
   However this choice might not be always optimal.  For example, when
   $K_z=3$ on AVX512 CPU, we could pick $R_s=8$ and $R_z=3$, as it
   utilizes $24$ registers, which is better than choosing $R_z=1$ and
@@ -124,10 +127,8 @@
   R_y \times R_z \times R_s$ is maximized.  When more combinations are
   possible, we prefer ones with large values of $R_s$, then $R_z, R_y$
   and finally $R_x$.  The choice of $R_x, R_y, R_z$ and $R_s$ will
-  determine the value of $Z$ as described above.
-
-  The computation is performed by iterating over the least significant
-  dimension, then second least significant, etc..
+  determine the value of $Z$ as described above.  The computation is
+  performed by iterating over $z$, then $y$, and then $x$.
 
   {\bf Sub--layer primitive} performs $\beta S \beta' S$
   cross--correlation.  Each of $\beta S$ input images is

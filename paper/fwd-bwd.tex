@@ -136,7 +136,7 @@
   computing all $i'[r_x][r_y][r_z][:]$ and reorder the computation
   such that once $w[k_x][k_y][k_z][:]$ is loaded (line 12) from
   memory, it is maximally re--used.
-  
+
   In the multiply--add operation of lines 16--19, the procedure
   $\proc{EXLOAD}$ loads a scalar value to all $S$ locations in a
   vector register.  The CPU-dependent macro $\proc{FMADD}$ either
@@ -218,7 +218,7 @@
   multiple benefits.  First, it can benefit from hardware
   pre--fetching.  Secondly, accessing contiguous data minimizes
   possible cache associativity conflicts, allowing us to store and reuse more
-  data in the higher levels of cache. 
+  data in the higher levels of cache.
 
   {\bf Sub--layer primitive} considers all $\alpha S$ input images and
   computes the values of $\beta S$ ($\beta \le \alpha'$) output

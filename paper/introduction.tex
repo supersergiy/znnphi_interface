@@ -20,13 +20,13 @@
   This paper focuses on CPU implementation of ConvNets that makes
   efficient use of available FLOPS.  A ConvNet contains convolutional
   and other kinds of layers.  A convolutional layer requires an amount
-  of computation that grows with the square of the number of channels
-  (images), whereas other kinds of layers scale linearly.  Therefore
+  of computation that grows with the square of the number of 
+  images, whereas other kinds of layers scale linearly.  Therefore
   almost all of the computation in a typical ConvNet resides in the
   convolutional layers, which are the subject of the current paper.
 
-  An highly popular approach is to implement convolution using highly
-  efficient matrix multiplication
+  A popular approach is to implement convolution using
+  matrix multiplication
   libraries~\cite{chellapilla2006high}.  This provides speedup for
   diverse ConvNet architectures, and has been applied to both
   GPUs~\cite{chetlur2014cudnn,neonnervana} and CPUs
@@ -35,29 +35,29 @@
   requirement of creating in--memory matrices.
 
   Another popular approach is to use meta--programming in various
-  forms.  One approach is to use offline meta--programming, where the
-  optimal primitives for solving a sub--problem are either optimized
+  forms.  In offline meta--programming, the
+  primitives for solving a sub--problem are either optimized
   by hand or by code generators.  This approach has been popularized
   by FFTW~\cite{frigo1998fftw,frigo1999fftw} and adopted by some some
   ConvNet frameworks~\cite{klockner2012pycuda,nervanagpu}.  This can
   achieve the highest efficiency of all approaches, but is
-  time-consuming and the speed-up does not generalize beyond the
-  specific or similar architectures.  (just as FFTW is efficient only
+  laborious and the speed-up may not generalize across ConvNet architectures
+  (just as FFTW is efficient only
   for certain sizes).  In fact, many GPU and CPU deep learning
   implementations appear to optimize code for standard benchmark
-  network architectures, for which they achieve markedly higher
-  efficiency than is typical (as demonstrated in this paper).
+  ConvNet architectures, for which they achieve markedly higher
+  efficiency than on other architectures (as demonstrated in this paper).
 
-  Another form of meta--programming, run--time meta--programming has
-  been introduced by intel in its MKL-DNN package.  Given a ConvNet
+  A run--time form of meta--programming has
+  been used by Intel in its MKL-DNN package.  Given a ConvNet
   architecture, the MKL-DNN software generates optimized assembly code
   at run time.  The part of the current package that is
   open--sourced~\cite{idlf,mkl-dnn} is for Broadwell and Haswell CPUs,
   and it is unclear how easily it generalizes to other CPUs including
   KNL.
 
-  We propose another form of, compile--time, meta--programming
-  approach that aims to be general with respect to both the ConvNet
+  Here we propose a compile--time form of meta--programming
+  that aims to be general with respect to both the ConvNet
   architecture and CPU.  We use C++ templates to create primitives at
   compile time.  Given the specifications of the CPU, our
   meta--algorithms optimize and vectorize single-threaded code, as
@@ -65,8 +65,8 @@
   over multiple cores.  Our approach tries to achieve generality by
   leveraging the power of the compiler.
 
-  To our knowledge this is the first application of compile--time
-  meta--programming to ConvNets.
+%  To our knowledge this is the first application of compile--time
+%  meta--programming to ConvNets.
 
   We show that our approach can utilize high percentage of the
   available FLOPS regardless of the CPU generation, as well as have
@@ -74,7 +74,7 @@
   competitive with state-of-the-art hand-optimized code for specific
   architectures.  Our code yields better performances on KNL
   compared to the state of the art GPU implementations for 3D
-  convolutional networks, even though KNL has less FLOPS/s available.
+  convolutional networks, even though KNL has less FLOPS available.
 
   Even though we provide an efficient, publicly available, open source
   implementation for popular ConvNet primitives, the goal of this
@@ -93,28 +93,30 @@
 
   \subsection{Related work}
 
-  Our approach adopts the memory layout proposed
-  in~\cite{chellapilla2006high,das2016distributed}, where
-  ``guidelines'', rather than complete algorithms are provided, for
-  both serial and parallel algorithms.  Our \emph{lowest-level}
-  primitive of the forward/backward propagation serial algorithm
-  employs the same vectorization strategy, but performs computation in
-  a different order.  This is where the similarity ends.  By using a
-  stack of primitives, our serial algorithm performs computation in a
-  nontrivial way that maximizes L2/L3 hit rate, but is oblivious to
-  the cache size.  While~\cite{chellapilla2006high} has to be manually
-  tuned for different kernel sizes, our approach is generic --
-  register and L1 blocking strategy is computed during compile-time
-  for an arbitrary $N$-dimensional image and kernel sizes.
+  Our work is most closely related to Refs.
+  \cite{chellapilla2006high,das2016distributed}, which propose
+  ``guidelines'' for parallelization and vectorization on Intel CPUs.
+  We adopt their recommended memory layout, in which data that will be
+  loaded into a vector register is kept contiguous and aligned.  Our
+  \emph{lowest-level} serial primitive for forward/backward
+  propagation employs the recommended vectorization strategy, except
+  that the loops are nested in a slightly different order.  This is
+  where the similarity ends.  By using a stack of primitives, our
+  serial algorithm performs computation in a nontrivial way that
+  maximizes L2/L3 hit rate, but is oblivious to the cache size.
+  While~\cite{chellapilla2006high} has to be manually tuned for
+  different kernel sizes, our approach is generic---register and L1
+  blocking strategy is computed during compile-time for arbitrary
+  $N$-dimensional image and kernel sizes.
 
-  Update algorithm in~\cite{chellapilla2006high} is derrived by
-  modifying their forward/backward propagation algorithm.  We propose
-  a new algorithm.
+  Our lowest-level serial primitive for the kernel update employs a
+  new algorithm with a novel vectorization strategy. This contrasts
+  with the approach recommended by Ref.~\cite{chellapilla2006high},
+  which is to modify the forward/backward propagation algorithm.
 
-  For parallelization strategy a simple fork--join method, where the
-  problem is divided into very fine--granularity tasks is described in
-  both ~\cite{chellapilla2006high} and~\cite{das2016distributed}.
-  This methods are suited only for specific networks, where the batch
+  For parallelization across cores,  ~\cite{chellapilla2006high} and~\cite{das2016distributed} describe a simple fork--join method, where the
+  problem is divided into very fine--granularity tasks.
+  This method is suited only for specific networks, where the batch
   size or the number of output images is large.  It does not scale
   well for an arbitrary problem size and arbitrary number of cores.
   Our statically scheduled approach scales to arbitrary network

@@ -1,6 +1,12 @@
 \tolerance=10000
 
-\documentclass[conference]{./IEEEtran/IEEEtran}
+\documentclass[sigconf, review]{acmart}
+
+\setcopyright{none}
+
+\acmConference[ICS'17]{ACM ICS}{2017}{Submission}
+
+
 \usepackage{hyperref}       % hyperlinks
 \usepackage{url}            % simple URL typesetting
 \usepackage{breakurl}
@@ -25,11 +31,10 @@
 \usepackage{xcolor}
 \usepackage[]{algorithm}
 \usepackage{clrscode4e}
-\usepackage[small]{caption}
 \usepackage{subcaption}
 \usepackage{url}
 
-\linespread{0.94}\selectfont
+\linespread{0.942}\selectfont
 
 \captionsetup[algorithm]{font=footnotesize}
 
@@ -57,22 +62,19 @@
 
 \begin{document}
 
-\special{papersize=8.5in,11in}
-\setlength{\pdfpageheight}{\paperheight}
-\setlength{\pdfpagewidth}{\paperwidth}
-
 \title{Compile--Time Optimized and Statically Scheduled N--D ConvNet
   Primitives for Multi--Core and Many--Core (Xeon Phi) CPUs }
 
 
-\author{\IEEEauthorblockN{Aleksandar Zlateski\IEEEauthorrefmark{1}, H
-    Sebastian Seung\IEEEauthorrefmark{2}} \IEEEauthorblockA{Princeton
-    Neuroscience Institute\\ and Computer Science
-    Department\\ Princeton University\\ Princeton, NJ 08540
-    USA\\ \IEEEauthorrefmark{1}{\tt zlateski@princeton.edu},
-    \IEEEauthorrefmark{2}{\tt sseung@princeton.edu}}} \maketitle
+%% \author{\IEEEauthorblockN{Aleksandar Zlateski\IEEEauthorrefmark{1}, H
+%%     Sebastian Seung\IEEEauthorrefmark{2}} \IEEEauthorblockA{Princeton
+%%     Neuroscience Institute\\ and Computer Science
+%%     Department\\ Princeton University\\ Princeton, NJ 08540
+%%     USA\\ \IEEEauthorrefmark{1}{\tt zlateski@princeton.edu},
+%%     \IEEEauthorrefmark{2}{\tt sseung@princeton.edu}}} \maketitle
 
 
+\author{Submission 27}
 
 \begin{abstract}
 
@@ -104,7 +106,11 @@
   of half the FLOPS of the GPU.
 
 \end{abstract}
-\setlength{\belowcaptionskip}{-10pt}
+%\setlength{\belowcaptionskip}{-10pt}
+
+\maketitle
+
+
 
 \input{introduction}
 \input{convlayer}
@@ -117,6 +123,6 @@
 \input{conclusion}
 
 %\clearpage
-\bibliographystyle{./IEEEtran/IEEEtranBST/IEEEtran}
-\bibliography{IEEEabrv,znnphi}
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{znnphi}
 \end{document}

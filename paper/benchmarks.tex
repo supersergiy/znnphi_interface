@@ -214,7 +214,7 @@
 
   On the other side, we notice that the scalability is relatively
   worse for the case of U--Net, which can be considered a hard case.
-  This is because the totall amount of computation required by U--Net
+  This is because the total amount of computation required by U--Net
   layers is relatively small, thus, even a single synchronization
   point will affect the scalability.  This is especially pronounced
   for the Haswell machine with 4 NUMA nodes.  Another reason for
@@ -291,7 +291,7 @@
       & C3  & 72.5  & 192.3 & {\bf 32.9} & 87.1  & 39.7 & {\bf  76.8}  \\
       & C4  & 142.0 & 402.9 & {\bf 65.4} & 166.2 & 80.6 & {\bf 158.9}  \\
       & C5  & 53.0  & 268.5 & {\bf 32.8} & {\bf 72.9}  & 40.1 & 77.5   \\
-      & C6  & 108.3 & 557.3 & {\bf 64.8} & {\bf 172.3} & 78.6 & 157.3  \\
+      & C6  & 108.3 & 557.3 & {\bf 64.8} & 172.3 & 78.6 & {\bf 157.3}  \\
       \hline
       \multirow{5}{*}{\rotatebox{90}{\textbf{U-Net}}}
       & C1b  & 799.60 & 1603.93 & 141.01 & 61.96 & {\bf 9.89} & {\bf 21.81} \\

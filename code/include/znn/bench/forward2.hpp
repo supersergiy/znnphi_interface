@@ -103,8 +103,8 @@ template <long_t B, long_t IFM, long_t OFM, long_t ID, long_t IHW, long_t KD,
           long_t KHW, long_t PADD = 0, long_t PADHW = 0>
 void benchmark_forward(std::string const& lname = "layer")
 {
-    // std::cout << "Benchmarked system has " << ZNN_NUM_CORES
-    //           << " cores ";
+    //std::cout << "Benchmarked system has " << ZNN_NUM_CORES
+    //          << " cores " << std::endl;
 
     // #if defined(ZNN_AVX)
     //     std::cout << "and AVX\n";
@@ -114,7 +114,6 @@ void benchmark_forward(std::string const& lname = "layer")
     //     std::cout << "and AVX512\n";
     // #endif
 
-    // benchmark_single_forward<60,1,B,IFM,OFM,ID,IHW,KD,KHW>( lname );
     // benchmark_single_forward<60,2,B,IFM,OFM,ID,IHW,KD,KHW>( lname );
     // benchmark_single_forward<60,4,B,IFM,OFM,ID,IHW,KD,KHW>( lname );
 

@@ -1,7 +1,0 @@
-ZnnPhiConvLayer.cpp: In constructor ‘ZnnPhiConvLayer::ZnnPhiConvLayer(int, int, int, int, int, int, int, int, int, int, int)’:
-ZnnPhiConvLayer.cpp:109:81: error: invalid cast to function type ‘CreateConvWrapper_fp {aka ZnnPhiConvWrapper*()}’
-                                                              "cerateConvWrapper");
-                                                                                 ^
-ZnnPhiConvLayer.cpp:111:82: error: invalid cast to function type ‘DestroyConvWrapper_fp {aka void(ZnnPhiConvWrapper*)}’
-                                                              "destroyConvWrapper");
-                                                                                  ^

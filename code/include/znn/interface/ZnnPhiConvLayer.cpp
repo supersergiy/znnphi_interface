@@ -10,9 +10,13 @@
 #include "ZnnPhiConvLayer.hpp"
 
 #define MAX_STRING 512
-#define COMPILE_CONV_WRAPPER_SCRIPT "generate_dl.sh"
+#define COMPILE_CONV_WRAPPER_SCRIPT "include/znn/interface/generate_dl.sh"
 #define BASH "/bin/bash"
 
+namespace znn
+{
+namespace phi
+{
 
 std::string generateParamString(
                          int bn, int ifm, int ofm, int id,
@@ -51,9 +55,12 @@ std::string generateWrapperDLName(
     std::ostringstream generated_name;
     std::string param_string;
     
+    const char *znnphi_path = std::getenv("ZNNPHI_PATH");
+
     param_string = generateParamString(bn, ifm, ofm, id, ihw, kd, khw, 
                                        padd, padhw, cores, ht, delim);
 
+    generated_name << znnphi_path << "/include/znn/interface/";
     generated_name << "conv_wrapper_" << param_string << ".so";
 
     return generated_name.str();
@@ -72,10 +79,22 @@ std::string generateCompileDLCommand(std::string& dl_filename,
     param_string = generateParamString(bn, ifm, ofm, id, ihw, kd, khw, 
                                        padd, padhw, cores, ht, delim);
     
-    command_string << BASH << " " << COMPILE_CONV_WRAPPER_SCRIPT << " ";
+    const char *znnphi_path = std::getenv("ZNNPHI_PATH");
+
+    command_string << BASH << " " ;
+    command_string << znnphi_path << "/" << COMPILE_CONV_WRAPPER_SCRIPT << " ";
     command_string << dl_filename << " " << param_string;
      
     return command_string.str(); 
+}
+
+void handleDLError(void)
+{
+    const char *dlsym_error = dlerror();
+    if (dlsym_error) {
+        std::cerr << dlsym_error << '\n';
+        std::exit(EXIT_FAILURE);
+    }
 }
 
 void *loadConvWrapperDL(int bn, int ifm, int ofm, int id,
@@ -91,11 +110,11 @@ void *loadConvWrapperDL(int bn, int ifm, int ofm, int id,
     compile_command = generateCompileDLCommand(dl_filename,
                           bn, ifm, ofm, id, ihw, kd, khw, padd, padhw, cores, ht);
 
-    std::cout << dl_filename << std::endl;
-    std::cout << compile_command << std::endl;
-
     std::system(compile_command.c_str());
-    return dlopen(dl_filename.c_str(), RTLD_NOW);
+    
+    void *handle = dlopen(dl_filename.c_str(), RTLD_NOW);
+    handleDLError();
+    return handle;
 }
 
 
@@ -107,10 +126,10 @@ ZnnPhiConvLayer::ZnnPhiConvLayer(int bn, int ifm, int ofm, int id,
 
     void *wrapper_handle = loadConvWrapperDL(bn, ifm, ofm, id, ihw, kd, khw, 
                                              padd, padhw, cores, ht);
-    
-    createConvWrapper = (CreateConvWrapper_fp) dlsym(wrapper_handle, "cerateConvWrapper");
+    createConvWrapper = (CreateConvWrapper_fp) dlsym(wrapper_handle, "createConvWrapper");
+    handleDLError();
     destroyConvWrapper = (DestroyConvWrapper_fp) dlsym(wrapper_handle, "destroyConvWrapper");
-
+    handleDLError();
     conv_wrapper = createConvWrapper();
 }
 
@@ -119,11 +138,10 @@ ZnnPhiConvLayer::~ZnnPhiConvLayer()
     destroyConvWrapper(conv_wrapper);
 }
 
-
-int main()
+void ZnnPhiConvLayer::forward(float *in, float *out, float *ker, float *bi)
 {
-    ZnnPhiConvLayer z(1,1,1,1,1,1,1,1,1);
+    conv_wrapper->compute(in, out, ker, bi);
 }
 
-
-
+}
+}

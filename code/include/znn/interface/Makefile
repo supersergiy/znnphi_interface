@@ -87,19 +87,20 @@ $(BINDIR)/avx/%.bin: $(BINDIR)/avx/obj/%.o
 	$(CXX) $^ $(CXXLDFLAGS) $(AVX_FLAGS) -o $@
 
 
-.PHONY: dl all clean remake
-dl:
+.PHONY: layer test layer_dl
+test:
+
 	$(CXX) ZnnPhiConvWrapper.cpp \
 		$(DLFLAGS) $(CXXFLAGS) $(AVX_FLAGS) -o $(DL_NAME) 
-all:
-	dl
+layer:
+	$(CXX) ZnnPhiConvLayer.cpp \
+		-c -ldl $(CXXFLAGS) $(AVX_FLAGS) -o ZnnPhiConvLayer.o
+layer_dl:
+	$(CXX) ZnnPhiConvLayer.cpp \
+		-c -ldl -fPIC $(CXXFLAGS) $(AVX_FLAGS) -o ZnnPhiConvLayer.o
+
+	$(CXX) -shared -ldl -o ZnnPhiConvLayer.so.1.0   ZnnPhiConvLayer.o
 clean:
 	$(RM) *.o *.so *.S *.bin 
 
 remake: clean all
-
-#-include $(SSE_DEPS)
-#-include $(AVX_DEPS)
-#-include $(AVX2_DEPS)
-#-include $(AVX512_DEPS)
-#-include $(KNC_DEPS)

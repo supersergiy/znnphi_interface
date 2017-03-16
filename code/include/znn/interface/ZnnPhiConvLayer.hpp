@@ -3,6 +3,10 @@
 #define DEFAULT_HT 2
 #define DEFAULT_CORES 32 
 
+namespace znn
+{
+namespace phi
+{
 
 class ZnnPhiConvLayer {
 private:
@@ -20,3 +24,6 @@ public:
 
     void forward(float *in, float *out, float *ker, float *bi);
 };
+
+}
+}

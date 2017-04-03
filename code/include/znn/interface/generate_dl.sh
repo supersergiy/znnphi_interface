@@ -15,7 +15,8 @@ HT=${12}
 POSTFIX=${BN}_${IFM}_${OFM}_${ID}_${IHW}_${KD}_${KHW}_${PADD}_${PADHW}_${CORES}_${HT}
 
 BASE_PATH=$ZNNPHI_PATH/include/znn/interface
-DL_DIR=$BASE_PATH/dl_$POSTFIX
+DL_FILES_DIR=${BASE_PATH}/dl_files
+DL_DIR=${DL_FILES_DIR}/dl_$POSTFIX
 DL_NAME=conv_wrapper_${POSTFIX}.so
 DL_PATH=$DL_DIR/$DL_NAME
 PARAMS_FILE_NAME=params.hpp
@@ -55,7 +56,6 @@ then
       then 
           mkdir "$DL_DIR"
       fi
-
       cp ConvMakefile ZnnPhiConvWrapper.cpp ZnnPhiConvWrapper.hpp "$DL_DIR"
       cd "$DL_DIR"
       cp ConvMakefile Makefile

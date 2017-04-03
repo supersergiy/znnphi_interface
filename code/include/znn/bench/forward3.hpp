@@ -25,25 +25,26 @@ double forward_pass(std::string const& lname = "layer")
 
     static const long_t OD  = ID + 1 - KD + 2 * PADD;
     static const long_t OHW = IHW + 1 - KHW + 2 * PADHW;
-
-    hbw_array<float> in(one_init, B * IFM2 * ID * IHW * (IHW + PADHW * 2));
-    hbw_array<float> ker(zero_init, IFM2 * OFM2 * KD * KHW * KHW);
-    hbw_array<float> out(one_init, B * OFM2 * OD * OHW * OHW);
-    hbw_array<float> bi(one_init, OFM2 * SIMD_WIDTH);
-    bi.set_to_const(0); 
-    ker.set_to_const(2); 
-    int out_size = B * OFM2 * OD * OHW * OHW;
-    int ker_size = IFM2 * OFM2 * KD * KHW * KHW;
-    int in_size  = B * IFM2 * ID * IHW * (IHW + PADHW * 2);
+    
+    long_t out_size = B * OFM2 * OD * OHW * OHW;
+    long_t ker_size = IFM2 * OFM2 * KD * KHW * KHW;
+    long_t in_size  = B * IFM2 * ID * IHW * (IHW + PADHW * 2);
 
     std::cout << "OFM2: " << OFM2 << std::endl;;
     std::cout << "SIMD_WIDTH: " << SIMD_WIDTH << std::endl;;
     std::cout << "Out size: " << out_size << std::endl;;
     std::cout << "In size: " << in_size << std::endl;;
     std::cout << "Ker size: " << ker_size << std::endl;;
-    for (int i = 0; i < 20; i++) {
-        std::cout << out.data()[i] << " ";
-    }
+    
+    std::cout << "Allocating in..." << std::endl;;
+    hbw_array<float> in(one_init, B * IFM2 * ID * IHW * (IHW + PADHW * 2));
+    std::cout << "Allocating ker..." << std::endl;;
+    hbw_array<float> ker(zero_init, IFM2 * OFM2 * KD * KHW * KHW);
+    std::cout << "Allocating out..." << std::endl;;
+    hbw_array<float> out(one_init, B * OFM2 * OD * OHW * OHW);
+    std::cout << "Allocating bi..." << std::endl;;
+    hbw_array<float> bi(one_init, OFM2 * SIMD_WIDTH);
+
     std::cout << std::endl;
     // std::cout << "Benchmarking: batch" << B << " x OFM "
     //           << OFM << " x IFM " << IFM << " x IN( "
@@ -73,14 +74,9 @@ double forward_pass(std::string const& lname = "layer")
     full_layer<Cores * HT, orig_prob> plan(&kl);
 
     auto begin = std::chrono::high_resolution_clock::now();
-
-    plan.execute(in.data(), out.data(), ker.data(), bi.data());
-
-    for (int i = 0; i < 20; i++) {
-        std::cout << out.data()[i] << " ";
+    for (int i = 0; i < 1; i++) {
+        plan.execute(in.data(), out.data(), ker.data(), bi.data());
     }
-    std::cout << std::endl;
-
     auto end = std::chrono::high_resolution_clock::now();
     auto duration =
         std::chrono::duration_cast<std::chrono::microseconds>(end - begin)

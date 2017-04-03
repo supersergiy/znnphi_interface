@@ -1,18 +1,3 @@
-In file included from sergiy-test.cpp:1:0:
-./include/znn/bench/forward3.hpp: In function ‘double znn::phi::forward_pass(const string&)’:
-./include/znn/bench/forward3.hpp:36:32: error: invalid types ‘<unresolved overloaded function type>[int]’ for array subscript
-         std::cout << out.data[i] << " ";
-                                ^
-./include/znn/bench/forward3.hpp:70:32: error: invalid types ‘<unresolved overloaded function type>[int]’ for array subscript
-         std::cout << out.data[i] << " ";
-                                ^
-./include/znn/bench/forward3.hpp: In instantiation of ‘double znn::phi::forward_pass(const string&) [with long int Cores = 32l; long int HT = 2l; long int B = 1l; long int IFM = 64l; long int OFM = 64l; long int ID = 1l; long int IHW = 570l; long int KD = 1l; long int KHW = 3l; long int PADD = 0l; long int PADHW = 0l; std::__cxx11::string = std::__cxx11::basic_string<char>]’:
-./include/znn/bench/forward3.hpp:120:58:   required from ‘void znn::phi::benchmark_forward(const string&) [with long int B = 1l; long int IFM = 64l; long int OFM = 64l; long int ID = 1l; long int IHW = 570l; long int KD = 1l; long int KHW = 3l; long int PADD = 0l; long int PADHW = 0l; std::__cxx11::string = std::__cxx11::basic_string<char>]’
-sergiy-test.cpp:11:56:   required from here
-./include/znn/bench/forward3.hpp:34:9: warning: unused variable ‘out_size’ [-Wunused-variable]
-     int out_size = B * OFM2 * OD * OHW * OHW;
-         ^
-./include/znn/bench/forward3.hpp:17:48: warning: unused parameter ‘lname’ [-Wunused-parameter]
- double forward_pass(std::string const& lname = "layer")
-                                                ^
-make: *** [bin/avx/obj/sergiy-test.o] Error 1
+
+sergiy-test.o.icpc.nounroll:     file format elf64-x86-64
+

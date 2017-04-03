@@ -16,7 +16,7 @@ SED	=	$(AT)sed
 RM	=	$(AT)rm
 TOUCH	=	$(AT)touch
 CHMOD	=	$(AT)chmod
-DATE    =       $(AT)date
+DATE    =   $(AT)date
 
 # compilers
 
@@ -100,6 +100,7 @@ layer_dl:
 		-c -ldl -fPIC $(CXXFLAGS) $(AVX_FLAGS) -o ZnnPhiConvLayer.o
 
 	$(CXX) -shared -ldl -o ZnnPhiConvLayer.so.1.0   ZnnPhiConvLayer.o
+	cp ZnnPhiConvLayer.so.1.0 ~
 clean:
 	$(RM) *.o *.so *.S *.bin 
 

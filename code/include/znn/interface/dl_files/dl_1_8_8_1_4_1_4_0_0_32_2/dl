@@ -1,0 +1,153 @@
+dl: ZnnPhiConvWrapper.cpp params.hpp \
+ /usr/people/popovych/znnphi-paper/code/include/znn/interface/ZnnPhiConvEngine.hpp \
+ /usr/people/popovych/znnphi-paper/code/include/znn/layer/conv/propagation/full_layer.hpp \
+ /usr/people/popovych/znnphi-paper/code/include/znn/layer/conv/propagation/executable.hpp \
+ /usr/people/popovych/znnphi-paper/code/include/znn/types.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/vl/vl.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/vl/vec.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/vl/detail/promote.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/bits/type_traits.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/config/config.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/config/compiler/gcc.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/config/os/linux.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/config/posix.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/bits/cstdint.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/meta/or.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/meta/true_type.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/meta/false_type.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/meta/null_type.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/meta/if.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/meta/and.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/vl/detail/enable_if.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/meta/meta.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/meta/bool.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/utility/assert.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/utility/non_copyable.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/utility/static_assert.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/zpp/glue.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/utility/address_of.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/utility/detail/dummy.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/vl/vec_functions.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/vl/mat.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/vl/detail/mat_lookup_table.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/vl/mat_functions.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/vl/detail/householder.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/vl/detail/jacobi.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/vl/detail/invert.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/vl/quat.hpp \
+ /usr/people/popovych/znnphi-paper/code/../zi/vl/quat_functions.hpp \
+ /usr/people/popovych/znnphi-paper/code/include/znn/layer/conv/propagation/full_layer/problem.hpp \
+ /usr/people/popovych/znnphi-paper/code/include/znn/layer/conv/propagation/full_image.hpp \
+ /usr/people/popovych/znnphi-paper/code/include/znn/layer/conv/propagation/blocking.hpp \
+ /usr/people/popovych/znnphi-paper/code/include/znn/intrin.hpp \
+ /usr/people/popovych/znnphi-paper/code/include/znn/layer/conv/propagation/sub_image.hpp \
+ /usr/people/popovych/znnphi-paper/code/include/znn/util/conditional_load.hpp \
+ /usr/people/popovych/znnphi-paper/code/include/znn/layer/conv/propagation/traits.hpp \
+ /usr/people/popovych/znnphi-paper/code/include/znn/layer/conv/propagation/full_layer/schedule.hpp \
+ /usr/people/popovych/znnphi-paper/code/include/znn/layer/conv/propagation/full_layer/split.hpp \
+ /usr/people/popovych/znnphi-paper/code/include/znn/layer/conv/propagation/sub_layer.hpp \
+ /usr/people/popovych/znnphi-paper/code/include/znn/util/constexpr.hpp \
+ /usr/people/popovych/znnphi-paper/code/include/znn/util/kernel_launcher.hpp \
+ /usr/people/popovych/znnphi-paper/code/include/znn/interface/ZnnPhiConvWrapper.hpp
+
+params.hpp:
+
+/usr/people/popovych/znnphi-paper/code/include/znn/interface/ZnnPhiConvEngine.hpp:
+
+/usr/people/popovych/znnphi-paper/code/include/znn/layer/conv/propagation/full_layer.hpp:
+
+/usr/people/popovych/znnphi-paper/code/include/znn/layer/conv/propagation/executable.hpp:
+
+/usr/people/popovych/znnphi-paper/code/include/znn/types.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/vl/vl.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/vl/vec.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/vl/detail/promote.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/bits/type_traits.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/config/config.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/config/compiler/gcc.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/config/os/linux.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/config/posix.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/bits/cstdint.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/meta/or.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/meta/true_type.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/meta/false_type.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/meta/null_type.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/meta/if.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/meta/and.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/vl/detail/enable_if.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/meta/meta.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/meta/bool.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/utility/assert.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/utility/non_copyable.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/utility/static_assert.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/zpp/glue.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/utility/address_of.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/utility/detail/dummy.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/vl/vec_functions.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/vl/mat.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/vl/detail/mat_lookup_table.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/vl/mat_functions.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/vl/detail/householder.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/vl/detail/jacobi.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/vl/detail/invert.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/vl/quat.hpp:
+
+/usr/people/popovych/znnphi-paper/code/../zi/vl/quat_functions.hpp:
+
+/usr/people/popovych/znnphi-paper/code/include/znn/layer/conv/propagation/full_layer/problem.hpp:
+
+/usr/people/popovych/znnphi-paper/code/include/znn/layer/conv/propagation/full_image.hpp:
+
+/usr/people/popovych/znnphi-paper/code/include/znn/layer/conv/propagation/blocking.hpp:
+
+/usr/people/popovych/znnphi-paper/code/include/znn/intrin.hpp:
+
+/usr/people/popovych/znnphi-paper/code/include/znn/layer/conv/propagation/sub_image.hpp:
+
+/usr/people/popovych/znnphi-paper/code/include/znn/util/conditional_load.hpp:
+
+/usr/people/popovych/znnphi-paper/code/include/znn/layer/conv/propagation/traits.hpp:
+
+/usr/people/popovych/znnphi-paper/code/include/znn/layer/conv/propagation/full_layer/schedule.hpp:
+
+/usr/people/popovych/znnphi-paper/code/include/znn/layer/conv/propagation/full_layer/split.hpp:
+
+/usr/people/popovych/znnphi-paper/code/include/znn/layer/conv/propagation/sub_layer.hpp:
+
+/usr/people/popovych/znnphi-paper/code/include/znn/util/constexpr.hpp:
+
+/usr/people/popovych/znnphi-paper/code/include/znn/util/kernel_launcher.hpp:
+
+/usr/people/popovych/znnphi-paper/code/include/znn/interface/ZnnPhiConvWrapper.hpp:

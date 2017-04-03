@@ -60,7 +60,7 @@ std::string generateWrapperDLName(
     param_string = generateParamString(bn, ifm, ofm, id, ihw, kd, khw, 
                                        padd, padhw, cores, ht, delim);
 
-    generated_name << znnphi_path << "/include/znn/interface/";
+    generated_name << znnphi_path << "/include/znn/interface/dl_files/";
     generated_name << "conv_wrapper_" << param_string << ".so";
 
     return generated_name.str();

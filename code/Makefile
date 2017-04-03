@@ -92,19 +92,24 @@ DEPFLAGS	=	-MM -MG -MP $(CXXINCLUDES) -MT "$(@:.d=.o)" $(CS_FLAGS) -DZNN_NO_CUDA
 INLINE_DEPFLAGS	=	-MMD -MP -MT "$(@)" -MF $(@:.o=.T) -DZNN_NO_CUDA $(HBW_FLAG) $(CORES_FLAG) $(STD_FLAG)
 
 
-COMMON_FLAGS	=	-g $(INLINE_DEPFLAGS) $(CXXINCLUDES) $(CXXWARN) $(HBW_FLAG) $(CORES_FLAG)
+COMMON_FLAGS	=	$(INLINE_DEPFLAGS) $(CXXINCLUDES) $(CXXWARN) $(HBW_FLAG) $(CORES_FLAG)
 
 
 DBG_FLAGS		=	$(COMMON_FLAGS) $(CS_FLAGS)
 LD_OPTIMIZATION_FLAGS	=	-DNDEBUG -O3
 #-fno-rtti -ffast-math -fno-omit-frame-pointer -fno-exceptions
 
-OPT_FLAGS		=	$(COMMON_FLAGS) $(OPTIMIZATION_FLAGS) $(CS_FLAGS)
-
 COMMON_LDFLAGS		=	$(HBW_LD_FLAG)
 
+ifneq ($(strip $(NOUNROLL)),)
+	UNROLL_FLAGS    =   -unroll0
+else
+	UNROLL_FLAGS    =   
+endif
+
+OPT_FLAGS		=	$(COMMON_FLAGS) $(OPTIMIZATION_FLAGS) $(CS_FLAGS)  $(UNROLL_FLAGS)
 DBG_LDFLAGS		=	$(COMMON_LDFLAGS) $(CS_LD_FLAGS)
-OPT_LDFLAGS		=	$(COMMON_LDFLAGS) $(CS_LD_FLAGS) $(LD_OPTIMIZATION_FLAGS)
+OPT_LDFLAGS		=	$(COMMON_LDFLAGS) $(CS_LD_FLAGS) $(LD_OPTIMIZATION_FLAGS) $(UNROLL_FLAGS)
 
 ifneq ($(strip $(OPT)),)
   CXXFLAGS	=	$(OPT_FLAGS)
@@ -174,6 +179,7 @@ $(BINDIR)/avx/obj/%.o: ./%.cpp
 $(BINDIR)/avx2/obj/%.o: ./%.cpp
 	$(ECHO) "[CXX] compiling $<"
 	$(MKDIR) -p $(dir $@)
+	$(ECHO) $(CXX) -c $(CXXFLAGS) $(AVX2_FLAGS) -o $@ $<
 	$(CXX) -c $(CXXFLAGS) $(AVX2_FLAGS) -o $@ $<
 	$(MV) -f "$(@:.o=.T)" "$(@:.o=.d)"
 

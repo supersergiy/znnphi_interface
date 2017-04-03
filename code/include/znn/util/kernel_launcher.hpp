@@ -1,5 +1,4 @@
 #pragma once
-
 #include "znn/types.hpp"
 
 #include <chrono>
@@ -68,7 +67,6 @@ public:
         , num_threads_(n_cpus * n_hwt)
     {
         sched_getaffinity(0, sizeof(old_set_), &old_set_);
-
         cpu_set_t set;
         CPU_ZERO(&set);
 

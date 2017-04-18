@@ -41,8 +41,10 @@ CS_FLAGS		=
 CS_LD_FLAGS		=       -lpthread
 
 FPIC	=	-fPIC
+CXXINCLUDES	=	-I$(ZNNPHI_PATH)/include -I$(ZNNPHI_PATH)/include/znn -I$(ZNNPHI_PATH)/.. \
+                -I/mnt/bucket/people/popovych/.julia/v0.5/CxxWrap/deps/src/cxx_wrap \
+			    -I/mnt/bucket/labs/seung/seungmount/research/popovych/bins/julia/include/julia
 
-CXXINCLUDES	=	-I$(ZNNPHI_PATH)/include -I$(ZNNPHI_PATH)/include/znn -I$(ZNNPHI_PATH)/..
 CXXWARN		=	-Wall -Wextra -Wno-format -Wno-unknown-pragmas
 CXXERR		=   -fmax-errors=5
 
@@ -87,9 +89,8 @@ $(BINDIR)/avx/%.bin: $(BINDIR)/avx/obj/%.o
 	$(CXX) $^ $(CXXLDFLAGS) $(AVX_FLAGS) -o $@
 
 
-.PHONY: layer test layer_dl
+.PHONY: layer test layer_dl 
 test:
-
 	$(CXX) ZnnPhiConvWrapper.cpp \
 		$(DLFLAGS) $(CXXFLAGS) $(AVX_FLAGS) -o $(DL_NAME) 
 layer:
@@ -99,8 +100,7 @@ layer_dl:
 	$(CXX) ZnnPhiConvLayer.cpp \
 		-c -ldl -fPIC $(CXXFLAGS) $(AVX_FLAGS) -o ZnnPhiConvLayer.o
 
-	$(CXX) -shared -ldl -o ZnnPhiConvLayer.so.1.0   ZnnPhiConvLayer.o
-	cp ZnnPhiConvLayer.so.1.0 ~
+	$(CXX) -shared -ldl -o libznnphiconv.so  ZnnPhiConvLayer.o
 clean:
 	$(RM) *.o *.so *.S *.bin 
 

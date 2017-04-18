@@ -1,6 +1,8 @@
 #pragma once
 #include "ZnnPhiConvWrapper.hpp"
-#define DEFAULT_HT 2
+#include <cxx_wrap.hpp>
+
+#define DEFAULT_HT 2 
 #define DEFAULT_CORES 32 
 
 namespace znn
@@ -22,8 +24,19 @@ public:
 
     ~ZnnPhiConvLayer(void);
 
-    void forward(float *in, float *out, float *ker, float *bi);
+    void forward(float const* __restrict in, float *out, 
+                 float const* __restrict ker, 
+                 float const* __restrict bi);
 };
 
 }
-}
+
+JULIA_CPP_MODULE_BEGIN(registry)
+types.add_type<ZnnPhiConvLayer>("ZnnPhiConvLayer")
+  .constructor<int, int, int, int,
+               int, int ,int,
+               int, int, int, int>()
+  .method("forward", &ZnnPhiConvLayer::forwad)
+JULIA_CPP_MODULE_END
+
+

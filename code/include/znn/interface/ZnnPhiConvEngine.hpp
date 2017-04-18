@@ -57,7 +57,8 @@ public:
         delete kl;
     }
     
-    void compute(float* in, float* out, float* ker, float *bi)
+    void compute(float const* __restrict in, float* out, 
+                 float const* __restrict ker, float const* __restrict bi)
     {
         plan->execute(in, out, ker, bi);
     }

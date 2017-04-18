@@ -1,3 +1,4 @@
+#define _GLIBCXX_USE_CXX11_ABI 0
 #include <iostream>
 #include <stdlib.h>
 #include <string.h>
@@ -138,7 +139,9 @@ ZnnPhiConvLayer::~ZnnPhiConvLayer()
     destroyConvWrapper(conv_wrapper);
 }
 
-void ZnnPhiConvLayer::forward(float *in, float *out, float *ker, float *bi)
+void ZnnPhiConvLayer::forward(float const* __restrict in, float *out, 
+                              float const* __restrict ker, 
+                              float const* __restrict bi)
 {
     conv_wrapper->compute(in, out, ker, bi);
 }

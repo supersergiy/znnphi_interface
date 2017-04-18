@@ -22,7 +22,9 @@ ZnnPhiConvWrapper::ZnnPhiConvWrapper()
     convEngine = new parametrizedConvEngine();
 }
 
-void ZnnPhiConvWrapper::compute(float *in, float *out, float *ker, float *bi)
+void ZnnPhiConvWrapper::compute(float const* __restrict in, float *out, 
+                                float const* __restrict ker, 
+                                float const* __restrict bi)
 {
     reinterpret_cast<parametrizedConvEngine*>(convEngine)->compute(in, out, ker, bi);
 }

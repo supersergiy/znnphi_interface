@@ -13,6 +13,7 @@ CORES=${11}
 HT=${12}
 
 POSTFIX=${BN}_${IFM}_${OFM}_${ID}_${IHW}_${KD}_${KHW}_${PADD}_${PADHW}_${CORES}_${HT}
+echo $POSTFIX
 
 BASE_PATH=$ZNNPHI_PATH/include/znn/interface
 DL_FILES_DIR=${BASE_PATH}/dl_files

@@ -20,6 +20,12 @@ DATE    =   $(AT)date
 
 # compilers
 
+PYTHON_VERSION = 2.7
+PYTHON_INCLUDE = /usr/include/python$(PYTHON_VERSION)
+
+BOOST_INC = /usr/include
+BOOST_LIB = /usr/lib64
+
 ZNN_TUNE	=
 
 
@@ -36,16 +42,19 @@ STD_FLAG	=
 
 
 CXX			=	$(AT)g++ -pthread $(STANDARD_FLAG)
-OPTIMIZATION_FLAGS	=	-DNDEBUG -O3 -ffast-math -fno-omit-frame-pointer -fno-rtti -fno-exceptions
+OPTIMIZATION_FLAGS	=	-DNDEBUG -O3 -ffast-math -fno-omit-frame-pointer #-fno-rtti -fno-exceptions
 CS_FLAGS		=
 CS_LD_FLAGS		=       -lpthread
 
 FPIC	=	-fPIC
-CXXINCLUDES	=	-I$(ZNNPHI_PATH)/include -I$(ZNNPHI_PATH)/include/znn -I$(ZNNPHI_PATH)/.. \
-                -I/mnt/bucket/people/popovych/.julia/v0.5/CxxWrap/deps/src/cxx_wrap \
-			    -I/mnt/bucket/labs/seung/seungmount/research/popovych/bins/julia/include/julia
-
-CXXWARN		=	-Wall -Wextra -Wno-format -Wno-unknown-pragmas
+CXXINCLUDES	= -I$(ZNNPHI_PATH)/include -I$(ZNNPHI_PATH)/include/znn -I$(ZNNPHI_PATH)/.. \
+				  -I$(PYTHON_INCLUDE) \
+				  -I$(BOOST_INC)
+				  
+LD_FLAGS	= 	-L/usr/local/lib64 -lstdc++ \
+				-L$(BOOST_LIB) -lboost_python \
+				-L/usr/lib/python$(PYTHON_VERSION)/config -lpython$(PYTHON_VERSION)
+CXXWARN		=	-Wall -Wextra -Wno-format -Wno-unknown-pragmas -Wno-unused-variable -Wno-unused-parameter -Wno-return-type
 CXXERR		=   -fmax-errors=5
 
 HBW_LD_FLAG	=
@@ -54,7 +63,7 @@ HBW_FLAG	=	-DZNN_NO_HBW
 DEPFLAGS	=	-MM -MG -MP $(CXXINCLUDES) -MT "$(@:.d=.o)" $(CS_FLAGS) -DZNN_NO_CUDA $(HBW_FLAG) $(CORES_FLAG)
 INLINE_DEPFLAGS	=	-MMD -MP -MT "$(@)" -MF $(@:.o=.T) -DZNN_NO_CUDA $(HBW_FLAG) $(CORES_FLAG) $(STD_FLAG)
 
-COMMON_FLAGS	=	-g $(INLINE_DEPFLAGS) $(CXXINCLUDES) $(CXXWARN) $(CXXERR) \
+COMMON_FLAGS	=	-g $(INLINE_DEPFLAGS) $(CXXINCLUDES) $(LD_FLAGS) $(CXXWARN) $(CXXERR) \
 					$(HBW_FLAG) $(CORES_FLAG)
 
 DBG_FLAGS		=	$(COMMON_FLAGS) $(CS_FLAGS)
@@ -97,10 +106,9 @@ layer:
 	$(CXX) ZnnPhiConvLayer.cpp \
 		-c -ldl $(CXXFLAGS) $(AVX_FLAGS) -o ZnnPhiConvLayer.o
 layer_dl:
-	$(CXX) ZnnPhiConvLayer.cpp \
-		-c -ldl -fPIC $(CXXFLAGS) $(AVX_FLAGS) -o ZnnPhiConvLayer.o
-
-	$(CXX) -shared -ldl -o libznnphiconv.so  ZnnPhiConvLayer.o
+	$(CXX) ZnnPhiConvLayer.cpp -c -fPIC $(CXXFLAGS) $(AVX_FLAGS) -o ZnnPhiConvLayer.o
+	$(ECHO) -c -fPIC $(CXXFLAGS) $(AVX_FLAGS) -o ZnnPhiConvLayer.o
+	$(CXX) -shared -Wl,--export-dynamic -L/usr/local/lib64 -lstdc++ $(LD_FLAGS) -o libznnphiconv.so  ZnnPhiConvLayer.o
 clean:
 	$(RM) *.o *.so *.S *.bin 
 

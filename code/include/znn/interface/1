@@ -1,0 +1,36 @@
+In file included from /usr/include/boost/preprocessor/iteration/detail/iter/forward1.hpp:52:0,
+                 from /usr/include/boost/python/object/value_holder.hpp:50,
+                 from /usr/include/boost/python/object/class_metadata.hpp:11,
+                 from /usr/include/boost/python/class.hpp:23,
+                 from /usr/include/boost/python.hpp:18,
+                 from ZnnPhiConvLayer.hpp:3,
+                 from ZnnPhiConvLayer.cpp:11:
+/usr/include/boost/python/object/value_holder.hpp: In instantiation of ‘boost::python::objects::value_holder<Value>::value_holder(PyObject*, A0) [with A0 = boost::python::objects::reference_to_value<std::basic_string<char> >; Value = znn::phi::ZnnPhiConvLayer; PyObject = _object]’:
+/usr/include/boost/python/object/make_holder.hpp:94:17:   required from ‘static void boost::python::objects::make_holder<1>::apply<Holder, ArgList>::execute(PyObject*, boost::python::objects::make_holder<1>::apply<Holder, ArgList>::t0) [with Holder = boost::python::objects::value_holder<znn::phi::ZnnPhiConvLayer>; ArgList = boost::mpl::vector1<std::basic_string<char> >; PyObject = _object; boost::python::objects::make_holder<1>::apply<Holder, ArgList>::t0 = std::basic_string<char>]’
+/usr/include/boost/python/detail/make_keyword_range_fn.hpp:63:47:   required from ‘boost::python::api::object boost::python::detail::make_keyword_range_constructor(const CallPolicies&, const keyword_range&, Holder*, ArgList*, Arity*) [with ArgList = boost::mpl::vector1<std::basic_string<char> >; Arity = boost::mpl::size<boost::mpl::vector1<std::basic_string<char> > >; Holder = boost::python::objects::value_holder<znn::phi::ZnnPhiConvLayer>; CallPolicies = boost::python::default_call_policies; boost::python::detail::keyword_range = std::pair<const boost::python::detail::keyword*, const boost::python::detail::keyword*>]’
+/usr/include/boost/python/init.hpp:332:66:   required from ‘void boost::python::detail::def_init_aux(ClassT&, const Signature&, NArgs, const CallPoliciesT&, const char*, const keyword_range&) [with ClassT = boost::python::class_<znn::phi::ZnnPhiConvLayer>; CallPoliciesT = boost::python::default_call_policies; Signature = boost::mpl::vector1<std::basic_string<char> >; NArgs = boost::mpl::size<boost::mpl::vector1<std::basic_string<char> > >; boost::python::detail::keyword_range = std::pair<const boost::python::detail::keyword*, const boost::python::detail::keyword*>]’
+/usr/include/boost/python/init.hpp:399:31:   required from ‘static void boost::python::detail::define_class_init_helper<0>::apply(ClassT&, const CallPoliciesT&, const Signature&, NArgs, const char*, const keyword_range&) [with ClassT = boost::python::class_<znn::phi::ZnnPhiConvLayer>; CallPoliciesT = boost::python::default_call_policies; Signature = boost::mpl::vector1<std::basic_string<char> >; NArgs = boost::mpl::size<boost::mpl::vector1<std::basic_string<char> > >; boost::python::detail::keyword_range = std::pair<const boost::python::detail::keyword*, const boost::python::detail::keyword*>]’
+/usr/include/boost/python/init.hpp:171:67:   required from ‘void boost::python::init_base<DerivedT>::visit(classT&) const [with classT = boost::python::class_<znn::phi::ZnnPhiConvLayer>; DerivedT = boost::python::init<std::basic_string<char> >]’
+/usr/include/boost/python/def_visitor.hpp:31:9:   required from ‘static void boost::python::def_visitor_access::visit(const V&, classT&) [with V = boost::python::def_visitor<boost::python::init<std::basic_string<char> > >; classT = boost::python::class_<znn::phi::ZnnPhiConvLayer>]’
+/usr/include/boost/python/def_visitor.hpp:67:34:   required from ‘void boost::python::def_visitor<DerivedVisitor>::visit(classT&) const [with classT = boost::python::class_<znn::phi::ZnnPhiConvLayer>; DerivedVisitor = boost::python::init<std::basic_string<char> >]’
+/usr/include/boost/python/class.hpp:226:9:   required from ‘boost::python::class_<T, X1, X2, X3>::self& boost::python::class_<T, X1, X2, X3>::def(const boost::python::def_visitor<Derived>&) [with Derived = boost::python::init<std::basic_string<char> >; W = znn::phi::ZnnPhiConvLayer; X1 = boost::python::detail::not_specified; X2 = boost::python::detail::not_specified; X3 = boost::python::detail::not_specified; boost::python::class_<T, X1, X2, X3>::self = boost::python::class_<znn::phi::ZnnPhiConvLayer>]’
+/usr/include/boost/python/class.hpp:502:9:   required from ‘void boost::python::class_<T, X1, X2, X3>::initialize(const DefVisitor&) [with DefVisitor = boost::python::init_base<boost::python::init<std::basic_string<char> > >; W = znn::phi::ZnnPhiConvLayer; X1 = boost::python::detail::not_specified; X2 = boost::python::detail::not_specified; X3 = boost::python::detail::not_specified]’
+/usr/include/boost/python/class.hpp:209:9:   required from ‘boost::python::class_<T, X1, X2, X3>::class_(const char*, const boost::python::init_base<DerivedT>&) [with DerivedT = boost::python::init<std::basic_string<char> >; W = znn::phi::ZnnPhiConvLayer; X1 = boost::python::detail::not_specified; X2 = boost::python::detail::not_specified; X3 = boost::python::detail::not_specified]’
+ZnnPhiConvLayer.hpp:39:72:   required from here
+/usr/include/boost/python/object/value_holder.hpp:137:13: error: no matching function for call to ‘znn::phi::ZnnPhiConvLayer::ZnnPhiConvLayer(const std::basic_string<char>&)’
+             BOOST_PP_REPEAT_1ST(N, BOOST_PYTHON_UNFORWARD_LOCAL, nil)
+             ^
+ZnnPhiConvLayer.cpp:122:1: note: candidate: znn::phi::ZnnPhiConvLayer::ZnnPhiConvLayer(int, int, int, int, int, int, int, int, int, int, int)
+ ZnnPhiConvLayer::ZnnPhiConvLayer(int bn, int ifm, int ofm, int id,
+ ^
+ZnnPhiConvLayer.cpp:122:1: note:   candidate expects 11 arguments, 1 provided
+In file included from ZnnPhiConvLayer.cpp:11:0:
+ZnnPhiConvLayer.hpp:19:5: note: candidate: znn::phi::ZnnPhiConvLayer::ZnnPhiConvLayer()
+     ZnnPhiConvLayer(void) {}
+     ^
+ZnnPhiConvLayer.hpp:19:5: note:   candidate expects 0 arguments, 1 provided
+ZnnPhiConvLayer.hpp:12:7: note: candidate: constexpr znn::phi::ZnnPhiConvLayer::ZnnPhiConvLayer(const znn::phi::ZnnPhiConvLayer&)
+ class ZnnPhiConvLayer {
+       ^
+ZnnPhiConvLayer.hpp:12:7: note:   no known conversion for argument 1 from ‘const std::basic_string<char>’ to ‘const znn::phi::ZnnPhiConvLayer&’
+make: *** [layer_dl] Error 1

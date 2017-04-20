@@ -1,0 +1,10 @@
+cc     hello_ext.c   -o hello_ext
+In file included from /usr/include/boost/python/detail/prefix.hpp:13:0,
+                 from /usr/include/boost/python/args.hpp:8,
+                 from /usr/include/boost/python.hpp:11,
+                 from hello_ext.c:7:
+/usr/include/boost/python/detail/wrap_python.hpp:50:23: fatal error: pyconfig.h: No such file or directory
+ # include <pyconfig.h>
+                       ^
+compilation terminated.
+make: *** [hello_ext] Error 1

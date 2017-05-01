@@ -117,10 +117,10 @@ struct sub_image_1d
         ZNN_PRAGMA(unroll(RW))
         for (long_t rw = 0; rw < RW; ++rw)
         {
-            if (Activation) 
+            /*if (Activation) 
             {
                 SIMD_ELU(vout[rw]); 
-            }
+            }i*/
 
             SIMD_STORE(o + rw * IW::out_stride, vout[rw]);
         }
@@ -196,10 +196,10 @@ struct sub_image_2d
             ZNN_PRAGMA(unroll(RW))
             for (long_t rw = 0; rw < RW; ++rw)
             {
-                if (Activation) 
+                /*if (Activation) 
                 {
                     SIMD_ELU(vout[rh][rw]); 
-                }
+                }*/
                 SIMD_STORE(o + rh * IH::out_stride + rw * IW::out_stride,
                            vout[rh][rw]);
             }
@@ -290,10 +290,10 @@ struct sub_image_3d
                 ZNN_PRAGMA(unroll(RW))
                 for (long_t rw = 0; rw < RW; ++rw)
                 {
-                    if (Activation) 
+                    /*if (Activation) 
                     {
                         SIMD_ELU(vout[rd][rh][rw]); 
-                    }
+                    }*/
                     SIMD_STORE(o + rd * ID::out_stride + rh * IH::out_stride +
                                    rw * IW::out_stride,
                                vout[rd][rh][rw]);

@@ -13,17 +13,18 @@ CORES=${11}
 HT=${12}
 
 POSTFIX=${BN}_${IFM}_${OFM}_${ID}_${IHW}_${KD}_${KHW}_${PADD}_${PADHW}_${CORES}_${HT}
-echo $POSTFIX
+>&2 echo $POSTFIX
 
 BASE_PATH=$ZNNPHI_PATH/include/znn/interface
+#BATCH_DIR=${BASE_DIR}/batch_${BN}
 DL_FILES_DIR=${BASE_PATH}/dl_files
 DL_DIR=${DL_FILES_DIR}/dl_$POSTFIX
 DL_NAME=conv_wrapper_${POSTFIX}.so
 DL_PATH=$DL_DIR/$DL_NAME
 PARAMS_FILE_NAME=params.hpp
 
-createParamsFile () 
-{ 
+createParamsFile ()
+{
    if [ -e "$PARAMS_FILE_NAME" ]
    then
       rm "$PARAMS_FILE_NAME"
@@ -44,21 +45,29 @@ createParamsFile ()
    echo "#define HT_v    $HT"    >> "$PARAMS_FILE_NAME"
 }
 
-# If the Shared Object that user wants is already there, 
+# If the Shared Object that user wants is already there,
 # no need to do anything
 if ! [ -e "$USER_PROVIDED_DL_PATH" ]
 then
-   # Recompile if a shared object with the same params in not already there 
+   # Recompile if a shared object with the same params in not already there
    if ! [ -e "$DL_PATH" ]
    then
       cd "$BASE_PATH"
-      echo "Recompiling layer..."
+      >&2 echo "Recompiling layer..."
+
+   #   if ! [ -e "$BATCH_DIR" ]
+   #   then
+   #       mkdir "$BATCH_DIR"
+   #   fi
+   #   cd "$BATCH_DIR"
+
       if ! [ -e "$DL_DIR" ]
-      then 
+      then
           mkdir "$DL_DIR"
       fi
       cp ConvMakefile ZnnPhiConvWrapper.cpp ZnnPhiConvWrapper.hpp "$DL_DIR"
       cd "$DL_DIR"
+
       cp ConvMakefile Makefile
       createParamsFile
       make dl DL_NAME=$DL_NAME
@@ -68,7 +77,7 @@ then
    #echo "Copying $DL_PATH into $USER_PROVIDED_DL_PATH..."
    cp "$DL_PATH" "$USER_PROVIDED_DL_PATH"
 else
-   echo "Reusing layer"
+   >&2 echo "Reusing layer"
 fi
 
 

@@ -6,7 +6,7 @@
 #if defined(ZNN_AVX512)
 
 #define SIMD_WIDTH 16
-
+//TODO: generalize for other architectures
 #define SIMD_FMADD _mm512_fmadd_ps
 #define SIMD_SET1 _mm512_set1_ps
 #define SIMD_LOAD _mm512_load_ps
@@ -16,6 +16,7 @@
 
 #define SIMD_MAX _mm512_max_ps
 
+#define SIMD_MASK  __mmask16
 #define SIMD_FLOAT __m512
 
 #define SIMD_MAX_BLOCK 31
@@ -23,6 +24,12 @@
 
 #define SIMD_NUM_REGISTERS 32
 
+#define SIMD_SUB_MASK(r, m, a, b) _mm512_mask_sub_ps(r, m, a, b)
+#define SIMD_MUL_MASK(r, m, a, b) _mm512_mask_mul_ps(r, m, a, b)
+
+
+#define SIMD_E2A23_MASK(a, m, b) _mm512_mask_exp2a23_ps(a, m, b)
+#define SIMD_LT(a, b) _mm512_cmp_ps_mask(a, b, _CMP_LT_OQ)
 #define SIMD_CMP(a, b) _mm512_cmp_ps_mask(a, b, _CMP_EQ_OQ)
 #define SIMD_MASK_ADD(r, m, a, b) _mm512_mask_add_ps(r, m, a, b)
 

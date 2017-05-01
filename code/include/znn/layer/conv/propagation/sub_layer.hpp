@@ -32,9 +32,9 @@ private:
     static constexpr long_t ik_stride        = full::ik_stride;
     static constexpr long_t ok_stride        = full::ok_stride;
 
-    template <bool First>
+    template <bool First, bool Activation>
     using sub_task = full_image<
-        First, SIMD_WIDTH, image_traits<sub::d_len, full::image_d::in_stride,
+        First, Activation, SIMD_WIDTH, image_traits<sub::d_len, full::image_d::in_stride,
                                         full::image_d::out_stride>,
         image_traits<sub::h_len, full::image_h::in_stride,
                      full::image_h::out_stride>,
@@ -64,16 +64,32 @@ private:
                                float const* __restrict k,
                                float const* __restrict b)
     {
-        for (long_t ofm = 0; ofm < ofm_len; ++ofm)
+        if (ifm_len == 1) 
         {
-            sub_task<true>::execute(i, o + ofm * ofm_stride,
-                                    k + ofm * ok_stride, b + ofm * SIMD_WIDTH);
-            for (long_t ifm = 1; ifm < ifm_len; ++ifm)
+            for (long_t ofm = 0; ofm < ofm_len; ++ofm)
             {
-                sub_task<false>::execute(i + ifm * ifm_stride,
-                                         o + ofm * ofm_stride,
-                                         k + ifm * ik_stride + ofm * ok_stride,
-                                         b + ofm * SIMD_WIDTH);
+                sub_task<true, true>::execute(i, o + ofm * ofm_stride,
+                                        k + ofm * ok_stride, b + ofm * SIMD_WIDTH);
+            }
+        }
+        else 
+        {
+            for (long_t ofm = 0; ofm < ofm_len; ++ofm)
+            {
+                sub_task<true, false>::execute(i, o + ofm * ofm_stride,
+                                        k + ofm * ok_stride, b + ofm * SIMD_WIDTH);
+                for (long_t ifm = 1; ifm < ifm_len - 1; ++ifm)
+                {
+                    sub_task<false, false>::execute(i + ifm * ifm_stride,
+                                             o + ofm * ofm_stride,
+                                             k + ifm * ik_stride + ofm * ok_stride,
+                                             b + ofm * SIMD_WIDTH);
+                }
+                sub_task<false, true>::execute(i + (ifm_len - 1) * ifm_stride,
+                                               o + ofm * ofm_stride,
+                                               k + (ifm_len - 1) * ik_stride 
+                                                                 + ofm * ok_stride,
+                                               b + ofm * SIMD_WIDTH);
             }
         }
     }

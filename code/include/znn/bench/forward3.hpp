@@ -25,7 +25,7 @@ double forward_pass(std::string const& lname = "layer")
 
     static const long_t OD  = ID + 1 - KD + 2 * PADD;
     static const long_t OHW = IHW + 1 - KHW + 2 * PADHW;
-    
+
     long_t out_size = B * OFM2 * OD * OHW * OHW;
     long_t ker_size = IFM2 * OFM2 * KD * KHW * KHW;
     long_t in_size  = B * IFM2 * ID * IHW * (IHW + PADHW * 2);
@@ -35,7 +35,7 @@ double forward_pass(std::string const& lname = "layer")
     std::cout << "Out size: " << out_size << std::endl;;
     std::cout << "In size: " << in_size << std::endl;;
     std::cout << "Ker size: " << ker_size << std::endl;;
-    
+
     std::cout << "Allocating in..." << std::endl;;
     hbw_array<float> in(one_init, B * IFM2 * ID * IHW * (IHW + PADHW * 2));
     std::cout << "Allocating ker..." << std::endl;;
@@ -123,6 +123,10 @@ void benchmark_forward(std::string const& lname = "layer")
         std::cout << "and AVX512\n";
     #endif
 
+    forward_pass<1,1,B,IFM,OFM,ID,IHW,KD,KHW>( lname );
+    forward_pass<1,2,B,IFM,OFM,ID,IHW,KD,KHW>( lname );
+    forward_pass<4,2,B,IFM,OFM,ID,IHW,KD,KHW>( lname );
+    forward_pass<8,2,B,IFM,OFM,ID,IHW,KD,KHW>( lname );
     forward_pass<ZNN_NUM_CORES,2,B,IFM,OFM,ID,IHW,KD,KHW>( lname );
     return;
 }

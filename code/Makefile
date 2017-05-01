@@ -65,9 +65,9 @@ ifneq ($(strip $(ICC)),)
 	CS_LD_FLAGS		=	-mkl=sequential  -static-intel
 else
 	ifneq ($(strip $(GCC5)),)
-		CXX			=	$(AT)g++-5 -pthread $(STANDARD_FLAG)
+		CXX			=	$(AT)/usr/local/bin/g++-5 -pthread $(STANDARD_FLAG)
 	else
-		CXX			=	$(AT)g++ -pthread $(STANDARD_FLAG)
+		CXX			=	$(AT)/usr/local/bin/g++ -pthread $(STANDARD_FLAG)
 	endif
 	OPTIMIZATION_FLAGS	=	-DNDEBUG -O3 -ffast-math -fno-omit-frame-pointer -fno-rtti -fno-exceptions
 	CS_FLAGS		=
@@ -77,7 +77,7 @@ endif
 FPIC	=	-fPIC
 
 CXXINCLUDES	=	-I$(HERE)/include -I$(HERE)/..
-CXXWARN		=	-Wall -Wextra -Wno-format -Wno-unknown-pragmas
+CXXWARN		=	-Wall -Wextra -Wno-format -Wno-unknown-pragmas -Wno-unused-parameter
 
 ifneq ($(strip $(NOHBW)),)
 	HBW_LD_FLAG	=

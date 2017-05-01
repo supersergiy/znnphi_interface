@@ -10,7 +10,7 @@
 
 #include "ZnnPhiConvLayer.hpp"
 
-#define MAX_STRING 512
+#define MAX_STRING 1024 
 #define COMPILE_CONV_WRAPPER_SCRIPT "include/znn/interface/generate_dl.sh"
 #define BASH "/bin/bash"
 
@@ -111,6 +111,7 @@ void *loadConvWrapperDL(int bn, int ifm, int ofm, int id,
     compile_command = generateCompileDLCommand(dl_filename,
                           bn, ifm, ofm, id, ihw, kd, khw, padd, padhw, cores, ht);
 
+    //std::cout << compile_command.c_str() << std::endl;
     std::system(compile_command.c_str());
     
     void *handle = dlopen(dl_filename.c_str(), RTLD_NOW);
@@ -124,7 +125,6 @@ ZnnPhiConvLayer::ZnnPhiConvLayer(int bn, int ifm, int ofm, int id,
                                  int padd, int padhw,
                                  int cores, int ht)
 {
-
     void *wrapper_handle = loadConvWrapperDL(bn, ifm, ofm, id, ihw, kd, khw, 
                                              padd, padhw, cores, ht);
     createConvWrapper = (CreateConvWrapper_fp) dlsym(wrapper_handle, "createConvWrapper");

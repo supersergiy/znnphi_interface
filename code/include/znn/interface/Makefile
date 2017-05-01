@@ -95,12 +95,13 @@ test:
 		$(DLFLAGS) $(CXXFLAGS) $(AVX_FLAGS) -o $(DL_NAME) 
 layer:
 	$(CXX) ZnnPhiConvLayer.cpp \
-		-c -ldl $(CXXFLAGS) $(AVX_FLAGS) -o ZnnPhiConvLayer.o
+		-c -ldl $(CXXFLAGS) $(AVX512_FLAGS) -o ZnnPhiConvLayer.o
 layer_dl:
 	$(CXX) ZnnPhiConvLayer.cpp \
-		-c -ldl -fPIC $(CXXFLAGS) $(AVX_FLAGS) -o ZnnPhiConvLayer.o
+		-c -ldl -fPIC $(CXXFLAGS) $(AVX512_FLAGS) -o ZnnPhiConvLayer.o
 
 	$(CXX) -shared -ldl -o libznnphiconv.so  ZnnPhiConvLayer.o
+	sudo cp libznnphiconv.so /usr/lib64/
 clean:
 	$(RM) *.o *.so *.S *.bin 
 

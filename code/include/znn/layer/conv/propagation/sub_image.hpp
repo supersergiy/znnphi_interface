@@ -120,7 +120,11 @@ struct sub_image_1d
             /*if (Activation) 
             {
                 SIMD_ELU(vout[rw]); 
+<<<<<<< HEAD
+            }*/
+=======
             }i*/
+>>>>>>> 1f5ce7b4306f72803dcf6c7d14d34e2f5db662ec
 
             SIMD_STORE(o + rw * IW::out_stride, vout[rw]);
         }

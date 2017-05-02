@@ -43,8 +43,8 @@ CXXINCLUDES	=	-I$(ZNNPHI_PATH)/include -I$(ZNNPHI_PATH)/include/znn -I$(ZNNPHI_P
 CXXWARN		=	-Wall -Wextra -Wno-format -Wno-unknown-pragmas
 CXXERR		=   -fmax-errors=5
 
-HBW_LD_FLAG	=   #-lmemkind 
-HBW_FLAG	=	-DZNN_NO_HBW
+HBW_LD_FLAG	=   -lmemkind 
+HBW_FLAG	=	#-DZNN_NO_HBW
 
 
 DEPFLAGS	=	-MM -MG -MP $(CXXINCLUDES) -MT "$(@:.d=.o)" $(CS_FLAGS) -DZNN_NO_CUDA $(HBW_FLAG) $(CORES_FLAG)
@@ -71,7 +71,7 @@ DLFLAGS		= 	-fPIC -shared
 .PHONY: dl all clean remake
 dl:
 	$(CXX) ZnnPhiConvWrapper.cpp \
-		$(DLFLAGS) $(CXXFLAGS) $(AVX512_FLAGS) -o $(DL_NAME) 
+		$(DLFLAGS) $(CXXFLAGS) $(CXXLDFLAGS) $(AVX512_FLAGS) -o $(DL_NAME) 
 all:
 	dl
 clean:

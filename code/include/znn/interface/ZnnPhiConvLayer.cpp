@@ -110,8 +110,10 @@ void *loadConvWrapperDL(int bn, int ifm, int ofm, int id,
                                         padhw, cores, ht);
     compile_command = generateCompileDLCommand(dl_filename,
                           bn, ifm, ofm, id, ihw, kd, khw, padd, padhw, cores, ht);
-
+   
+    std::cout << ofm << std::endl;
     //std::cout << compile_command.c_str() << std::endl;
+    //std::system(("time " + compile_command + " &> /dev/null").c_str());
     std::system(compile_command.c_str());
     
     void *handle = dlopen(dl_filename.c_str(), RTLD_NOW);
@@ -119,11 +121,17 @@ void *loadConvWrapperDL(int bn, int ifm, int ofm, int id,
     return handle;
 }
 
+ 
+ZnnPhiConvLayer::ZnnPhiConvLayer(void): conv_wrapper(NULL), 
+                                        createConvWrapper(NULL),
+                                        destroyConvWrapper(NULL) {}   
 
-ZnnPhiConvLayer::ZnnPhiConvLayer(int bn, int ifm, int ofm, int id,
-                                 int ihw, int kd, int khw,
-                                 int padd, int padhw,
-                                 int cores, int ht)
+//TODO: add checkf for null pointers with uninitialized layers
+//TODO: change naming convention to take advantage of namespaces
+void ZnnPhiConvLayer::init(int bn, int ifm, int ofm, int id,
+                         int ihw, int kd, int khw,
+                         int padd, int padhw,
+                         int cores, int ht)
 {
     void *wrapper_handle = loadConvWrapperDL(bn, ifm, ofm, id, ihw, kd, khw, 
                                              padd, padhw, cores, ht);

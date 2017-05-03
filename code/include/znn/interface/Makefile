@@ -78,8 +78,8 @@ SO_NAME = libznnphiconv.so
 
 %.so: ./%.o
 	$(ECHO) "[CXX] creasting shared lib $<"
-	$(ECHO) $(CXX) $(DL_FLAGS) -Wl,-soname,$(SO_NAME) -o $(SO_NAME) $<
-	$(CXX) $(DLFLAGS) -Wl -o $(SO_NAME) $<
+	$(ECHO) $(CXX) $(DL_FLAGS)-o $(SO_NAME) $<
+	$(CXX) $(DLFLAGS) -o $(SO_NAME) $<
 
 #%.bin: ./%.o
 #   $(ECHO) "[CXX] linking $^"

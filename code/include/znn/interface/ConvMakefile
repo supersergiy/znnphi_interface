@@ -32,8 +32,7 @@ STANDARD_FLAG	=	-std=c++14
 STD_FLAG	=
 
 CXX             =   $(AT)icpc $(STANDARD_FLAG)                                           
-OPTIMIZATION_FLAGS  =   -DNDEBUG -O3 -ipo -fp-model fast=2  \
-						-mkl=sequential -fno-rtti -fno-exceptions 
+OPTIMIZATION_FLAGS  =   -DNDEBUG -O3 -ipo -fp-model fast=2 -mkl=sequential -fno-rtti -fno-exceptions 
 CS_FLAGS        =   -mkl=sequential                                                       
 CS_LD_FLAGS     =   -mkl=sequential  -static-intel 
 
@@ -43,8 +42,8 @@ CXXINCLUDES	=	-I$(ZNNPHI_PATH)/include -I$(ZNNPHI_PATH)/include/znn -I$(ZNNPHI_P
 CXXWARN		=	-Wall -Wextra -Wno-format -Wno-unknown-pragmas
 CXXERR		=   -fmax-errors=5
 
-HBW_LD_FLAG	=   -lmemkind 
-HBW_FLAG	=	#-DZNN_NO_HBW
+HBW_LD_FLAG	=   #-lmemkind 
+HBW_FLAG	=	-DZNN_NO_HBW
 
 
 DEPFLAGS	=	-MM -MG -MP $(CXXINCLUDES) -MT "$(@:.d=.o)" $(CS_FLAGS) -DZNN_NO_CUDA $(HBW_FLAG) $(CORES_FLAG)
@@ -54,12 +53,11 @@ COMMON_FLAGS	=	-g $(INLINE_DEPFLAGS) $(CXXINCLUDES) $(CXXWARN) $(CXXERR) \
 					$(HBW_FLAG) $(CORES_FLAG)
 
 DBG_FLAGS		=	$(COMMON_FLAGS) $(CS_FLAGS)
+
 LD_OPTIMIZATION_FLAGS	=	-DNDEBUG -O3
-
-OPT_FLAGS		=	$(COMMON_FLAGS) $(OPTIMIZATION_FLAGS) $(CS_FLAGS)
-
 COMMON_LDFLAGS		=	$(HBW_LD_FLAG)
 
+OPT_FLAGS		=	$(COMMON_FLAGS) $(OPTIMIZATION_FLAGS) $(CS_FLAGS)
 DBG_LDFLAGS		=	$(COMMON_LDFLAGS) $(CS_LD_FLAGS) -g
 OPT_LDFLAGS		=	$(COMMON_LDFLAGS) $(CS_LD_FLAGS) $(LD_OPTIMIZATION_FLAGS)
 
@@ -68,12 +66,28 @@ CXXFLAGS	=	$(OPT_FLAGS)
 CXXLDFLAGS	=	$(OPT_LDFLAGS)
 DLFLAGS		= 	-fPIC -shared 
 
-.PHONY: dl all clean remake
-dl:
-	$(CXX) ZnnPhiConvWrapper.cpp \
-		$(DLFLAGS) $(CXXFLAGS) $(CXXLDFLAGS) $(AVX512_FLAGS) -o $(DL_NAME) 
-all:
-	dl
+%.d: ./%.cpp
+	$(ECHO) "[CXX] dependencies $<"
+	$(CXX) $(DEPFLAGS) $(AVX512_FLAGS) -MF $@ $<remake
+
+%.o: ./%.cpp
+	$(ECHO) "[CXX] compiling $<"
+	$(ECHO) $(CXX) -c $(CXXFLAGS) $(AVX512_FLAGS) -o $@ $<
+	$(CXX) -c $(CXXFLAGS) $(AVX512_FLAGS) -o $@ $<
+
+%.so: ./%.o
+	$(ECHO) "[CXX] creasting shared lib $<"
+	$(ECHO) $(CXX) $(DL_FLAGS) $(CXXLDFLAGS) -o $@ $<
+	$(CXX) $(DLFLAGS) $(CXXLDFLAGS) -o $@ $<
+
+#%.bin: ./%.o
+#   $(ECHO) "[CXX] linking $^"
+#	$(CXX) $^ $(CXXLDFLAGS) $(AVX512_FLAGS) -o $@
+
+.PHONY: dl
+dl: ZnnPhiConvWrapper.so
+	mv -f ZnnPhiConvWrapper.so ${DL_NAME}	
+all: dl
 clean:
 	$(RM) *.o *.so *.S *.bin 
 

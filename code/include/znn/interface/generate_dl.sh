@@ -19,7 +19,7 @@ BASE_PATH=$ZNNPHI_PATH/include/znn/interface
 #BATCH_DIR=${BASE_DIR}/batch_${BN}
 DL_FILES_DIR=${BASE_PATH}/dl_files
 DL_DIR=${DL_FILES_DIR}/dl_$POSTFIX
-DL_NAME=conv_wrapper_${POSTFIX}.so
+DL_NAME=conv_wrapper_${POSTFIX}_.so #Note the extra _ <- don't ask why
 DL_PATH=$DL_DIR/$DL_NAME
 PARAMS_FILE_NAME=params.hpp
 
@@ -47,13 +47,15 @@ createParamsFile ()
 
 # If the Shared Object that user wants is already there,
 # no need to do anything
+echo "$USER_PROVIDED_DL_PATH" 
 if ! [ -e "$USER_PROVIDED_DL_PATH" ]
 then
    # Recompile if a shared object with the same params in not already there
+   echo "$DL_PATH" 
    if ! [ -e "$DL_PATH" ]
    then
       cd "$BASE_PATH"
-      >&2 echo "Recompiling layer..."
+      echo "Recompiling layer..."
 
    #   if ! [ -e "$BATCH_DIR" ]
    #   then
@@ -77,7 +79,7 @@ then
    #echo "Copying $DL_PATH into $USER_PROVIDED_DL_PATH..."
    cp "$DL_PATH" "$USER_PROVIDED_DL_PATH"
 else
-   >&2 echo "Reusing layer"
+   echo "Reusing layer"
 fi
 
 

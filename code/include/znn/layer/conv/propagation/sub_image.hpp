@@ -141,7 +141,8 @@ struct sub_image_2d
     {
         SIMD_FLOAT vout[RH][RW], vwt; // Expected to be in the register file
 
-        ZNN_PRAGMA(unroll(RH))
+        //ZNN_PRAGMA(unroll(RH))
+        #pragma unroll(RH)
         for (long_t rh = 0; rh < RH; ++rh)
         {
             ZNN_PRAGMA(unroll(RW))
@@ -168,7 +169,8 @@ struct sub_image_2d
                              s) *
                                 SIMD_WIDTH);
 
-                        ZNN_PRAGMA(unroll(RH))
+                        //ZNN_PRAGMA(unroll(RH)
+#pragma unroll(RH)
                         for (long_t rh = 0; rh < RH; ++rh)
                         {
                             ZNN_PRAGMA(unroll(RW))

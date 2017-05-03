@@ -11,9 +11,9 @@ namespace phi
 
 class ZnnPhiConvLayer {
 private:
+    ZnnPhiConvWrapper *conv_wrapper;
     CreateConvWrapper_fp  createConvWrapper;
     DestroyConvWrapper_fp destroyConvWrapper;
-    ZnnPhiConvWrapper *conv_wrapper;
 
 public:
     ZnnPhiConvLayer(void);

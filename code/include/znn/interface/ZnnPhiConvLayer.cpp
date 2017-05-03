@@ -113,8 +113,10 @@ void *loadConvWrapperDL(int bn, int ifm, int ofm, int id,
    
     std::cout << ofm << std::endl;
     //std::cout << compile_command.c_str() << std::endl;
-    //std::system(("time " + compile_command + " &> /dev/null").c_str());
-    std::system(compile_command.c_str());
+    const char* command_str = ("time " + compile_command + " ").c_str();
+    std::cout << command_str << std::endl;
+    std::system(command_str);
+//std::system(compile_command.c_str());
     
     void *handle = dlopen(dl_filename.c_str(), RTLD_NOW);
     handleDLError();

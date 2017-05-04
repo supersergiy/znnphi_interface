@@ -52,8 +52,6 @@ if ! [ -e "$USER_PROVIDED_DL_PATH" ]
 then
    # Recompile if a shared object with the same params in not already there
    # set to always true for now...
-   if ! [ -e "$DL_PATH" ]
-   then
       cd "$BASE_PATH"
       echo "Recompiling layer..."
 
@@ -69,7 +67,6 @@ then
       createParamsFile
       make dl DESTINATION=$USER_PROVIDED_DL_PATH
       cd ..
-   fi
 else
    >&2 echo "Reusing layer"
 fi

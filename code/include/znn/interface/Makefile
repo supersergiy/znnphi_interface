@@ -72,36 +72,33 @@ CXXFLAGS	=	$(OPT_FLAGS)
 CXXLDFLAGS	=	$(OPT_LDFLAGS)
 DLFLAGS		= 	-fPIC -shared 
 
-$(BINDIR)/avx/obj/%.o: ./%.cpp
+SO_NAME = libznnphiconv.so
+%.d: ./%.cpp
+	$(ECHO) "[CXX] dependencies $<"
+	$(CXX) $(DEPFLAGS) $(AVX512_FLAGS) -MF $@ $<remake
+
+%.o: ./%.cpp
 	$(ECHO) "[CXX] compiling $<"
-	$(MKDIR) -p $(dir $@)
-	$(CXX) -c $(CXXFLAGS) $(AVX_FLAGS) -o $@ $<
-	#$(MV) -f "$(@:.o=.T)" "$(@:.o=.d)"
+	$(ECHO) $(CXX) -c $(CXXFLAGS) $(AVX512_FLAGS) -o $@ $<
+	$(CXX) -c $(CXXFLAGS) $(AVX512_FLAGS) -o $@ $<
 
-$(BINDIR)/avx/obj/%.S: ./%.cpp
-	$(ECHO) "[CXX] compiling $<"
-	$(MKDIR) -p $(dir $@)
-	$(CXX) -S $(CXXFLAGS) $(AVX_FLAGS) -o $@ $<
+%.so: ./%.o
+	$(ECHO) "[CXX] creasting shared lib $<"
+	$(ECHO) $(CXX) $(DL_FLAGS)-o $(SO_NAME) $<
+	$(CXX) $(DLFLAGS) -o $(SO_NAME) $<
 
-$(BINDIR)/avx/%.bin: $(BINDIR)/avx/obj/%.o
-	$(ECHO) "[CXX] linking $^"
-	$(ECHO) $(CXX) $^ $(CXXLDFLAGS) $(AVX_FLAGS) -o $@
-	$(CXX) $^ $(CXXLDFLAGS) $(AVX_FLAGS) -o $@
+#%.bin: ./%.o
+#   $(ECHO) "[CXX] linking $^"
+#	$(CXX) $^ $(CXXLDFLAGS) $(AVX512_FLAGS) -o $@
 
+.PHONY: dl
+dl: ZnnPhiConvLayer.so
+	sudo cp $(SO_NAME) /usr/lib64/
+all: clean dl
+clean:
+	$(RM) -rf ./*.o ./*.so ./*.S *.bin 
 
-.PHONY: layer test layer_dl 
-test:
-	$(CXX) ZnnPhiConvWrapper.cpp \
-		$(DLFLAGS) $(CXXFLAGS) $(AVX_FLAGS) -o $(DL_NAME) 
-layer:
-	$(CXX) ZnnPhiConvLayer.cpp \
-		-c -ldl $(CXXFLAGS) $(AVX512_FLAGS) -o ZnnPhiConvLayer.o
-layer_dl:
-	$(CXX) ZnnPhiConvLayer.cpp \
-		-c -ldl -fPIC $(CXXFLAGS) $(AVX512_FLAGS) -o ZnnPhiConvLayer.o
-
-	$(CXX) -shared -ldl -o libznnphiconv.so  ZnnPhiConvLayer.o
-	sudo cp libznnphiconv.so /usr/lib64/
+remake: clean all
 clean:
 	$(RM) *.o *.so *.S *.bin 
 

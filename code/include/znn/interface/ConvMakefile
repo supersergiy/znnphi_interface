@@ -49,7 +49,7 @@ HBW_FLAG	=	-DZNN_NO_HBW
 DEPFLAGS	=	-MM -MG -MP $(CXXINCLUDES) -MT "$(@:.d=.o)" $(CS_FLAGS) -DZNN_NO_CUDA $(HBW_FLAG) $(CORES_FLAG)
 INLINE_DEPFLAGS	=	-MMD -MP -MT "$(@)" -MF $(@:.o=.T) -DZNN_NO_CUDA $(HBW_FLAG) $(CORES_FLAG) $(STD_FLAG)
 
-COMMON_FLAGS	=	-g $(INLINE_DEPFLAGS) $(CXXINCLUDES) $(CXXWARN) $(CXXERR) \
+COMMON_FLAGS	=	$(INLINE_DEPFLAGS) $(CXXINCLUDES) $(CXXWARN) $(CXXERR) \
 					$(HBW_FLAG) $(CORES_FLAG)
 
 DBG_FLAGS		=	$(COMMON_FLAGS) $(CS_FLAGS)
@@ -80,21 +80,11 @@ DLFLAGS		= 	-fPIC -shared
 	$(ECHO) $(CXX) $(DL_FLAGS) $(CXXLDFLAGS) -o $@ $<
 	$(CXX) $(DLFLAGS) $(CXXLDFLAGS) -o $@ $<
 
-#%.bin: ./%.o
-#   $(ECHO) "[CXX] linking $^"
-#	$(CXX) $^ $(CXXLDFLAGS) $(AVX512_FLAGS) -o $@
-
 .PHONY: dl
-dl: ZnnPhiConvWrapper.so
-	mv -f ZnnPhiConvWrapper.so ${DL_NAME}	
 all: dl
+dl: ZnnPhiConvWrapper.so
+	cp ZnnPhiConvWrapper.so $(DESTINATION)
 clean:
 	$(RM) *.o *.so *.S *.bin 
 
 remake: clean all
-
-#-include $(SSE_DEPS)
-#-include $(AVX_DEPS)
-#-include $(AVX2_DEPS)
-#-include $(AVX512_DEPS)
-#-include $(KNC_DEPS)

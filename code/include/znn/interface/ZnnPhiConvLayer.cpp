@@ -115,7 +115,7 @@ void *loadConvWrapperDL(int bn, int ifm, int ofm, int id,
                           bn, ifm, ofm, id, ihw, kd, khw, padd, padhw, cores, ht);
 
     // don't wan't to hear ya 
-    //compile_command += " &>/dev/null; "; 
+    compile_command += " &>/dev/null; "; 
     auto begin = std::chrono::high_resolution_clock::now();  
     std::system(compile_command.c_str());
     auto end = std::chrono::high_resolution_clock::now();

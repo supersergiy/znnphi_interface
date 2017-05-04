@@ -1,2 +1,4 @@
 bin/
 include/znn/interface/dl_files/
+include/znn/interface/tmp/
+*.T

@@ -7,6 +7,7 @@
 #include <sstream>
 #include <iterator>
 #include <string.h>
+#include <chrono>
 
 #include "ZnnPhiConvLayer.hpp"
 
@@ -105,19 +106,28 @@ void *loadConvWrapperDL(int bn, int ifm, int ofm, int id,
 {
     std::string dl_filename;
     std::string compile_command;
+    std::string param = generateParamString(bn, ifm, ofm, id, ihw, kd, khw,
+                                       padd, padhw, cores, ht, "_");
     
     dl_filename = generateWrapperDLName(bn, ifm, ofm, id, ihw, kd, khw, padd, 
                                         padhw, cores, ht);
     compile_command = generateCompileDLCommand(dl_filename,
                           bn, ifm, ofm, id, ihw, kd, khw, padd, padhw, cores, ht);
-   
-    std::cout << ofm << std::endl;
-    //std::cout << compile_command.c_str() << std::endl;
-    //std::system(("time " + compile_command + " &> /dev/null").c_str());
+
+    // don't wan't to hear ya 
+    //compile_command += " &>/dev/null; "; 
+    auto begin = std::chrono::high_resolution_clock::now();  
     std::system(compile_command.c_str());
-    
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>
+                  (end - begin).count();
+    double secs = static_cast<double>(duration) / 1000000;
+
+    std::cout << param << ": " << secs << std::endl;
+
     void *handle = dlopen(dl_filename.c_str(), RTLD_NOW);
     handleDLError();
+
     return handle;
 }
 

@@ -16,54 +16,48 @@ SED	=	$(AT)sed
 RM	=	$(AT)rm
 TOUCH	=	$(AT)touch
 CHMOD	=	$(AT)chmod
-DATE    =   $(AT)date
+DATE    =       $(AT)date
 
 # compilers
 
 ZNN_TUNE	=
-
-
-SSE_FLAGS	=	-DZNN_SSE -msse $(ZNN_TUNE)
-AVX_FLAGS	=	-DZNN_AVX -mavx $(ZNN_TUNE)
-AVX2_FLAGS	=	-DZNN_AVX2 -mavx2 -mfma $(ZNN_TUNE)
-AVX512_FLAGS	=	-DZNN_AVX512 -mavx512f -mavx512pf -mavx512cd -mfma $(ZNN_TUNE)
-KNC_FLAGS	=	-DZNN_AVX512 -mavx512f -mavx512pf -mfma $(ZNN_TUNE)
-
-CORES_FLAG	=
+SSE_FLAGS   =   -DZNN_SSE -msse $(ZNN_TUNE)                                               
+AVX_FLAGS   =   -DZNN_AVX -xAVX $(ZNN_TUNE)                                               
+AVX2_FLAGS  =   -DZNN_AVX2 -march=core-avx2 $(ZNN_TUNE)                                   
+AVX512_FLAGS    =   -DZNN_AVX512 -xMIC-AVX512 $(ZNN_TUNE)                                 
+KNC_FLAGS   =   -DZNN_KNC -mmic $(ZNN_TUNE)
+CORES_FLAG  =   -DZNN_NUM_CORES=64
 
 STANDARD_FLAG	=	-std=c++14
 STD_FLAG	=
 
-
-CXX			=	$(AT)g++ -pthread $(STANDARD_FLAG)
-OPTIMIZATION_FLAGS	=	-DNDEBUG -O3 -ffast-math -fno-omit-frame-pointer -fno-rtti -fno-exceptions
-CS_FLAGS		=
-CS_LD_FLAGS		=       -lpthread
+CXX             =   $(AT)icpc $(STANDARD_FLAG)                                           
+OPTIMIZATION_FLAGS  =   -DNDEBUG -O3 -ipo -fp-model fast=2 -mkl=sequential -fno-rtti -fno-exceptions 
+CS_FLAGS        =   -mkl=sequential                                                       
+CS_LD_FLAGS     =   -mkl=sequential  -static-intel 
 
 FPIC	=	-fPIC
-CXXINCLUDES	=	-I$(ZNNPHI_PATH)/include -I$(ZNNPHI_PATH)/include/znn -I$(ZNNPHI_PATH)/.. \
-                -I/mnt/bucket/people/popovych/.julia/v0.5/CxxWrap/deps/src/cxx_wrap \
-			    -I/mnt/bucket/labs/seung/seungmount/research/popovych/bins/julia/include/julia
 
+CXXINCLUDES	=	-I$(ZNNPHI_PATH)/include -I$(ZNNPHI_PATH)/include/znn -I$(ZNNPHI_PATH)/..
 CXXWARN		=	-Wall -Wextra -Wno-format -Wno-unknown-pragmas
 CXXERR		=   -fmax-errors=5
 
-HBW_LD_FLAG	=
+HBW_LD_FLAG	=   #-lmemkind 
 HBW_FLAG	=	-DZNN_NO_HBW
+
 
 DEPFLAGS	=	-MM -MG -MP $(CXXINCLUDES) -MT "$(@:.d=.o)" $(CS_FLAGS) -DZNN_NO_CUDA $(HBW_FLAG) $(CORES_FLAG)
 INLINE_DEPFLAGS	=	-MMD -MP -MT "$(@)" -MF $(@:.o=.T) -DZNN_NO_CUDA $(HBW_FLAG) $(CORES_FLAG) $(STD_FLAG)
 
-COMMON_FLAGS	=	-g $(INLINE_DEPFLAGS) $(CXXINCLUDES) $(CXXWARN) $(CXXERR) \
+COMMON_FLAGS	=	$(INLINE_DEPFLAGS) $(CXXINCLUDES) $(CXXWARN) $(CXXERR) \
 					$(HBW_FLAG) $(CORES_FLAG)
 
 DBG_FLAGS		=	$(COMMON_FLAGS) $(CS_FLAGS)
+
 LD_OPTIMIZATION_FLAGS	=	-DNDEBUG -O3
-
-OPT_FLAGS		=	$(COMMON_FLAGS) $(OPTIMIZATION_FLAGS) $(CS_FLAGS)
-
 COMMON_LDFLAGS		=	$(HBW_LD_FLAG)
 
+OPT_FLAGS		=	$(COMMON_FLAGS) $(OPTIMIZATION_FLAGS) $(CS_FLAGS)
 DBG_LDFLAGS		=	$(COMMON_LDFLAGS) $(CS_LD_FLAGS) -g
 OPT_LDFLAGS		=	$(COMMON_LDFLAGS) $(CS_LD_FLAGS) $(LD_OPTIMIZATION_FLAGS)
 
@@ -99,7 +93,9 @@ clean:
 	$(RM) -rf ./*.o ./*.so ./*.S *.bin 
 
 remake: clean all
-clean:
-	$(RM) *.o *.so *.S *.bin 
 
-remake: clean all
+#-include $(SSE_DEPS)
+#-include $(AVX_DEPS)
+#-include $(AVX2_DEPS)
+#-include $(AVX512_DEPS)
+#-include $(KNC_DEPS)

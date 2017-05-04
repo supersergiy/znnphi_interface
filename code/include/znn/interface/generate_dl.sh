@@ -47,39 +47,28 @@ createParamsFile ()
 
 # If the Shared Object that user wants is already there,
 # no need to do anything
-echo "$USER_PROVIDED_DL_PATH" 
+#echo "$USER_PROVIDED_DL_PATH"
 if ! [ -e "$USER_PROVIDED_DL_PATH" ]
 then
    # Recompile if a shared object with the same params in not already there
-   echo "$DL_PATH" 
-   if ! [ -e "$DL_PATH" ]
-   then
+   # set to always true for now...
       cd "$BASE_PATH"
       echo "Recompiling layer..."
-
-   #   if ! [ -e "$BATCH_DIR" ]
-   #   then
-   #       mkdir "$BATCH_DIR"
-   #   fi
-   #   cd "$BATCH_DIR"
 
       if ! [ -e "$DL_DIR" ]
       then
           mkdir "$DL_DIR"
       fi
+
       cp ConvMakefile ZnnPhiConvWrapper.cpp ZnnPhiConvWrapper.hpp "$DL_DIR"
       cd "$DL_DIR"
 
       cp ConvMakefile Makefile
       createParamsFile
-      make dl DL_NAME=$DL_NAME
+      make dl DESTINATION=$USER_PROVIDED_DL_PATH
       cd ..
-   fi
-
-   #echo "Copying $DL_PATH into $USER_PROVIDED_DL_PATH..."
-   cp "$DL_PATH" "$USER_PROVIDED_DL_PATH"
 else
-   echo "Reusing layer"
+   >&2 echo "Reusing layer"
 fi
 
 

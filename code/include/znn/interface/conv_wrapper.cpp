@@ -12,8 +12,8 @@
 #include "conv_wrapper.hpp"
 
 #define MAX_STRING 1024 
-#define COMPILE_CONV_WRAPPER_SCRIPT "include/znn/interface/generate_dl.sh"
 #define BASH "/bin/bash"
+#define RELATIVE_MAKEFILE_PATH "code/include/znn/interface"
 
 namespace znn
 {
@@ -62,7 +62,7 @@ std::string generateLayerSOName(
     param_string = generateParamString(bn, ifm, ofm, id, ihw, kd, khw, 
                                        padd, padhw, cores, ht, delim);
 
-    generated_name << znnphi_path << "/include/znn/interface/dl_files/";
+    generated_name << znnphi_path << "/lib/";
     generated_name << "conv_wrapper_" << param_string << ".so";
 
     return generated_name.str();
@@ -74,19 +74,22 @@ std::string generateCompileSOCommand(std::string& dl_filename,
                         int padd, int padhw,
                         int cores, int ht)
 {
-    const char delim[] = " ";
     std::ostringstream command_string;
-    std::string param_string;
-
-    param_string = generateParamString(bn, ifm, ofm, id, ihw, kd, khw, 
-                                       padd, padhw, cores, ht, delim);
-    
     const char *znnphi_path = std::getenv("ZNNPHI_PATH");
 
-    command_string << BASH << " " ;
-    command_string << znnphi_path << "/" << COMPILE_CONV_WRAPPER_SCRIPT << " ";
-    command_string << dl_filename << " " << param_string;
-     
+    //invoke makefile in the interface folder
+    command_string << "make -C " << znnphi_path << "/" << RELATIVE_MAKEFILE_PATH;
+   
+    //specify the target: layer
+    command_string << " layer";
+
+    //specify layer params 
+    command_string << " BN=" << bn << " IFM=" << ifm << " OFM=" << ofm;
+    command_string << " ID=" << id << " IHW=" << ihw; 
+    command_string << " KD=" << kd << " KHW=" << khw;
+    command_string << " PADD=" << padd << " PADHW=" << padhw; 
+    command_string << " CORES=" << cores << " HT=" << ht; 
+
     return command_string.str(); 
 }
 
@@ -110,12 +113,14 @@ void *loadConvLayerSO(int bn, int ifm, int ofm, int id,
                                        padd, padhw, cores, ht, "_");
     
     dl_filename = generateLayerSOName(bn, ifm, ofm, id, ihw, kd, khw, padd, 
-                                        padhw, cores, ht);
+                                      padhw, cores, ht);
+
     compile_command = generateCompileSOCommand(dl_filename,
                           bn, ifm, ofm, id, ihw, kd, khw, padd, padhw, cores, ht);
 
-    compile_command += " &>/dev/null; "; 
+    //compile_command += " &>/dev/null; "; 
     auto begin = std::chrono::high_resolution_clock::now();  
+    std::cout << (compile_command.c_str());
     std::system(compile_command.c_str());
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>

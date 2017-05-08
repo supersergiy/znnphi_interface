@@ -49,8 +49,7 @@ HBW_FLAG	=	-DZNN_NO_HBW
 DEPFLAGS	=	-MM -MG -MP $(CXXINCLUDES) -MT "$(@:.d=.o)" $(CS_FLAGS) -DZNN_NO_CUDA $(HBW_FLAG) $(CORES_FLAG)
 INLINE_DEPFLAGS	=	-MMD -MP -MT "$(@)" -MF $(@:.o=.T) -DZNN_NO_CUDA $(HBW_FLAG) $(CORES_FLAG) $(STD_FLAG)
 
-COMMON_FLAGS	=	$(INLINE_DEPFLAGS) $(CXXINCLUDES) $(CXXWARN) $(CXXERR) \
-					$(HBW_FLAG) $(CORES_FLAG)
+COMMON_FLAGS	=	$(INLINE_DEPFLAGS) $(CXXINCLUDES) $(CXXWARN) $(CXXERR) 
 
 DBG_FLAGS		=	$(COMMON_FLAGS) $(CS_FLAGS)
 
@@ -62,40 +61,60 @@ DBG_LDFLAGS		=	$(COMMON_LDFLAGS) $(CS_LD_FLAGS) -g
 OPT_LDFLAGS		=	$(COMMON_LDFLAGS) $(CS_LD_FLAGS) $(LD_OPTIMIZATION_FLAGS)
 
 #CXXFLAGS	=	$(DBG_FLAGS)
-CXXFLAGS	=	$(OPT_FLAGS)
+CXXFLAGS   	=	$(OPT_FLAGS)
 CXXLDFLAGS	=	$(OPT_LDFLAGS)
 DLFLAGS		= 	-fPIC -shared 
 
-SO_NAME = libznnphiconv.so
+# user gives these params to make layer
+PARAM_DEFS  = -DBN_v=${BN} -DIFM_v=${IFM} -DOFM_v=${OFM} -DID_v=${ID} \
+				  -DIHW_v=${IHW} -DKD_v=${KD} -DKHW_v=${IHW} -DPADD_v=${PADD} \
+				  -DPADHW_v=${PADHW} -DCores_v=${CORES} -DHT_v=${HT}
+
+LAYER_NAME  =  conv_layer_${BN}_${IFM}_${OFM}_${ID}_${IHW}_${KD}_${IHW}_${PADD}_${PADHW}_${CORES}_${HT}.so
+
+LAYER_SO_PATH = ${ZNNPHI_PATH}/lib/${LAYER_NAME}
+
+ifneq ("$(wildcard $(LAYER_SO_PATH))","")
+	LAYER_EXISTS=1
+else
+	LAYER_EXISTS=0
+endif
+
+FORCE:
+
 %.d: ./%.cpp
 	$(ECHO) "[CXX] dependencies $<"
 	$(CXX) $(DEPFLAGS) $(AVX512_FLAGS) -MF $@ $<remake
 
-%.o: ./%.cpp
+%.o: ./%.cpp FORCE
+ifeq ($(LAYER_EXISTS),0)
 	$(ECHO) "[CXX] compiling $<"
-	$(ECHO) $(CXX) -c $(CXXFLAGS) $(AVX512_FLAGS) -o $@ $<
-	$(CXX) -c $(CXXFLAGS) $(AVX512_FLAGS) -o $@ $<
+	$(ECHO) $(CXX) -c $(CXXFLAGS) $(AVX512_FLAGS) $(PARAM_DEFS) -o $@ $<
+	$(CXX)         -c $(CXXFLAGS) $(AVX512_FLAGS) $(PARAM_DEFS) -o $@ $<
+else
+	$(ECHO) All good 
+endif
 
 %.so: ./%.o
-	$(ECHO) "[CXX] creasting shared lib $<"
-	$(ECHO) $(CXX) $(DL_FLAGS)-o $(SO_NAME) $<
-	$(CXX) $(DLFLAGS) -o $(SO_NAME) $<
+ifeq ($(LAYER_EXISTS),0)
+	$(ECHO) "[CXX] creating shared lib $@" 
+	$(ECHO) $(CXX) $(DLFLAGS) $(CXXLDFLAGS) -o $@ $< 
+	$(CXX)         $(DLFLAGS) $(CXXLDFLAGS) -o $@ $< 
+else 
+	$(ECHO) All good 
+endif
 
-#%.bin: ./%.o
-#   $(ECHO) "[CXX] linking $^"
-#	$(CXX) $^ $(CXXLDFLAGS) $(AVX512_FLAGS) -o $@
-
-.PHONY: dl
-dl: ZnnPhiConvLayer.so
-	sudo cp $(SO_NAME) /usr/lib64/
+.PHONY: wrapper, layer, all, clean, remake 
+wrapper: conv_wrapper.so 
+ifeq ($(LAYER_EXISTS),0)
+	sudo mv $< /usr/lib64/libznnphiconv.so
+endif
+layer: conv_layer.so
+ifeq ($(LAYER_EXISTS),0)
+	mv $< ${LAYER_SO_PATH} 
+endif
 all: clean dl
 clean:
 	$(RM) -rf ./*.o ./*.so ./*.S *.bin 
 
 remake: clean all
-
-#-include $(SSE_DEPS)
-#-include $(AVX_DEPS)
-#-include $(AVX2_DEPS)
-#-include $(AVX512_DEPS)
-#-include $(KNC_DEPS)

@@ -1,5 +1,0 @@
-layer_dl: ZnnPhiConvLayer.cpp ZnnPhiConvLayer.hpp ZnnPhiConvWrapper.hpp
-
-ZnnPhiConvLayer.hpp:
-
-ZnnPhiConvWrapper.hpp:

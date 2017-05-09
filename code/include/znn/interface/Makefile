@@ -79,6 +79,14 @@ else
 	LAYER_EXISTS=0
 endif
 
+UNAME_S = $(shell uname -s)
+
+ifeq ($(UNAME_S),Linux)
+	LIB_DEST=/usr/lib
+else
+	LIB_DEST=/usr/lib64
+endif
+
 FORCE:
 
 %.d: ./%.cpp
@@ -106,7 +114,9 @@ endif
 .PHONY: wrapper, layer, all, clean, remake 
 wrapper: conv_wrapper.so 
 ifeq ($(LAYER_EXISTS),0)
-	sudo mv ${HERE}/$< /usr/lib64/libznnphiconv.so
+	$(ECHO) ${UNAME_S}
+	$(ECHO) ${LIB_DEST}
+	sudo mv ${HERE}/$< ${LIB_DEST}/libznnphiconv.so
 endif
 layer: conv_layer.so
 ifeq ($(LAYER_EXISTS),0)

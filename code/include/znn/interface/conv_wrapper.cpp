@@ -63,7 +63,7 @@ std::string generateLayerSOName(
                                        padd, padhw, cores, ht, delim);
 
     generated_name << znnphi_path << "/lib/";
-    generated_name << "conv_wrapper_" << param_string << ".so";
+    generated_name << "conv_layer_" << param_string << ".so";
 
     return generated_name.str();
 }

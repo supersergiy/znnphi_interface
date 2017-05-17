@@ -3,3 +3,4 @@ include/znn/interface/dl_files/
 include/znn/interface/tmp/
 *.T
 *.so
+*.o

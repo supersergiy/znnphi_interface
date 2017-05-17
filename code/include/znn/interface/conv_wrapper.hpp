@@ -1,8 +1,8 @@
 #pragma once
 #include "conv_layer.hpp"
 
-#define DEFAULT_HT 2
-#define DEFAULT_CORES 64 
+#define DEFAULT_HT 1 
+#define DEFAULT_CORES 2 
 
 namespace znn
 {

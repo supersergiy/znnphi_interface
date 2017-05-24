@@ -197,8 +197,6 @@ $(BINDIR)/knc/obj/%.o: ./%.cpp
 	$(CXX) -c $(CXXFLAGS) $(KNC_FLAGS) -o $@ $<
 	$(MV) -f "$(@:.o=.T)" "$(@:.o=.d)"
 
-
-
 # c++
 $(BINDIR)/sse/obj/%.S: ./%.cpp
 	$(ECHO) "[CXX] compiling $<"

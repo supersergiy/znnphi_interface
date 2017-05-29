@@ -10,23 +10,23 @@ struct unblock_data_layer {
 private:
     int bn, fm, ihw, id;
 
-    unblock_data(int _bn, int _fm, int _ihw, int _id): bn(_bn), fm(_fm), id(_id), ihw(_ihw) 
+public:
+    unblock_data_layer(int _bn, int _fm, int _ihw, int _id): bn(_bn), fm(_fm), id(_id), ihw(_ihw) 
     {   
-        assert(fm % SIMD_WIDTH == 0); 
+        assert(ihw > 0);
         assert( bn > 0);
         assert( fm > 0);
         assert( id > 0);
-        assert(ihw > 0);
+        assert( fm % SIMD_WIDTH == 0); 
     }
 
-public:
-    void execute(float const* __restrict i, float* __restirct o)
+    void execute(float const* __restrict i, float* __restrict o)
     {
         typedef float const (*in_tp)[fm/SIMD_WIDTH][id][ihw][ihw][SIMD_WIDTH];
         typedef float (*out_tp)[fm][id][ihw][ihw];
  
-        out_tp o_array = reinterpret_cast<top_tp>(o);
-        in_tp i_array = reinterpret_cast<bot_tp const>(i);
+        out_tp o_array = reinterpret_cast<out_tp>(o);
+        in_tp i_array = reinterpret_cast<in_tp>(i);
 
 //TODO: pragma parallel
         for (int b = 0; b < bn; ++b) {
@@ -42,7 +42,7 @@ public:
                              int bi_1d = (&(bottom_array[n][c][d][h][w]) -
                                                   &(bottom_array[0][0][0][0][0]));
                              std::cout << ti_1d << "--->" << bi_1d << std::endl;*/
-                             o_array[n][c][d][h][w] = i_array[n][f][d][h][w][s];
+                             o_array[b][c][d][h][w] = i_array[b][f][d][h][w][s];
                         }
                     }
                 }

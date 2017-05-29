@@ -29,6 +29,9 @@ struct one_init_tag
 struct zero_init_tag
 {
 };
+struct seq_init_tag
+{
+};
 }
 }
 }

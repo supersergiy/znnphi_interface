@@ -1,30 +1,42 @@
-name: "convolution"
-input: "data"
-input_dim: 1
-input_dim: 8 
-input_dim: 18 
-input_dim: 192
-input_dim: 192
+layer {
+  name: "input"
+  type: "Input"
+  top: "data"
+  input_param {
+    shape {
+	dim: 1
+	dim: 8 
+	dim: 18 
+	dim: 192
+	dim: 192
+    }
+  }
+}
 layer {
   name: "conv"
   type: "Convolution"
   bottom: "data"
   top: "result"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 1
+  }
   convolution_param {
-    num_output: 8 
-    kernel_size: 1 
-    kernel_size: 5
-    kernel_size: 5
+    num_output: 24
+    bias_term: true
+    kernel_size: 1
+    kernel_size: 4
+    kernel_size: 4
     stride: 1
-    stride: 1
+    stride: 1 
     stride: 1
     weight_filler {
-      type: "gaussian"
-      std: 0.01
+      type: "msra"
     }
     bias_filler {
       type: "constant"
-      value: 0
     }
   }
 }

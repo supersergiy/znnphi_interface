@@ -1,0 +1,30 @@
+name: "convolution"
+input: "data"
+input_dim: 1
+input_dim: 8 
+input_dim: 18 
+input_dim: 192
+input_dim: 192
+layer {
+  name: "conv"
+  type: "Convolution"
+  bottom: "data"
+  top: "result"
+  convolution_param {
+    num_output: 8 
+    kernel_size: 1 
+    kernel_size: 5
+    kernel_size: 5
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}

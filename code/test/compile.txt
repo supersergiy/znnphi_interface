@@ -1,0 +1,6 @@
+[CXX] compiling test_un_block.cpp
+@icpc -std=c++14 -c -MMD -MP -MT bin/avx2/obj/test_un_block.o -MF bin/avx2/obj/test_un_block.T -DZNN_NO_CUDA -DZNN_NO_HBW -I/usr/people/popovych/znnphi_interface/code/include -I/usr/people/popovych/znnphi_interface/code/.. -Wall -Wextra -Wno-format -Wno-unknown-pragmas -Wno-unused-parameter -DZNN_NO_HBW -DNDEBUG -O3 -ipo -fp-model fast=2 -mkl=sequential -fno-rtti -fno-exceptions -mkl=sequential -DZNN_AVX2 -march=core-avx2 -o bin/avx2/obj/test_un_block.o test_un_block.cpp
+[CXX] linking bin/avx2/obj/test_un_block.o
+@icpc -std=c++14 bin/avx2/obj/test_un_block.o -mkl=sequential -static-intel -DNDEBUG -O3 -DZNN_AVX2 -march=core-avx2 -o bin/avx2/test_un_block.bin
+icpc: warning #10237: -lcilkrts linked in dynamically, static library not available
+rm bin/avx2/obj/test_un_block.o

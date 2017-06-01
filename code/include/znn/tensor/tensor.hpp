@@ -34,6 +34,25 @@ private:
     }
 
 private:
+    void do_seq_init(detail::tensor::host_tag)
+    {
+        std::iota(this->data(), this->data() + this->num_elements(), static_cast<T>(0));
+    }
+
+    void do_seq_init(detail::tensor::hbw_tag)
+    {
+        std::iota(this->data(), this->data() + this->num_elements(), static_cast<T>(0));
+    }
+
+    void do_seq_init(detail::tensor::device_tag)
+    {
+        T* rnd = reinterpret_cast<T*>(detail::tensor::malloc(
+            this->num_elements() * sizeof(T), detail::tensor::host_tag()));
+        std::iota(this->data(), this->data() + this->num_elements(), static_cast<T>(0));
+        this->load(rnd, detail::tensor::host_tag());
+        detail::tensor::free(rnd, detail::tensor::host_tag());
+    }
+    
     void do_random_init(T const& v, detail::tensor::host_tag)
     {
         random_initialize(this->data(), this->num_elements(), v);
@@ -80,6 +99,8 @@ public:
 
     void set_to_const(T const & v) { do_const_init(architecture(),v); }
 
+    void fill_in_seq(void) { do_seq_init(architecture()); }
+    
     void reset()
     {
         if (this->ptr_)
@@ -118,6 +139,14 @@ public:
         randomize();
     }
 
+    explicit tensor(detail::tensor::seq_init_tag,
+                    zi::vl::vec<long_t, D> const& e)
+        : super_type(nullptr, e)
+    {
+        allocate_memory();
+        fill_in_seq() 
+    }
+
     explicit tensor(detail::tensor::one_init_tag,
                     zi::vl::vec<long_t, D> const& e)
         : super_type(nullptr, e)
@@ -142,6 +171,16 @@ public:
         allocate_memory();
         randomize();
     }
+    
+    template <typename... Args>
+    explicit tensor(detail::tensor::seq_init_tag, Args&&... args)
+        : super_type(nullptr,
+                     zi::vl::vec<long_t, D>(std::forward<Args>(args)...))
+    {
+        allocate_memory();
+        fill_in_seq();
+    }
+
 
     template <typename... Args>
     explicit tensor(detail::tensor::one_init_tag, Args&&... args)
@@ -216,6 +255,7 @@ detail::tensor::device_tag to_device;
 detail::tensor::random_initialize_tag rand_init;
 detail::tensor::one_init_tag          one_init;
 detail::tensor::zero_init_tag         zero_init;
+detail::tensor::seq_init_tag          seq_init;
 }
 
 inline void ____use_tag_instances()
@@ -229,6 +269,7 @@ inline void ____use_tag_instances()
     static_cast<void>(rand_init);
     static_cast<void>(one_init);
     static_cast<void>(zero_init);
+    static_cast<void>(seq_init);
 }
 }
 } // namespace znn::phi

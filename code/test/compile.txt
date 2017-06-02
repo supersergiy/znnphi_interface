@@ -1,9 +1,4 @@
 [CXX] compiling test_un_block.cpp
-@icpc -std=c++14 -c -MMD -MP -MT bin/avx2/obj/test_un_block.o -MF bin/avx2/obj/test_un_block.T -DZNN_NO_CUDA -DZNN_NO_HBW -I/home/ubuntu/znnphi_interface/include -I/home/ubuntu/znnphi_interface/.. -Wall -Wextra -Wno-format -Wno-unknown-pragmas -Wno-unused-parameter -DZNN_NO_HBW -DNDEBUG -O3 -ipo -fp-model fast=2 -mkl=sequential -fno-rtti -fno-exceptions -mkl=sequential -DZNN_AVX2 -march=core-avx2 -o bin/avx2/obj/test_un_block.o test_un_block.cpp
-test_un_block.cpp(1): catastrophic error: cannot open source file "znn/intrin.hpp"
-  #include "znn/intrin.hpp"
-                           ^
-
-compilation aborted for test_un_block.cpp (code 4)
-Makefile:179: recipe for target 'bin/avx2/obj/test_un_block.o' failed
-make: *** [bin/avx2/obj/test_un_block.o] Error 4
+@icpc -std=c++14 -c -MMD -MP -MT bin/avx2/obj/test_un_block.o -MF bin/avx2/obj/test_un_block.T -DZNN_NO_CUDA -DZNN_NO_HBW -I/include -I/.. -Wall -Wextra -Wno-format -Wno-unknown-pragmas -Wno-unused-parameter -DZNN_NO_HBW -DNDEBUG -O3 -ipo -fp-model fast=2 -mkl=sequential -fno-rtti -fno-exceptions -mkl=sequential -DZNN_AVX2 -march=core-avx2 -o bin/avx2/obj/test_un_block.o test_un_block.cpp
+/bin/sh: 1: icpc: not found
+make: *** [bin/avx2/obj/test_un_block.o] Error 127

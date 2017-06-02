@@ -1,0 +1,22 @@
+layer {
+  name: "conv"
+  type: "Convolution"
+  bottom: "input"
+  top: "conv_o"
+  convolution_param {
+    num_output: [OFM] 
+    bias_term: true
+    kernel_size: [K1] 
+    kernel_size: [K2] 
+    kernel_size: [K3] 
+    stride: 1
+    stride: 1 
+    stride: 1
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}

@@ -85,8 +85,11 @@ def generate_constructor_body(net):
     for (n,t) in iteritems(tensors):
        lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(n, t.size))
    
-    #alocate weights
-    #alocate layers
+    #allocate weights
+    for (n,t) in iteritems(tensors):
+       lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(n, t.size))
+    #initialize weights
+    #allocate layers
     #initialize layers
     return lines
 

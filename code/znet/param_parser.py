@@ -4,7 +4,7 @@ import copy
 #TODO: FIX FOR VARIABLE SIMD
 S = 8
 def round_to_simd(n):
-    return ceil(n / S) * S;
+    return int(ceil(n / S) * S);
 
 def get_deconv_top_dim(params, bot_tensor):
     top_dim = [-1, -1, -1, -1, -1]
@@ -41,6 +41,12 @@ def parse_conv(json_conv_param, bot_tensor):
 
     params["top_dim"] = get_conv_top_dim(params, bot_tensor)
 
+    params["kernel_size"]  = params["kdim"][0] * params["kdim"][1] 
+    params["kernel_size"] *= params["kdim"][2] * params["ofm"]     
+    params["kernel_size"] *= params["ifm"] 
+
+    params["bias_size"] = params["ofm"]
+
     return params
 
 def parse_deconv(json_conv_param, bot_tensor):
@@ -58,6 +64,12 @@ def parse_deconv(json_conv_param, bot_tensor):
     params["ihw"] = bot_tensor.dim[3]
 
     params["top_dim"] = get_deconv_top_dim(params, bot_tensor)
+
+    params["kernel_size"]  = params["kdim"][0] * params["kdim"][1] 
+    params["kernel_size"] *= params["kdim"][2] * params["ofm"]     
+    params["kernel_size"] *= params["ifm"] 
+
+    params["bias_size"] = params["ofm"]
 
     return params
 

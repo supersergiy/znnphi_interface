@@ -45,7 +45,7 @@ znet: cpp_out/client.cpp cpp_out/znet.hpp \
  /usr/people/popovych/znnphi_interface/code/include/znn/tensor/tags.hpp \
  /usr/people/popovych/znnphi_interface/code/include/znn/tensor/memory.hpp \
  /usr/people/popovych/znnphi_interface/code/include/znn/tensor/sub_tensor.hpp \
- cpp_out/layer.hpp
+ /usr/people/popovych/znnphi_interface/code/include/znn/layer/layer.hpp
 
 cpp_out/znet.hpp:
 
@@ -141,4 +141,4 @@ cpp_out/znet.hpp:
 
 /usr/people/popovych/znnphi_interface/code/include/znn/tensor/sub_tensor.hpp:
 
-cpp_out/layer.hpp:
+/usr/people/popovych/znnphi_interface/code/include/znn/layer/layer.hpp:

@@ -1,7 +1,6 @@
-#include <znn/tensor/tensor.hpp>
 #include <string.h>
-
-#include "layer.hpp"
+#include <znn/tensor/tensor.hpp>
+#include <znn/layer/layer.hpp>
 
 namespace znn {
 namespace phi {
@@ -13,7 +12,7 @@ class Znet {
         hbw_map tensors;
         hbw_map weights;
 
-        std::vector<znn::phi::Layer> layers;
+        std::vector<znn::phi::Layer *> layers;
     public:
         Znet(void);
         ~Znet(void) {

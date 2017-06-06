@@ -114,13 +114,7 @@ end
 
 type ZnnPhiConv <: Layer
    name::String
-   top::String
-   bot::String
-   weights::Array{Int}
-   kernel_size::Int
-   bias_size::Int
-   params::Dict
-
+   top::String bot::String weights::Array{Int} kernel_size::Int bias_size::Int params::Dict 
    forward::Function
 
    function ZnnPhiConv(name::String, params::Dict, weights::Array, bot::String, top::String)

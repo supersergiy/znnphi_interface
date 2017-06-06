@@ -1,22 +1,27 @@
 import json
+import sys
+import copy
 from math import ceil
-from Tensor import Tensor
 from operator import mul
+
 import param_parser
+from Tensor import Tensor
+from codegen import generate_function
 
 net_path   = "./nets/unet.json"
+
 BATCH_SIZE = 1
 SIMD_WIDTH = 8
 S = SIMD_WIDTH
 
 def upd_tensor(tensors, name, dim):
-    size = reduce(mul, list)
+    size = reduce(mul, dim)
     if name not in tensors:
-        tensors[name] = Tensor(size)
+        tensors[name] = Tensor(dim)
     elif size > tensors[name].size:
         tensors[name].size = size
 
-def parse_net(net_path, layers, tensors):
+def parse_net(net_path):
     with open(net_path) as f:
 	net = json.load(f)
 
@@ -26,44 +31,89 @@ def parse_net(net_path, layers, tensors):
     layer_info   = {}
 
     for l in json_layers:
+        lparams = {}
 	lt = l["type"]
-        bot_name   = l["bottom"][0]
-        top_name   = l["top"][0]
-        bot_tensor = tensors[bot_name]
+        print lt
+
+        if lt != "Input":
+            bot_name   = l["bottom"][0]
+            top_name   = l["top"][0]
+            bot_tensor = tensors[bot_name]
 
 	if lt == "Input":
 	    dim = l["input_param"]["shape"][0]["dim"]
 	    dim[0] = BATCH_SIZE
 	    dim[1] = int(ceil(dim[1] / S) * S)
 
-	    tensors[l["name"]] = Tensor(dim)
+            tensors[l["name"]] = Tensor(dim)
 	elif lt == "Convolution":
 	    lparams = param_parser.parse_conv(l["convolution_param"], bot_tensor)
-            layer_info[l["name"]] = lparams
-            layer_order.push(l["name"])
         elif lt == "ELU":
-            pass
+            lparams["top_dim"] = copy.copy(bot_tensor.dim)
+        elif lt == "Sigmoid":
+            lparams["top_dim"] = copy.copy(bot_tensor.dim)
         elif lt == "BatchNorm":
-            pass
+            lparams["top_dim"] = copy.copy(bot_tensor.dim)
         elif lt == "Scale":
-            pass
+            lparams["top_dim"] = copy.copy(bot_tensor.dim)
         elif lt == "Eltwise":
+            lparams["top_dim"] = copy.copy(bot_tensor.dim)
             #TODO: do I need to reset dimensions?
-            pass
         elif lt == "Pooling":
-	    lparams = param_parser.parse_pool(l["convolution_param"], bot_tensor)
-            layer_info[l["name"]] = lparams
-            layer_order.push(l["name"])
+	    lparams = param_parser.parse_pool(l["pooling_param"], bot_tensor)
         elif lt == "Deconvolution":
 	    lparams = param_parser.parse_deconv(l["convolution_param"], bot_tensor)
-            layer_info[l["name"]] = lparams
-            layer_order.push(l["name"])
         else:
             raise Exception("Unsupported Layer: {}".format(lt))
 
-        if "top_dim" in lparams:
-            top_dim = lparams["top_dim"]
-            upd_tensor(tensors, top_name, top_dim)
+        if lparams:
+            if "top_dim" in lparams:
+                top_dim = lparams["top_dim"]
+                upd_tensor(tensors, top_name, top_dim)
 
+            layer_info[l["name"]] = lparams
+            layer_order.append(l["name"])
 
+    return (tensors, layer_info, layer_order)
 
+def generate_constructor_body(net):
+    lines = []
+    return lines
+
+def generate_forward_body(net):
+    lines = []
+    #alocate tensors
+    #alocate weights
+    #alocate layers
+    #initialize layers
+    return lines
+
+def generate_znet(net):
+    lines = []
+    #includes
+    lines.append('#include <iostream>')
+    lines.append('#include <chrono>')
+    lines.append('#include <znn/interface/conv_wrapper.hpp>')
+    lines.append('#include "znet.hpp"')
+    lines.append('')
+
+    #initialization
+    constructor_signature = 'znn::phi::Znet::Znet(void)'
+    constructor_body      = generate_constructor_body(net)
+    constructor           = generate_function(constructor_signature, constructor_body)
+    lines += constructor
+
+    #forward pass
+    forward_signature = 'void znn::phi::Znet::forward(void)'
+    forward_body      = generate_forward_body(net)
+    forward           = generate_function(forward_signature, forward_body)
+    lines += forward
+
+    #write lines to file
+    f = open("cpp_out/znet.cpp", 'w')
+    for l in lines:
+        f.write("{}\n".format(l))
+
+if __name__ == "__main__":
+    net = parse_net(net_path)
+    generate_znet(net)

@@ -72,7 +72,6 @@ OPT_LDFLAGS		=	$(COMMON_LDFLAGS) $(CS_LD_FLAGS) $(LD_OPTIMIZATION_FLAGS)
 CXXFLAGS	=	$(OPT_FLAGS)
 CXXLDFLAGS	=	$(OPT_LDFLAGS)
 
-ZNNPHI_PATH = /usr/people/popovych/znnphi_interface
 LD_FLAGS    =   -L$(ZNNPHI_PATH)/code/include/znn/interface \
 				-lznnphiconv
 
@@ -90,7 +89,12 @@ $(BINDIR)/%_b${B}.bin: $(CPPODIR)/%_b${B}.cpp
 	#Nothin
 
 .PRECIOUS: %.cpp 
-.PHONY: unet, all, layers
+.PHONY: unet, all, layers, znet, client
+client:
+znet: cpp_out/znet.cpp cpp_out/client.cpp
+	$(ECHO) $(CXX) -c $(CXXFLAGS) $(AVX_FLAGS) $^ 
+	$(CXX)  $(CXXFLAGS) $(AVX_FLAGS) $(LD_FLAGS) $^ 
+
 layers: 
 	julia run_separate.jl ./nets/unet.json ./nets/unet.h5 ${B} 1 
 	make layer_{1..49} B=${B} #-j64

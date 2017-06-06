@@ -1,0 +1,139 @@
+test: tmp.cpp \
+ /usr/people/popovych/znnphi_interface/code/include/znn/tensor/tensor.hpp \
+ /usr/people/popovych/znnphi_interface/code/include/znn/tensor/tensor_ref.hpp \
+ /usr/people/popovych/znnphi_interface/code/include/znn/assert.hpp \
+ /usr/people/popovych/znnphi_interface/zi/assert.hpp \
+ /usr/people/popovych/znnphi_interface/zi/debug/assert.hpp \
+ /usr/people/popovych/znnphi_interface/zi/utility/assert.hpp \
+ /usr/people/popovych/znnphi_interface/zi/config/config.hpp \
+ /usr/people/popovych/znnphi_interface/zi/config/compiler/gcc.hpp \
+ /usr/people/popovych/znnphi_interface/zi/config/os/linux.hpp \
+ /usr/people/popovych/znnphi_interface/zi/config/posix.hpp \
+ /usr/people/popovych/znnphi_interface/zi/zpp/stringify.hpp \
+ /usr/people/popovych/znnphi_interface/code/include/znn/init.hpp \
+ /usr/people/popovych/znnphi_interface/code/include/znn/types.hpp \
+ /usr/people/popovych/znnphi_interface/zi/vl/vl.hpp \
+ /usr/people/popovych/znnphi_interface/zi/vl/vec.hpp \
+ /usr/people/popovych/znnphi_interface/zi/vl/detail/promote.hpp \
+ /usr/people/popovych/znnphi_interface/zi/bits/type_traits.hpp \
+ /usr/people/popovych/znnphi_interface/zi/bits/cstdint.hpp \
+ /usr/people/popovych/znnphi_interface/zi/meta/or.hpp \
+ /usr/people/popovych/znnphi_interface/zi/meta/true_type.hpp \
+ /usr/people/popovych/znnphi_interface/zi/meta/false_type.hpp \
+ /usr/people/popovych/znnphi_interface/zi/meta/null_type.hpp \
+ /usr/people/popovych/znnphi_interface/zi/meta/if.hpp \
+ /usr/people/popovych/znnphi_interface/zi/meta/and.hpp \
+ /usr/people/popovych/znnphi_interface/zi/vl/detail/enable_if.hpp \
+ /usr/people/popovych/znnphi_interface/zi/meta/meta.hpp \
+ /usr/people/popovych/znnphi_interface/zi/meta/bool.hpp \
+ /usr/people/popovych/znnphi_interface/zi/utility/non_copyable.hpp \
+ /usr/people/popovych/znnphi_interface/zi/utility/static_assert.hpp \
+ /usr/people/popovych/znnphi_interface/zi/zpp/glue.hpp \
+ /usr/people/popovych/znnphi_interface/zi/utility/address_of.hpp \
+ /usr/people/popovych/znnphi_interface/zi/utility/detail/dummy.hpp \
+ /usr/people/popovych/znnphi_interface/zi/vl/vec_functions.hpp \
+ /usr/people/popovych/znnphi_interface/zi/vl/mat.hpp \
+ /usr/people/popovych/znnphi_interface/zi/vl/detail/mat_lookup_table.hpp \
+ /usr/people/popovych/znnphi_interface/zi/vl/mat_functions.hpp \
+ /usr/people/popovych/znnphi_interface/zi/vl/detail/householder.hpp \
+ /usr/people/popovych/znnphi_interface/zi/vl/detail/jacobi.hpp \
+ /usr/people/popovych/znnphi_interface/zi/vl/detail/invert.hpp \
+ /usr/people/popovych/znnphi_interface/zi/vl/quat.hpp \
+ /usr/people/popovych/znnphi_interface/zi/vl/quat_functions.hpp \
+ /usr/people/popovych/znnphi_interface/code/include/znn/tensor/base.hpp \
+ /usr/people/popovych/znnphi_interface/code/include/znn/tensor/device_reference.hpp \
+ /usr/people/popovych/znnphi_interface/code/include/znn/tensor/tags.hpp \
+ /usr/people/popovych/znnphi_interface/code/include/znn/tensor/memory.hpp \
+ /usr/people/popovych/znnphi_interface/code/include/znn/tensor/sub_tensor.hpp
+
+/usr/people/popovych/znnphi_interface/code/include/znn/tensor/tensor.hpp:
+
+/usr/people/popovych/znnphi_interface/code/include/znn/tensor/tensor_ref.hpp:
+
+/usr/people/popovych/znnphi_interface/code/include/znn/assert.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/assert.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/debug/assert.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/utility/assert.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/config/config.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/config/compiler/gcc.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/config/os/linux.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/config/posix.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/zpp/stringify.hpp:
+
+/usr/people/popovych/znnphi_interface/code/include/znn/init.hpp:
+
+/usr/people/popovych/znnphi_interface/code/include/znn/types.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/vl/vl.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/vl/vec.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/vl/detail/promote.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/bits/type_traits.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/bits/cstdint.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/meta/or.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/meta/true_type.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/meta/false_type.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/meta/null_type.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/meta/if.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/meta/and.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/vl/detail/enable_if.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/meta/meta.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/meta/bool.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/utility/non_copyable.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/utility/static_assert.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/zpp/glue.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/utility/address_of.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/utility/detail/dummy.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/vl/vec_functions.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/vl/mat.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/vl/detail/mat_lookup_table.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/vl/mat_functions.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/vl/detail/householder.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/vl/detail/jacobi.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/vl/detail/invert.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/vl/quat.hpp:
+
+/usr/people/popovych/znnphi_interface/zi/vl/quat_functions.hpp:
+
+/usr/people/popovych/znnphi_interface/code/include/znn/tensor/base.hpp:
+
+/usr/people/popovych/znnphi_interface/code/include/znn/tensor/device_reference.hpp:
+
+/usr/people/popovych/znnphi_interface/code/include/znn/tensor/tags.hpp:
+
+/usr/people/popovych/znnphi_interface/code/include/znn/tensor/memory.hpp:
+
+/usr/people/popovych/znnphi_interface/code/include/znn/tensor/sub_tensor.hpp:

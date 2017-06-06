@@ -1,0 +1,17 @@
+@g++ -pthread -std=c++14 -fopenmp -c -g -MMD -MP -MT znet -MF znet -DZNN_NO_CUDA -DZNN_NO_HBW -I/usr/people/popovych/znnphi_interface/code/include -I/usr/people/popovych/znnphi_interface/code/include/znn -I/usr/people/popovych/znnphi_interface/ -Wall -Wextra -Wno-format -Wno-unknown-pragmas -Wno-unused-variable -Wno-return-type -Wno-unused-parameter -fmax-errors=5 -DZNN_NO_HBW -DNDEBUG -O3 -ffast-math -fno-omit-frame-pointer -DZNN_AVX -mavx cpp_out/znet.cpp cpp_out/client.cpp
+In file included from /usr/people/popovych/znnphi_interface/code/include/znn/tensor/tensor.hpp:3:0,
+                 from cpp_out/znet.hpp:1,
+                 from cpp_out/znet.cpp:4:
+/usr/people/popovych/znnphi_interface/code/include/znn/tensor/tensor_ref.hpp: In instantiation of ‘znn::phi::tensor_ref<T, D, A>& znn::phi::tensor_ref<T, D, A>::operator=(const Tensor&) [with Tensor = znn::phi::tensor<float, 1ul, znn::phi::detail::tensor::hbw_tag>*; T = float; long unsigned int D = 1ul; A = znn::phi::detail::tensor::hbw_tag]’:
+/usr/people/popovych/znnphi_interface/code/include/znn/tensor/tensor.hpp:222:30:   required from ‘znn::phi::tensor<T, D, A>& znn::phi::tensor<T, D, A>::operator=(const Tensor&) [with Tensor = znn::phi::tensor<float, 1ul, znn::phi::detail::tensor::hbw_tag>*; T = float; long unsigned int D = 1ul; A = znn::phi::detail::tensor::hbw_tag]’
+cpp_out/znet.cpp:9:22:   required from here
+/usr/people/popovych/znnphi_interface/code/include/znn/tensor/tensor_ref.hpp:204:38: error: ‘dimensionality’ is not a member of ‘znn::phi::tensor<float, 1ul, znn::phi::detail::tensor::hbw_tag>*’
+         static_assert(dimensionality == Tensor::dimensionality,
+                                      ^
+/usr/people/popovych/znnphi_interface/code/include/znn/tensor/tensor_ref.hpp:207:47: error: ‘znn::phi::tensor<float, 1ul, znn::phi::detail::tensor::hbw_tag>*’ is not a class, struct, or union type
+         typedef typename Tensor::architecture other_architecture;
+                                               ^
+/usr/people/popovych/znnphi_interface/code/include/znn/tensor/tensor_ref.hpp:211:31: error: request for member ‘data’ in ‘other’, which is of pointer type ‘znn::phi::tensor<float, 1ul, znn::phi::detail::tensor::hbw_tag>* const’ (maybe you meant to use ‘->’ ?)
+         detail::tensor::copy_n(other.data(), this->num_elements(), data(),
+                               ^
+make: *** [znet] Error 1

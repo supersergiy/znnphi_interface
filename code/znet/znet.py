@@ -3,10 +3,12 @@ import sys
 import copy
 from math import ceil
 from operator import mul
+from six import iteritems
 
 import param_parser
 from Tensor import Tensor
 from codegen import generate_function
+#import pdb; pdb.set_trace()
 
 net_path   = "./nets/unet.json"
 
@@ -23,7 +25,7 @@ def upd_tensor(tensors, name, dim):
 
 def parse_net(net_path):
     with open(net_path) as f:
-	net = json.load(f)
+   net = json.load(f)
 
     json_layers  = net["layer"]
     tensors      = {}
@@ -32,7 +34,7 @@ def parse_net(net_path):
 
     for l in json_layers:
         lparams = {}
-	lt = l["type"]
+   lt = l["type"]
         print lt
 
         if lt != "Input":
@@ -40,14 +42,14 @@ def parse_net(net_path):
             top_name   = l["top"][0]
             bot_tensor = tensors[bot_name]
 
-	if lt == "Input":
-	    dim = l["input_param"]["shape"][0]["dim"]
-	    dim[0] = BATCH_SIZE
-	    dim[1] = int(ceil(dim[1] / S) * S)
+   if lt == "Input":
+       dim = l["input_param"]["shape"][0]["dim"]
+       dim[0] = BATCH_SIZE
+       dim[1] = int(ceil(dim[1] / S) * S)
 
             tensors[l["name"]] = Tensor(dim)
-	elif lt == "Convolution":
-	    lparams = param_parser.parse_conv(l["convolution_param"], bot_tensor)
+   elif lt == "Convolution":
+       lparams = param_parser.parse_conv(l["convolution_param"], bot_tensor)
         elif lt == "ELU":
             lparams["top_dim"] = copy.copy(bot_tensor.dim)
         elif lt == "Sigmoid":
@@ -60,9 +62,9 @@ def parse_net(net_path):
             lparams["top_dim"] = copy.copy(bot_tensor.dim)
             #TODO: do I need to reset dimensions?
         elif lt == "Pooling":
-	    lparams = param_parser.parse_pool(l["pooling_param"], bot_tensor)
+            lparams = param_parser.parse_pool(l["pooling_param"], bot_tensor)
         elif lt == "Deconvolution":
-	    lparams = param_parser.parse_deconv(l["convolution_param"], bot_tensor)
+            lparams = param_parser.parse_deconv(l["convolution_param"], bot_tensor)
         else:
             raise Exception("Unsupported Layer: {}".format(lt))
 
@@ -78,14 +80,18 @@ def parse_net(net_path):
 
 def generate_constructor_body(net):
     lines = []
+    tensors, layer_info, _ = net
+    #alocate tensors
+    for (n,t) in iteritems(tensors):
+       lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(n, t.size))
+   
+    #alocate weights
+    #alocate layers
+    #initialize layers
     return lines
 
 def generate_forward_body(net):
     lines = []
-    #alocate tensors
-    #alocate weights
-    #alocate layers
-    #initialize layers
     return lines
 
 def generate_znet(net):

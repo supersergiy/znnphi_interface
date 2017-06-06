@@ -90,8 +90,12 @@ $(BINDIR)/%_b${B}.bin: $(CPPODIR)/%_b${B}.cpp
 
 .PRECIOUS: %.cpp 
 .PHONY: unet, all, layers, znet, client
+test: tmp.cpp
+	$(ECHO) $(CXX) -c $(CXXFLAGS) $(AVX_FLAGS) tmp.cpp
+	$(CXX)  $(CXXFLAGS) $(AVX_FLAGS) $(LD_FLAGS) tmp.cpp 
+
 client:
-znet: cpp_out/znet.cpp cpp_out/client.cpp
+znet: cpp_out/znet.cpp cpp_out/client.cpp 
 	$(ECHO) $(CXX) -c $(CXXFLAGS) $(AVX_FLAGS) $^ 
 	$(CXX)  $(CXXFLAGS) $(AVX_FLAGS) $(LD_FLAGS) $^ 
 

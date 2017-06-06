@@ -4,3 +4,4 @@ class Tensor:
         self.size = 1
         for d in self.dim:
             self.size *= d
+        self.size = int(self.size)

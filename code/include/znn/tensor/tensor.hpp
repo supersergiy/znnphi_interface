@@ -144,7 +144,7 @@ public:
         : super_type(nullptr, e)
     {
         allocate_memory();
-        fill_in_seq() 
+        fill_in_seq();
     }
 
     explicit tensor(detail::tensor::one_init_tag,

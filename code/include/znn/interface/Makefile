@@ -87,6 +87,8 @@ else
 	LIB_DEST=/usr/lib64
 endif
 
+
+
 FORCE:
 
 %.d: ./%.cpp
@@ -96,8 +98,8 @@ FORCE:
 %.o: ./%.cpp FORCE
 ifeq ($(LAYER_EXISTS),0)
 	$(ECHO) "[CXX] compiling $<"
-	$(ECHO) $(CXX) -c $(CXXFLAGS) $(AVX512_FLAGS) $(PARAM_DEFS) -o $@ $<
-	$(CXX)         -c $(CXXFLAGS) $(AVX512_FLAGS) $(PARAM_DEFS) -o $@ $<
+	$(ECHO) $(CXX) -c $(CXXFLAGS) $(AVX2_FLAGS) $(PARAM_DEFS) -o $@ $<
+	$(CXX)         -c $(CXXFLAGS) $(AVX2_FLAGS) $(PARAM_DEFS) -o $@ $<
 else
 	$(ECHO) All good 
 endif
@@ -105,8 +107,8 @@ endif
 %.so: ./%.o
 ifeq ($(LAYER_EXISTS),0)
 	$(ECHO) "[CXX] creating shared lib $@" 
-	$(ECHO) $(CXX) $(DLFLAGS) $(CXXLDFLAGS) -o $@ $< 
-	$(CXX)         $(DLFLAGS) $(CXXLDFLAGS) -o $@ $< 
+	$(ECHO) $(CXX) $(DLFLAGS) $(CXXLDFLAGS) -o $@ $< -ldl
+	$(CXX)         $(DLFLAGS) $(CXXLDFLAGS) -o $@ $< -ldl
 else 
 	$(ECHO) All good 
 endif
@@ -116,7 +118,7 @@ wrapper: conv_wrapper.so
 ifeq ($(LAYER_EXISTS),0)
 	$(ECHO) ${UNAME_S}
 	$(ECHO) ${LIB_DEST}
-	sudo mv ${HERE}/$< ${LIB_DEST}/libznnphiconv.so
+	sudo mv ${HERE}/$<     ${LIB_DEST}/libznnphiconv.so
 endif
 layer: conv_layer.so
 ifeq ($(LAYER_EXISTS),0)

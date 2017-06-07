@@ -136,7 +136,7 @@ void *loadConvLayerSO(int bn, int ifm, int ofm, int id,
 }
 
  
-ConvWrapper::ConvWrapper(void): conv_layer(NULL), 
+ConvWrapper::ConvWrapper(int a): conv_layer(NULL), 
                                 createConvLayer(NULL),
                                 destroyConvLayer(NULL) {}   
 

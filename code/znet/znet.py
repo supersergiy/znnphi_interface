@@ -8,7 +8,6 @@ from six import iteritems
 import param_parser
 from Tensor import Tensor
 from codegen import generate_function
-#import pdb; pdb.set_trace()
 
 net_path   = "./nets/unet.json"
 
@@ -106,9 +105,10 @@ def generate_constructor_body(net):
     lines.append('')
 
     #allocate layers
-    if l["type"] == "conv":
-       lines.append(
-          'layers["{}"] = new znn::phi::ConvWrapper();'.format(l["name"]))
+    for (n,l) in iteritems(layer_info):
+       if l["type"] == "conv":
+          lines.append(
+             'layers["{}"] = new znn::phi::ConvWrapper(0);'.format(l["name"]))
 
     lines.append('')
 

@@ -196,6 +196,55 @@ znn::phi::Znet::Znet(void)
 	weights["conv2_d0_bias"] = new znn::phi::hbw_array<float>(28);
 	
 	
+	layers["conv0_d1"] = new znn::phi::ConvWrapper(0);
+	layers["conv0_d0"] = new znn::phi::ConvWrapper(0);
+	layers["conv0_d3"] = new znn::phi::ConvWrapper(0);
+	layers["conv0_d2"] = new znn::phi::ConvWrapper(0);
+	layers["conv0_d5"] = new znn::phi::ConvWrapper(0);
+	layers["conv0_d4"] = new znn::phi::ConvWrapper(0);
+	layers["conv4_d3"] = new znn::phi::ConvWrapper(0);
+	layers["conv4_d4"] = new znn::phi::ConvWrapper(0);
+	layers["conv4_d1"] = new znn::phi::ConvWrapper(0);
+	layers["conv5_d0"] = new znn::phi::ConvWrapper(0);
+	layers["conv4_d0"] = new znn::phi::ConvWrapper(0);
+	layers["conv6_d3"] = new znn::phi::ConvWrapper(0);
+	layers["conv6_d2"] = new znn::phi::ConvWrapper(0);
+	layers["convf6_d2"] = new znn::phi::ConvWrapper(0);
+	layers["convf6_d4"] = new znn::phi::ConvWrapper(0);
+	layers["conv6_d4"] = new znn::phi::ConvWrapper(0);
+	layers["convf5_d4"] = new znn::phi::ConvWrapper(0);
+	layers["convf5_d3"] = new znn::phi::ConvWrapper(0);
+	layers["convf5_d2"] = new znn::phi::ConvWrapper(0);
+	layers["conv2_d5"] = new znn::phi::ConvWrapper(0);
+	layers["conv2_d3"] = new znn::phi::ConvWrapper(0);
+	layers["conv2_d1"] = new znn::phi::ConvWrapper(0);
+	layers["conv4_d2"] = new znn::phi::ConvWrapper(0);
+	layers["conv6_d1"] = new znn::phi::ConvWrapper(0);
+	layers["convf6_d3"] = new znn::phi::ConvWrapper(0);
+	layers["conv6_d0"] = new znn::phi::ConvWrapper(0);
+	layers["conv5_d2"] = new znn::phi::ConvWrapper(0);
+	layers["conv5_d3"] = new znn::phi::ConvWrapper(0);
+	layers["conv5_d1"] = new znn::phi::ConvWrapper(0);
+	layers["conv5_d4"] = new znn::phi::ConvWrapper(0);
+	layers["conv1_d4"] = new znn::phi::ConvWrapper(0);
+	layers["conv1_d5"] = new znn::phi::ConvWrapper(0);
+	layers["conv1_d2"] = new znn::phi::ConvWrapper(0);
+	layers["conv1_d3"] = new znn::phi::ConvWrapper(0);
+	layers["conv1_d0"] = new znn::phi::ConvWrapper(0);
+	layers["conv1_d1"] = new znn::phi::ConvWrapper(0);
+	layers["convi"] = new znn::phi::ConvWrapper(0);
+	layers["conv7_d0"] = new znn::phi::ConvWrapper(0);
+	layers["convf1_d3"] = new znn::phi::ConvWrapper(0);
+	layers["convf1_d2"] = new znn::phi::ConvWrapper(0);
+	layers["convf1_d5"] = new znn::phi::ConvWrapper(0);
+	layers["convf1_d4"] = new znn::phi::ConvWrapper(0);
+	layers["convf2_d4"] = new znn::phi::ConvWrapper(0);
+	layers["convf2_d5"] = new znn::phi::ConvWrapper(0);
+	layers["convf2_d2"] = new znn::phi::ConvWrapper(0);
+	layers["convf2_d3"] = new znn::phi::ConvWrapper(0);
+	layers["conv2_d4"] = new znn::phi::ConvWrapper(0);
+	layers["conv2_d2"] = new znn::phi::ConvWrapper(0);
+	layers["conv2_d0"] = new znn::phi::ConvWrapper(0);
 	
 }
 

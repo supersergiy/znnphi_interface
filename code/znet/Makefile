@@ -38,7 +38,7 @@ STANDARD_FLAG	=	-std=c++14
 STD_FLAG	=
 
 
-CXX			=	$(AT)g++ -pthread $(STANDARD_FLAG) -fopenmp
+CXX			=	$(AT)icpc $(STANDARD_FLAG) 
 OPTIMIZATION_FLAGS	=	-DNDEBUG -O3 -ffast-math -fno-omit-frame-pointer #-fno-rtti -fno-exceptions
 CS_FLAGS		=
 CS_LD_FLAGS		=       -lpthread

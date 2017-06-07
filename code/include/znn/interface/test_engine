@@ -1,21 +1,15 @@
-znet: cpp_out/client.cpp cpp_out/znet.hpp \
- /home/ubuntu/znnphi_interface/code/include/znn/tensor/tensor.hpp \
- /home/ubuntu/znnphi_interface/code/include/znn/tensor/tensor_ref.hpp \
- /home/ubuntu/znnphi_interface/code/include/znn/assert.hpp \
- /home/ubuntu/znnphi_interface/zi/assert.hpp \
- /home/ubuntu/znnphi_interface/zi/debug/assert.hpp \
- /home/ubuntu/znnphi_interface/zi/utility/assert.hpp \
- /home/ubuntu/znnphi_interface/zi/config/config.hpp \
- /home/ubuntu/znnphi_interface/zi/config/compiler/gcc.hpp \
- /home/ubuntu/znnphi_interface/zi/config/os/linux.hpp \
- /home/ubuntu/znnphi_interface/zi/config/posix.hpp \
- /home/ubuntu/znnphi_interface/zi/zpp/stringify.hpp \
- /home/ubuntu/znnphi_interface/code/include/znn/init.hpp \
+test_engine: ./test/test_engine.cpp ./test/../conv_engine.hpp \
+ /home/ubuntu/znnphi_interface/code/include/znn/layer/conv/propagation/full_layer.hpp \
+ /home/ubuntu/znnphi_interface/code/include/znn/layer/conv/propagation/executable.hpp \
  /home/ubuntu/znnphi_interface/code/include/znn/types.hpp \
  /home/ubuntu/znnphi_interface/zi/vl/vl.hpp \
  /home/ubuntu/znnphi_interface/zi/vl/vec.hpp \
  /home/ubuntu/znnphi_interface/zi/vl/detail/promote.hpp \
  /home/ubuntu/znnphi_interface/zi/bits/type_traits.hpp \
+ /home/ubuntu/znnphi_interface/zi/config/config.hpp \
+ /home/ubuntu/znnphi_interface/zi/config/compiler/gcc.hpp \
+ /home/ubuntu/znnphi_interface/zi/config/os/linux.hpp \
+ /home/ubuntu/znnphi_interface/zi/config/posix.hpp \
  /home/ubuntu/znnphi_interface/zi/bits/cstdint.hpp \
  /home/ubuntu/znnphi_interface/zi/meta/or.hpp \
  /home/ubuntu/znnphi_interface/zi/meta/true_type.hpp \
@@ -26,6 +20,7 @@ znet: cpp_out/client.cpp cpp_out/znet.hpp \
  /home/ubuntu/znnphi_interface/zi/vl/detail/enable_if.hpp \
  /home/ubuntu/znnphi_interface/zi/meta/meta.hpp \
  /home/ubuntu/znnphi_interface/zi/meta/bool.hpp \
+ /home/ubuntu/znnphi_interface/zi/utility/assert.hpp \
  /home/ubuntu/znnphi_interface/zi/utility/non_copyable.hpp \
  /home/ubuntu/znnphi_interface/zi/utility/static_assert.hpp \
  /home/ubuntu/znnphi_interface/zi/zpp/glue.hpp \
@@ -43,16 +38,24 @@ znet: cpp_out/client.cpp cpp_out/znet.hpp \
  /home/ubuntu/znnphi_interface/zi/vl/quat.hpp \
  /home/ubuntu/znnphi_interface/zi/vl/quat_functions.hpp \
  /home/ubuntu/znnphi_interface/zi/vl/quat.hpp \
- /home/ubuntu/znnphi_interface/code/include/znn/tensor/base.hpp \
- /home/ubuntu/znnphi_interface/code/include/znn/tensor/device_reference.hpp \
- /home/ubuntu/znnphi_interface/code/include/znn/tensor/tags.hpp \
- /home/ubuntu/znnphi_interface/code/include/znn/tensor/memory.hpp \
- /home/ubuntu/znnphi_interface/code/include/znn/tensor/sub_tensor.hpp \
- /home/ubuntu/znnphi_interface/code/include/znn/layer/layer.hpp
+ /home/ubuntu/znnphi_interface/code/include/znn/layer/conv/propagation/full_layer/problem.hpp \
+ /home/ubuntu/znnphi_interface/code/include/znn/layer/conv/propagation/full_image.hpp \
+ /home/ubuntu/znnphi_interface/code/include/znn/layer/conv/propagation/blocking.hpp \
+ /home/ubuntu/znnphi_interface/code/include/znn/intrin.hpp \
+ /home/ubuntu/znnphi_interface/code/include/znn/layer/conv/propagation/sub_image.hpp \
+ /home/ubuntu/znnphi_interface/code/include/znn/util/conditional_load.hpp \
+ /home/ubuntu/znnphi_interface/code/include/znn/layer/conv/propagation/traits.hpp \
+ /home/ubuntu/znnphi_interface/code/include/znn/layer/conv/propagation/full_layer/schedule.hpp \
+ /home/ubuntu/znnphi_interface/code/include/znn/layer/conv/propagation/full_layer/split.hpp \
+ /home/ubuntu/znnphi_interface/code/include/znn/layer/conv/propagation/sub_layer.hpp \
+ /home/ubuntu/znnphi_interface/code/include/znn/util/constexpr.hpp \
+ /home/ubuntu/znnphi_interface/code/include/znn/util/kernel_launcher.hpp
 
-cpp_out/znet.hpp:
+/usr/include/c++/5/iostream:
 
-/usr/include/string.h:
+/usr/include/x86_64-linux-gnu/c++/5/bits/c++config.h:
+
+/usr/include/x86_64-linux-gnu/c++/5/bits/os_defines.h:
 
 /usr/include/features.h:
 
@@ -66,107 +69,49 @@ cpp_out/znet.hpp:
 
 /usr/include/x86_64-linux-gnu/gnu/stubs-64.h:
 
-/opt/intel/compilers_and_libraries_2017.3.191/linux/compiler/include/stddef.h:
-
-/usr/include/xlocale.h:
-
-/home/ubuntu/znnphi_interface/code/include/znn/tensor/tensor.hpp:
-
-/home/ubuntu/znnphi_interface/code/include/znn/tensor/tensor_ref.hpp:
-
-/home/ubuntu/znnphi_interface/code/include/znn/assert.hpp:
-
-/home/ubuntu/znnphi_interface/zi/assert.hpp:
-
-/home/ubuntu/znnphi_interface/zi/debug/assert.hpp:
-
-/home/ubuntu/znnphi_interface/zi/utility/assert.hpp:
-
-/home/ubuntu/znnphi_interface/zi/config/config.hpp:
-
-/home/ubuntu/znnphi_interface/zi/config/compiler/gcc.hpp:
-
-/home/ubuntu/znnphi_interface/zi/config/os/linux.hpp:
-
-/usr/include/c++/5/cstdlib:
-
-/usr/include/x86_64-linux-gnu/c++/5/bits/c++config.h:
-
-/usr/include/x86_64-linux-gnu/c++/5/bits/os_defines.h:
-
 /usr/include/x86_64-linux-gnu/c++/5/bits/cpu_defines.h:
 
-/usr/include/stdlib.h:
+/usr/include/c++/5/ostream:
 
-/usr/include/x86_64-linux-gnu/bits/waitflags.h:
+/usr/include/c++/5/ios:
 
-/usr/include/x86_64-linux-gnu/bits/waitstatus.h:
-
-/usr/include/endian.h:
-
-/usr/include/x86_64-linux-gnu/bits/endian.h:
-
-/usr/include/x86_64-linux-gnu/bits/byteswap.h:
-
-/usr/include/x86_64-linux-gnu/bits/types.h:
-
-/usr/include/x86_64-linux-gnu/bits/typesizes.h:
-
-/usr/include/x86_64-linux-gnu/bits/byteswap-16.h:
-
-/usr/include/x86_64-linux-gnu/sys/types.h:
-
-/usr/include/time.h:
-
-/usr/include/x86_64-linux-gnu/sys/select.h:
-
-/usr/include/x86_64-linux-gnu/bits/select.h:
-
-/usr/include/x86_64-linux-gnu/bits/sigset.h:
-
-/usr/include/x86_64-linux-gnu/bits/time.h:
-
-/usr/include/x86_64-linux-gnu/sys/sysmacros.h:
-
-/usr/include/x86_64-linux-gnu/bits/pthreadtypes.h:
-
-/usr/include/alloca.h:
-
-/usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h:
-
-/usr/include/x86_64-linux-gnu/bits/stdlib-float.h:
-
-/home/ubuntu/znnphi_interface/zi/config/posix.hpp:
-
-/usr/include/unistd.h:
-
-/usr/include/x86_64-linux-gnu/bits/posix_opt.h:
-
-/usr/include/x86_64-linux-gnu/bits/environments.h:
-
-/usr/include/x86_64-linux-gnu/bits/confname.h:
-
-/usr/include/getopt.h:
-
-/usr/include/c++/5/cassert:
-
-/usr/include/assert.h:
-
-/home/ubuntu/znnphi_interface/zi/zpp/stringify.hpp:
-
-/usr/include/c++/5/string:
+/usr/include/c++/5/iosfwd:
 
 /usr/include/c++/5/bits/stringfwd.h:
 
 /usr/include/c++/5/bits/memoryfwd.h:
+
+/usr/include/c++/5/bits/postypes.h:
+
+/usr/include/c++/5/cwchar:
+
+/usr/include/wchar.h:
+
+/usr/include/stdio.h:
+
+/opt/intel/compilers_and_libraries_2017.3.191/linux/compiler/include/stdarg.h:
+
+/usr/include/x86_64-linux-gnu/bits/wchar.h:
+
+/opt/intel/compilers_and_libraries_2017.3.191/linux/compiler/include/stddef.h:
+
+/usr/include/xlocale.h:
+
+/usr/include/c++/5/exception:
+
+/usr/include/c++/5/bits/atomic_lockfree_defines.h:
+
+/usr/include/c++/5/bits/exception_ptr.h:
+
+/usr/include/c++/5/bits/exception_defines.h:
+
+/usr/include/c++/5/bits/nested_exception.h:
 
 /usr/include/c++/5/bits/char_traits.h:
 
 /usr/include/c++/5/bits/stl_algobase.h:
 
 /usr/include/c++/5/bits/functexcept.h:
-
-/usr/include/c++/5/bits/exception_defines.h:
 
 /usr/include/c++/5/bits/cpp_type_traits.h:
 
@@ -194,18 +139,6 @@ cpp_out/znet.hpp:
 
 /usr/include/c++/5/bits/predefined_ops.h:
 
-/usr/include/c++/5/bits/postypes.h:
-
-/usr/include/c++/5/cwchar:
-
-/usr/include/wchar.h:
-
-/usr/include/stdio.h:
-
-/opt/intel/compilers_and_libraries_2017.3.191/linux/compiler/include/stdarg.h:
-
-/usr/include/x86_64-linux-gnu/bits/wchar.h:
-
 /usr/include/c++/5/cstdint:
 
 /opt/intel/compilers_and_libraries_2017.3.191/linux/compiler/include/stdint.h:
@@ -213,22 +146,6 @@ cpp_out/znet.hpp:
 /usr/lib/gcc/x86_64-linux-gnu/5/include/stdint.h:
 
 /usr/include/stdint.h:
-
-/usr/include/c++/5/bits/allocator.h:
-
-/usr/include/x86_64-linux-gnu/c++/5/bits/c++allocator.h:
-
-/usr/include/c++/5/ext/new_allocator.h:
-
-/usr/include/c++/5/new:
-
-/usr/include/c++/5/exception:
-
-/usr/include/c++/5/bits/atomic_lockfree_defines.h:
-
-/usr/include/c++/5/bits/exception_ptr.h:
-
-/usr/include/c++/5/bits/nested_exception.h:
 
 /usr/include/c++/5/bits/localefwd.h:
 
@@ -240,11 +157,59 @@ cpp_out/znet.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/locale.h:
 
-/usr/include/c++/5/iosfwd:
-
 /usr/include/c++/5/cctype:
 
 /usr/include/ctype.h:
+
+/usr/include/x86_64-linux-gnu/bits/types.h:
+
+/usr/include/x86_64-linux-gnu/bits/typesizes.h:
+
+/usr/include/endian.h:
+
+/usr/include/x86_64-linux-gnu/bits/endian.h:
+
+/usr/include/x86_64-linux-gnu/bits/byteswap.h:
+
+/usr/include/x86_64-linux-gnu/bits/byteswap-16.h:
+
+/usr/include/c++/5/bits/ios_base.h:
+
+/usr/include/c++/5/ext/atomicity.h:
+
+/usr/include/x86_64-linux-gnu/c++/5/bits/gthr.h:
+
+/usr/include/x86_64-linux-gnu/c++/5/bits/gthr-default.h:
+
+/usr/include/pthread.h:
+
+/usr/include/sched.h:
+
+/usr/include/time.h:
+
+/usr/include/x86_64-linux-gnu/bits/sched.h:
+
+/usr/include/x86_64-linux-gnu/bits/time.h:
+
+/usr/include/x86_64-linux-gnu/bits/timex.h:
+
+/usr/include/x86_64-linux-gnu/bits/pthreadtypes.h:
+
+/usr/include/x86_64-linux-gnu/bits/setjmp.h:
+
+/usr/include/x86_64-linux-gnu/c++/5/bits/atomic_word.h:
+
+/usr/include/c++/5/bits/locale_classes.h:
+
+/usr/include/c++/5/string:
+
+/usr/include/c++/5/bits/allocator.h:
+
+/usr/include/x86_64-linux-gnu/c++/5/bits/c++allocator.h:
+
+/usr/include/c++/5/ext/new_allocator.h:
+
+/usr/include/c++/5/new:
 
 /usr/include/c++/5/bits/ostream_insert.h:
 
@@ -260,29 +225,35 @@ cpp_out/znet.hpp:
 
 /usr/include/c++/5/bits/basic_string.h:
 
-/usr/include/c++/5/ext/atomicity.h:
-
-/usr/include/x86_64-linux-gnu/c++/5/bits/gthr.h:
-
-/usr/include/x86_64-linux-gnu/c++/5/bits/gthr-default.h:
-
-/usr/include/pthread.h:
-
-/usr/include/sched.h:
-
-/usr/include/x86_64-linux-gnu/bits/sched.h:
-
-/usr/include/x86_64-linux-gnu/bits/timex.h:
-
-/usr/include/x86_64-linux-gnu/bits/setjmp.h:
-
-/usr/include/x86_64-linux-gnu/c++/5/bits/atomic_word.h:
-
 /usr/include/c++/5/ext/alloc_traits.h:
 
 /usr/include/c++/5/bits/alloc_traits.h:
 
 /usr/include/c++/5/ext/string_conversions.h:
+
+/usr/include/c++/5/cstdlib:
+
+/usr/include/stdlib.h:
+
+/usr/include/x86_64-linux-gnu/bits/waitflags.h:
+
+/usr/include/x86_64-linux-gnu/bits/waitstatus.h:
+
+/usr/include/x86_64-linux-gnu/sys/types.h:
+
+/usr/include/x86_64-linux-gnu/sys/select.h:
+
+/usr/include/x86_64-linux-gnu/bits/select.h:
+
+/usr/include/x86_64-linux-gnu/bits/sigset.h:
+
+/usr/include/x86_64-linux-gnu/sys/sysmacros.h:
+
+/usr/include/alloca.h:
+
+/usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h:
+
+/usr/include/x86_64-linux-gnu/bits/stdlib-float.h:
 
 /usr/include/c++/5/cstdio:
 
@@ -316,16 +287,6 @@ cpp_out/znet.hpp:
 
 /usr/include/c++/5/bits/basic_string.tcc:
 
-/usr/include/c++/5/sstream:
-
-/usr/include/c++/5/istream:
-
-/usr/include/c++/5/ios:
-
-/usr/include/c++/5/bits/ios_base.h:
-
-/usr/include/c++/5/bits/locale_classes.h:
-
 /usr/include/c++/5/bits/locale_classes.tcc:
 
 /usr/include/c++/5/system_error:
@@ -356,15 +317,43 @@ cpp_out/znet.hpp:
 
 /usr/include/c++/5/bits/basic_ios.tcc:
 
-/usr/include/c++/5/ostream:
-
 /usr/include/c++/5/bits/ostream.tcc:
+
+/usr/include/c++/5/istream:
 
 /usr/include/c++/5/bits/istream.tcc:
 
+/usr/include/string.h:
+
+/usr/include/dlfcn.h:
+
+/usr/include/x86_64-linux-gnu/bits/dlfcn.h:
+
+/usr/include/c++/5/vector:
+
+/usr/include/c++/5/bits/stl_construct.h:
+
+/usr/include/c++/5/bits/stl_uninitialized.h:
+
+/usr/include/c++/5/bits/stl_vector.h:
+
+/usr/include/c++/5/bits/stl_bvector.h:
+
+/usr/include/c++/5/bits/vector.tcc:
+
+/usr/include/c++/5/sstream:
+
 /usr/include/c++/5/bits/sstream.tcc:
 
-/home/ubuntu/znnphi_interface/code/include/znn/init.hpp:
+/usr/include/c++/5/iterator:
+
+/usr/include/c++/5/bits/stream_iterator.h:
+
+./test/../conv_engine.hpp:
+
+/home/ubuntu/znnphi_interface/code/include/znn/layer/conv/propagation/full_layer.hpp:
+
+/home/ubuntu/znnphi_interface/code/include/znn/layer/conv/propagation/executable.hpp:
 
 /home/ubuntu/znnphi_interface/code/include/znn/types.hpp:
 
@@ -384,13 +373,7 @@ cpp_out/znet.hpp:
 
 /usr/include/c++/5/bits/uses_allocator.h:
 
-/usr/include/c++/5/iostream:
-
 /usr/include/c++/5/memory:
-
-/usr/include/c++/5/bits/stl_construct.h:
-
-/usr/include/c++/5/bits/stl_uninitialized.h:
 
 /usr/include/c++/5/bits/stl_tempbuf.h:
 
@@ -434,6 +417,24 @@ cpp_out/znet.hpp:
 
 /home/ubuntu/znnphi_interface/zi/bits/type_traits.hpp:
 
+/home/ubuntu/znnphi_interface/zi/config/config.hpp:
+
+/home/ubuntu/znnphi_interface/zi/config/compiler/gcc.hpp:
+
+/home/ubuntu/znnphi_interface/zi/config/os/linux.hpp:
+
+/home/ubuntu/znnphi_interface/zi/config/posix.hpp:
+
+/usr/include/unistd.h:
+
+/usr/include/x86_64-linux-gnu/bits/posix_opt.h:
+
+/usr/include/x86_64-linux-gnu/bits/environments.h:
+
+/usr/include/x86_64-linux-gnu/bits/confname.h:
+
+/usr/include/getopt.h:
+
 /home/ubuntu/znnphi_interface/zi/bits/cstdint.hpp:
 
 /home/ubuntu/znnphi_interface/zi/meta/or.hpp:
@@ -453,6 +454,12 @@ cpp_out/znet.hpp:
 /home/ubuntu/znnphi_interface/zi/meta/meta.hpp:
 
 /home/ubuntu/znnphi_interface/zi/meta/bool.hpp:
+
+/home/ubuntu/znnphi_interface/zi/utility/assert.hpp:
+
+/usr/include/c++/5/cassert:
+
+/usr/include/assert.h:
 
 /home/ubuntu/znnphi_interface/zi/utility/non_copyable.hpp:
 
@@ -501,14 +508,6 @@ cpp_out/znet.hpp:
 /usr/include/x86_64-linux-gnu/bits/mathinline.h:
 
 /usr/include/c++/5/bits/random.h:
-
-/usr/include/c++/5/vector:
-
-/usr/include/c++/5/bits/stl_vector.h:
-
-/usr/include/c++/5/bits/stl_bvector.h:
-
-/usr/include/c++/5/bits/vector.tcc:
 
 /usr/include/c++/5/bits/uniform_int_dist.h:
 
@@ -578,14 +577,30 @@ cpp_out/znet.hpp:
 
 /usr/include/c++/5/bits/stl_multimap.h:
 
-/home/ubuntu/znnphi_interface/code/include/znn/tensor/base.hpp:
+/home/ubuntu/znnphi_interface/code/include/znn/layer/conv/propagation/full_layer/problem.hpp:
 
-/home/ubuntu/znnphi_interface/code/include/znn/tensor/device_reference.hpp:
+/home/ubuntu/znnphi_interface/code/include/znn/layer/conv/propagation/full_image.hpp:
 
-/home/ubuntu/znnphi_interface/code/include/znn/tensor/tags.hpp:
+/home/ubuntu/znnphi_interface/code/include/znn/layer/conv/propagation/blocking.hpp:
 
-/home/ubuntu/znnphi_interface/code/include/znn/tensor/memory.hpp:
+/home/ubuntu/znnphi_interface/code/include/znn/intrin.hpp:
 
-/home/ubuntu/znnphi_interface/code/include/znn/tensor/sub_tensor.hpp:
+/home/ubuntu/znnphi_interface/code/include/znn/layer/conv/propagation/sub_image.hpp:
 
-/home/ubuntu/znnphi_interface/code/include/znn/layer/layer.hpp:
+/home/ubuntu/znnphi_interface/code/include/znn/util/conditional_load.hpp:
+
+/home/ubuntu/znnphi_interface/code/include/znn/layer/conv/propagation/traits.hpp:
+
+/home/ubuntu/znnphi_interface/code/include/znn/layer/conv/propagation/full_layer/schedule.hpp:
+
+/home/ubuntu/znnphi_interface/code/include/znn/layer/conv/propagation/full_layer/split.hpp:
+
+/home/ubuntu/znnphi_interface/code/include/znn/layer/conv/propagation/sub_layer.hpp:
+
+/home/ubuntu/znnphi_interface/code/include/znn/util/constexpr.hpp:
+
+/home/ubuntu/znnphi_interface/code/include/znn/util/kernel_launcher.hpp:
+
+/usr/include/c++/5/condition_variable:
+
+/usr/include/c++/5/thread:

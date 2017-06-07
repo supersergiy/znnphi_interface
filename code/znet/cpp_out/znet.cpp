@@ -84,7 +84,6 @@ znn::phi::Znet::Znet(void)
 	tensors["output"] = new znn::phi::hbw_array<float>(0);
 	tensors["merge_d3"] = new znn::phi::hbw_array<float>(15925248);
 	tensors["conv6_d1"] = new znn::phi::hbw_array<float>(5308416);
-	
 	weights["conv0_d1_kernel"] = new znn::phi::hbw_array<float>(7776);
 	weights["conv0_d1_bias"] = new znn::phi::hbw_array<float>(36);
 	weights["conv0_d0_kernel"] = new znn::phi::hbw_array<float>(6048);
@@ -196,56 +195,6 @@ znn::phi::Znet::Znet(void)
 	weights["conv2_d0_kernel"] = new znn::phi::hbw_array<float>(6048);
 	weights["conv2_d0_bias"] = new znn::phi::hbw_array<float>(28);
 	
-	
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
-	layers.push_back(new znn::phi::ConvWrapper);
 	
 	
 }

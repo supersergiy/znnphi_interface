@@ -7,12 +7,14 @@ namespace phi {
 
 class Znet {
     //TODO: look into boost ptr_map
-    using hbw_map = std::map<std::string, znn::phi::hbw_array<float> *>;
+    using hbw_map   = std::map<std::string, znn::phi::hbw_array<float> *>;
+    using layer_map = std::map<std::string, znn::phi::Layer *>;
     public:
         hbw_map tensors;
         hbw_map weights;
-
-        std::vector<znn::phi::Layer *> layers;
+        
+        layer_map layers;
+        std::vector<std::string> layer_order;
     public:
         Znet(void);
         ~Znet(void) {

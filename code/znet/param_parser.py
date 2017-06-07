@@ -41,9 +41,9 @@ def parse_conv(json_conv_param, bot_tensor):
 
     params["top_dim"] = get_conv_top_dim(params, bot_tensor)
 
-    params["kernel_size"]  = params["kdim"][0] * params["kdim"][1] 
-    params["kernel_size"] *= params["kdim"][2] * params["ofm"]     
-    params["kernel_size"] *= params["ifm"] 
+    params["kernel_size"]  = params["kdim"][0] * params["kdim"][1]
+    params["kernel_size"] *= params["kdim"][2] * params["ofm"]
+    params["kernel_size"] *= params["ifm"]
 
     params["bias_size"] = params["ofm"]
 
@@ -65,9 +65,9 @@ def parse_deconv(json_conv_param, bot_tensor):
 
     params["top_dim"] = get_deconv_top_dim(params, bot_tensor)
 
-    params["kernel_size"]  = params["kdim"][0] * params["kdim"][1] 
-    params["kernel_size"] *= params["kdim"][2] * params["ofm"]     
-    params["kernel_size"] *= params["ifm"] 
+    params["kernel_size"]  = params["kdim"][0] * params["kdim"][1]
+    params["kernel_size"] *= params["kdim"][2] * params["ofm"]
+    params["kernel_size"] *= params["ifm"]
 
     params["bias_size"] = params["ofm"]
 

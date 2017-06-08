@@ -1,1 +1,6 @@
-./lib/*
+lib/*
+!lib/.gitkeep
+
+code/znet/*.bin
+code/znet/*.pyc
+code/znet/cpp_out/*.T

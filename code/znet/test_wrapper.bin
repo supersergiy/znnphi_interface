@@ -1,7 +1,0 @@
-test_wrapper.bin: cpp_out/znet.cpp \
- /home/ubuntu/znnphi_interface/code/include/znn/interface/conv_wrapper.hpp \
- /home/ubuntu/znnphi_interface/code/include/znn/interface/conv_layer.hpp \
- /home/ubuntu/znnphi_interface/code/include/znn/layer/layer.hpp cpp_out/znet.hpp \
- /home/ubuntu/znnphi_interface/code/include/znn/tensor/tensor.hpp \
- /home/ubuntu/znnphi_interface/code/include/znn/tensor/tensor_ref.hpp \
- /home/ubuntu/znnphi_interface/code/include/znn/assert.hpp

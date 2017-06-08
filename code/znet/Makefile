@@ -86,7 +86,7 @@ $(BINDIR)/%_b${B}.bin: $(CPPODIR)/%_b${B}.cpp
 
 /usr/lib/znnphiconvlib.so:
 	#Nothin
-cpp_out/znet.cpp:
+cpp_out/znet.cpp: znet.py
 	python znet.py
 .PRECIOUS: %.cpp 
 .PHONY: unet, all, layers, znet, client

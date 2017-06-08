@@ -92,6 +92,7 @@ def parse_net(net_path):
 def generate_constructor_body(net):
     lines = []
     tensors, layer_info, _ = net
+    '''
     #alocate tensors
     for (n,t) in iteritems(tensors):
        lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(n, 10*t.size))
@@ -108,7 +109,7 @@ def generate_constructor_body(net):
     #initialize weights
     #TODO: read weights from HD5, convert them to the right layout, hardcode them in
     lines.append('')
-
+    '''
     #allocate layers
     for (n,l) in iteritems(layer_info):
         if l["type"] == "conv":

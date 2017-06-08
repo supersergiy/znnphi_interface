@@ -1,4 +1,4 @@
-HERE    	=  ${ZNNPHI_PATH}/code/include/znn/interface
+HERE    	= .
 AT	=	@
 DOLLAR  = 	$$
 
@@ -15,6 +15,7 @@ RM	=	$(AT)rm
 TOUCH	=	$(AT)touch
 CHMOD	=	$(AT)chmod
 DATE    =       $(AT)date
+BASE = ../../../..
 
 # compilers
 
@@ -36,7 +37,7 @@ CS_LD_FLAGS     =   -mkl=sequential  -static-intel
 
 FPIC	=	-fPIC
 
-CXXINCLUDES	=	-I$(ZNNPHI_PATH)/code/include -I$(ZNNPHI_PATH)/code/include/znn -I$(ZNNPHI_PATH)
+CXXINCLUDES	=	-I$(BASE)/code/include -I$(BASE)/code/include/znn -I$(BASE)
 CXXWARN		=	-Wall -Wextra -Wno-format -Wno-unknown-pragmas
 CXXERR		=   -fmax-errors=5
 
@@ -71,7 +72,7 @@ PARAM_DEFS  = -DBN_v=${BN} -DIFM_v=${IFM} -DOFM_v=${OFM} -DID_v=${ID} \
 # Note the trailing _ -- it has to be there
 LAYER_NAME  =  conv_layer_${BN}_${IFM}_${OFM}_${ID}_${IHW}_${KD}_${KHW}_${PADD}_${PADHW}_${CORES}_${HT}_.so
 
-LAYER_SO_PATH = ${ZNNPHI_PATH}/lib/${LAYER_NAME}
+LAYER_SO_PATH = ${BASE}/lib/${LAYER_NAME}
 
 ifneq ("$(wildcard $(LAYER_SO_PATH))","")
 	LAYER_EXISTS=1
@@ -99,7 +100,7 @@ ifeq ($(LAYER_EXISTS),0)
 	$(ECHO) $(CXX) -c $(CXXFLAGS) $(AVX2_FLAGS) $(PARAM_DEFS) -o $@ $<
 	$(CXX)         -c $(CXXFLAGS) $(AVX2_FLAGS) $(PARAM_DEFS) -o $@ $<
 else
-	$(ECHO) all good
+	$(ECHO)
 endif
 
 %.so: ./%.o
@@ -123,6 +124,9 @@ ifeq ($(LAYER_EXISTS),0)
 	mv ${HERE}/$< ${LAYER_SO_PATH} 
 endif
 all: clean dl
+
+test_wrapper.bin: FORCE
+	$(CXX) $(CXXFLAGS) $(AVX_FLAGS) $(LD_FLAGS) -lznnphiconv ./test/test_wrapper.cpp -o $@
 clean:
 	$(RM) -rf ./*.o ./*.so ./*.S *.bin 
 

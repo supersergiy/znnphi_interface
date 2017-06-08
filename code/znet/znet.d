@@ -1,4 +1,4 @@
-znet: cpp_out/client.cpp cpp_out/znet.hpp \
+-MF: cpp_out/client.cpp cpp_out/znet.hpp \
  /home/ubuntu/znnphi_interface/code/include/znn/tensor/tensor.hpp \
  /home/ubuntu/znnphi_interface/code/include/znn/tensor/tensor_ref.hpp \
  /home/ubuntu/znnphi_interface/code/include/znn/assert.hpp \

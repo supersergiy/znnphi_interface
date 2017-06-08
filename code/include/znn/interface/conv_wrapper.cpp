@@ -9,7 +9,6 @@
 #include <string.h>
 #include <chrono>
 
-#include "exec.cpp"
 #include "conv_wrapper.hpp"
 
 #define MAX_STRING 1024 
@@ -122,7 +121,7 @@ void *loadConvLayerSO(int bn, int ifm, int ofm, int id,
     //compile_command += " &>/dev/null; "; 
     auto begin = std::chrono::high_resolution_clock::now();  
     std::cout << (compile_command.c_str());
-    exec(compile_command.c_str());
+    std::system(compile_command.c_str());
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>
                   (end - begin).count();
@@ -163,8 +162,8 @@ ConvWrapper::~ConvWrapper()
 }
 
 void ConvWrapper::forward(float const* __restrict in, float *out, 
-                              float const* __restrict ker, 
-                              float const* __restrict bi)
+                          float const* __restrict ker, 
+                          float const* __restrict bi)
 {
     conv_layer->compute(in, out, ker, bi);
 }

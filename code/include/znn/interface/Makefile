@@ -87,8 +87,6 @@ else
 	LIB_DEST=/usr/lib64
 endif
 
-
-
 FORCE:
 
 %.d: ./%.cpp
@@ -101,7 +99,7 @@ ifeq ($(LAYER_EXISTS),0)
 	$(ECHO) $(CXX) -c $(CXXFLAGS) $(AVX2_FLAGS) $(PARAM_DEFS) -o $@ $<
 	$(CXX)         -c $(CXXFLAGS) $(AVX2_FLAGS) $(PARAM_DEFS) -o $@ $<
 else
-	$(ECHO) All good 
+	$(ECHO) all good
 endif
 
 %.so: ./%.o
@@ -110,7 +108,7 @@ ifeq ($(LAYER_EXISTS),0)
 	$(ECHO) $(CXX) $(DLFLAGS) $(CXXLDFLAGS) -o $@ $< -ldl
 	$(CXX)         $(DLFLAGS) $(CXXLDFLAGS) -o $@ $< -ldl
 else 
-	$(ECHO) All good 
+	$(ECHO) 
 endif
 
 .PHONY: wrapper, layer, all, clean, remake 
@@ -129,3 +127,5 @@ clean:
 	$(RM) -rf ./*.o ./*.so ./*.S *.bin 
 
 remake: clean all
+
+

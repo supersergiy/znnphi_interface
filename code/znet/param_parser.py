@@ -1,10 +1,5 @@
-from math import ceil
 import copy
-
-#TODO: FIX FOR VARIABLE SIMD
-S = 8
-def round_to_simd(n):
-    return int(ceil(n / S) * S);
+from common import round_to_simd
 
 def get_deconv_top_dim(params, bot_tensor):
     top_dim = [-1, -1, -1, -1, -1]
@@ -29,13 +24,14 @@ def get_conv_top_dim(params, bot_tensor):
 def parse_conv(json_conv_param, bot_tensor):
     params = {}
     params["type"] = "conv"
+
     params["kdim"] = json_conv_param["kernel_size"]
     params["pad"]  = json_conv_param["pad"]
     params["stride"]  = json_conv_param["stride"]
 
     params["bn"]  = bot_tensor.dim[0]
     params["ifm"] = bot_tensor.dim[1]
-    params["ofm"] = json_conv_param["num_output"]
+    params["ofm"] = round_to_simd(json_conv_param["num_output"])
     params["id"]  = bot_tensor.dim[2]
     params["ihw"] = bot_tensor.dim[3]
 
@@ -59,7 +55,7 @@ def parse_deconv(json_conv_param, bot_tensor):
 
     params["bn"]  = bot_tensor.dim[0]
     params["ifm"] = bot_tensor.dim[1]
-    params["ofm"] = json_conv_param["num_output"]
+    params["ofm"] = round_to_simd(json_conv_param["num_output"])
     params["id"]  = bot_tensor.dim[2]
     params["ihw"] = bot_tensor.dim[3]
 

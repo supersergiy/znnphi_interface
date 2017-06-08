@@ -72,8 +72,7 @@ OPT_LDFLAGS		=	$(COMMON_LDFLAGS) $(CS_LD_FLAGS) $(LD_OPTIMIZATION_FLAGS)
 CXXFLAGS	=	$(OPT_FLAGS)
 CXXLDFLAGS	=	$(OPT_LDFLAGS)
 
-LD_FLAGS    =   -L$(ZNNPHI_PATH)/code/include/znn/interface \
-				-lznnphiconv
+LD_FLAGS    =   -lznnphiconv
 
 
 $(CPPODIR)/%_b${B}.cpp: run.jl $(NETDIR)/%.json $(NETDIR)/%.h5
@@ -87,7 +86,8 @@ $(BINDIR)/%_b${B}.bin: $(CPPODIR)/%_b${B}.cpp
 
 /usr/lib/znnphiconvlib.so:
 	#Nothin
-
+cpp_out/znet.cpp:
+	python znet.py
 .PRECIOUS: %.cpp 
 .PHONY: unet, all, layers, znet, client
 test: tmp.cpp
@@ -96,8 +96,9 @@ test: tmp.cpp
 
 client:
 znet: cpp_out/znet.cpp cpp_out/client.cpp 
-	$(ECHO) $(CXX) -c $(CXXFLAGS) $(AVX_FLAGS) $^ 
-	$(CXX)  $(CXXFLAGS) $(AVX_FLAGS) $(LD_FLAGS) $^ 
+	$(ECHO) $(CXX) $(CXXFLAGS) $(AVX_FLAGS) $^ 
+	$(CXX)  $(CXXFLAGS) $(AVX_FLAGS) $(LD_FLAGS) $^ -o znet.bin
+	./znet.bin
 
 layers: 
 	julia run_separate.jl ./nets/unet.json ./nets/unet.h5 ${B} 1 

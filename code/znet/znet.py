@@ -1,14 +1,13 @@
 import json
 import sys
 import copy
-from math import ceil
 from operator import mul
 from six import iteritems
 
 import param_parser
 from Tensor import Tensor
 from codegen import generate_function
-
+from common import round_to_simd
 net_path   = "./nets/unet.json"
 
 BATCH_SIZE = 1
@@ -34,7 +33,6 @@ def parse_net(net_path):
    for l in json_layers:
       name = l["name"]
       lt = l["type"]
-      print lt
       lparams = {}
 
       if lt != "Input":
@@ -46,12 +44,16 @@ def parse_net(net_path):
          lparams["type"] = "input"
          dim = l["input_param"]["shape"][0]["dim"]
          dim[0] = BATCH_SIZE
-         dim[1] = int(ceil(dim[1] / S) * S)
+         dim[1] = round_to_simd(dim[1])
          tensors[l["name"]] = Tensor(dim)
       elif lt == "Convolution":
          lparams = param_parser.parse_conv(l["convolution_param"], bot_tensor)
+         lparams["kernel"] = "{}_kernel".format(name)
+         lparams["bias"]   = "{}_bias".format(name)
       elif lt == "Deconvolution":
          lparams = param_parser.parse_deconv(l["convolution_param"], bot_tensor)
+         lparams["kernel"] = "{}_kernel".format(name)
+         lparams["bias"]   = "{}_bias".format(name)
       elif lt == "Pooling":
          lparams["type"] = "pool"
          lparams = param_parser.parse_pool(l["pooling_param"], bot_tensor)
@@ -80,6 +82,8 @@ def parse_net(net_path):
          upd_tensor(tensors, top_name, top_dim)
 
       if lparams["type"] != "input":
+         lparams["top"] = top_name
+         lparams["bot"] = bot_name
          layer_info[l["name"]] = lparams
          layer_order.append(l["name"])
 
@@ -90,15 +94,16 @@ def generate_constructor_body(net):
     tensors, layer_info, _ = net
     #alocate tensors
     for (n,t) in iteritems(tensors):
-       lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(n, t.size))
+       lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(n, 10*t.size))
 
     #allocate weights
     for (n,l) in iteritems(layer_info):
        if l["type"] in ["conv", "deconv"]:
-          lines.append('weights["{}_kernel"] = new znn::phi::hbw_array<float>({});'.format(n,
-                      l["kernel_size"]))
-          lines.append('weights["{}_bias"] = new znn::phi::hbw_array<float>({});'.format(n,
-                      l["bias_size"]))
+          lines.append('weights["{}"] = new znn::phi::hbw_array<float>({});'.format(
+                                                      l["kernel"], 10*l["kernel_size"]))
+
+          lines.append('weights["{}"] = new znn::phi::hbw_array<float>({});'.format(
+                                                          l["bias"], 10*l["bias_size"]))
     lines.append('')
     #initialize weights
     #TODO: read weights from HD5, convert them to the right layout, hardcode them in
@@ -106,16 +111,34 @@ def generate_constructor_body(net):
 
     #allocate layers
     for (n,l) in iteritems(layer_info):
-       if l["type"] == "conv":
-          lines.append(
-             'layers["{}"] = new znn::phi::ConvWrapper(0);'.format(l["name"]))
+        if l["type"] == "conv":
+            conv_params = "{}, {}, {}, {}, {}, {}, {}, {}".format(l["bn"], l["ifm"], l["ofm"],
+                                                              l["id"], l["ihw"],
+                                                              l["kdim"][0], l["kdim"][1],
+                                                              l["pad"][0],  l["pad"][1])
+            lines.append('layers["{}"] = new znn::phi::ConvWrapper({});'.format(l["name"],
+                                                                                conv_params))
 
     lines.append('')
 
     return lines
 
 def generate_forward_body(net):
+    tensors, layer_info, layer_order = net
     lines = []
+    count = 0
+    #call forward on all layers
+    for lname in layer_order:
+       l = layer_info[lname]
+       count += 1
+       if l["type"] in ["conv"]:
+
+           params  = 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
+           params += 'weights["{}"]->data(), weights["{}"]->data()'.format(l["kernel"], l["bias"])
+
+           lines.append('std::cout << "{}\\n";'.format(count))
+           lines.append('layers["{}"]->forward({});'.format(lname, params))
+    lines.append('')
     return lines
 
 def generate_znet(net):

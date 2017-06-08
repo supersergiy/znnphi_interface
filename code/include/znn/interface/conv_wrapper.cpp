@@ -9,6 +9,7 @@
 #include <string.h>
 #include <chrono>
 
+#include "exec.cpp"
 #include "conv_wrapper.hpp"
 
 #define MAX_STRING 1024 
@@ -121,13 +122,13 @@ void *loadConvLayerSO(int bn, int ifm, int ofm, int id,
     //compile_command += " &>/dev/null; "; 
     auto begin = std::chrono::high_resolution_clock::now();  
     std::cout << (compile_command.c_str());
-    std::system(compile_command.c_str());
+    exec(compile_command.c_str());
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>
                   (end - begin).count();
     double secs = static_cast<double>(duration) / 1000000;
 
-    std::cout << param << ": " << secs << std::endl;
+    std::cout << "\n" << param << ": " << secs << std::endl;
 
     void *handle = dlopen(dl_filename.c_str(), RTLD_NOW);
     handleSOError();
@@ -136,12 +137,13 @@ void *loadConvLayerSO(int bn, int ifm, int ofm, int id,
 }
 
  
-ConvWrapper::ConvWrapper(int a): conv_layer(NULL), 
+/*ConvWrapper::ConvWrapper(int a): conv_layer(NULL), 
                                 createConvLayer(NULL),
-                                destroyConvLayer(NULL) {}   
+                                destroyConvLayer(NULL) {}   */
 
 //TODO: add checkf for null pointers with uninitialized layers
-void ConvWrapper::init(int bn, int ifm, int ofm, int id,
+//void ConvWrapper::init(int bn, int ifm, int ofm, int id,
+ConvWrapper::ConvWrapper(int bn, int ifm, int ofm, int id,
                          int ihw, int kd, int khw,
                          int padd, int padhw,
                          int cores, int ht)

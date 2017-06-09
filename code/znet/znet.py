@@ -3,12 +3,16 @@ import sys
 import copy
 from operator import mul
 from six import iteritems
+import h5py
+import numpy as np
 
 import param_parser
 from Tensor import Tensor
-from codegen import generate_function
-from common import round_to_simd
-net_path   = "./nets/unet.json"
+from codegen import generate_function, zero_out_tensor, fill_tensor
+from common import round_to_simd, block_bias, block_kernel
+
+net_path     = "./nets/unet.json"
+weights_path = "./nets/unet.h5"
 
 BATCH_SIZE = 1
 SIMD_WIDTH = 8
@@ -44,7 +48,6 @@ def parse_net(net_path):
          lparams["type"] = "input"
          dim = l["input_param"]["shape"][0]["dim"]
          dim[0] = BATCH_SIZE
-         dim[1] = round_to_simd(dim[1])
          tensors[l["name"]] = Tensor(dim)
       elif lt == "Convolution":
          lparams = param_parser.parse_conv(l["convolution_param"], bot_tensor)
@@ -92,21 +95,38 @@ def parse_net(net_path):
 def generate_constructor_body(net):
     lines = []
     tensors, layer_info, _ = net
-    #alocate tensors
+    #alocate activateion maps
     for (n,t) in iteritems(tensors):
        lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(n, t.size))
 
     #allocate weights
     for (n,l) in iteritems(layer_info):
        if l["type"] in ["conv", "deconv"]:
-          lines.append('weights["{}"] = new znn::phi::hbw_array<float>({});'.format(
+          lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                                       l["kernel"], l["kernel_size"]))
 
-          lines.append('weights["{}"] = new znn::phi::hbw_array<float>({});'.format(
+          lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                                           l["bias"], l["bias_size"]))
     lines.append('')
+
     #initialize weights
-    #TODO: read weights from HD5, convert them to the right layout, hardcode them in
+    weights = h5py.File(weights_path) ['data']
+    for (lname, l) in iteritems(layer_info):
+        if l["type"] == "conv":
+            lweights = weights[lname].values()
+            kernel = lweights[0][:]
+            blocked_kernel = block_kernel(kernel, l)
+            lines += fill_tensor('{}_kernel'.format(lname), blocked_kernel)
+
+            if len(lweights) > 1:
+                bias = lweights[1][:]
+                blocked_bias = block_bias(bias, l)
+                lines += fill_tensor('{}_bias'.format(lname), blocked_bias)
+            else:
+                lines += zero_out_tensor('{}_bias'.format(lname))
+
+
+
     lines.append('')
     #allocate layers
     for (n,l) in iteritems(layer_info):
@@ -133,7 +153,7 @@ def generate_forward_body(net):
        if l["type"] in ["conv"]:
 
            params  = 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
-           params += 'weights["{}"]->data(), weights["{}"]->data()'.format(l["kernel"], l["bias"])
+           params += 'tensors["{}"]->data(), tensors["{}"]->data()'.format(l["kernel"], l["bias"])
 
            lines.append('std::cout << "{}\\n";'.format(count))
            lines.append('layers["{}"]->forward({});'.format(lname, params))

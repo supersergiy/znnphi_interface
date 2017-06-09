@@ -28,3 +28,16 @@ def generate_function(signature, body_lines):
 
     return lines
 
+def fill_tensor(tname, values):
+    lines = []
+    values_str  = ", ".join(map(str, list(values)))
+    alloc_array = 'float {}_init[] = {{}};'.format(tname, values_str)
+    lines.append(alloc_array)
+    return lines
+
+def zero_out_tensor(tname):
+    lines = []
+    lines.append('tensors["{}"]->set_to_const(0);'.format(tname))
+    return lines
+
+

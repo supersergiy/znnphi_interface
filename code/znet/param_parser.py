@@ -4,7 +4,7 @@ from common import round_to_simd
 def get_deconv_top_dim(params, bot_tensor):
     top_dim = [-1, -1, -1, -1, -1]
     top_dim[0] = bot_tensor.dim[0]
-    top_dim[1] = round_to_simd(params["ofm"])
+    top_dim[1] = params["ofm"]
 
     for i in [2, 3, 4]:
 	top_dim[i]  = params["stride"][i - 2] * (bot_tensor.dim[i] - 1)
@@ -15,7 +15,7 @@ def get_deconv_top_dim(params, bot_tensor):
 def get_conv_top_dim(params, bot_tensor):
     top_dim = [-1, -1, -1, -1, -1]
     top_dim[0] = bot_tensor.dim[0]
-    top_dim[1] = round_to_simd(params["ofm"])
+    top_dim[1] = params["ofm"]
     for i in [2, 3, 4]:
 	top_dim[i] = (bot_tensor.dim[i] - params["kdim"][i - 2] +
 		                         2*params["pad"][i - 2]) / params["stride"][i - 2] + 1
@@ -31,17 +31,18 @@ def parse_conv(json_conv_param, bot_tensor):
 
     params["bn"]  = bot_tensor.dim[0]
     params["ifm"] = bot_tensor.dim[1]
-    params["ofm"] = round_to_simd(json_conv_param["num_output"])
+    params["ofm"] = json_conv_param["num_output"]
     params["id"]  = bot_tensor.dim[2]
     params["ihw"] = bot_tensor.dim[3]
 
     params["top_dim"] = get_conv_top_dim(params, bot_tensor)
 
     params["kernel_size"]  = params["kdim"][0] * params["kdim"][1]
-    params["kernel_size"] *= params["kdim"][2] * params["ofm"]
-    params["kernel_size"] *= params["ifm"]
+    params["kernel_size"] *= params["kdim"][2]
+    params["kernel_size"] *= round_to_simd(params["ofm"])
+    params["kernel_size"] *= round_to_simd(params["ifm"])
 
-    params["bias_size"] = params["ofm"]
+    params["bias_size"] = round_to_simd(params["ofm"])
 
     return params
 
@@ -55,17 +56,18 @@ def parse_deconv(json_conv_param, bot_tensor):
 
     params["bn"]  = bot_tensor.dim[0]
     params["ifm"] = bot_tensor.dim[1]
-    params["ofm"] = round_to_simd(json_conv_param["num_output"])
+    params["ofm"] = json_conv_param["num_output"]
     params["id"]  = bot_tensor.dim[2]
     params["ihw"] = bot_tensor.dim[3]
 
     params["top_dim"] = get_deconv_top_dim(params, bot_tensor)
 
     params["kernel_size"]  = params["kdim"][0] * params["kdim"][1]
-    params["kernel_size"] *= params["kdim"][2] * params["ofm"]
-    params["kernel_size"] *= params["ifm"]
+    params["kernel_size"] *= params["kdim"][2]
+    params["kernel_size"] *= round_to_simd(params["ofm"])
+    params["kernel_size"] *= round_to_simd(params["ifm"])
 
-    params["bias_size"] = params["ofm"]
+    params["bias_size"] = round_to_simd(params["ofm"])
 
     return params
 

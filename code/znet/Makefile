@@ -89,7 +89,7 @@ $(BINDIR)/%_b${B}.bin: $(CPPODIR)/%_b${B}.cpp
 cpp_out/znet.cpp:
 	python znet.py
 .PRECIOUS: %.cpp 
-.PHONY: unet, all, layers, znet, client
+.PHONY: unet, all, layers, znet, client, znet
 test: tmp.cpp
 	$(ECHO) $(CXX) -c $(CXXFLAGS) $(AVX_FLAGS) tmp.cpp
 	$(CXX)  $(CXXFLAGS) $(AVX_FLAGS) $(LD_FLAGS) tmp.cpp 

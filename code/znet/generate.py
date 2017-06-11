@@ -66,6 +66,7 @@ def generate_initialize_weights(net, weights_path):
                 weights = h5py.File(weights_path) ['data']
                 lweights = weights[lname].values()
             else:
+                print "WARNING: uninitialized layer {}".fomrat(lname)
                 lweights = []
                 lweights.append(np.ones(l["kernel_dim"]))
                 lweights.append(np.array(range(l["ofm"])))
@@ -89,9 +90,28 @@ def generate_allocate_featuremaps(net):
     tensors, layer_info, layer_order = net
 
     for (n,t) in iteritems(tensors):
-       lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(n, t.size))
+       lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(n, t.memory_size))
 
     lines.append('')
+    return lines
+
+def generate_set_in_out_dimensions(net):
+    tensors, layer_info, layer_order = net
+    lines = []
+    #input
+    lines.append('input_size = {};'.format(tensors['user_input'].size))
+    #output
+    out_dim = 5
+    out_strides = [4]  #sizeof float
+    for i in range(4): #4 more dimensions
+        out_strides.append(out_strides[-1]*tensors['user_output'].dim[-i])
+
+    lines.append('out_dim = {};'.format(out_dim))
+    lines.append('size_t tmp_shape[] = {{ {} }};'.format(', '.join(map(str, tensors['user_output'].dim))))
+    lines.append('out_shape.assign(tmp_shape, tmp_shape + {});'.format(out_dim))
+
+    lines.append('size_t tmp_strides[] = {{ {} }};'.format(', '.join(map(str, out_strides))))
+    lines.append('out_strides.assign(tmp_strides, tmp_strides + {});'.format(out_dim))
     return lines
 
 def generate_constructor_body(net, weights_path):
@@ -102,17 +122,19 @@ def generate_constructor_body(net, weights_path):
     lines += generate_initialize_weights(net, weights_path)
     lines += generate_allocate_layers(net)
 
+    lines += generate_set_in_out_dimensions(net)
+
     lines.append('')
 
 
     return lines
 
-def generate_load_data(net):
+'''def generate_load_data(net):
     tensors, layer_info, layer_order = net
     lines = []
     input_values = [1, 2, 3, 4]*(tensors['user_input'].size/4)
     lines += fill_tensor('user_input', input_values)
-    return lines
+    return lines'''
 
 def generate_forward_all_layers(net):
     tensors, layer_info, layer_order = net
@@ -121,7 +143,7 @@ def generate_forward_all_layers(net):
     lines.append('std::cout << "Starting Forward Pass\\n";')
     for lname in layer_order:
        l = layer_info[lname]
-       lines.append('std::cout << "Running {}!\\n";'.format(l["name"]))
+       #lines.append('std::cout << "Running {}!\\n";'.format(l["name"]))
 
        if l["type"] in ["conv"]:
            params  = 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
@@ -136,7 +158,7 @@ def generate_forward_all_layers(net):
            params += 'NULL, NULL'
            lines.append('layers["{}"]->forward({});'.format(lname, params))
 
-       lines.append('std::cout << "{} Finished!\\n";'.format(l["name"]))
+       #lines.append('std::cout << "{} Finished!\\n";'.format(l["name"]))
 
     lines.append('')
     return lines
@@ -146,8 +168,8 @@ def generate_forward_body(net):
     tensors, layer_info, layer_order = net
     lines = []
 
-    lines += generate_load_data(net)
-    lines += timeit(generate_forward_all_layers(net), 10, "average:")
+    #lines += generate_load_data(net)
+    lines += timeit(generate_forward_all_layers(net), 1, "average:")
     return lines
 
 def generate_znet(net, weights_path):
@@ -169,8 +191,8 @@ def generate_znet(net, weights_path):
     lines.append('#include "common.hpp"')
     lines.append('')
 
-    #initialization
-    constructor_signature = 'znn::phi::Znet::Znet(void)'
+    #constructor
+    constructor_signature = 'znn::phi::Znet::Znet(std::string weights_path)'
     constructor_body      = generate_constructor_body(net, weights_path)
     constructor           = generate_function(constructor_signature, constructor_body)
     lines += constructor

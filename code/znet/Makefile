@@ -20,7 +20,7 @@ RM			=	$(AT)rm -f
 TOUCH		=	$(AT)touch
 CHMOD		=	$(AT)chmod
 DATE    	=  $(AT)date
-
+MKDIR_P  = mkdir -p
 
 # compilers
 
@@ -87,32 +87,19 @@ $(BINDIR)/%_b${B}.bin: $(CPPODIR)/%_b${B}.cpp
 /usr/lib/znnphiconvlib.so:
 	#Nothin
 cpp_out/znet.cpp:
+	rm -rf out
+	${MKDIR_P} out
+	${MKDIR_P} out/weights
 	python znet.py
-.PRECIOUS: %.cpp 
-.PHONY: unet, all, layers, znet, client, znet
-test: tmp.cpp
-	$(ECHO) $(CXX) -c $(CXXFLAGS) $(AVX_FLAGS) tmp.cpp
-	$(CXX)  $(CXXFLAGS) $(AVX_FLAGS) $(LD_FLAGS) tmp.cpp 
 
-client:
+.PRECIOUS: %.cpp 
+.PHONY: znet 
+
 znet: cpp_out/znet.cpp cpp_out/client.cpp 
 	$(ECHO) $(CXX) $(CXXFLAGS) $(AVX_FLAGS) $^ 
-	$(CXX)  $(CXXFLAGS) $(AVX_FLAGS) $(LD_FLAGS) $^ -o znet.bin
-	./znet.bin
-
-layers: 
-	julia run_separate.jl ./nets/unet.json ./nets/unet.h5 ${B} 1 
-	make layer_{1..49} B=${B} #-j64
-layer_%: $(BINDIR)/layer_%_b${B}.bin
-	$^
-unet: $(BINDIR)/unet_b${B}.bin
-	numactl --membind=1 $^
-	tail bench/timings${B}.txt
-small_layer: $(BINDIR)/small_layer_b${B}.bin
-	numactl --membind=1 $^
-big_layer: $(BINDIR)/big_layer_b${B}.bin
-	numactl --membind=1 $^
-all:  unet
+	$(CXX)  $(CXXFLAGS) $(AVX_FLAGS) $(LD_FLAGS) $^ -o ./out/znet.bin
+	./out/znet.bin
+all: znet 
 clean:
 	rm -rf ./bin/
 

@@ -1,3 +1,5 @@
+import os
+
 def indent_lines(lines, indent):
     for i in range(indent):
 	lines = list(map(lambda c: "\t" + c, lines))
@@ -34,10 +36,12 @@ def write_values_to_file(values, file_name):
 
 def fill_tensor(tname, values):
     lines = []
-    data_file_name = './bin/{}.data'.format(tname)
-
-    write_values_to_file(values, data_file_name)
-    fill_in_array = 'readArrayFromFile(tensors["{}"]->data(), "{}");'.format(tname, data_file_name)
+    out_directory  = './out/weights'
+    data_file_name = '{}.data'.format(tname)
+    data_path      = os.path.join(out_directory, data_file_name)
+    print "writing to {}!".format(data_path)
+    write_values_to_file(values, data_path)
+    fill_in_array = 'readArrayFromFile(tensors["{}"]->data(), weights_path + "{}");'.format(tname, data_file_name)
 
     lines.append(fill_in_array)
 

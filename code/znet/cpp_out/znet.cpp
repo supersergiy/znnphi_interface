@@ -4,8 +4,8 @@
 #include <znn/layer/block_data.hpp>
 #include <znn/layer/unblock_data.hpp>
 #include <cstring>
-#include "znet.hpp"
-#include "common.hpp"
+#include <znet.hpp>
+#include <common.hpp>
 
 
 znn::phi::Znet::Znet(std::string weights_path)

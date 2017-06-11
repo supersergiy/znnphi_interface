@@ -23,9 +23,9 @@ class ZnetNumpyWrapper {
          zn->forward();
 			auto out_data = zn->tensors["user_output"]->data();
 
-         std::cout << zn->out_dim << std::endl;
-         std::cout << zn->out_shape.size() << std::endl;
-         std::cout << zn->out_strides.size() << std::endl;
+         //std::cout << zn->out_dim << std::endl;
+         //std::cout << zn->out_shape.size() << std::endl;
+         //std::cout << zn->out_strides.size() << std::endl;
 
 		   return py::array(py::buffer_info(out_data, sizeof(float),
                                           py::format_descriptor<float>::format(),

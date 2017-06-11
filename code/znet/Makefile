@@ -1,7 +1,6 @@
 HERE    	=  .
 BINDIR	=	./bin
 NETDIR	=	./nets
-CPPODIR	=  ./cpp_out
 
 AT    	=	@
 DOLLAR   = 	$$
@@ -44,7 +43,7 @@ CS_FLAGS		=
 CS_LD_FLAGS		=       -lpthread
 
 FPIC	=	-fPIC
-CXXINCLUDES	=	-I$(ZNNPHI_PATH)/code/include -I$(ZNNPHI_PATH)/code/include/znn -I$(ZNNPHI_PATH)/
+CXXINCLUDES	=	-I$(ZNNPHI_PATH)/code/include -I$(ZNNPHI_PATH)/code/include/znn -I$(ZNNPHI_PATH)/ -I./src/
 
 #CXXWARN		=	-Wall -Wextra -Wno-format -Wno-unknown-pragmas -Wno-unused-variable -Wno-return-type -Wno-unused-parameter
 CXXERR		=   -fmax-errors=5
@@ -74,33 +73,27 @@ CXXLDFLAGS	=	$(OPT_LDFLAGS)
 
 LD_FLAGS    =   -lznnphiconv
 
+PY_INTERFACE_FLAGS = `python-config --cflags --ldflags` -Isrc/python/pybind11/include -fPIC 
 
-$(CPPODIR)/%_b${B}.cpp: run.jl $(NETDIR)/%.json $(NETDIR)/%.h5
-	$(ECHO) "[Generating $@]..."
-	$(JULIA) $^ ${B} ${N} > $@ 
+.PHONY: FORCE, bin, py
 
-$(BINDIR)/%_b${B}.bin: $(CPPODIR)/%_b${B}.cpp
-	$(ECHO) "[Generating $@]..."
-	$(CXX) $(CXXFLAGS) $(AVX_FLAGS) $(LD_FLAGS) $< -o $@
-
-
-/usr/lib/znnphiconvlib.so:
-	#Nothin
-cpp_out/znet.cpp:
+FORCE:
+src/generated/znet.cpp: FORCE
 	rm -rf out
 	${MKDIR_P} out
 	${MKDIR_P} out/weights
-	python znet.py
-
-.PRECIOUS: %.cpp 
-.PHONY: znet 
-
-znet: cpp_out/znet.cpp cpp_out/client.cpp 
-	$(ECHO) $(CXX) $(CXXFLAGS) $(AVX_FLAGS) $^ 
-	$(CXX)  $(CXXFLAGS) $(AVX_FLAGS) $(LD_FLAGS) $^ -o ./out/znet.bin
-	./out/znet.bin
+	python src/znet_generator/znet.py $(N) $(W)
+bin/client_cpp.o: src/client.cpp 
+	$(CXX) $(CXXFLAGS) -fPIC -c $^ -o $@
+bin/znet.o: src/generated/znet.cpp 
+	$(CXX) $(CXXFLAGS) -fPIC -c $^ -o $@
+bin/znet_numpy_wrapper.o: src/python/znet_numpy_wrapper.cpp 
+	$(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) -fPIC -c $^ -o $@
+py: bin/znet.o bin/znet_numpy_wrapper.o 
+	$(CXX) $^ -lznnphiconv -shared -o znet.so 
+bin: bin/client.o bin/znet.o FORCE 
+	$(CXX) $(CXXFLAGS) $(AVX2_FLAGS) $(LD_FLAGS) $^ -o ./out/znet.bin
 all: znet 
 clean:
-	rm -rf ./bin/
-
+	rm -rf ./out
 remake: clean all

@@ -2,6 +2,7 @@
 
 int main(void)
 {
-    Znet zn;
+    znn::phi::Znet zn;
+    zn.forward();
     return 0;
 }

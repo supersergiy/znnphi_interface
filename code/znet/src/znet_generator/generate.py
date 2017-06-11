@@ -187,8 +187,8 @@ def generate_znet(net, weights_path):
     lines.append('#include <znn/layer/block_data.hpp>')
     lines.append('#include <znn/layer/unblock_data.hpp>')
     lines.append('#include <cstring>')
-    lines.append('#include "znet.hpp"')
-    lines.append('#include "common.hpp"')
+    lines.append('#include <znet.hpp>')
+    lines.append('#include <common.hpp>')
     lines.append('')
 
     #constructor

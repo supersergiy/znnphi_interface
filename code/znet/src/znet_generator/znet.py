@@ -11,8 +11,8 @@ import param_parser
 from Tensor import Tensor
 from generate import generate_znet
 
-net_path     = "./nets/unet.json"
-weights_path = "./nets/unet.h5"
+net_path     = sys.argv[1]
+weights_path = sys.argv[2]
 #weights_path = None
 
 BATCH_SIZE =1

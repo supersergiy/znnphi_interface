@@ -14,7 +14,6 @@ void readArrayFromFile(T *a, std::string path)
       exit(EXIT_FAILURE);
    }
 
-
    T e;
    size_t c = 0;
    while(InFile >> e) {

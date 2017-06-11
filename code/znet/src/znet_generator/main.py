@@ -13,7 +13,7 @@ from generate import generate_znet
 
 net_path     = sys.argv[1]
 weights_path = sys.argv[2]
-#weights_path = None
+out_path     = sys.argv[3]
 
 BATCH_SIZE =1
 SIMD_WIDTH = 8
@@ -125,4 +125,4 @@ if __name__ == "__main__":
     net = parse_net(net_path)
     add_block_input(net)
     add_unblock_output(net)
-    generate_znet(net, weights_path)
+    generate_znet(net, weights_path, out_path)

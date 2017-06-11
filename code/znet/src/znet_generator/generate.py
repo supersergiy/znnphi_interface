@@ -66,7 +66,7 @@ def generate_initialize_weights(net, weights_path):
                 weights = h5py.File(weights_path) ['data']
                 lweights = weights[lname].values()
             else:
-                print "WARNING: uninitialized layer {}".fomrat(lname)
+                print "WARNING: uninitialized layer {}".format(lname)
                 lweights = []
                 lweights.append(np.ones(l["kernel_dim"]))
                 lweights.append(np.array(range(l["ofm"])))
@@ -143,7 +143,7 @@ def generate_forward_all_layers(net):
     lines.append('std::cout << "Starting Forward Pass\\n";')
     for lname in layer_order:
        l = layer_info[lname]
-       #lines.append('std::cout << "Running {}!\\n";'.format(l["name"]))
+       lines.append('std::cout << "Running {}!\\n";'.format(l["name"]))
 
        if l["type"] in ["conv"]:
            params  = 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
@@ -158,7 +158,7 @@ def generate_forward_all_layers(net):
            params += 'NULL, NULL'
            lines.append('layers["{}"]->forward({});'.format(lname, params))
 
-       #lines.append('std::cout << "{} Finished!\\n";'.format(l["name"]))
+       lines.append('std::cout << "{} Finished!\\n";'.format(l["name"]))
 
     lines.append('')
     return lines
@@ -172,7 +172,7 @@ def generate_forward_body(net):
     lines += timeit(generate_forward_all_layers(net), 1, "average:")
     return lines
 
-def generate_znet(net, weights_path):
+def generate_znet(net, weights_path, out_path):
     '''tmp = net[1]["conv1_d1"]
     net[1].clear()
     net[1]["conv1_d1"] = tmp
@@ -204,7 +204,7 @@ def generate_znet(net, weights_path):
     lines += forward
 
     #write lines to file
-    f = open("cpp_out/znet.cpp", 'w')
+    f = open(out_path, 'w')
     for l in lines:
         f.write("{}\n".format(l))
 

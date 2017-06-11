@@ -27,7 +27,7 @@ ZNN_TUNE	=
 
 SSE_FLAGS	=	-DZNN_SSE -msse $(ZNN_TUNE)
 AVX_FLAGS	=	-DZNN_AVX -mavx $(ZNN_TUNE)
-AVX2_FLAGS	=	-DZNN_AVX2 -mavx2 -mfma $(ZNN_TUNE)
+AVX2_FLAGS	=	-DZNN_AVX2 -march=core-avx2 $(ZNN_TUNE)
 AVX512_FLAGS	=	-DZNN_AVX512 -mavx512f -mavx512pf -mavx512cd -mfma $(ZNN_TUNE)
 KNC_FLAGS	=	-DZNN_AVX512 -mavx512f -mavx512pf -mfma $(ZNN_TUNE)
 
@@ -38,7 +38,7 @@ STD_FLAG	=
 
 
 CXX			=	$(AT)icpc -pthread $(STANDARD_FLAG) -fopenmp
-OPTIMIZATION_FLAGS	=	-DNDEBUG -O3 -ffast-math -fno-omit-frame-pointer #-fno-rtti -fno-exceptions
+OPTIMIZATION_FLAGS	=	-DNDEBUG -O3 -fno-omit-frame-pointer #-fno-rtti -fno-exceptions #-ffast-math 
 CS_FLAGS		=
 CS_LD_FLAGS		=       -lpthread
 
@@ -75,25 +75,31 @@ LD_FLAGS    =   -lznnphiconv
 
 PY_INTERFACE_FLAGS = `python-config --cflags --ldflags` -Isrc/python/pybind11/include -fPIC 
 
-.PHONY: FORCE, bin, py
+.PHONY: bin, py, rerun, gen, FORCE
 
-FORCE:
-src/generated/znet.cpp: FORCE
+NET_NAME = unet
+N = nets/${NET_NAME}.json
+W = nets/${NET_NAME}.h5
+
+src/generated/znet.cpp: 
 	rm -rf out
 	${MKDIR_P} out
 	${MKDIR_P} out/weights
-	python src/znet_generator/znet.py $(N) $(W)
-bin/client_cpp.o: src/client.cpp 
+	python src/znet_generator/main.py $(N) $(W) src/generated/znet.cpp
+out/client.o: src/client.cpp 
 	$(CXX) $(CXXFLAGS) -fPIC -c $^ -o $@
-bin/znet.o: src/generated/znet.cpp 
+out/znet.o: src/generated/znet.cpp 
 	$(CXX) $(CXXFLAGS) -fPIC -c $^ -o $@
-bin/znet_numpy_wrapper.o: src/python/znet_numpy_wrapper.cpp 
+out/znet_numpy_wrapper.o: src/python/znet_numpy_wrapper.cpp 
 	$(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) -fPIC -c $^ -o $@
-py: bin/znet.o bin/znet_numpy_wrapper.o 
-	$(CXX) $^ -lznnphiconv -shared -o znet.so 
-bin: bin/client.o bin/znet.o FORCE 
+py: out/znet.o out/znet_numpy_wrapper.o 
+	$(CXX) $^ -lznnphiconv -shared -o out/znet.so 
+bin: out/client.o out/znet.o 
 	$(CXX) $(CXXFLAGS) $(AVX2_FLAGS) $(LD_FLAGS) $^ -o ./out/znet.bin
+gen: src/generated/znet.cpp FORCE
+rerun: clean gen bin
+	./out/znet.bin
 all: znet 
 clean:
-	rm -rf ./out
+	rm -rf out/*.so out/*.o out/*.bin
 remake: clean all

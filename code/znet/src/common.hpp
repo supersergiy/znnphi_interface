@@ -10,7 +10,7 @@ void readArrayFromFile(T *a, std::string path)
    
    if (!InFile) {
       std::cout << "Couldn't open " << path << std::endl;
-      std::cout << "Make sure that proper weights folder is present at invocation location" << path << std::endl;
+      std::cout << "Make sure that proper weights folder is present at invocation location" << std::endl;
       exit(EXIT_FAILURE);
    }
 

@@ -2,7 +2,7 @@
 
 int main(void)
 {
-    znn::phi::Znet zn;
+    znn::phi::Znet zn("./out/weights/");
     zn.forward();
     return 0;
 }

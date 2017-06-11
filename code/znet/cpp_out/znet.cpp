@@ -1,11 +1,17 @@
 #include <iostream>
 #include <chrono>
 #include <znn/interface/conv_wrapper.hpp>
+#include <znn/layer/block_data.hpp>
+#include <znn/layer/unblock_data.hpp>
+#include <cstring>
 #include "znet.hpp"
+#include "common.hpp"
 
 
 znn::phi::Znet::Znet(void)
 {
+	layers["conv1_d1"] = new znn::phi::ConvWrapper(1, 36, 36, 18, 96, 1, 3, 0, 1);
+	
 	tensors["conv0_d1"] = new znn::phi::hbw_array<float>(6635520);
 	tensors["conv0_d0"] = new znn::phi::hbw_array<float>(21233664);
 	tensors["conv0_d3"] = new znn::phi::hbw_array<float>(663552);
@@ -15,6 +21,7 @@ znn::phi::Znet::Znet(void)
 	tensors["conv4_d3"] = new znn::phi::hbw_array<float>(663552);
 	tensors["conv4_d4"] = new znn::phi::hbw_array<float>(207360);
 	tensors["conv4_d0"] = new znn::phi::hbw_array<float>(21233664);
+	tensors["user_input"] = new znn::phi::hbw_array<float>(5308416);
 	tensors["sum4_d2"] = new znn::phi::hbw_array<float>(1990656);
 	tensors["Deconvolution4"] = new znn::phi::hbw_array<float>(6635520);
 	tensors["conv4_d1"] = new znn::phi::hbw_array<float>(6635520);
@@ -42,6 +49,7 @@ znn::phi::Znet::Znet(void)
 	tensors["Deconvolution3"] = new znn::phi::hbw_array<float>(1990656);
 	tensors["convf5_d3"] = new znn::phi::hbw_array<float>(663552);
 	tensors["convf5_d2"] = new znn::phi::hbw_array<float>(1990656);
+	tensors["user_output"] = new znn::phi::hbw_array<float>(5308416);
 	tensors["input"] = new znn::phi::hbw_array<float>(5308416);
 	tensors["conv2_d5"] = new znn::phi::hbw_array<float>(62208);
 	tensors["conv2_d4"] = new znn::phi::hbw_array<float>(207360);
@@ -84,271 +92,31 @@ znn::phi::Znet::Znet(void)
 	tensors["output"] = new znn::phi::hbw_array<float>(5308416);
 	tensors["merge_d3"] = new znn::phi::hbw_array<float>(21233664);
 	tensors["conv6_d1"] = new znn::phi::hbw_array<float>(6635520);
-	weights["conv0_d1_kernel"] = new znn::phi::hbw_array<float>(11520);
-	weights["conv0_d1_bias"] = new znn::phi::hbw_array<float>(40);
-	weights["conv0_d0_kernel"] = new znn::phi::hbw_array<float>(9216);
-	weights["conv0_d0_bias"] = new znn::phi::hbw_array<float>(32);
-	weights["conv0_d3_kernel"] = new znn::phi::hbw_array<float>(27648);
-	weights["conv0_d3_bias"] = new znn::phi::hbw_array<float>(64);
-	weights["conv0_d2_kernel"] = new znn::phi::hbw_array<float>(17280);
-	weights["conv0_d2_bias"] = new znn::phi::hbw_array<float>(48);
-	weights["conv0_d5_kernel"] = new znn::phi::hbw_array<float>(69120);
-	weights["conv0_d5_bias"] = new znn::phi::hbw_array<float>(96);
-	weights["conv0_d4_kernel"] = new znn::phi::hbw_array<float>(46080);
-	weights["conv0_d4_bias"] = new znn::phi::hbw_array<float>(80);
-	weights["conv4_d3_kernel"] = new znn::phi::hbw_array<float>(36864);
-	weights["conv4_d3_bias"] = new znn::phi::hbw_array<float>(64);
-	weights["conv4_d4_kernel"] = new znn::phi::hbw_array<float>(57600);
-	weights["conv4_d4_bias"] = new znn::phi::hbw_array<float>(80);
-	weights["conv4_d1_kernel"] = new znn::phi::hbw_array<float>(14400);
-	weights["conv4_d1_bias"] = new znn::phi::hbw_array<float>(40);
-	weights["conv5_d0_kernel"] = new znn::phi::hbw_array<float>(9216);
-	weights["conv5_d0_bias"] = new znn::phi::hbw_array<float>(32);
-	weights["conv4_d0_kernel"] = new znn::phi::hbw_array<float>(9216);
-	weights["conv4_d0_bias"] = new znn::phi::hbw_array<float>(32);
-	weights["conv6_d3_kernel"] = new znn::phi::hbw_array<float>(12288);
-	weights["conv6_d3_bias"] = new znn::phi::hbw_array<float>(64);
-	weights["conv6_d2_kernel"] = new znn::phi::hbw_array<float>(6912);
-	weights["conv6_d2_bias"] = new znn::phi::hbw_array<float>(48);
-	weights["convf6_d2_kernel"] = new znn::phi::hbw_array<float>(20736);
-	weights["convf6_d2_bias"] = new znn::phi::hbw_array<float>(48);
-	weights["convf6_d4_kernel"] = new znn::phi::hbw_array<float>(57600);
-	weights["convf6_d4_bias"] = new znn::phi::hbw_array<float>(80);
-	weights["conv6_d4_kernel"] = new znn::phi::hbw_array<float>(19200);
-	weights["conv6_d4_bias"] = new znn::phi::hbw_array<float>(80);
-	weights["convf5_d4_kernel"] = new znn::phi::hbw_array<float>(57600);
-	weights["convf5_d4_bias"] = new znn::phi::hbw_array<float>(80);
-	weights["convf5_d3_kernel"] = new znn::phi::hbw_array<float>(36864);
-	weights["convf5_d3_bias"] = new znn::phi::hbw_array<float>(64);
-	weights["convf5_d2_kernel"] = new znn::phi::hbw_array<float>(20736);
-	weights["convf5_d2_bias"] = new znn::phi::hbw_array<float>(48);
-	weights["Deconvolution2_kernel"] = new znn::phi::hbw_array<float>(20480);
-	weights["Deconvolution2_bias"] = new znn::phi::hbw_array<float>(64);
-	weights["Deconvolution4_kernel"] = new znn::phi::hbw_array<float>(7680);
-	weights["Deconvolution4_bias"] = new znn::phi::hbw_array<float>(40);
-	weights["Deconvolution1_kernel"] = new znn::phi::hbw_array<float>(30720);
-	weights["Deconvolution1_bias"] = new znn::phi::hbw_array<float>(80);
-	weights["conv2_d5_kernel"] = new znn::phi::hbw_array<float>(27648);
-	weights["conv2_d5_bias"] = new znn::phi::hbw_array<float>(96);
-	weights["Deconvolution3_kernel"] = new znn::phi::hbw_array<float>(12288);
-	weights["Deconvolution3_bias"] = new znn::phi::hbw_array<float>(48);
-	weights["conv2_d3_kernel"] = new znn::phi::hbw_array<float>(12288);
-	weights["conv2_d3_bias"] = new znn::phi::hbw_array<float>(64);
-	weights["conv2_d1_kernel"] = new znn::phi::hbw_array<float>(14400);
-	weights["conv2_d1_bias"] = new znn::phi::hbw_array<float>(40);
-	weights["score_kernel"] = new znn::phi::hbw_array<float>(6400);
-	weights["score_bias"] = new znn::phi::hbw_array<float>(8);
-	weights["conv4_d2_kernel"] = new znn::phi::hbw_array<float>(20736);
-	weights["conv4_d2_bias"] = new znn::phi::hbw_array<float>(48);
-	weights["conv6_d1_kernel"] = new znn::phi::hbw_array<float>(14400);
-	weights["conv6_d1_bias"] = new znn::phi::hbw_array<float>(40);
-	weights["convf6_d3_kernel"] = new znn::phi::hbw_array<float>(36864);
-	weights["convf6_d3_bias"] = new znn::phi::hbw_array<float>(64);
-	weights["conv6_d0_kernel"] = new znn::phi::hbw_array<float>(9216);
-	weights["conv6_d0_bias"] = new znn::phi::hbw_array<float>(32);
-	weights["deconv_d3_kernel"] = new znn::phi::hbw_array<float>(5120);
-	weights["deconv_d3_bias"] = new znn::phi::hbw_array<float>(32);
-	weights["conv5_d2_kernel"] = new znn::phi::hbw_array<float>(6912);
-	weights["conv5_d2_bias"] = new znn::phi::hbw_array<float>(48);
-	weights["conv5_d3_kernel"] = new znn::phi::hbw_array<float>(12288);
-	weights["conv5_d3_bias"] = new znn::phi::hbw_array<float>(64);
-	weights["conv5_d1_kernel"] = new znn::phi::hbw_array<float>(14400);
-	weights["conv5_d1_bias"] = new znn::phi::hbw_array<float>(40);
-	weights["conv5_d4_kernel"] = new znn::phi::hbw_array<float>(19200);
-	weights["conv5_d4_bias"] = new znn::phi::hbw_array<float>(80);
-	weights["conv1_d4_kernel"] = new znn::phi::hbw_array<float>(19200);
-	weights["conv1_d4_bias"] = new znn::phi::hbw_array<float>(80);
-	weights["conv1_d5_kernel"] = new znn::phi::hbw_array<float>(27648);
-	weights["conv1_d5_bias"] = new znn::phi::hbw_array<float>(96);
-	weights["conv1_d2_kernel"] = new znn::phi::hbw_array<float>(6912);
-	weights["conv1_d2_bias"] = new znn::phi::hbw_array<float>(48);
-	weights["conv1_d3_kernel"] = new znn::phi::hbw_array<float>(12288);
-	weights["conv1_d3_bias"] = new znn::phi::hbw_array<float>(64);
-	weights["conv1_d0_kernel"] = new znn::phi::hbw_array<float>(9216);
-	weights["conv1_d0_bias"] = new znn::phi::hbw_array<float>(32);
-	weights["conv1_d1_kernel"] = new znn::phi::hbw_array<float>(14400);
-	weights["conv1_d1_bias"] = new znn::phi::hbw_array<float>(40);
-	weights["convi_kernel"] = new znn::phi::hbw_array<float>(6400);
-	weights["convi_bias"] = new znn::phi::hbw_array<float>(32);
-	weights["conv7_d0_kernel"] = new znn::phi::hbw_array<float>(9216);
-	weights["conv7_d0_bias"] = new znn::phi::hbw_array<float>(32);
-	weights["convf1_d3_kernel"] = new znn::phi::hbw_array<float>(36864);
-	weights["convf1_d3_bias"] = new znn::phi::hbw_array<float>(64);
-	weights["convf1_d2_kernel"] = new znn::phi::hbw_array<float>(20736);
-	weights["convf1_d2_bias"] = new znn::phi::hbw_array<float>(48);
-	weights["convf1_d5_kernel"] = new znn::phi::hbw_array<float>(82944);
-	weights["convf1_d5_bias"] = new znn::phi::hbw_array<float>(96);
-	weights["convf1_d4_kernel"] = new znn::phi::hbw_array<float>(57600);
-	weights["convf1_d4_bias"] = new znn::phi::hbw_array<float>(80);
-	weights["convf2_d4_kernel"] = new znn::phi::hbw_array<float>(57600);
-	weights["convf2_d4_bias"] = new znn::phi::hbw_array<float>(80);
-	weights["convf2_d5_kernel"] = new znn::phi::hbw_array<float>(82944);
-	weights["convf2_d5_bias"] = new znn::phi::hbw_array<float>(96);
-	weights["convf2_d2_kernel"] = new znn::phi::hbw_array<float>(20736);
-	weights["convf2_d2_bias"] = new znn::phi::hbw_array<float>(48);
-	weights["convf2_d3_kernel"] = new znn::phi::hbw_array<float>(36864);
-	weights["convf2_d3_bias"] = new znn::phi::hbw_array<float>(64);
-	weights["conv2_d4_kernel"] = new znn::phi::hbw_array<float>(19200);
-	weights["conv2_d4_bias"] = new znn::phi::hbw_array<float>(80);
-	weights["conv2_d2_kernel"] = new znn::phi::hbw_array<float>(6912);
-	weights["conv2_d2_bias"] = new znn::phi::hbw_array<float>(48);
-	weights["conv2_d0_kernel"] = new znn::phi::hbw_array<float>(9216);
-	weights["conv2_d0_bias"] = new znn::phi::hbw_array<float>(32);
 	
+	tensors["conv1_d1_kernel"] = new znn::phi::hbw_array<float>(14400);
+	tensors["conv1_d1_bias"] = new znn::phi::hbw_array<float>(40);
 	
-	layers["conv0_d1"] = new znn::phi::ConvWrapper(1, 32, 40, 18, 96, 1, 3, 0);
-	layers["conv0_d0"] = new znn::phi::ConvWrapper(1, 32, 32, 18, 192, 1, 3, 0);
-	layers["conv0_d3"] = new znn::phi::ConvWrapper(1, 48, 64, 18, 24, 1, 3, 0);
-	layers["conv0_d2"] = new znn::phi::ConvWrapper(1, 40, 48, 18, 48, 1, 3, 0);
-	layers["conv0_d5"] = new znn::phi::ConvWrapper(1, 80, 96, 18, 6, 1, 3, 0);
-	layers["conv0_d4"] = new znn::phi::ConvWrapper(1, 64, 80, 18, 12, 1, 3, 0);
-	layers["conv4_d3"] = new znn::phi::ConvWrapper(1, 64, 64, 18, 24, 1, 3, 0);
-	layers["conv4_d4"] = new znn::phi::ConvWrapper(1, 80, 80, 18, 12, 1, 3, 0);
-	layers["conv4_d1"] = new znn::phi::ConvWrapper(1, 40, 40, 18, 96, 1, 3, 0);
-	layers["conv5_d0"] = new znn::phi::ConvWrapper(1, 32, 32, 18, 192, 1, 3, 0);
-	layers["conv4_d0"] = new znn::phi::ConvWrapper(1, 32, 32, 18, 192, 1, 3, 0);
-	layers["conv6_d3"] = new znn::phi::ConvWrapper(1, 64, 64, 18, 24, 3, 1, 1);
-	layers["conv6_d2"] = new znn::phi::ConvWrapper(1, 48, 48, 18, 48, 3, 1, 1);
-	layers["convf6_d2"] = new znn::phi::ConvWrapper(1, 48, 48, 18, 48, 1, 3, 0);
-	layers["convf6_d4"] = new znn::phi::ConvWrapper(1, 80, 80, 18, 12, 1, 3, 0);
-	layers["conv6_d4"] = new znn::phi::ConvWrapper(1, 80, 80, 18, 12, 3, 1, 1);
-	layers["convf5_d4"] = new znn::phi::ConvWrapper(1, 80, 80, 18, 12, 1, 3, 0);
-	layers["convf5_d3"] = new znn::phi::ConvWrapper(1, 64, 64, 18, 24, 1, 3, 0);
-	layers["convf5_d2"] = new znn::phi::ConvWrapper(1, 48, 48, 18, 48, 1, 3, 0);
-	layers["conv2_d5"] = new znn::phi::ConvWrapper(1, 96, 96, 18, 6, 3, 1, 1);
-	layers["conv2_d3"] = new znn::phi::ConvWrapper(1, 64, 64, 18, 24, 3, 1, 1);
-	layers["conv2_d1"] = new znn::phi::ConvWrapper(1, 40, 40, 18, 96, 1, 3, 0);
-	layers["conv4_d2"] = new znn::phi::ConvWrapper(1, 48, 48, 18, 48, 1, 3, 0);
-	layers["conv6_d1"] = new znn::phi::ConvWrapper(1, 40, 40, 18, 96, 1, 3, 0);
-	layers["convf6_d3"] = new znn::phi::ConvWrapper(1, 64, 64, 18, 24, 1, 3, 0);
-	layers["conv6_d0"] = new znn::phi::ConvWrapper(1, 32, 32, 18, 192, 1, 3, 0);
-	layers["conv5_d2"] = new znn::phi::ConvWrapper(1, 48, 48, 18, 48, 3, 1, 1);
-	layers["conv5_d3"] = new znn::phi::ConvWrapper(1, 64, 64, 18, 24, 3, 1, 1);
-	layers["conv5_d1"] = new znn::phi::ConvWrapper(1, 40, 40, 18, 96, 1, 3, 0);
-	layers["conv5_d4"] = new znn::phi::ConvWrapper(1, 80, 80, 18, 12, 3, 1, 1);
-	layers["conv1_d4"] = new znn::phi::ConvWrapper(1, 80, 80, 18, 12, 3, 1, 1);
-	layers["conv1_d5"] = new znn::phi::ConvWrapper(1, 96, 96, 18, 6, 3, 1, 1);
-	layers["conv1_d2"] = new znn::phi::ConvWrapper(1, 48, 48, 18, 48, 3, 1, 1);
-	layers["conv1_d3"] = new znn::phi::ConvWrapper(1, 64, 64, 18, 24, 3, 1, 1);
-	layers["conv1_d0"] = new znn::phi::ConvWrapper(1, 32, 32, 18, 192, 1, 3, 0);
-	layers["conv1_d1"] = new znn::phi::ConvWrapper(1, 40, 40, 18, 96, 1, 3, 0);
-	layers["convi"] = new znn::phi::ConvWrapper(1, 8, 32, 18, 192, 1, 5, 0);
-	layers["conv7_d0"] = new znn::phi::ConvWrapper(1, 32, 32, 18, 192, 1, 3, 0);
-	layers["convf1_d3"] = new znn::phi::ConvWrapper(1, 64, 64, 18, 24, 1, 3, 0);
-	layers["convf1_d2"] = new znn::phi::ConvWrapper(1, 48, 48, 18, 48, 1, 3, 0);
-	layers["convf1_d5"] = new znn::phi::ConvWrapper(1, 96, 96, 18, 6, 1, 3, 0);
-	layers["convf1_d4"] = new znn::phi::ConvWrapper(1, 80, 80, 18, 12, 1, 3, 0);
-	layers["convf2_d4"] = new znn::phi::ConvWrapper(1, 80, 80, 18, 12, 1, 3, 0);
-	layers["convf2_d5"] = new znn::phi::ConvWrapper(1, 96, 96, 18, 6, 1, 3, 0);
-	layers["convf2_d2"] = new znn::phi::ConvWrapper(1, 48, 48, 18, 48, 1, 3, 0);
-	layers["convf2_d3"] = new znn::phi::ConvWrapper(1, 64, 64, 18, 24, 1, 3, 0);
-	layers["conv2_d4"] = new znn::phi::ConvWrapper(1, 80, 80, 18, 12, 3, 1, 1);
-	layers["conv2_d2"] = new znn::phi::ConvWrapper(1, 48, 48, 18, 48, 3, 1, 1);
-	layers["conv2_d0"] = new znn::phi::ConvWrapper(1, 32, 32, 18, 192, 1, 3, 0);
+	readArrayFromFile(tensors["conv1_d1_kernel"]->data(), "./bin/conv1_d1_kernel.data");
+	tensors["conv1_d1_bias"]->set_to_const(0);
+	
 	
 }
 
 
 void znn::phi::Znet::forward(void)
 {
-	std::cout << "1\n";
-	layers["convi"]->forward(tensors["input"]->data(), tensors["convi"]->data(), weights["convi_kernel"]->data(), weights["convi_bias"]->data());
-	std::cout << "3\n";
-	layers["conv0_d0"]->forward(tensors["convi"]->data(), tensors["conv0_d0"]->data(), weights["conv0_d0_kernel"]->data(), weights["conv0_d0_bias"]->data());
-	std::cout << "7\n";
-	layers["conv1_d0"]->forward(tensors["conv0_d0"]->data(), tensors["conv1_d0"]->data(), weights["conv1_d0_kernel"]->data(), weights["conv1_d0_bias"]->data());
-	std::cout << "11\n";
-	layers["conv2_d0"]->forward(tensors["conv1_d0"]->data(), tensors["conv2_d0"]->data(), weights["conv2_d0_kernel"]->data(), weights["conv2_d0_bias"]->data());
-	std::cout << "17\n";
-	layers["conv0_d1"]->forward(tensors["pool_d1"]->data(), tensors["conv0_d1"]->data(), weights["conv0_d1_kernel"]->data(), weights["conv0_d1_bias"]->data());
-	std::cout << "21\n";
-	layers["conv1_d1"]->forward(tensors["conv0_d1"]->data(), tensors["conv1_d1"]->data(), weights["conv1_d1_kernel"]->data(), weights["conv1_d1_bias"]->data());
-	std::cout << "25\n";
-	layers["conv2_d1"]->forward(tensors["conv1_d1"]->data(), tensors["conv2_d1"]->data(), weights["conv2_d1_kernel"]->data(), weights["conv2_d1_bias"]->data());
-	std::cout << "31\n";
-	layers["conv0_d2"]->forward(tensors["pool_d2"]->data(), tensors["conv0_d2"]->data(), weights["conv0_d2_kernel"]->data(), weights["conv0_d2_bias"]->data());
-	std::cout << "35\n";
-	layers["convf1_d2"]->forward(tensors["conv0_d2"]->data(), tensors["convf1_d2"]->data(), weights["convf1_d2_kernel"]->data(), weights["convf1_d2_bias"]->data());
-	std::cout << "36\n";
-	layers["conv1_d2"]->forward(tensors["convf1_d2"]->data(), tensors["conv1_d2"]->data(), weights["conv1_d2_kernel"]->data(), weights["conv1_d2_bias"]->data());
-	std::cout << "40\n";
-	layers["convf2_d2"]->forward(tensors["conv1_d2"]->data(), tensors["convf2_d2"]->data(), weights["convf2_d2_kernel"]->data(), weights["convf2_d2_bias"]->data());
-	std::cout << "41\n";
-	layers["conv2_d2"]->forward(tensors["convf2_d2"]->data(), tensors["conv2_d2"]->data(), weights["conv2_d2_kernel"]->data(), weights["conv2_d2_bias"]->data());
-	std::cout << "47\n";
-	layers["conv0_d3"]->forward(tensors["pool_d3"]->data(), tensors["conv0_d3"]->data(), weights["conv0_d3_kernel"]->data(), weights["conv0_d3_bias"]->data());
-	std::cout << "51\n";
-	layers["convf1_d3"]->forward(tensors["conv0_d3"]->data(), tensors["convf1_d3"]->data(), weights["convf1_d3_kernel"]->data(), weights["convf1_d3_bias"]->data());
-	std::cout << "52\n";
-	layers["conv1_d3"]->forward(tensors["convf1_d3"]->data(), tensors["conv1_d3"]->data(), weights["conv1_d3_kernel"]->data(), weights["conv1_d3_bias"]->data());
-	std::cout << "56\n";
-	layers["convf2_d3"]->forward(tensors["conv1_d3"]->data(), tensors["convf2_d3"]->data(), weights["convf2_d3_kernel"]->data(), weights["convf2_d3_bias"]->data());
-	std::cout << "57\n";
-	layers["conv2_d3"]->forward(tensors["convf2_d3"]->data(), tensors["conv2_d3"]->data(), weights["conv2_d3_kernel"]->data(), weights["conv2_d3_bias"]->data());
-	std::cout << "63\n";
-	layers["conv0_d4"]->forward(tensors["pool_d4"]->data(), tensors["conv0_d4"]->data(), weights["conv0_d4_kernel"]->data(), weights["conv0_d4_bias"]->data());
-	std::cout << "67\n";
-	layers["convf1_d4"]->forward(tensors["conv0_d4"]->data(), tensors["convf1_d4"]->data(), weights["convf1_d4_kernel"]->data(), weights["convf1_d4_bias"]->data());
-	std::cout << "68\n";
-	layers["conv1_d4"]->forward(tensors["convf1_d4"]->data(), tensors["conv1_d4"]->data(), weights["conv1_d4_kernel"]->data(), weights["conv1_d4_bias"]->data());
-	std::cout << "72\n";
-	layers["convf2_d4"]->forward(tensors["conv1_d4"]->data(), tensors["convf2_d4"]->data(), weights["convf2_d4_kernel"]->data(), weights["convf2_d4_bias"]->data());
-	std::cout << "73\n";
-	layers["conv2_d4"]->forward(tensors["convf2_d4"]->data(), tensors["conv2_d4"]->data(), weights["conv2_d4_kernel"]->data(), weights["conv2_d4_bias"]->data());
-	std::cout << "79\n";
-	layers["conv0_d5"]->forward(tensors["pool_d5"]->data(), tensors["conv0_d5"]->data(), weights["conv0_d5_kernel"]->data(), weights["conv0_d5_bias"]->data());
-	std::cout << "83\n";
-	layers["convf1_d5"]->forward(tensors["conv0_d5"]->data(), tensors["convf1_d5"]->data(), weights["convf1_d5_kernel"]->data(), weights["convf1_d5_bias"]->data());
-	std::cout << "84\n";
-	layers["conv1_d5"]->forward(tensors["convf1_d5"]->data(), tensors["conv1_d5"]->data(), weights["conv1_d5_kernel"]->data(), weights["conv1_d5_bias"]->data());
-	std::cout << "88\n";
-	layers["convf2_d5"]->forward(tensors["conv1_d5"]->data(), tensors["convf2_d5"]->data(), weights["convf2_d5_kernel"]->data(), weights["convf2_d5_bias"]->data());
-	std::cout << "89\n";
-	layers["conv2_d5"]->forward(tensors["convf2_d5"]->data(), tensors["conv2_d5"]->data(), weights["conv2_d5_kernel"]->data(), weights["conv2_d5_bias"]->data());
-	std::cout << "99\n";
-	layers["conv4_d4"]->forward(tensors["Eltwise1"]->data(), tensors["conv4_d4"]->data(), weights["conv4_d4_kernel"]->data(), weights["conv4_d4_bias"]->data());
-	std::cout << "103\n";
-	layers["convf5_d4"]->forward(tensors["conv4_d4"]->data(), tensors["convf5_d4"]->data(), weights["convf5_d4_kernel"]->data(), weights["convf5_d4_bias"]->data());
-	std::cout << "104\n";
-	layers["conv5_d4"]->forward(tensors["convf5_d4"]->data(), tensors["conv5_d4"]->data(), weights["conv5_d4_kernel"]->data(), weights["conv5_d4_bias"]->data());
-	std::cout << "108\n";
-	layers["convf6_d4"]->forward(tensors["conv5_d4"]->data(), tensors["convf6_d4"]->data(), weights["convf6_d4_kernel"]->data(), weights["convf6_d4_bias"]->data());
-	std::cout << "109\n";
-	layers["conv6_d4"]->forward(tensors["convf6_d4"]->data(), tensors["conv6_d4"]->data(), weights["conv6_d4_kernel"]->data(), weights["conv6_d4_bias"]->data());
-	std::cout << "119\n";
-	layers["conv4_d3"]->forward(tensors["Eltwise2"]->data(), tensors["conv4_d3"]->data(), weights["conv4_d3_kernel"]->data(), weights["conv4_d3_bias"]->data());
-	std::cout << "123\n";
-	layers["convf5_d3"]->forward(tensors["conv4_d3"]->data(), tensors["convf5_d3"]->data(), weights["convf5_d3_kernel"]->data(), weights["convf5_d3_bias"]->data());
-	std::cout << "124\n";
-	layers["conv5_d3"]->forward(tensors["convf5_d3"]->data(), tensors["conv5_d3"]->data(), weights["conv5_d3_kernel"]->data(), weights["conv5_d3_bias"]->data());
-	std::cout << "128\n";
-	layers["convf6_d3"]->forward(tensors["conv5_d3"]->data(), tensors["convf6_d3"]->data(), weights["convf6_d3_kernel"]->data(), weights["convf6_d3_bias"]->data());
-	std::cout << "129\n";
-	layers["conv6_d3"]->forward(tensors["convf6_d3"]->data(), tensors["conv6_d3"]->data(), weights["conv6_d3_kernel"]->data(), weights["conv6_d3_bias"]->data());
-	std::cout << "139\n";
-	layers["conv4_d2"]->forward(tensors["Eltwise3"]->data(), tensors["conv4_d2"]->data(), weights["conv4_d2_kernel"]->data(), weights["conv4_d2_bias"]->data());
-	std::cout << "143\n";
-	layers["convf5_d2"]->forward(tensors["conv4_d2"]->data(), tensors["convf5_d2"]->data(), weights["convf5_d2_kernel"]->data(), weights["convf5_d2_bias"]->data());
-	std::cout << "144\n";
-	layers["conv5_d2"]->forward(tensors["convf5_d2"]->data(), tensors["conv5_d2"]->data(), weights["conv5_d2_kernel"]->data(), weights["conv5_d2_bias"]->data());
-	std::cout << "148\n";
-	layers["convf6_d2"]->forward(tensors["conv5_d2"]->data(), tensors["convf6_d2"]->data(), weights["convf6_d2_kernel"]->data(), weights["convf6_d2_bias"]->data());
-	std::cout << "149\n";
-	layers["conv6_d2"]->forward(tensors["convf6_d2"]->data(), tensors["conv6_d2"]->data(), weights["conv6_d2_kernel"]->data(), weights["conv6_d2_bias"]->data());
-	std::cout << "159\n";
-	layers["conv4_d1"]->forward(tensors["Eltwise4"]->data(), tensors["conv4_d1"]->data(), weights["conv4_d1_kernel"]->data(), weights["conv4_d1_bias"]->data());
-	std::cout << "163\n";
-	layers["conv5_d1"]->forward(tensors["conv4_d1"]->data(), tensors["conv5_d1"]->data(), weights["conv5_d1_kernel"]->data(), weights["conv5_d1_bias"]->data());
-	std::cout << "167\n";
-	layers["conv6_d1"]->forward(tensors["conv5_d1"]->data(), tensors["conv6_d1"]->data(), weights["conv6_d1_kernel"]->data(), weights["conv6_d1_bias"]->data());
-	std::cout << "177\n";
-	layers["conv4_d0"]->forward(tensors["merge_d3"]->data(), tensors["conv4_d0"]->data(), weights["conv4_d0_kernel"]->data(), weights["conv4_d0_bias"]->data());
-	std::cout << "181\n";
-	layers["conv5_d0"]->forward(tensors["conv4_d0"]->data(), tensors["conv5_d0"]->data(), weights["conv5_d0_kernel"]->data(), weights["conv5_d0_bias"]->data());
-	std::cout << "185\n";
-	layers["conv6_d0"]->forward(tensors["conv5_d0"]->data(), tensors["conv6_d0"]->data(), weights["conv6_d0_kernel"]->data(), weights["conv6_d0_bias"]->data());
-	std::cout << "190\n";
-	layers["conv7_d0"]->forward(tensors["sum4_d0"]->data(), tensors["conv7_d0"]->data(), weights["conv7_d0_kernel"]->data(), weights["conv7_d0_bias"]->data());
-	
+	readArrayFromFile(tensors["user_input"]->data(), "./bin/user_input.data");
+	auto begin = std::chrono::high_resolution_clock::now();
+	for (int i = 0; i < 20; i++) {
+		std::cout << "Starting Forward Pass\n";
+		std::cout << "Running conv1_d1!\n";
+		layers["conv1_d1"]->forward(tensors["conv0_d1"]->data(), tensors["conv1_d1"]->data(), tensors["conv1_d1_kernel"]->data(), tensors["conv1_d1_bias"]->data());
+		std::cout << "conv1_d1 Finished!\n";
+		
+	}
+	auto end = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+	double secs = static_cast<double>(duration) / 1000000;
+	std::cout << "average:" << secs/20 << "\n";
 }
 

@@ -109,13 +109,11 @@ void *loadConvLayerSO(int bn, int ifm, int ofm, int id,
 {
     std::string dl_filename;
     std::string compile_command;
-    std::string param = generateParamString(bn, ifm, ofm, id, ihw, kd, khw,
-                                       padd, padhw, cores, ht, "_");
     
     dl_filename = generateLayerSOName(bn, ifm, ofm, id, ihw, kd, khw, padd, 
                                       padhw, cores, ht);
 
-    compile_command = generateCompileSOCommand(dl_filename,
+    /*compile_command = generateCompileSOCommand(dl_filename,
                           bn, ifm, ofm, id, ihw, kd, khw, padd, padhw, cores, ht);
 
     //compile_command += " &>/dev/null; "; 
@@ -127,8 +125,10 @@ void *loadConvLayerSO(int bn, int ifm, int ofm, int id,
                   (end - begin).count();
     double secs = static_cast<double>(duration) / 1000000;
 
+    std::string param = generateParamString(bn, ifm, ofm, id, ihw, kd, khw,
+                                       padd, padhw, cores, ht, "_");
     std::cout << "\n" << param << ": " << secs << std::endl;
-
+    */
     void *handle = dlopen(dl_filename.c_str(), RTLD_NOW);
     handleSOError();
 
@@ -136,10 +136,6 @@ void *loadConvLayerSO(int bn, int ifm, int ofm, int id,
 }
 
  
-/*ConvWrapper::ConvWrapper(int a): conv_layer(NULL), 
-                                createConvLayer(NULL),
-                                destroyConvLayer(NULL) {}   */
-
 //TODO: add checkf for null pointers with uninitialized layers
 //void ConvWrapper::init(int bn, int ifm, int ofm, int id,
 ConvWrapper::ConvWrapper(int bn, int ifm, int ofm, int id,

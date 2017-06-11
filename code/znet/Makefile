@@ -38,7 +38,7 @@ STANDARD_FLAG	=	-std=c++14
 STD_FLAG	=
 
 
-CXX			=	$(AT)icpc $(STANDARD_FLAG) 
+CXX			=	$(AT)icpc -pthread $(STANDARD_FLAG) -fopenmp
 OPTIMIZATION_FLAGS	=	-DNDEBUG -O3 -ffast-math -fno-omit-frame-pointer #-fno-rtti -fno-exceptions
 CS_FLAGS		=
 CS_LD_FLAGS		=       -lpthread
@@ -46,17 +46,17 @@ CS_LD_FLAGS		=       -lpthread
 FPIC	=	-fPIC
 CXXINCLUDES	=	-I$(ZNNPHI_PATH)/code/include -I$(ZNNPHI_PATH)/code/include/znn -I$(ZNNPHI_PATH)/
 
-CXXWARN		=	-Wall -Wextra -Wno-format -Wno-unknown-pragmas -Wno-unused-variable -Wno-return-type -Wno-unused-parameter
+#CXXWARN		=	-Wall -Wextra -Wno-format -Wno-unknown-pragmas -Wno-unused-variable -Wno-return-type -Wno-unused-parameter
 CXXERR		=   -fmax-errors=5
 
 HBW_LD_FLAG	= #-lmemkind
 HBW_FLAG	=	-DZNN_NO_HBW
 
-DEPFLAGS	=	-MM -MG -MP $(CXXINCLUDES) -MT "$(@:.d=.o)" $(CS_FLAGS) -DZNN_NO_CUDA $(HBW_FLAG) $(CORES_FLAG)
-INLINE_DEPFLAGS	=	-MMD -MP -MT "$(@)" -MF $(@:.o=.T) -DZNN_NO_CUDA $(HBW_FLAG) $(CORES_FLAG) $(STD_FLAG)
+#DEPFLAGS	=	-MM -MG -MP $(CXXINCLUDES) -MT "$(@:.d=.o)" $(CS_FLAGS) -DZNN_NO_CUDA $(HBW_FLAG) $(CORES_FLAG)
+#INLINE_DEPFLAGS	=	-MMD -MP -MT "$(@)" -MF $(@:.o=.T) $(HBW_FLAG) $(CORES_FLAG) $(STD_FLAG)
 
-COMMON_FLAGS	=	-g $(INLINE_DEPFLAGS) $(CXXINCLUDES) $(CXXWARN) $(CXXERR) \
-					$(HBW_FLAG) $(CORES_FLAG)
+COMMON_FLAGS	=	$(INLINE_DEPFLAGS) $(CXXINCLUDES) $(CXXWARN) $(CXXERR) \
+					$(HBW_FLAG) $(CORES_FLAG) -DZNN_NO_CUDA 
 
 DBG_FLAGS		=	$(COMMON_FLAGS) $(CS_FLAGS)
 LD_OPTIMIZATION_FLAGS	=	-DNDEBUG -O3
@@ -89,7 +89,7 @@ $(BINDIR)/%_b${B}.bin: $(CPPODIR)/%_b${B}.cpp
 cpp_out/znet.cpp:
 	python znet.py
 .PRECIOUS: %.cpp 
-.PHONY: unet, all, layers, znet, client
+.PHONY: unet, all, layers, znet, client, znet
 test: tmp.cpp
 	$(ECHO) $(CXX) -c $(CXXFLAGS) $(AVX_FLAGS) tmp.cpp
 	$(CXX)  $(CXXFLAGS) $(AVX_FLAGS) $(LD_FLAGS) tmp.cpp 
@@ -114,6 +114,6 @@ big_layer: $(BINDIR)/big_layer_b${B}.bin
 	numactl --membind=1 $^
 all:  unet
 clean:
-	rm -rf ./cpp_out/ ./bin/
+	rm -rf ./bin/
 
 remake: clean all

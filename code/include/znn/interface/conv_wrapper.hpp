@@ -22,10 +22,10 @@ public:
                     int padd=0, int padhw=0,
                     int cores=DEFAULT_CORES, int ht=DEFAULT_HT);
    
-    /*void init(int bn, int ifm, int ofm, int id,
+    void init(int bn, int ifm, int ofm, int id,
                       int ihw, int kd, int khw,
                       int padd=0, int padhw=0,
-                      int cores=DEFAULT_CORES, int ht=DEFAULT_HT);*/
+                      int cores=DEFAULT_CORES, int ht=DEFAULT_HT);
    
     ~ConvWrapper(void);
 

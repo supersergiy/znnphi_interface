@@ -11,19 +11,18 @@ class Znet {
     using layer_map = std::map<std::string, znn::phi::Layer *>;
     public:
         hbw_map tensors;
-        hbw_map weights;
         
         layer_map layers;
         std::vector<std::string> layer_order;
+
     public:
         Znet(void);
         ~Znet(void) {
+           std::cout << "in destructor\n";
            for (hbw_map::iterator it = tensors.begin(); it != tensors.end(); it++) {
               delete it->second;
            }
-           for (hbw_map::iterator it = weights.begin(); it != weights.end(); it++) {
-              delete it->second;
-           }
+           //TODO: there's a memory leak here
         }
 
         //TODO: add input and output data

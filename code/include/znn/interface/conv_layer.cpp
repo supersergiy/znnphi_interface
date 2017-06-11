@@ -7,9 +7,9 @@ namespace phi
 {
 
 typedef ConvEngine<Cores_v, HT_v, BN_v, 
-                         IFM_v, OFM_v, ID_v, 
-                         IHW_v, KD_v, KHW_v, 
-                         PADD_v, PADHW_v    >    parametrizedConvEngine;
+                   IFM_v, OFM_v, ID_v, 
+                   IHW_v, KD_v, KHW_v, 
+                   PADD_v, PADHW_v    >    parametrizedConvEngine;
 
 ConvLayer::~ConvLayer()
 {
@@ -22,8 +22,8 @@ ConvLayer::ConvLayer()
 }
 
 void ConvLayer::compute(float const* __restrict in, float *out, 
-                                float const* __restrict ker, 
-                                float const* __restrict bi)
+                        float const* __restrict ker, 
+                        float const* __restrict bi)
 {
     reinterpret_cast<parametrizedConvEngine*>(convEngine)->compute(in, out, ker, bi);
 }

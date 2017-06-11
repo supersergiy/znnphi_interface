@@ -22,7 +22,8 @@ class Znet {
         size_t out_dim = 1;
 
     public:
-        Znet(std::string = "./weights/");
+        Znet() {};
+        Znet(std::string);
         ~Znet(void) {
            //std::cout << "in destructor\n";
            for (hbw_map::iterator it = tensors.begin(); it != tensors.end(); it++) {

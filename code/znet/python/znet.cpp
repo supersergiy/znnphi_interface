@@ -300,7 +300,7 @@ znn::phi::Znet::Znet(std::string weights_path)
 	tensors["conv2_d2_bias"]->set_to_const(0);
 	readArrayFromFile(tensors["conv2_d0_kernel"]->data(), weights_path + "conv2_d0_kernel.data");
 	tensors["conv2_d0_bias"]->set_to_const(0);
-	
+
 	layers["conv0_d1"] = new znn::phi::ConvWrapper(1, 28, 36, 18, 96, 1, 3, 0, 1);
 	layers["conv0_d0"] = new znn::phi::ConvWrapper(1, 28, 28, 18, 192, 1, 3, 0, 1);
 	layers["conv0_d3"] = new znn::phi::ConvWrapper(1, 48, 64, 18, 24, 1, 3, 0, 1);
@@ -359,7 +359,7 @@ znn::phi::Znet::Znet(std::string weights_path)
 	out_shape.assign(tmp_shape, tmp_shape + 5);
 	size_t tmp_strides[] = { 4, 4, 768, 147456, 2654208 };
 	out_strides.assign(tmp_strides, tmp_strides + 5);
-	
+   std::cout << "Constructor is OK!\n";	
 }
 
 

@@ -98,10 +98,9 @@ def generate_constructor_body(net, weights_path):
     lines = []
     tensors, layer_info, layer_order = net
 
-
-    lines += generate_allocate_layers(net)
     lines += generate_allocate_featuremaps(net)
     lines += generate_initialize_weights(net, weights_path)
+    lines += generate_allocate_layers(net)
 
     lines.append('')
 
@@ -148,15 +147,15 @@ def generate_forward_body(net):
     lines = []
 
     lines += generate_load_data(net)
-    lines += timeit(generate_forward_all_layers(net), 20, "average:")
+    lines += timeit(generate_forward_all_layers(net), 10, "average:")
     return lines
 
 def generate_znet(net, weights_path):
-    tmp = net[1]["conv1_d1"]
+    '''tmp = net[1]["conv1_d1"]
     net[1].clear()
     net[1]["conv1_d1"] = tmp
     net[2].clear()
-    net[2].append("conv1_d1")
+    net[2].append("conv1_d1")'''
 
     lines = []
     #includes

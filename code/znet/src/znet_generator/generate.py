@@ -62,14 +62,17 @@ def generate_initialize_weights(net, weights_path):
     #initialize weights
     for (lname, l) in iteritems(layer_info):
         if l["type"] == "conv":
-            if weights_path:
+            if False and weights_path:
                 weights = h5py.File(weights_path) ['data']
                 lweights = weights[lname].values()
             else:
                 print "WARNING: uninitialized layer {}".format(lname)
                 lweights = []
                 lweights.append(np.ones(l["kernel_dim"]))
-                lweights.append(np.array(range(l["ofm"])))
+                #lweights.append(np.array(range(l["ofm"])))
+                lweights.append(np.zeros(l["bias_dim"]))
+                #lweights.append(np.ones(l["bias_dim"]))
+                #lweights.append(np.array(range(l["ofm"])))
 
             kernel = lweights[0][:]
             blocked_kernel = block_kernel(kernel, l)

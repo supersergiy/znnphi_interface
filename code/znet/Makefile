@@ -77,11 +77,11 @@ PY_INTERFACE_FLAGS = `python-config --cflags --ldflags` -Isrc/python/pybind11/in
 
 .PHONY: bin, py, rerun, gen, FORCE
 
-NET_NAME = unet
+NET_NAME = small_layer
 N = nets/${NET_NAME}.json
 W = nets/${NET_NAME}.h5
 
-src/generated/znet.cpp: 
+src/generated/znet.cpp:  $(shell find src/znet_generator -type f) $(N) $(W)
 	rm -rf out
 	${MKDIR_P} out
 	${MKDIR_P} out/weights
@@ -96,9 +96,11 @@ py: out/znet.o out/znet_numpy_wrapper.o
 	$(CXX) $^ -lznnphiconv -shared -o out/znet.so 
 bin: out/client.o out/znet.o 
 	$(CXX) $(CXXFLAGS) $(AVX2_FLAGS) $(LD_FLAGS) $^ -o ./out/znet.bin
-gen: src/generated/znet.cpp FORCE
+gen: src/generated/znet.cpp 
 rerun: clean gen bin
 	./out/znet.bin
+rerun_py: clean gen py
+	./src/client.py
 all: znet 
 clean:
 	rm -rf out/*.so out/*.o out/*.bin

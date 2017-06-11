@@ -27,7 +27,6 @@ class ZnetNumpyWrapper {
          std::cout << zn->out_shape.size() << std::endl;
          std::cout << zn->out_strides.size() << std::endl;
 
-         std::cout << "TRALALA\n";
 		   return py::array(py::buffer_info(out_data, sizeof(float),
                                           py::format_descriptor<float>::format(),
                                           zn->out_dim, zn->out_shape, zn->out_strides));
@@ -39,6 +38,6 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(znet, m) {
     py::class_<ZnetNumpyWrapper>(m, "znet")
-        .def(py::init<const std::string &>(), py::arg("weights_path") = "./weights/") 
+        .def(py::init<const std::string &>(), py::arg("weights_path") = "../out/weights/") 
         .def("forward", &ZnetNumpyWrapper::forward);
 }

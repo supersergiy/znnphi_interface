@@ -1,7 +1,6 @@
 HERE    	=  .
 BINDIR	=	./bin
 NETDIR	=	./nets
-CPPODIR	=  ./cpp_out
 
 AT    	=	@
 DOLLAR   = 	$$
@@ -20,7 +19,7 @@ RM			=	$(AT)rm -f
 TOUCH		=	$(AT)touch
 CHMOD		=	$(AT)chmod
 DATE    	=  $(AT)date
-
+MKDIR_P  = mkdir -p
 
 # compilers
 
@@ -28,7 +27,7 @@ ZNN_TUNE	=
 
 SSE_FLAGS	=	-DZNN_SSE -msse $(ZNN_TUNE)
 AVX_FLAGS	=	-DZNN_AVX -mavx $(ZNN_TUNE)
-AVX2_FLAGS	=	-DZNN_AVX2 -mavx2 -mfma $(ZNN_TUNE)
+AVX2_FLAGS	=	-DZNN_AVX2 -march=core-avx2 $(ZNN_TUNE)
 AVX512_FLAGS	=	-DZNN_AVX512 -mavx512f -mavx512pf -mavx512cd -mfma $(ZNN_TUNE)
 KNC_FLAGS	=	-DZNN_AVX512 -mavx512f -mavx512pf -mfma $(ZNN_TUNE)
 
@@ -39,12 +38,12 @@ STD_FLAG	=
 
 
 CXX			=	$(AT)icpc -pthread $(STANDARD_FLAG) -fopenmp
-OPTIMIZATION_FLAGS	=	-DNDEBUG -O3 -ffast-math -fno-omit-frame-pointer #-fno-rtti -fno-exceptions
+OPTIMIZATION_FLAGS	=	-DNDEBUG -O3 -fno-omit-frame-pointer #-fno-rtti -fno-exceptions #-ffast-math 
 CS_FLAGS		=
 CS_LD_FLAGS		=       -lpthread
 
 FPIC	=	-fPIC
-CXXINCLUDES	=	-I$(ZNNPHI_PATH)/code/include -I$(ZNNPHI_PATH)/code/include/znn -I$(ZNNPHI_PATH)/
+CXXINCLUDES	=	-I$(ZNNPHI_PATH)/code/include -I$(ZNNPHI_PATH)/code/include/znn -I$(ZNNPHI_PATH)/ -I./src/
 
 #CXXWARN		=	-Wall -Wextra -Wno-format -Wno-unknown-pragmas -Wno-unused-variable -Wno-return-type -Wno-unused-parameter
 CXXERR		=   -fmax-errors=5
@@ -74,46 +73,35 @@ CXXLDFLAGS	=	$(OPT_LDFLAGS)
 
 LD_FLAGS    =   -lznnphiconv
 
+PY_INTERFACE_FLAGS = `python-config --cflags --ldflags` -Isrc/python/pybind11/include -fPIC 
 
-$(CPPODIR)/%_b${B}.cpp: run.jl $(NETDIR)/%.json $(NETDIR)/%.h5
-	$(ECHO) "[Generating $@]..."
-	$(JULIA) $^ ${B} ${N} > $@ 
+.PHONY: bin, py, rerun, gen, FORCE
 
-$(BINDIR)/%_b${B}.bin: $(CPPODIR)/%_b${B}.cpp
-	$(ECHO) "[Generating $@]..."
-	$(CXX) $(CXXFLAGS) $(AVX_FLAGS) $(LD_FLAGS) $< -o $@
+NET_NAME = small_layer
+N = nets/${NET_NAME}.json
+W = nets/${NET_NAME}.h5
 
-
-/usr/lib/znnphiconvlib.so:
-	#Nothin
-cpp_out/znet.cpp:
-	python znet.py
-.PRECIOUS: %.cpp 
-.PHONY: unet, all, layers, znet, client, znet
-test: tmp.cpp
-	$(ECHO) $(CXX) -c $(CXXFLAGS) $(AVX_FLAGS) tmp.cpp
-	$(CXX)  $(CXXFLAGS) $(AVX_FLAGS) $(LD_FLAGS) tmp.cpp 
-
-client:
-znet: cpp_out/znet.cpp cpp_out/client.cpp 
-	$(ECHO) $(CXX) $(CXXFLAGS) $(AVX_FLAGS) $^ 
-	$(CXX)  $(CXXFLAGS) $(AVX_FLAGS) $(LD_FLAGS) $^ -o znet.bin
-	./znet.bin
-
-layers: 
-	julia run_separate.jl ./nets/unet.json ./nets/unet.h5 ${B} 1 
-	make layer_{1..49} B=${B} #-j64
-layer_%: $(BINDIR)/layer_%_b${B}.bin
-	$^
-unet: $(BINDIR)/unet_b${B}.bin
-	numactl --membind=1 $^
-	tail bench/timings${B}.txt
-small_layer: $(BINDIR)/small_layer_b${B}.bin
-	numactl --membind=1 $^
-big_layer: $(BINDIR)/big_layer_b${B}.bin
-	numactl --membind=1 $^
-all:  unet
+src/generated/znet.cpp:  $(shell find src/znet_generator -type f) $(N) $(W)
+	rm -rf out
+	${MKDIR_P} out
+	${MKDIR_P} out/weights
+	python src/znet_generator/main.py $(N) $(W) src/generated/znet.cpp
+out/client.o: src/client.cpp 
+	$(CXX) $(CXXFLAGS) -fPIC -c $^ -o $@
+out/znet.o: src/generated/znet.cpp 
+	$(CXX) $(CXXFLAGS) -fPIC -c $^ -o $@
+out/znet_numpy_wrapper.o: src/python/znet_numpy_wrapper.cpp 
+	$(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) -fPIC -c $^ -o $@
+py: out/znet.o out/znet_numpy_wrapper.o 
+	$(CXX) $^ -lznnphiconv -shared -o out/znet.so 
+bin: out/client.o out/znet.o 
+	$(CXX) $(CXXFLAGS) $(AVX2_FLAGS) $(LD_FLAGS) $^ -o ./out/znet.bin
+gen: src/generated/znet.cpp 
+rerun: clean gen bin
+	./out/znet.bin
+rerun_py: clean gen py
+	./src/client.py
+all: znet 
 clean:
-	rm -rf ./bin/
-
+	rm -rf out/*.so out/*.o out/*.bin
 remake: clean all

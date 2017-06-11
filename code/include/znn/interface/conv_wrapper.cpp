@@ -78,7 +78,7 @@ std::string generateCompileSOCommand(std::string& dl_filename,
     const char *znnphi_path = std::getenv("ZNNPHI_PATH");
 
     //invoke makefile in the interface folder
-    command_string << "make -C " << znnphi_path << "/" << RELATIVE_MAKEFILE_PATH;
+    command_string << "make -s -C " << znnphi_path << "/" << RELATIVE_MAKEFILE_PATH;
    
     //specify the target: layer
     command_string << " layer";
@@ -113,12 +113,13 @@ void *loadConvLayerSO(int bn, int ifm, int ofm, int id,
     dl_filename = generateLayerSOName(bn, ifm, ofm, id, ihw, kd, khw, padd, 
                                       padhw, cores, ht);
 
-    /*compile_command = generateCompileSOCommand(dl_filename,
+    compile_command = generateCompileSOCommand(dl_filename,
                           bn, ifm, ofm, id, ihw, kd, khw, padd, padhw, cores, ht);
-
     //compile_command += " &>/dev/null; "; 
+
+    //std::cout << (compile_command.c_str());
+
     auto begin = std::chrono::high_resolution_clock::now();  
-    std::cout << (compile_command.c_str());
     std::system(compile_command.c_str());
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>
@@ -127,8 +128,8 @@ void *loadConvLayerSO(int bn, int ifm, int ofm, int id,
 
     std::string param = generateParamString(bn, ifm, ofm, id, ihw, kd, khw,
                                        padd, padhw, cores, ht, "_");
-    std::cout << "\n" << param << ": " << secs << std::endl;
-    */
+    //std::cout << "\n" << param << ": " << secs << std::endl;
+    
     void *handle = dlopen(dl_filename.c_str(), RTLD_NOW);
     handleSOError();
 

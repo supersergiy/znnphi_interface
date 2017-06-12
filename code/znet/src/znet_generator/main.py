@@ -42,6 +42,9 @@ def parse_net(net_path):
       if lt != "Input":
          bot_name   = l["bottom"][0]
          top_name   = l["top"][0]
+         if top_name == "conv_o": #TODO: don't forget to remove this hack
+             top_name = "output"
+
          bot_tensor = tensors[bot_name]
 
       if lt == "Input":
@@ -65,7 +68,7 @@ def parse_net(net_path):
       elif lt == "Sigmoid":
          lparams["type"] = "sigmoid"
          lparams["top_dim"] = copy.copy(bot_tensor.dim)
-         lparams["top"] = l["top"]
+         lparams["top"] = top_name
       elif lt == "BatchNorm":
          lparams["type"] = "batchnorm"
          lparams["top_dim"] = copy.copy(bot_tensor.dim)
@@ -117,6 +120,9 @@ def add_unblock_output(net):
         layer_order.append("unblock_output")
         layer_info["unblock_output"] = block_params
         tensors["user_output"] = Tensor(tensors["output"].dim)
+    else:
+        print "WARNING: there's no output tensor in your network"
+        exit()
 
 
 if __name__ == "__main__":

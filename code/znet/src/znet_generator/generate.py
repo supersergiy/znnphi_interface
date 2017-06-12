@@ -63,21 +63,12 @@ def generate_initialize_weights(net, weights_path):
     #initialize weights
     for (lname, l) in iteritems(layer_info):
         if l["type"] == "conv":
-            if False and weights_path:
+            if weights_path:
                 weights = h5py.File(weights_path) ['data']
                 lweights = weights[lname].values()
             else:
                 print "WARNING: uninitialized layer {}".format(lname)
                 lweights = []
-
-                lweights.append(2*np.ones(l["kernel_dim"]))
-                for i in range(lweights[0].shape[0]):
-                 for j in range(lweights[0].shape[1]):
-                  for k in range(lweights[0].shape[2]):
-                   for m in range(lweights[0].shape[3]):
-                    for n in range(lweights[0].shape[4]):
-                     lweights[0][i][j][k][n][m] = n + m
-                print lweights[0]
                 lweights.append(np.zeros(l["bias_dim"]))
 
             kernel = lweights[0][:]
@@ -112,6 +103,7 @@ def generate_set_in_out_dimensions(net):
     #output
     out_dim = 5
     out_strides = [4]  #sizeof float
+
     #go from the outer most dimension backward,
     #then reverse
     for i in range(1, 5): #4 more dimensions
@@ -172,9 +164,6 @@ def generate_forward_all_layers(net):
            lines.append('layers["{}"]->forward({});'.format(lname, params))
 
        lines.append('std::cout << "{} Finished!\\n";'.format(l["name"]))
-    lines += generate_print_tensor("convi_kernel");
-    lines += generate_print_tensor("output");
-    lines += generate_print_tensor("user_output");
     lines.append('')
     return lines
 

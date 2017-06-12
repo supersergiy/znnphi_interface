@@ -1,0 +1,54 @@
+{
+   "layer": [
+      {
+         "input_param": {
+            "shape": [
+               {
+                  "dim": [
+                     1, 
+                     8, 
+                     18, 
+                     192, 
+                     192
+                  ]
+               }
+            ]
+         }, 
+         "top": [
+            "input"
+         ], 
+         "type": "Input", 
+         "name": "input"
+      }, 
+      {
+         "top": [
+            "conv_o"
+         ], 
+         "convolution_param": {
+            "num_output": 8, 
+            "weight_filler": {
+               "type": "msra"
+            }, 
+            "stride": [
+               1, 
+               1, 
+               1
+            ], 
+            "bias_filler": {
+               "type": "constant"
+            }, 
+            "bias_term": true, 
+            "kernel_size": [
+               3, 
+               1, 
+               1
+            ]
+         }, 
+         "type": "Convolution", 
+         "name": "conv", 
+         "bottom": [
+            "input"
+         ]
+      }
+   ]
+}

@@ -19,6 +19,11 @@ class ZnetNumpyWrapper {
          py::buffer_info in_info = in.request();
          auto in_ptr = static_cast<float *>(in_info.ptr);
 
+         if (in_info.size < zn->input_size) {
+            std::cerr << "The input tensor is too small." << std::endl;
+            std::cerr << "Expected " << zn->input_size << " elements, but got " << in_info.size << std::endl;
+            exit(EXIT_FAILURE);
+         }
          std::memcpy(zn->tensors["user_input"]->data(), in_ptr, zn->input_size*sizeof(float));
          /*std::cout << "I think python input is like:\n";
          for (int i = 0; i < 10; i++) {
@@ -33,6 +38,7 @@ class ZnetNumpyWrapper {
          std::cout << "\n";*/
 
          zn->forward();
+         std::cout << "Forward Finished\n";
 			auto out_data = zn->tensors["user_output"]->data();
 
          std::cout << zn->out_dim << std::endl;

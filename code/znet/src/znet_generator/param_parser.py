@@ -25,7 +25,10 @@ def parse_conv(json_conv_param, bot_tensor):
     params = {}
     params["type"] = "conv"
 
-    params["pad"]  = json_conv_param["pad"]
+    if "pad" in json_conv_param:
+        params["pad"]     = json_conv_param["pad"]
+    else:
+        params["pad"]     = [0, 0, 0]
     params["stride"]  = json_conv_param["stride"]
 
     params["bn"]  = bot_tensor.dim[0]
@@ -51,7 +54,10 @@ def parse_deconv(json_conv_param, bot_tensor):
     params = {}
     params["type"] = "deconv"
 
-    params["pad"]     = json_conv_param["pad"]
+    if "pad" in json_conv_param:
+        params["pad"]     = json_conv_param["pad"]
+    else:
+        params["pad"]     = [0, 0, 0]
     params["stride"]  = json_conv_param["stride"]
 
     params["bn"]  = bot_tensor.dim[0]

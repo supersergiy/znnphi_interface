@@ -77,9 +77,9 @@ PY_INTERFACE_FLAGS = `python-config --cflags --ldflags` -Isrc/python/pybind11/in
 
 .PHONY: bin, py, rerun, gen, FORCE
 
-NET_NAME = small_layer
-N = nets/${NET_NAME}.json
-W = nets/${NET_NAME}.h5
+#NET_NAME = small_layer
+#N = nets/${NET_NAME}.json
+#W = nets/${NET_NAME}.h5
 
 src/generated/znet.cpp:  $(shell find src/znet_generator -type f) $(N) $(W)
 	rm -rf out
@@ -92,10 +92,16 @@ out/znet.o: src/generated/znet.cpp
 	$(CXX) $(CXXFLAGS) -fPIC -c $^ -o $@
 out/znet_numpy_wrapper.o: src/python/znet_numpy_wrapper.cpp 
 	$(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) -fPIC -c $^ -o $@
+
 py: out/znet.o out/znet_numpy_wrapper.o 
 	$(CXX) $^ -lznnphiconv -shared -o out/znet.so 
+ifneq ($(strip $(O)),)
+	${CP} -r out/znet.so $(O)
+	${CP} -r out/weights $(O)
+endif
+
 bin: out/client.o out/znet.o 
-	$(CXX) $(CXXFLAGS) $(AVX2_FLAGS) $(LD_FLAGS) $^ -o ./out/znet.bin
+	$(CXX) $(CXXFLAGS) $(AVX2_FLAGS) $(LD_FLAGS) $^ -o out/znet.bin
 gen: src/generated/znet.cpp 
 rerun: clean gen bin
 	./out/znet.bin

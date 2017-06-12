@@ -45,7 +45,7 @@ def block_kernel(kernel, lparam):
 
 
 def block_bias(bias, lparam):
-    blocked_bias = np.array([0]*lparam['bias_size'])
+    blocked_bias = np.array([0.0]*lparam['bias_size'])
     for ofm in range(lparam["ofm"]):
         blocked_bias[ofm] = bias[ofm]
 

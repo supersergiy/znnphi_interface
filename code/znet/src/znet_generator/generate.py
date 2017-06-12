@@ -77,7 +77,9 @@ def generate_initialize_weights(net, weights_path):
 
             if len(lweights) > 1:
                 bias = lweights[1][:]
+                print bias
                 blocked_bias = block_bias(bias, l)
+                print blocked_bias
                 lines += fill_tensor('{}_bias'.format(lname), blocked_bias)
             else:
                 lines += zero_out_tensor('{}_bias'.format(lname))

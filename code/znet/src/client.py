@@ -7,7 +7,7 @@ from operator import mul
 
 in_dim = [1,1,18,192,192]
 z = znet.znet("./out/weights/")
-in_a = np.arange((reduce(mul, in_dim)))
+in_a = np.ones((reduce(mul, in_dim)), dtype=np.float)
 out_a = z.forward(in_a)
 print out_a
 print out_a.shape

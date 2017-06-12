@@ -15,7 +15,6 @@ net_path     = sys.argv[1]
 weights_path = sys.argv[2]
 out_path     = sys.argv[3]
 
-BATCH_SIZE =1
 SIMD_WIDTH = 8
 S = SIMD_WIDTH
 
@@ -48,7 +47,6 @@ def parse_net(net_path):
       if lt == "Input":
          lparams["type"] = "input"
          dim = l["input_param"]["shape"][0]["dim"]
-         dim[0] = BATCH_SIZE
          tensors[l["name"]] = Tensor(dim)
       elif lt == "Convolution":
          lparams = param_parser.parse_conv(l["convolution_param"], bot_tensor)

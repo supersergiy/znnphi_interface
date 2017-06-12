@@ -5,3 +5,5 @@
 znet
 bin/
 out/
+tmp*
+reference/

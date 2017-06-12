@@ -10,12 +10,14 @@ def round_to_simd(n):
 def block_kernel(kernel, lparam):
     kdim = lparam["kernel_dim"]
     kernel = kernel.reshape(kdim)
-
     blocked_kernel = np.array([0.0]*lparam['kernel_size'])
 
     def h5ker_to_znnphiker(ofm, ifm, kz, kx, ky):
+        total_ofms = round_to_simd(kdim[0])
+        total_ifms = round_to_simd(kdim[1])
+
         offset = ofm/S
-        offset *= round_to_simd(kdim[1])/S
+        offset *= total_ifms/S
         offset += ifm/S
         offset *= kdim[2]
         offset += kz
@@ -24,9 +26,9 @@ def block_kernel(kernel, lparam):
         offset *= kdim[4]
         offset += ky
         offset *= S
-        offset += ofm % S
-        offset *= S
         offset += ifm % S
+        offset *= S
+        offset += ofm % S
         return offset
 
     # h5 weight format: ofm-ifm-kz-kx-ky

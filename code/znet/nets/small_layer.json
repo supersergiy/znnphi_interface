@@ -5,11 +5,11 @@
             "shape": [
                {
                   "dim": [
-                     1, 
-                     1, 
-                     1, 
                      2, 
-                     2 
+                     9, 
+                     2, 
+                     3, 
+                     3 
                   ]
                }
             ]
@@ -37,7 +37,7 @@
             }
          ], 
          "convolution_param": {
-            "num_output": 8, 
+            "num_output": 9, 
             "weight_filler": {
                "std": 1.0, 
                "type": "msra"
@@ -58,8 +58,8 @@
             "bias_term": true, 
             "kernel_size": [
                1, 
-               1, 
-               1 
+               2, 
+               2 
             ]
          }, 
          "type": "Convolution"

@@ -10,6 +10,8 @@ def generate_print_tensor(tname):
     lines.append('for (int i = 0; i < tensors["{}"]->num_elements(); i++) {{'.format(tname))
     lines.append('  cout << tensors["{}"]->data()[i] << " ";'.format(tname))
     lines.append('}')
+    lines.append('std::cout << std::endl;')
+    lines.append('')
     return lines
 
 def generate_allocate_layers(net):
@@ -48,7 +50,6 @@ def generate_allocate_layers(net):
 def generate_initialize_weights(net, weights_path):
     lines = []
     tensors, layer_info, layer_order = net
-
     #allocate_weights
     for (n,l) in iteritems(layer_info):
        if l["type"] in ["conv", "deconv"]:
@@ -68,11 +69,16 @@ def generate_initialize_weights(net, weights_path):
             else:
                 print "WARNING: uninitialized layer {}".format(lname)
                 lweights = []
-                lweights.append(np.ones(l["kernel_dim"]))
-                #lweights.append(np.array(range(l["ofm"])))
+
+                lweights.append(2*np.ones(l["kernel_dim"]))
+                for i in range(lweights[0].shape[0]):
+                 for j in range(lweights[0].shape[1]):
+                  for k in range(lweights[0].shape[2]):
+                   for m in range(lweights[0].shape[3]):
+                    for n in range(lweights[0].shape[4]):
+                     lweights[0][i][j][k][n][m] = n + m
+                print lweights[0]
                 lweights.append(np.zeros(l["bias_dim"]))
-                #lweights.append(np.ones(l["bias_dim"]))
-                #lweights.append(np.array(range(l["ofm"])))
 
             kernel = lweights[0][:]
             blocked_kernel = block_kernel(kernel, l)
@@ -106,8 +112,11 @@ def generate_set_in_out_dimensions(net):
     #output
     out_dim = 5
     out_strides = [4]  #sizeof float
-    for i in range(4): #4 more dimensions
+    #go from the outer most dimension backward,
+    #then reverse
+    for i in range(1, 5): #4 more dimensions
         out_strides.append(out_strides[-1]*tensors['user_output'].dim[-i])
+    out_strides = list(reversed(out_strides))
 
     lines.append('out_dim = {};'.format(out_dim))
     lines.append('size_t tmp_shape[] = {{ {} }};'.format(', '.join(map(str, tensors['user_output'].dim))))
@@ -158,11 +167,14 @@ def generate_forward_all_layers(net):
            lines.append('layers["{}"]->forward({});'.format(lname, params))
        if l["type"] in ["unblock_output"]:
            params  = 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
+           #params  = 'tensors["{}"]->data(), tensors["{}"]->data(), '.format("input", l["top"])
            params += 'NULL, NULL'
            lines.append('layers["{}"]->forward({});'.format(lname, params))
 
        lines.append('std::cout << "{} Finished!\\n";'.format(l["name"]))
-
+    lines += generate_print_tensor("convi_kernel");
+    lines += generate_print_tensor("output");
+    lines += generate_print_tensor("user_output");
     lines.append('')
     return lines
 

@@ -67,10 +67,10 @@ DLFLAGS		= 	-fPIC -shared
 # user gives these params to make layer
 PARAM_DEFS  = -DBN_v=${BN} -DIFM_v=${IFM} -DOFM_v=${OFM} -DID_v=${ID} \
 				  -DIHW_v=${IHW} -DKD_v=${KD} -DKHW_v=${KHW} -DPADD_v=${PADD} \
-				  -DPADHW_v=${PADHW} -DCores_v=${CORES} -DHT_v=${HT}
+				  -DPADHW_v=${PADHW} -DCores_v=${CORES} -DHT_v=${HT} -DACTIVATION_v=${ACTIVATION}
 
 # Note the trailing _ -- it has to be there
-LAYER_NAME  =  conv_layer_${BN}_${IFM}_${OFM}_${ID}_${IHW}_${KD}_${KHW}_${PADD}_${PADHW}_${CORES}_${HT}_.so
+LAYER_NAME  =  conv_layer_${BN}_${IFM}_${OFM}_${ID}_${IHW}_${KD}_${KHW}_${ACTIVATION}_${PADD}_${PADHW}_${CORES}_${HT}_.so
 
 LAYER_SO_PATH = ${BASE}/lib/${LAYER_NAME}
 

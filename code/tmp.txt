@@ -1,0 +1,29 @@
+[CXX] compiling client.cpp
+[CXX] linking bin/avx512/obj/client.o
+@icpc -std=c++14 bin/avx512/obj/client.o -mkl=sequential -static-intel -DNDEBUG -O3 -DZNN_AVX512 -xMIC-AVX512 -o bin/avx512/client.bin
+icpc: warning #10237: -lcilkrts linked in dynamically, static library not available
+./include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
+./include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
+./include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
+./include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
+./include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
+./include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
+./include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
+./include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
+./include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
+./include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
+./include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
+./include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
+./include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
+./include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
+./include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
+./include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
+./include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
+./include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
+./include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
+./include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
+./include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
+./include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
+./include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
+./include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
+rm bin/avx512/obj/client.o

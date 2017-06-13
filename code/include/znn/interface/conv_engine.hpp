@@ -9,7 +9,7 @@ namespace phi
 
 using namespace propagation;
 
-template <long_t Cores, long_t HT, long_t B, long_t IFM, long_t OFM, long_t ID,
+template <long_t Cores, long_t HT, bool Activation, long_t B, long_t IFM, long_t OFM, long_t ID,
           long_t IHW, long_t KD, long_t KHW, long_t PADD=0, long_t PADHW=0>
 class ConvEngine
 {
@@ -42,13 +42,13 @@ private:
 
 private:
     kernel_launcher *kl;
-    full_layer<Cores*HT, orig_prob> *plan;
+    full_layer<Cores*HT, orig_prob, Activation> *plan;
 
 public:
     ConvEngine() 
     {
         kl = new kernel_launcher(Cores, HT, 0);
-        plan = new full_layer<Cores * HT, orig_prob>(kl);
+        plan = new full_layer<Cores * HT, orig_prob, Activation>(kl);
     }
      
     ~ConvEngine() 

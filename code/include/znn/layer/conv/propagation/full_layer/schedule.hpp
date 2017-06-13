@@ -16,7 +16,7 @@ namespace phi
 namespace propagation
 {
 
-template <class P>
+template <class P, bool Activation>
 struct serial_scheduler
 {
 private:
@@ -26,14 +26,14 @@ private:
 public:
     static void schedule(long_t t, exec_vector& ev)
     {
-        ev[t].push_back(&sub_layer<P>::execute);
+        ev[t].push_back(&sub_layer<P, Activation>::execute);
     }
 };
 
-template <class P>
+template <class P, bool Activation>
 struct scheduler;
 
-template <class P, long_t N>
+template <class P, long_t N, bool Activation>
 struct split_scheduler
 {
 private:
@@ -43,14 +43,14 @@ private:
     static std::enable_if_t<(K == N)> schedule_part(long_t       t0, long_t,
                                                     exec_vector& ev)
     {
-        scheduler<typename splitted::rest_t>::schedule(t0, ev);
+        scheduler<typename splitted::rest_t, Activation>::schedule(t0, ev);
     }
 
     template <long_t                 K>
     static std::enable_if_t<(K < N)> schedule_part(long_t t0, long_t t,
                                                    exec_vector& ev)
     {
-        scheduler<typename splitted::template part_t<K>>::schedule(t, ev);
+        scheduler<typename splitted::template part_t<K>, Activation>::schedule(t, ev);
         split_scheduler::template schedule_part<K + 1>(t0, t + P::threads / N,
                                                        ev);
     }
@@ -62,20 +62,20 @@ public:
     }
 };
 
-template <class P>
+template <class P, bool Activation>
 struct scheduler
 {
 private:
     using type = std::conditional_t<
-        P::threads == 1, serial_scheduler<P>,
-        split_scheduler<P, smallest_prime_factor(P::threads)>>;
+        P::threads == 1, serial_scheduler<P, Activation>,
+        split_scheduler<P, smallest_prime_factor(P::threads), Activation>>;
 
 public:
     static void schedule(long_t t, exec_vector& ev) { type::schedule(t, ev); }
 };
 
-template <>
-struct scheduler<null_problem_t>
+template <bool Activation>
+struct scheduler<null_problem_t, Activation>
 {
     static void schedule(long_t, exec_vector&) {}
 };

@@ -6,6 +6,7 @@
 #include <chrono>
 #include <iostream>
 #include <string>
+#define APPLY_ACTIVATION true
 
 namespace znn
 {
@@ -55,8 +56,8 @@ double benchmark_single_forward(std::string const& lname = "layer")
         image_traits<OHW, SIMD_WIDTH, SIMD_WIDTH>,
         conv_traits<KD, KHW * KHW, 1>, conv_traits<KHW, KHW, 1>,
         conv_traits<KHW, 1, 1>>;
-
-    full_layer<Cores * HT, orig_prob> plan(&kl);
+    
+    full_layer<Cores * HT, orig_prob, APPLY_ACTIVATION> plan(&kl);
 
     long_t iters = 2 * Cores;
     for (long_t i = 0; i < iters; ++i)

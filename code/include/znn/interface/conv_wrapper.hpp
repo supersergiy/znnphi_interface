@@ -18,12 +18,12 @@ private:
 
 public:
     ConvWrapper(int bn, int ifm, int ofm, int id,
-                    int ihw, int kd, int khw,
+                    int ihw, int kd, int khw, bool activation, 
                     int padd=0, int padhw=0,
                     int cores=DEFAULT_CORES, int ht=DEFAULT_HT);
    
     void init(int bn, int ifm, int ofm, int id,
-                      int ihw, int kd, int khw,
+                      int ihw, int kd, int khw, bool activation, 
                       int padd=0, int padhw=0,
                       int cores=DEFAULT_CORES, int ht=DEFAULT_HT);
    

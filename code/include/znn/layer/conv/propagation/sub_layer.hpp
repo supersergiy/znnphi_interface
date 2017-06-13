@@ -12,7 +12,7 @@ namespace phi
 namespace propagation
 {
 
-template <class P>
+template <class P, bool Activation>
 struct sub_layer
 {
 private:
@@ -32,9 +32,9 @@ private:
     static constexpr long_t ik_stride        = full::ik_stride;
     static constexpr long_t ok_stride        = full::ok_stride;
 
-    template <bool First, bool Activation>
+    template <bool First, bool ApplyActivation>
     using sub_task = full_image<
-        First, Activation, SIMD_WIDTH, image_traits<sub::d_len, full::image_d::in_stride,
+        First, ApplyActivation, SIMD_WIDTH, image_traits<sub::d_len, full::image_d::in_stride,
                                         full::image_d::out_stride>,
         image_traits<sub::h_len, full::image_h::in_stride,
                      full::image_h::out_stride>,
@@ -68,7 +68,7 @@ private:
         {
             for (long_t ofm = 0; ofm < ofm_len; ++ofm)
             {
-                sub_task<true, true>::execute(i, o + ofm * ofm_stride,
+                sub_task<true, Activation>::execute(i, o + ofm * ofm_stride,
                                         k + ofm * ok_stride, b + ofm * SIMD_WIDTH);
             }
         }
@@ -85,7 +85,7 @@ private:
                                              k + ifm * ik_stride + ofm * ok_stride,
                                              b + ofm * SIMD_WIDTH);
                 }
-                sub_task<false, true>::execute(i + (ifm_len - 1) * ifm_stride,
+                sub_task<false, Activation>::execute(i + (ifm_len - 1) * ifm_stride,
                                                o + ofm * ofm_stride,
                                                k + (ifm_len - 1) * ik_stride 
                                                                  + ofm * ok_stride,
@@ -114,8 +114,8 @@ public:
     }
 };
 
-template <>
-struct sub_layer<null_problem_t>
+template <bool Activation>
+struct sub_layer<null_problem_t, Activation>
 {
     static void execute(float const* __restrict, float* __restrict,
                         float const* __restrict, float const* __restrict)

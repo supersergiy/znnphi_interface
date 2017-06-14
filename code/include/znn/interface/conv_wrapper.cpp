@@ -129,8 +129,6 @@ void *loadConvLayerSO(int bn, int ifm, int ofm, int id,
 
     std::string param = generateParamString(bn, ifm, ofm, id, ihw, kd, khw,
                                        padd, padhw, Activation, cores, ht, "_");
-    //std::cout << "\n" << param << ": " << secs << std::endl;
-    
     void *handle = dlopen(dl_filename.c_str(), RTLD_NOW);
     handleSOError();
 

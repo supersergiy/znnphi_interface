@@ -128,15 +128,15 @@ void benchmark_forward(std::string const& lname = "layer")
 
     //#if 0
 
-//    benchmark_single_forward<1, 1, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
-//    benchmark_single_forward<1, 2, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+    benchmark_single_forward<1, 1, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+    benchmark_single_forward<1, 2, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
 #if defined(ZNN_AVX512) || defined(ZNN_KNC)
 //    benchmark_single_forward<1, 4, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
 #endif
 
 #if (ZNN_NUM_CORES >= 2)
-//    benchmark_single_forward<2, 1, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
-//    benchmark_single_forward<2, 2, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+    benchmark_single_forward<2, 1, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
+    benchmark_single_forward<2, 2, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
 #if defined(ZNN_AVX512) || defined(ZNN_KNC)
 //    benchmark_single_forward<2, 4, B, IFM, OFM, ID, IHW, KD, KHW>(lname);
 #endif

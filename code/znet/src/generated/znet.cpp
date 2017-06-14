@@ -10,26 +10,26 @@
 
 znn::phi::Znet::Znet(std::string weights_path)
 {
-	tensors["user_output"] = new znn::phi::hbw_array<float>(4333568);
-	tensors["input"] = new znn::phi::hbw_array<float>(4875264);
-	tensors["user_input"] = new znn::phi::hbw_array<float>(4875264);
-	tensors["output"] = new znn::phi::hbw_array<float>(4333568);
+	tensors["user_output"] = new znn::phi::hbw_array<float>(20793600);
+	tensors["input"] = new znn::phi::hbw_array<float>(5308416);
+	tensors["user_input"] = new znn::phi::hbw_array<float>(5308416);
+	tensors["output"] = new znn::phi::hbw_array<float>(20793600);
 	
-	tensors["conv_kernel"] = new znn::phi::hbw_array<float>(3072);
+	tensors["conv_kernel"] = new znn::phi::hbw_array<float>(2304);
 	tensors["conv_bias"] = new znn::phi::hbw_array<float>(32);
 	
 	readArrayFromFile(tensors["conv_kernel"]->data(), weights_path + "conv_kernel.data");
 	readArrayFromFile(tensors["conv_bias"]->data(), weights_path + "conv_bias.data");
 	
-	layers["block_input"] = new znn::phi::BlockDataLayer(1, 28, 18, 92);
-	layers["unblock_output"] = new znn::phi::UnblockDataLayer(1, 28, 16, 92);
-	layers["conv"] = new znn::phi::ConvWrapper(1, 28, 28, 18, 92, 3, 1, 0, 0);
+	layers["block_input"] = new znn::phi::BlockDataLayer(1, 8, 18, 192);
+	layers["unblock_output"] = new znn::phi::UnblockDataLayer(1, 28, 18, 190);
+	layers["conv"] = new znn::phi::ConvWrapper(1, 8, 28, 18, 192, 1, 3, true, 0, 0);
 	
-	input_size = 4265856;
+	input_size = 5308416;
 	out_dim = 5;
-	size_t tmp_shape[] = { 1, 28, 16, 92, 92 };
+	size_t tmp_shape[] = { 1, 28, 18, 190, 190 };
 	out_shape.assign(tmp_shape, tmp_shape + 5);
-	size_t tmp_strides[] = { 15167488, 541696, 33856, 368, 4 };
+	size_t tmp_strides[] = { 72777600, 2599200, 144400, 760, 4 };
 	out_strides.assign(tmp_strides, tmp_strides + 5);
 	
 }

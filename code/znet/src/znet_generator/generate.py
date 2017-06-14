@@ -5,6 +5,8 @@ import numpy as np
 from codegen import generate_function, zero_out_tensor, fill_tensor, timeit
 from common import round_to_simd, block_bias, block_kernel
 
+ACTIVATION = "false"
+
 def generate_print_tensor(tname):
     lines = []
     lines.append('for (int i = 0; i < tensors["{}"]->num_elements(); i++) {{'.format(tname))
@@ -17,12 +19,11 @@ def generate_print_tensor(tname):
 def generate_allocate_layers(net):
     lines = []
     tensors, layer_info, layer_order = net
-
     for (n,l) in iteritems(layer_info):
         if l["type"] == "conv":
-            conv_params = "{}, {}, {}, {}, {}, {}, {}, {}, {}".format(l["bn"], l["ifm"], l["ofm"],
+            conv_params = "{}, {}, {}, {}, {}, {}, {}, {}, {}, {}".format(l["bn"], l["ifm"], l["ofm"],
                                                               l["id"], l["ihw"],
-                                                              l["kernel_dim"][2], l["kernel_dim"][3],
+                                                              l["kernel_dim"][2], l["kernel_dim"][3], ACTIVATION,
                                                               l["pad"][0],  l["pad"][1])
             lines.append('layers["{}"] = new znn::phi::ConvWrapper({});'.format(l["name"],
                                                                                 conv_params))
@@ -69,7 +70,8 @@ def generate_initialize_weights(net, weights_path):
             else:
                 print "WARNING: uninitialized layer {}".format(lname)
                 lweights = []
-                lweights.append(np.zeros(l["bias_dim"]))
+                lweights.append(np.ones(l["kernel_dim"], dtype=np.float))
+                lweights.append(np.zeros(l["bias_dim"], dtype=np.float))
 
             kernel = lweights[0][:]
             blocked_kernel = block_kernel(kernel, l)

@@ -5,7 +5,7 @@ import numpy as np
 from codegen import generate_function, zero_out_tensor, fill_tensor, timeit
 from common import round_to_simd, block_bias, block_kernel
 
-ACTIVATION = "true"
+ACTIVATION = "false"
 
 def generate_print_tensor(tname):
     lines = []

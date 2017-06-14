@@ -22,7 +22,7 @@ znn::phi::Znet::Znet(std::string weights_path)
 	readArrayFromFile(tensors["conv_0_bias"]->data(), weights_path + "conv_0_bias.data");
 	
 	layers["block_input"] = new znn::phi::BlockDataLayer(1, 8, 18, 192);
-	layers["conv_0"] = new znn::phi::ConvWrapper(1, 8, 28, 18, 192, 1, 3, 0, 0, true);
+	layers["conv_0"] = new znn::phi::ConvWrapper(1, 8, 28, 18, 192, 1, 3, 0, 0, false);
 	layers["unblock_output"] = new znn::phi::UnblockDataLayer(1, 28, 18, 190);
 	
 	input_size = 5308416;

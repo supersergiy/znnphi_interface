@@ -3,8 +3,33 @@
 #include "znn/intrin.hpp"
 #include "znn/types.hpp"
 #include "znn/util/conditional_load.hpp"
-
 #include <type_traits>
+#include <math.h>
+
+#ifdef ZNN_AVX512
+   #define _LOG_E_BASE_2 1.44269504089
+   #define SIMD_EXP_M_INPL(a, m) SIMD_MUL_MASK(a, m, a, SIMD_SET1(_LOG_E_BASE_2));\
+                                    SIMD_E2A23_MASK(a, m, a)
+
+   #define SIMD_SUBCONST_M_INPL(a, c, m) SIMD_SUB_MASK(a, m, a, SIMD_SET1(c))
+
+   #define SIMD_ELU(v) { SIMD_MASK ltz;\
+                         ltz =  SIMD_LT(v, SIMD_SET1(0.0));\
+                         SIMD_EXP_M_INPL(v, ltz);\
+                         SIMD_SUBCONST_M_INPL(v, 1.0, ltz); }
+#else
+   #define ELU(base) {\
+                        ZNN_PRAGMA(SIMD_WIDTH)\
+                        for (long_t i = 0; i < SIMD_WIDTH; i++) {\
+                           if (base[i] < 0) {\
+                              base[i] = exp(base[i]) - 1.0;\
+                              std::cout << base[i] << std::endl;\
+                           }\
+                        }\
+                       }
+#endif
+
+
 
 namespace znn
 {
@@ -30,6 +55,7 @@ namespace propagation
 *******************************************************************************/
 
 template <bool   Bias,                    // load or set to bias
+          bool   Activation,
           long_t IFMs,                    // number of input images
           class ID, class IH, class IW,   // image traits
           class CD, class CH, class CW,   // convolution traits
@@ -46,6 +72,7 @@ struct sub_image_dummy
 };
 
 template <bool   Bias,                  // load or set to bias
+          bool   Activation,
           long_t IFMs,                  // number of input images
           class ID, class IH, class IW, // image traits
           class CD, class CH, class CW, // convolution traits
@@ -97,16 +124,28 @@ struct sub_image_1d
                 }
             }
         }
+        
+
 
         ZNN_PRAGMA(unroll(RW))
         for (long_t rw = 0; rw < RW; ++rw)
         {
-            SIMD_STORE(o + rw * IW::out_stride, vout[rw]);
+            /*if (Activation) 
+            {
+                SIMD_ELU(vout[rw]); 
+            }*/
+            auto base = o + rw * IW::out_stride;
+            SIMD_STORE(base, vout[rw]);
+            if (Activation) 
+            {
+               ELU(base);
+            }
         }
     }
 };
 
 template <bool   Bias,                  // load or set to bias
+          bool   Activation,
           long_t IFMs,                  // number of input images
           class ID, class IH, class IW, // image traits
           class CD, class CH, class CW, // convolution traits
@@ -119,7 +158,8 @@ struct sub_image_2d
     {
         SIMD_FLOAT vout[RH][RW], vwt; // Expected to be in the register file
 
-        ZNN_PRAGMA(unroll(RH))
+        //ZNN_PRAGMA(unroll(RH))
+        #pragma unroll(RH)
         for (long_t rh = 0; rh < RH; ++rh)
         {
             ZNN_PRAGMA(unroll(RW))
@@ -146,7 +186,8 @@ struct sub_image_2d
                              s) *
                                 SIMD_WIDTH);
 
-                        ZNN_PRAGMA(unroll(RH))
+                        //ZNN_PRAGMA(unroll(RH)
+#pragma unroll(RH)
                         for (long_t rh = 0; rh < RH; ++rh)
                         {
                             ZNN_PRAGMA(unroll(RW))
@@ -174,14 +215,23 @@ struct sub_image_2d
             ZNN_PRAGMA(unroll(RW))
             for (long_t rw = 0; rw < RW; ++rw)
             {
-                SIMD_STORE(o + rh * IH::out_stride + rw * IW::out_stride,
-                           vout[rh][rw]);
+                /*if (Activation) 
+                {
+                    SIMD_ELU(vout[rh][rw]); 
+                }*/
+                auto base = o + rh * IH::out_stride + rw * IW::out_stride;
+                SIMD_STORE(base, vout[rh][rw]);
+                if (Activation) 
+                {
+                   ELU(base);
+                }
             }
         }
     }
 };
 
 template <bool   Bias,                    // load or set to bias
+          bool   Activation,
           long_t IFMs,                    // number of input images
           class ID, class IH, class IW,   // image traits
           class CD, class CH, class CW,   // convolution traits
@@ -263,9 +313,17 @@ struct sub_image_3d
                 ZNN_PRAGMA(unroll(RW))
                 for (long_t rw = 0; rw < RW; ++rw)
                 {
-                    SIMD_STORE(o + rd * ID::out_stride + rh * IH::out_stride +
-                                   rw * IW::out_stride,
-                               vout[rd][rh][rw]);
+                    /*if (Activation) 
+                    {
+                        SIMD_ELU(vout[rd][rh][rw]); 
+                    }*/
+                    auto base = o + rd * ID::out_stride + rh * IH::out_stride + rw * IW::out_stride; 
+                    SIMD_STORE(base, vout[rd][rh][rw]);
+
+                    if (Activation) 
+                    {
+                       ELU(base);
+                    }
                 }
             }
         }
@@ -273,6 +331,7 @@ struct sub_image_3d
 };
 
 template <bool   Bias,                    // load or set to bias
+          bool   Activation,
           long_t IFMs,                    // number of input images
           class ID, class IH, class IW,   // image traits
           class CD, class CH, class CW,   // convolution traits
@@ -283,10 +342,10 @@ struct sub_image
           RD == 0 || RH == 0 || RW == 0, sub_image_dummy,
           std::conditional_t<
               RD == 1 && RH == 1,
-              sub_image_1d<Bias, IFMs, ID, IH, IW, CD, CH, CW, RW>,
-              std::conditional_t<RD == 1, sub_image_2d<Bias, IFMs, ID, IH, IW,
+              sub_image_1d<Bias, Activation, IFMs, ID, IH, IW, CD, CH, CW, RW>,
+              std::conditional_t<RD == 1, sub_image_2d<Bias, Activation, IFMs, ID, IH, IW,
                                                        CD, CH, CW, RH, RW>,
-                                 sub_image_3d<Bias, IFMs, ID, IH, IW, CD, CH,
+                                 sub_image_3d<Bias, Activation, IFMs, ID, IH, IW, CD, CH,
                                               CW, RD, RH, RW>>>>
 {
 };

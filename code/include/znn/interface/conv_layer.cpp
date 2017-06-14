@@ -9,7 +9,7 @@ namespace phi
 typedef ConvEngine<Cores_v, HT_v, BN_v, 
                    IFM_v, OFM_v, ID_v, 
                    IHW_v, KD_v, KHW_v, 
-                   PADD_v, PADHW_v    >    parametrizedConvEngine;
+                   PADD_v, PADHW_v, ACTIVATION_v>    parametrizedConvEngine;
 
 ConvLayer::~ConvLayer()
 {

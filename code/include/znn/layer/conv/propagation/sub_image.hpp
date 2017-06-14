@@ -19,13 +19,13 @@
                          SIMD_SUBCONST_M_INPL(v, 1.0, ltz); }
 #else
    #define ELU(base) {\
-                        ZNN_PRAGMA(SIMD_WIDTH)\
+                        /*ZNN_PRAGMA(SIMD_WIDTH)\
                         for (long_t i = 0; i < SIMD_WIDTH; i++) {\
                            if (base[i] < 0) {\
                               base[i] = exp(base[i]) - 1.0;\
                               std::cout << base[i] << std::endl;\
                            }\
-                        }\
+                        }\*/\
                        }
 #endif
 

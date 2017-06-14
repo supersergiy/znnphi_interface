@@ -23,8 +23,8 @@ def generate_allocate_layers(net):
         if l["type"] == "conv":
             conv_params = "{}, {}, {}, {}, {}, {}, {}, {}, {}, {}".format(l["bn"], l["ifm"], l["ofm"],
                                                               l["id"], l["ihw"],
-                                                              l["kernel_dim"][2], l["kernel_dim"][3], ACTIVATION,
-                                                              l["pad"][0],  l["pad"][1])
+                                                              l["kernel_dim"][2], l["kernel_dim"][3],
+                                                              l["pad"][0],  l["pad"][1], ACTIVATION)
             lines.append('layers["{}"] = new znn::phi::ConvWrapper({});'.format(l["name"],
                                                                                 conv_params))
         elif l["type"] == 'block_input':

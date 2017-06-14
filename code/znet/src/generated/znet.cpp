@@ -22,7 +22,7 @@ znn::phi::Znet::Znet(std::string weights_path)
 	readArrayFromFile(tensors["conv_0_bias"]->data(), weights_path + "conv_0_bias.data");
 	
 	layers["block_input"] = new znn::phi::BlockDataLayer(1, 8, 18, 192);
-	layers["conv_0"] = new znn::phi::ConvWrapper(1, 8, 28, 18, 192, 1, 3, 0, 0, false);
+	layers["conv_0"] = new znn::phi::ConvWrapper(1, 8, 28, 18, 192, 1, 3, 0, 0, true);
 	layers["unblock_output"] = new znn::phi::UnblockDataLayer(1, 28, 18, 190);
 	
 	input_size = 5308416;
@@ -40,15 +40,9 @@ void znn::phi::Znet::forward(void)
 	auto begin = std::chrono::high_resolution_clock::now();
 	for (int i = 0; i < 1; i++) {
 		std::cout << "Starting Forward Pass\n";
-		std::cout << "Running block_input!\n";
 		layers["block_input"]->forward(tensors["user_input"]->data(), tensors["input"]->data(), NULL, NULL);
-		std::cout << "block_input Finished!\n";
-		std::cout << "Running conv_0!\n";
 		layers["conv_0"]->forward(tensors["input"]->data(), tensors["output"]->data(), tensors["conv_0_kernel"]->data(), tensors["conv_0_bias"]->data());
-		std::cout << "conv_0 Finished!\n";
-		std::cout << "Running unblock_output!\n";
 		layers["unblock_output"]->forward(tensors["output"]->data(), tensors["user_output"]->data(), NULL, NULL);
-		std::cout << "unblock_output Finished!\n";
 		
 	}
 	auto end = std::chrono::high_resolution_clock::now();

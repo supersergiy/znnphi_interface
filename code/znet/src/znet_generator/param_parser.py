@@ -87,6 +87,7 @@ def parse_pool(json_param, bot_tensor):
     #TODO: there's a bug with converting pooling param to JSON
     #      will need to un-hardcode this
     params["top_dim"]     = copy.copy(bot_tensor.dim)
+    params["top_dim"][2] /= 1
     params["top_dim"][3] /= 2
     params["top_dim"][4] /= 2
 

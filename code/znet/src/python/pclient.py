@@ -9,7 +9,7 @@ import sys
 input_dim    = [1, 8, 18, 192, 192]
 ofm          = 28
 kernel_dim   = [1, 3, 3]
-layers       = ["conv"]#, "elu"]
+layers       = ["conv", "elu"]
 
 layers_prefix = '_'.join(layers)
 base =     '/home/ubuntu/znnphi_interface/code/znet/reference/'
@@ -65,6 +65,11 @@ reference_a = reference_file["data"][:]
 
 diff_a = reference_a - out_a
 error = ssq = np.sum(diff_a**2)
+
+fd = diff_a.flatten()
+fo = out_a.flatten()
+fr = reference_a.flatten()
+boo = np.argmax(fd)
 if error > 0.1:
     print "Not congrats! Error == {}".format(error)
     import pdb; pdb.set_trace()

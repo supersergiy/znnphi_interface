@@ -5,7 +5,7 @@ import numpy as np
 from codegen import generate_function, zero_out_tensor, fill_tensor, timeit
 from common import round_to_simd, block_bias, block_kernel
 
-ACTIVATION = "false"
+ACTIVATION = "true"
 
 def generate_print_tensor(tname):
     lines = []
@@ -151,7 +151,7 @@ def generate_forward_all_layers(net):
     lines.append('std::cout << "Starting Forward Pass\\n";')
     for lname in layer_order:
        l = layer_info[lname]
-       lines.append('std::cout << "Running {}!\\n";'.format(l["name"]))
+       #lines.append('std::cout << "Running {}!\\n";'.format(l["name"]))
 
        if l["type"] in ["conv"]:
            params  = 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
@@ -167,7 +167,7 @@ def generate_forward_all_layers(net):
            params += 'NULL, NULL'
            lines.append('layers["{}"]->forward({});'.format(lname, params))
 
-       lines.append('std::cout << "{} Finished!\\n";'.format(l["name"]))
+       #lines.append('std::cout << "{} Finished!\\n";'.format(l["name"]))
     lines.append('')
     return lines
 

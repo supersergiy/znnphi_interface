@@ -4,17 +4,30 @@
 #include "znn/types.hpp"
 #include "znn/util/conditional_load.hpp"
 #include <type_traits>
+#include <math.h>
 
-#define _LOG_E_BASE_2 1.44269504089
-#define SIMD_EXP_M_INPL(a, m) SIMD_MUL_MASK(a, m, a, SIMD_SET1(_LOG_E_BASE_2));\
+#ifdef ZNN_AVX512
+   #define _LOG_E_BASE_2 1.44269504089
+   #define SIMD_EXP_M_INPL(a, m) SIMD_MUL_MASK(a, m, a, SIMD_SET1(_LOG_E_BASE_2));\
                                     SIMD_E2A23_MASK(a, m, a)
 
-#define SIMD_SUBCONST_M_INPL(a, c, m) SIMD_SUB_MASK(a, m, a, SIMD_SET1(c))
+   #define SIMD_SUBCONST_M_INPL(a, c, m) SIMD_SUB_MASK(a, m, a, SIMD_SET1(c))
 
-#define SIMD_ELU(v) { SIMD_MASK ltz;\
-                      ltz =  SIMD_LT(v, SIMD_SET1(0.0));\
-                      SIMD_EXP_M_INPL(v, ltz);\
-                      SIMD_SUBCONST_M_INPL(v, 1.0, ltz); }
+   #define SIMD_ELU(v) { SIMD_MASK ltz;\
+                         ltz =  SIMD_LT(v, SIMD_SET1(0.0));\
+                         SIMD_EXP_M_INPL(v, ltz);\
+                         SIMD_SUBCONST_M_INPL(v, 1.0, ltz); }
+#else
+   #define ELU(base) {\
+                        ZNN_PRAGMA(SIMD_WIDTH)\
+                        for (long_t i = 0; i < SIMD_WIDTH; i++) {\
+                           if (base[i] < 0) {\
+                              base[i] = exp(base[i]) - 1.0;\
+                              std::cout << base[i] << std::endl;\
+                           }\
+                        }\
+                       }
+#endif
 
 
 
@@ -120,9 +133,13 @@ struct sub_image_1d
             /*if (Activation) 
             {
                 SIMD_ELU(vout[rw]); 
-            }i*/
-
-            SIMD_STORE(o + rw * IW::out_stride, vout[rw]);
+            }*/
+            auto base = o + rw * IW::out_stride;
+            SIMD_STORE(base, vout[rw]);
+            if (Activation) 
+            {
+               ELU(base);
+            }
         }
     }
 };
@@ -202,8 +219,12 @@ struct sub_image_2d
                 {
                     SIMD_ELU(vout[rh][rw]); 
                 }*/
-                SIMD_STORE(o + rh * IH::out_stride + rw * IW::out_stride,
-                           vout[rh][rw]);
+                auto base = o + rh * IH::out_stride + rw * IW::out_stride;
+                SIMD_STORE(base, vout[rh][rw]);
+                if (Activation) 
+                {
+                   ELU(base);
+                }
             }
         }
     }
@@ -296,9 +317,13 @@ struct sub_image_3d
                     {
                         SIMD_ELU(vout[rd][rh][rw]); 
                     }*/
-                    SIMD_STORE(o + rd * ID::out_stride + rh * IH::out_stride +
-                                   rw * IW::out_stride,
-                               vout[rd][rh][rw]);
+                    auto base = o + rd * ID::out_stride + rh * IH::out_stride + rw * IW::out_stride; 
+                    SIMD_STORE(base, vout[rd][rh][rw]);
+
+                    if (Activation) 
+                    {
+                       ELU(base);
+                    }
                 }
             }
         }

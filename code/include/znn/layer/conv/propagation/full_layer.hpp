@@ -14,7 +14,7 @@ namespace phi
 namespace propagation
 {
 
-template <long_t Threads, class P>
+template <long_t Threads, class P, bool Activation>
 struct full_layer
 {
 private:
@@ -39,7 +39,7 @@ public:
         , fns(Threads)
         , executables(Threads)
     {
-        scheduler<problem>::schedule(0, executables);
+        scheduler<problem, Activation>::schedule(0, executables);
         for (long_t i = 0; i < Threads; ++i)
         {
             fns[i] = [i, this]() {

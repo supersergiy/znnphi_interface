@@ -6,12 +6,15 @@ import h5py
 import sys
 
 
-input_dim    = [1, 28, 18, 92, 92]
+input_dim    = [1, 8, 18, 192, 192]
 ofm          = 28
-kernel_dim   = [3, 1, 1]
+kernel_dim   = [1, 3, 3]
+layers       = ["conv"]#, "elu"]
 
+layers_prefix = '_'.join(layers)
 base =     '/home/ubuntu/znnphi_interface/code/znet/reference/'
-net_file = 'nets/conv_{}_{}_{}_{}_{}_x{}_{}_{}_o{}.prototxt'.format(input_dim[0],
+net_file = 'nets/{}_{}_{}_{}_{}_{}_x{}_{}_{}_o{}.prototxt'.format(layers_prefix,
+                                                                    input_dim[0],
                                                                     input_dim[1],
                                                                     input_dim[2],
                                                                     input_dim[3],
@@ -20,8 +23,9 @@ net_file = 'nets/conv_{}_{}_{}_{}_{}_x{}_{}_{}_o{}.prototxt'.format(input_dim[0]
                                                                     kernel_dim[1],
                                                                     kernel_dim[2],
                                                                     ofm)
-weights_file = 'data/weights/weight_{}_{}_{}_{}_{}_r.h5'.format(input_dim[1], #ifm
+weights_file = 'data/weights/weights_{}_{}_{}_{}_{}_r.h5'.format(
                                                                 ofm,
+                                                                input_dim[1], #ifm
                                                                 kernel_dim[0],
                                                                 kernel_dim[1],
                                                                 kernel_dim[2])
@@ -32,7 +36,8 @@ input_file = 'data/inputs/input_{}_{}_{}_{}_{}_r.h5'.format(input_dim[0],
                                                             input_dim[3],
                                                             input_dim[4])
 
-reference_file = 'data/reference/reference_conv_{}_{}_{}_{}_{}_x{}_{}_{}_o{}_r.h5'.format(input_dim[0],
+reference_file = 'data/reference/reference_{}_{}_{}_{}_{}_{}_x{}_{}_{}_o{}_r.h5'.format(layers_prefix,
+                                                                                        input_dim[0],
                                                                                         input_dim[1],
                                                                                         input_dim[2],
                                                                                         input_dim[3],
@@ -51,6 +56,7 @@ reference_path = os.path.join(base, reference_file)
 
 z = pznet.znet(net_path, weights_path)
 
+
 in_file  = h5py.File(input_path)
 in_a     = in_file["input"][:]
 out_a    = z.forward(in_a)
@@ -60,6 +66,7 @@ reference_a = reference_file["data"][:]
 diff_a = reference_a - out_a
 error = ssq = np.sum(diff_a**2)
 if error > 0.1:
+    print "Not congrats! Error == {}".format(error)
     import pdb; pdb.set_trace()
 else:
     print "Congrats! All pass"

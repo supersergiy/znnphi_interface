@@ -12,7 +12,7 @@ namespace phi
 namespace propagation
 {
 
-template <class P, bool Activation>
+template <class P>
 struct sub_layer
 {
 private:
@@ -32,9 +32,9 @@ private:
     static constexpr long_t ik_stride        = full::ik_stride;
     static constexpr long_t ok_stride        = full::ok_stride;
 
-    template <bool First, bool ApplyActivation>
+    template <bool First>
     using sub_task = full_image<
-        First, ApplyActivation, SIMD_WIDTH, image_traits<sub::d_len, full::image_d::in_stride,
+        First, SIMD_WIDTH, image_traits<sub::d_len, full::image_d::in_stride,
                                         full::image_d::out_stride>,
         image_traits<sub::h_len, full::image_h::in_stride,
                      full::image_h::out_stride>,
@@ -64,32 +64,16 @@ private:
                                float const* __restrict k,
                                float const* __restrict b)
     {
-        if (ifm_len == 1) 
+        for (long_t ofm = 0; ofm < ofm_len; ++ofm)
         {
-            for (long_t ofm = 0; ofm < ofm_len; ++ofm)
+            sub_task<true>::execute(i, o + ofm * ofm_stride,
+                                    k + ofm * ok_stride, b + ofm * SIMD_WIDTH);
+            for (long_t ifm = 1; ifm < ifm_len; ++ifm)
             {
-                sub_task<true, Activation>::execute(i, o + ofm * ofm_stride,
-                                        k + ofm * ok_stride, b + ofm * SIMD_WIDTH);
-            }
-        }
-        else 
-        {
-            for (long_t ofm = 0; ofm < ofm_len; ++ofm)
-            {
-                sub_task<true, false>::execute(i, o + ofm * ofm_stride,
-                                        k + ofm * ok_stride, b + ofm * SIMD_WIDTH);
-                for (long_t ifm = 1; ifm < ifm_len - 1; ++ifm)
-                {
-                    sub_task<false, false>::execute(i + ifm * ifm_stride,
-                                             o + ofm * ofm_stride,
-                                             k + ifm * ik_stride + ofm * ok_stride,
-                                             b + ofm * SIMD_WIDTH);
-                }
-                sub_task<false, Activation>::execute(i + (ifm_len - 1) * ifm_stride,
-                                               o + ofm * ofm_stride,
-                                               k + (ifm_len - 1) * ik_stride 
-                                                                 + ofm * ok_stride,
-                                               b + ofm * SIMD_WIDTH);
+                sub_task<false>::execute(i + ifm * ifm_stride,
+                                         o + ofm * ofm_stride,
+                                         k + ifm * ik_stride + ofm * ok_stride,
+                                         b + ofm * SIMD_WIDTH);
             }
         }
     }
@@ -114,8 +98,8 @@ public:
     }
 };
 
-template <bool Activation>
-struct sub_layer<null_problem_t, Activation>
+template <>
+struct sub_layer<null_problem_t>
 {
     static void execute(float const* __restrict, float* __restrict,
                         float const* __restrict, float const* __restrict)

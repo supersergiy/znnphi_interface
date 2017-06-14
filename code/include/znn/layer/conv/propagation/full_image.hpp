@@ -11,7 +11,6 @@ namespace propagation
 {
 
 template <bool   First,                 // load or set to bias
-          bool   Activation,
           long_t IFMs,                  // number of input images
           class ID, class IH, class IW, // image traits
           class CD, class CH, class CW> // convolution traits
@@ -31,7 +30,7 @@ private:
 
         for (long_t w = 0; w < Full; ++w)
         {
-            sub_image<First, Activation, IFMs, ID, IH, IW, CD, CH, CW, D, H,
+            sub_image<First, IFMs, ID, IH, IW, CD, CH, CW, D, H,
                       RB::width>::execute(i, o, k, b);
             i += RB::width * CW::conv_stride * IW::in_stride;
             o += RB::width * IW::out_stride;
@@ -39,7 +38,7 @@ private:
 
         if (Partial)
         {
-            sub_image<First, Activation, IFMs, ID, IH, IW, CD, CH, CW, D, H,
+            sub_image<First, IFMs, ID, IH, IW, CD, CH, CW, D, H,
                       Partial>::execute(i, o, k, b);
         }
     }

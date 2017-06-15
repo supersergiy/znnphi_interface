@@ -3,111 +3,121 @@ rm -rf out
 mkdir -p out
 mkdir -p out/weights
 python src/znet_generator/main.py /home/ubuntu/znnphi_interface/code/znet/src/python/pznet/.tmp/net.json /home/ubuntu/znnphi_interface/code/znet/nets/unet.h5 src/generated/znet.cpp
-writing to ./out/weights/conv0_d1_kernel.data!
-writing to ./out/weights/conv0_d0_kernel.data!
-writing to ./out/weights/conv0_d3_kernel.data!
-writing to ./out/weights/conv0_d2_kernel.data!
-writing to ./out/weights/conv0_d5_kernel.data!
-writing to ./out/weights/conv0_d4_kernel.data!
-writing to ./out/weights/conv4_d3_kernel.data!
-writing to ./out/weights/conv4_d4_kernel.data!
-writing to ./out/weights/conv4_d1_kernel.data!
-writing to ./out/weights/conv5_d0_kernel.data!
-writing to ./out/weights/conv4_d0_kernel.data!
-writing to ./out/weights/conv6_d3_kernel.data!
-writing to ./out/weights/conv6_d2_kernel.data!
-writing to ./out/weights/convf6_d2_kernel.data!
-writing to ./out/weights/convf6_d4_kernel.data!
-writing to ./out/weights/conv6_d4_kernel.data!
-writing to ./out/weights/convf5_d4_kernel.data!
-writing to ./out/weights/convf5_d3_kernel.data!
-writing to ./out/weights/convf5_d2_kernel.data!
-writing to ./out/weights/conv2_d5_kernel.data!
-writing to ./out/weights/conv2_d3_kernel.data!
-writing to ./out/weights/conv2_d1_kernel.data!
-writing to ./out/weights/conv4_d2_kernel.data!
-writing to ./out/weights/conv6_d1_kernel.data!
-writing to ./out/weights/convf6_d3_kernel.data!
-writing to ./out/weights/conv6_d0_kernel.data!
-writing to ./out/weights/conv5_d2_kernel.data!
-writing to ./out/weights/conv5_d3_kernel.data!
-writing to ./out/weights/conv5_d1_kernel.data!
-writing to ./out/weights/conv5_d4_kernel.data!
-writing to ./out/weights/conv1_d4_kernel.data!
-writing to ./out/weights/conv1_d5_kernel.data!
-writing to ./out/weights/conv1_d2_kernel.data!
-writing to ./out/weights/conv1_d3_kernel.data!
-writing to ./out/weights/conv1_d0_kernel.data!
-writing to ./out/weights/conv1_d1_kernel.data!
-writing to ./out/weights/convi_kernel.data!
-[  2.41028762   1.16357577   0.90781212   0.59325039  -7.22538471
-  -1.28225803   1.15336919   1.63944006   2.12086844   0.8551923
-   0.3702518    0.63091528  -2.48465228  -0.46243548  -1.87429035
-   0.94392574   1.42678428  -3.65891647  -2.36084723   0.42224509
-   0.19827922  -0.99481457   2.62291098   2.90783453   0.2905401
-  19.10751534   0.62494379  -0.96107298]
-[  2.41028762   1.16357577   0.90781212   0.59325039  -7.22538471
-  -1.28225803   1.15336919   1.63944006   2.12086844   0.8551923
-   0.3702518    0.63091528  -2.48465228  -0.46243548  -1.87429035
-   0.94392574   1.42678428  -3.65891647  -2.36084723   0.42224509
-   0.19827922  -0.99481457   2.62291098   2.90783453   0.2905401
-  19.10751534   0.62494379  -0.96107298   0.           0.           0.           0.        ]
-writing to ./out/weights/convi_bias.data!
-writing to ./out/weights/conv7_d0_kernel.data!
-[-0.02759373 -0.02172623 -0.0219968  -0.01550578 -0.03070433 -0.08240953
- -0.02007155 -0.02256315 -0.03678045 -0.01458687 -0.02586036 -0.02491913
- -0.0334425   0.05713638 -0.01391019 -0.10847719 -0.17268382 -0.03139765
- -0.01837751 -0.02203476 -0.02071214 -0.03661184 -0.01846389 -0.0320685
- -0.03867053 -0.03742854 -0.05159246 -0.01729802]
-[-0.02759373 -0.02172623 -0.0219968  -0.01550578 -0.03070433 -0.08240953
- -0.02007155 -0.02256315 -0.03678045 -0.01458687 -0.02586036 -0.02491913
- -0.0334425   0.05713638 -0.01391019 -0.10847719 -0.17268382 -0.03139765
- -0.01837751 -0.02203476 -0.02071214 -0.03661184 -0.01846389 -0.0320685
- -0.03867053 -0.03742854 -0.05159246 -0.01729802  0.          0.          0.
-  0.        ]
-writing to ./out/weights/conv7_d0_bias.data!
-writing to ./out/weights/convf1_d3_kernel.data!
-writing to ./out/weights/convf1_d2_kernel.data!
-writing to ./out/weights/convf1_d5_kernel.data!
-writing to ./out/weights/convf1_d4_kernel.data!
-writing to ./out/weights/convf2_d4_kernel.data!
-writing to ./out/weights/convf2_d5_kernel.data!
-writing to ./out/weights/convf2_d2_kernel.data!
-writing to ./out/weights/convf2_d3_kernel.data!
-writing to ./out/weights/conv2_d4_kernel.data!
-writing to ./out/weights/conv2_d2_kernel.data!
-writing to ./out/weights/conv2_d0_kernel.data!
-icpc: command line warning #10006: ignoring unknown option '-Wdate-time'
-icpc: warning #10315: specifying -lm before files may supersede the Intel(R) math library and affect performance
-make: Leaving directory '/home/ubuntu/znnphi_interface/code/znet'
-[CXX] compiling conv_layer.cpp
-@icpc -std=c++14 -c -MMD -MP -MT conv_layer.o -MF conv_layer.T -DZNN_NO_CUDA -DZNN_NO_HBW -DZNN_NUM_CORES=64 -I../../../../code/include -I../../../../code/include/znn -I../../../.. -Wall -Wextra -Wno-format -Wno-unknown-pragmas -fmax-errors=5 -DNDEBUG -O3 -ipo -fp-model fast=2 -mkl=sequential -fno-rtti -fno-exceptions -mkl=sequential -DZNN_AVX2 -march=core-avx2 -DBN_v=1 -DIFM_v=28 -DOFM_v=36 -DID_v=18 -DIHW_v=96 -DKD_v=1 -DKHW_v=3 -DPADD_v=0 -DPADHW_v=1 -DCores_v=2 -DHT_v=2 -DACTIVATION_v=1 -o conv_layer.o conv_layer.cpp
-[CXX] creating shared lib conv_layer.so
-@icpc -std=c++14 -fPIC -shared -mkl=sequential -static-intel -DNDEBUG -O3 -o conv_layer.so conv_layer.o -ldl
-icpc: warning #10237: -lcilkrts linked in dynamically, static library not available
-../../../../code/include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
-../../../../code/include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
-../../../../code/include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
-[Make] Placing the lib into ../../../../lib/conv_layer_1_28_36_18_96_1_3_0_1_1_2_2_.so
-[CXX] compiling conv_layer.cpp
-@icpc -std=c++14 -c -MMD -MP -MT conv_layer.o -MF conv_layer.T -DZNN_NO_CUDA -DZNN_NO_HBW -DZNN_NUM_CORES=64 -I../../../../code/include -I../../../../code/include/znn -I../../../.. -Wall -Wextra -Wno-format -Wno-unknown-pragmas -fmax-errors=5 -DNDEBUG -O3 -ipo -fp-model fast=2 -mkl=sequential -fno-rtti -fno-exceptions -mkl=sequential -DZNN_AVX2 -march=core-avx2 -DBN_v=1 -DIFM_v=28 -DOFM_v=28 -DID_v=18 -DIHW_v=192 -DKD_v=1 -DKHW_v=3 -DPADD_v=0 -DPADHW_v=1 -DCores_v=2 -DHT_v=2 -DACTIVATION_v=1 -o conv_layer.o conv_layer.cpp
-[CXX] creating shared lib conv_layer.so
-@icpc -std=c++14 -fPIC -shared -mkl=sequential -static-intel -DNDEBUG -O3 -o conv_layer.so conv_layer.o -ldl
-icpc: warning #10237: -lcilkrts linked in dynamically, static library not available
-../../../../code/include/znn/layer/conv/propagation/full_image.hpp(83): (col. 13) remark: unroll pragma will be ignored due to unroll_and_jam pragma expected
-[Make] Placing the lib into ../../../../lib/conv_layer_1_28_28_18_192_1_3_0_1_1_2_2_.so
-[CXX] compiling conv_layer.cpp
-@icpc -std=c++14 -c -MMD -MP -MT conv_layer.o -MF conv_layer.T -DZNN_NO_CUDA -DZNN_NO_HBW -DZNN_NUM_CORES=64 -I../../../../code/include -I../../../../code/include/znn -I../../../.. -Wall -Wextra -Wno-format -Wno-unknown-pragmas -fmax-errors=5 -DNDEBUG -O3 -ipo -fp-model fast=2 -mkl=sequential -fno-rtti -fno-exceptions -mkl=sequential -DZNN_AVX2 -march=core-avx2 -DBN_v=1 -DIFM_v=48 -DOFM_v=64 -DID_v=18 -DIHW_v=24 -DKD_v=1 -DKHW_v=3 -DPADD_v=0 -DPADHW_v=1 -DCores_v=2 -DHT_v=2 -DACTIVATION_v=1 -o conv_layer.o conv_layer.cpp
-[CXX] creating shared lib conv_layer.so
-@icpc -std=c++14 -fPIC -shared -mkl=sequential -static-intel -DNDEBUG -O3 -o conv_layer.so conv_layer.o -ldl
-icpc: warning #10237: -lcilkrts linked in dynamically, static library not available
-[Make] Placing the lib into ../../../../lib/conv_layer_1_48_64_18_24_1_3_0_1_1_2_2_.so
-[CXX] compiling conv_layer.cpp
-@icpc -std=c++14 -c -MMD -MP -MT conv_layer.o -MF conv_layer.T -DZNN_NO_CUDA -DZNN_NO_HBW -DZNN_NUM_CORES=64 -I../../../../code/include -I../../../../code/include/znn -I../../../.. -Wall -Wextra -Wno-format -Wno-unknown-pragmas -fmax-errors=5 -DNDEBUG -O3 -ipo -fp-model fast=2 -mkl=sequential -fno-rtti -fno-exceptions -mkl=sequential -DZNN_AVX2 -march=core-avx2 -DBN_v=1 -DIFM_v=36 -DOFM_v=48 -DID_v=18 -DIHW_v=48 -DKD_v=1 -DKHW_v=3 -DPADD_v=0 -DPADHW_v=1 -DCores_v=2 -DHT_v=2 -DACTIVATION_v=1 -o conv_layer.o conv_layer.cpp
-[CXX] creating shared lib conv_layer.so
-@icpc -std=c++14 -fPIC -shared -mkl=sequential -static-intel -DNDEBUG -O3 -o conv_layer.so conv_layer.o -ldl
-icpc: warning #10237: -lcilkrts linked in dynamically, static library not available
-Makefile:108: recipe for target 'conv_layer.so' failed
-make: *** [conv_layer.so] Error 2
-make: *** Deleting intermediate file 'conv_layer.o'
-/home/ubuntu/znnphi_interface/lib/conv_layer_1_36_48_18_48_1_3_0_1_1_2_2_.so: cannot open shared object file: No such file or directory
+Makefile:92: recipe for target 'out/znet.o' failed
+make: *** [out/znet.o] Error 2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1 36 18 96
+1 48 18 48
+1 28 18 192
+1 64 18 24
+1 80 18 12
+Starting Forward Pass
+block_input0.0095475
+pool_d10.0279085
+pool_d20.009206
+pool_d30.0029636
+pool_d40.0008919
+pool_d50.0004596
+unblock_output0.0022809
+average:0.532654
+Forward Finished
+5
+1 3 18 192 192 
+7962624 2654208 147456 768 4 

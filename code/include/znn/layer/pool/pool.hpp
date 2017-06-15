@@ -13,6 +13,8 @@ namespace znn
       struct MaxPoolingLayer: public Layer{
          private:
             int bn, fm, id, ihw;
+            int rounded_fm;
+
             int kd, khw;
             int stride_d, stride_hw;
             int od, ohw;
@@ -31,23 +33,25 @@ namespace znn
             assert(ihw > 0);
             assert( kd > 0);
             assert(khw > 0);
+            
             assert(stride_d  == kd);
             assert(stride_hw == khw);
 
             assert(id  % kd == 0);
             assert(ihw % khw == 0);
+            rounded_fm = ((fm + SIMD_WIDTH - 1) / SIMD_WIDTH) * SIMD_WIDTH;
 
             od  = id  / kd;
             ohw = ihw / khw;
 
-            std::cout << bn << " " << fm << " " << id << " " << ihw << std::endl;
+            std::cout << bn << " " << fm << " " << rounded_fm << " " << id << " " << ihw << std::endl;
          }
 
             void forward(float const* __restrict i, float* __restrict o, 
                   float const* __restrict dummy1, float const* __restrict dummy2)
             {
-               typedef float const (*in_tp)[fm/SIMD_WIDTH][id][ihw][ihw][SIMD_WIDTH];
-               typedef float (*out_tp)[fm/SIMD_WIDTH][od][ohw][ohw][SIMD_WIDTH];
+               typedef float const (*in_tp)[rounded_fm/SIMD_WIDTH][id][ihw][ihw][SIMD_WIDTH];
+               typedef float (*out_tp)[rounded_fm/SIMD_WIDTH][od][ohw][ohw][SIMD_WIDTH];
 
                out_tp o_array = reinterpret_cast<out_tp>(o);
                in_tp i_array = reinterpret_cast<in_tp>(i);

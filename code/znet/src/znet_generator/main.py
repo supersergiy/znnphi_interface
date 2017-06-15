@@ -71,6 +71,7 @@ def parse_net(net_path):
          lparams["top"] = top_name
       elif lt == "BatchNorm":
          lparams["type"] = "batchnorm"
+
          lparams["top_dim"] = copy.copy(bot_tensor.dim)
       elif lt == "Scale":
          lparams["type"] = "scale"

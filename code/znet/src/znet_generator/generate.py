@@ -27,6 +27,17 @@ def generate_allocate_layers(net):
                                                               l["pad"][0],  l["pad"][1], ACTIVATION)
             lines.append('layers["{}"] = new znn::phi::ConvWrapper({});'.format(l["name"],
                                                                                 conv_params))
+        elif l["type"] == "pool":
+            bot_dim = tensors[l["bot"]].dim
+            pool_params = ', '.join(['{}']*8).format( #8 parameters
+                                                    bot_dim[0], bot_dim[1], bot_dim[2],
+                                                    bot_dim[3], bot_dim[4],
+                                                    l["kernel_dim"][0], l["kernel_dim"][1],
+                                                    l["stride"][0], l["stride"][1])
+            lines.append('layers["{}"] = new znn::phi::MaxPoolingLayer({});'.format(l["name"],
+                                                                                pool_params))
+
+
         elif l["type"] == 'block_input':
             user_input = tensors["user_input"]
             block_params = '{}, {}, {}, {}'.format(user_input.dim[0],
@@ -157,13 +168,8 @@ def generate_forward_all_layers(net):
            params  = 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
            params += 'tensors["{}"]->data(), tensors["{}"]->data()'.format(l["kernel"], l["bias"])
            lines.append('layers["{}"]->forward({});'.format(lname, params))
-       if l["type"] in ["block_input"]:
+       if l["type"] in ["pool", "block_input", "unblock_output"]:
            params  = 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
-           params += 'NULL, NULL'
-           lines.append('layers["{}"]->forward({});'.format(lname, params))
-       if l["type"] in ["unblock_output"]:
-           params  = 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
-           #params  = 'tensors["{}"]->data(), tensors["{}"]->data(), '.format("input", l["top"])
            params += 'NULL, NULL'
            lines.append('layers["{}"]->forward({});'.format(lname, params))
 
@@ -177,7 +183,7 @@ def generate_forward_body(net):
     lines = []
 
     #lines += generate_load_data(net)
-    lines += timeit(generate_forward_all_layers(net), 1, "average:")
+    lines += timeit(generate_forward_all_layers(net), 10, "average:")
     return lines
 
 def generate_znet(net, weights_path, out_path):
@@ -193,6 +199,7 @@ def generate_znet(net, weights_path, out_path):
     lines.append('#include <chrono>')
     lines.append('#include <znn/interface/conv_wrapper.hpp>')
     lines.append('#include <znn/layer/block_data.hpp>')
+    lines.append('#include <znn/layer/pool/pool.hpp>')
     lines.append('#include <znn/layer/unblock_data.hpp>')
     lines.append('#include <cstring>')
     lines.append('#include <znet.hpp>')

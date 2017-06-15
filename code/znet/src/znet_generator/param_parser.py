@@ -83,12 +83,14 @@ def parse_deconv(json_conv_param, bot_tensor):
 def parse_pool(json_param, bot_tensor):
     params = {}
     params["type"] = "pool"
-
     #TODO: there's a bug with converting pooling param to JSON
     #      will need to un-hardcode this
+    params["kernel_dim"] = [1, 2, 2]
+    params["stride"]     = [1, 2, 2]
+
     params["top_dim"]     = copy.copy(bot_tensor.dim)
-    params["top_dim"][2] /= 1
-    params["top_dim"][3] /= 2
-    params["top_dim"][4] /= 2
+    params["top_dim"][2] /= params["kernel_dim"][0]
+    params["top_dim"][3] /= params["kernel_dim"][1]
+    params["top_dim"][4] /= params["kernel_dim"][2]
 
     return params

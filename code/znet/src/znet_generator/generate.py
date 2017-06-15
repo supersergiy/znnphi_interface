@@ -26,12 +26,12 @@ def generate_allocate_layers(net):
                                                               l["kernel_dim"][2], l["kernel_dim"][3],
                                                               l["pad"][0],  l["pad"][1], ACTIVATION)
             lines.append('layers["{}"] = new znn::phi::ConvWrapper({});'.format(l["name"],
-                                                                                conv_params))
+                                                                               conv_params))
         elif l["type"] == "pool":
             bot_dim = tensors[l["bot"]].dim
-            pool_params = ', '.join(['{}']*8).format( #8 parameters
+            pool_params = ', '.join(['{}']*8).format( #7 parameters
                                                     bot_dim[0], bot_dim[1], bot_dim[2],
-                                                    bot_dim[3], bot_dim[4],
+                                                    bot_dim[3],
                                                     l["kernel_dim"][0], l["kernel_dim"][1],
                                                     l["stride"][0], l["stride"][1])
             lines.append('layers["{}"] = new znn::phi::MaxPoolingLayer({});'.format(l["name"],
@@ -62,6 +62,7 @@ def generate_allocate_layers(net):
 def generate_initialize_weights(net, weights_path):
     lines = []
     tensors, layer_info, layer_order = net
+    return lines
     #allocate_weights
     for (n,l) in iteritems(layer_info):
        if l["type"] in ["conv", "deconv"]:
@@ -145,15 +146,7 @@ def generate_constructor_body(net, weights_path):
 
     lines.append('')
 
-
     return lines
-
-'''def generate_load_data(net):
-    tensors, layer_info, layer_order = net
-    lines = []
-    input_values = [1, 2, 3, 4]*(tensors['user_input'].size/4)
-    lines += fill_tensor('user_input', input_values)
-    return lines'''
 
 def generate_forward_all_layers(net):
     tensors, layer_info, layer_order = net
@@ -167,11 +160,13 @@ def generate_forward_all_layers(net):
        if l["type"] in ["conv"]:
            params  = 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
            params += 'tensors["{}"]->data(), tensors["{}"]->data()'.format(l["kernel"], l["bias"])
-           lines.append('layers["{}"]->forward({});'.format(lname, params))
+           #lines.append('layers["{}"]->forward({});'.format(lname, params))
        if l["type"] in ["pool", "block_input", "unblock_output"]:
            params  = 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
            params += 'NULL, NULL'
-           lines.append('layers["{}"]->forward({});'.format(lname, params))
+           run_layer = 'layers["{}"]->forward({});'.format(lname, params)
+           lines += timeit([run_layer], 10, l["name"])
+           #lines.append(run_layer)
 
        #lines.append('std::cout << "{} Finished!\\n";'.format(l["name"]))
     lines.append('')
@@ -182,16 +177,10 @@ def generate_forward_body(net):
     tensors, layer_info, layer_order = net
     lines = []
 
-    #lines += generate_load_data(net)
-    lines += timeit(generate_forward_all_layers(net), 10, "average:")
+    lines += timeit(generate_forward_all_layers(net), 1, "average:")
     return lines
 
 def generate_znet(net, weights_path, out_path):
-    '''tmp = net[1]["conv1_d1"]
-    net[1].clear()
-    net[1]["conv1_d1"] = tmp
-    net[2].clear()
-    net[2].append("conv1_d1")'''
 
     lines = []
     #includes

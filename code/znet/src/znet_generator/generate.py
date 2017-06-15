@@ -62,6 +62,7 @@ def generate_allocate_layers(net):
 def generate_initialize_weights(net, weights_path):
     lines = []
     tensors, layer_info, layer_order = net
+    return lines
     #allocate_weights
     for (n,l) in iteritems(layer_info):
        if l["type"] in ["conv", "deconv"]:
@@ -167,11 +168,12 @@ def generate_forward_all_layers(net):
        if l["type"] in ["conv"]:
            params  = 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
            params += 'tensors["{}"]->data(), tensors["{}"]->data()'.format(l["kernel"], l["bias"])
-           lines.append('layers["{}"]->forward({});'.format(lname, params))
+           #lines.append('layers["{}"]->forward({});'.format(lname, params))
        if l["type"] in ["pool", "block_input", "unblock_output"]:
            params  = 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
            params += 'NULL, NULL'
-           lines.append('layers["{}"]->forward({});'.format(lname, params))
+           lines += (timeit(['layers["{}"]->forward({});'.format(lname, params)],
+                            1, l["name"]+": "))
 
        #lines.append('std::cout << "{} Finished!\\n";'.format(l["name"]))
     lines.append('')
@@ -183,7 +185,7 @@ def generate_forward_body(net):
     lines = []
 
     #lines += generate_load_data(net)
-    lines += timeit(generate_forward_all_layers(net), 10, "average:")
+    lines += timeit(generate_forward_all_layers(net), 1, "average:")
     return lines
 
 def generate_znet(net, weights_path, out_path):

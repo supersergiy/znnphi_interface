@@ -7,6 +7,7 @@ def indent_lines(lines, indent):
 
 def timeit(code_lines, n=1, title=""):
     lines = []
+    lines.append("{")
     lines.append("auto begin = std::chrono::high_resolution_clock::now();")
     lines.append("for (int i = 0; i < {}; i++) {{".format(n))
     lines += indent_lines(code_lines, 1)
@@ -15,6 +16,7 @@ def timeit(code_lines, n=1, title=""):
     lines.append("auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();")
     lines.append("double secs = static_cast<double>(duration) / 1000000;")
     lines.append("std::cout << \"{}\" << secs/{} << \"\\n\";".format(title, n))
+    lines.append("}")
 
     return lines
 

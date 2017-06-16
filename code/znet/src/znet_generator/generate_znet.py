@@ -1,0 +1,117 @@
+from six import iteritems
+import h5py
+import numpy as np
+
+from codegen import generate_function, timeit
+
+from layers import allocate_layer_lines, forward_layer_lines
+
+def allocate_all_layers_lines(net):
+    lines = []
+    tensors, layer_info, layer_order = net
+
+    for (n,l) in iteritems(layer_info):
+        lines += allocate_layer_lines(l)
+
+    lines.append('')
+    return lines
+
+def allocate_featuremaps_lines(net):
+    lines = []
+    tensors, layer_info, layer_order = net
+
+    for (n,t) in iteritems(tensors):
+       lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(n, t.memory_size))
+
+    lines.append('')
+    return lines
+
+def generate_python_interface_misc(net):
+    tensors, layer_info, layer_order = net
+    lines = []
+    #input
+    lines.append('input_size = {};'.format(tensors['user_input'].size))
+    #output
+    out_dim = 5
+    out_strides = [4]  #sizeof float
+
+    #go from the outer most dimension backward,
+    #then reverse
+    for i in range(1, 5): #4 more dimensions
+        out_strides.append(out_strides[-1]*tensors['user_output'].dim[-i])
+    out_strides = list(reversed(out_strides))
+
+    lines.append('out_dim = {};'.format(out_dim))
+    lines.append('size_t tmp_shape[] = {{ {} }};'.format(', '.join(map(str, tensors['user_output'].dim))))
+    lines.append('out_shape.assign(tmp_shape, tmp_shape + {});'.format(out_dim))
+
+    lines.append('size_t tmp_strides[] = {{ {} }};'.format(', '.join(map(str, out_strides))))
+    lines.append('out_strides.assign(tmp_strides, tmp_strides + {});'.format(out_dim))
+
+    lines.append('')
+    return lines
+
+def constructor_body_lines(net):
+    lines = []
+    tensors, layer_info, layer_order = net
+
+    lines += allocate_featuremaps_lines(net)
+    lines += allocate_all_layers_lines(net)
+    lines += generate_python_interface_misc(net)
+
+    lines.append('')
+    return lines
+
+def forward_all_layers_lines(net):
+    tensors, layer_info, layer_order = net
+    lines = []
+
+    lines.append('std::cout << "Starting Forward Pass\\n";')
+    for lname in layer_order:
+       l = layer_info[lname]
+       #lines.append('std::cout << "Running {}!\\n";'.format(l["name"]))
+       lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
+       #lines.append('std::cout << "{} Finished!\\n";'.format(l["name"]))
+
+    lines.append('')
+    return lines
+
+
+def forward_body_lines(net):
+    tensors, layer_info, layer_order = net
+    lines = []
+    lines += timeit(forward_all_layers_lines(net), 1, "average:")
+
+    lines.append('')
+    return lines
+
+def generate_znet(net, out_path):
+    lines = []
+    #includes
+    lines.append('#include <iostream>')
+    lines.append('#include <chrono>')
+    lines.append('#include <znn/interface/conv_wrapper.hpp>')
+    lines.append('#include <znn/layer/layers.hpp>')
+    lines.append('#include <cstring>')
+    lines.append('#include <znet.hpp>')
+    lines.append('#include <common.hpp>')
+    lines.append('')
+
+    #constructor
+    constructor_signature = 'znn::phi::Znet::Znet(std::string weights_path)'
+    constructor_body      = constructor_body_lines(net)
+    constructor           = generate_function(constructor_signature, constructor_body)
+    lines += constructor
+
+    #forward pass
+    forward_signature = 'void znn::phi::Znet::forward(void)'
+    forward_body      = forward_body_lines(net)
+    forward           = generate_function(forward_signature, forward_body)
+    lines += forward
+
+    #write lines to file
+    f = open(out_path, 'w')
+    for l in lines:
+        f.write("{}\n".format(l))
+
+

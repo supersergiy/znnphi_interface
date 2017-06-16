@@ -1,0 +1,57 @@
+make: Entering directory '/home/ubuntu/znnphi_interface/code/znet'
+rm -rf out
+mkdir -p out
+mkdir -p out/weights
+python src/znet_generator/main.py /home/ubuntu/znnphi_interface/code/znet/src/python/pznet/.tmp/net.json /home/ubuntu/znnphi_interface/code/znet/nets/unet.h5 src/generated/znet.cpp
+Traceback (most recent call last):
+  File "src/znet_generator/main.py", line 17, in <module>
+    generate_znet(net, out_path)
+  File "/home/ubuntu/znnphi_interface/code/znet/src/znet_generator/generate_znet.py", line 102, in generate_znet
+    constructor_body      = constructor_body_lines(net)
+  File "/home/ubuntu/znnphi_interface/code/znet/src/znet_generator/generate_znet.py", line 59, in constructor_body_lines
+    lines += allocate_all_layers_lines(net)
+  File "/home/ubuntu/znnphi_interface/code/znet/src/znet_generator/generate_znet.py", line 14, in allocate_all_layers_lines
+    lines += allocate_layer_lines(l)
+  File "/home/ubuntu/znnphi_interface/code/znet/src/znet_generator/layers/allocate_layer_lines.py", line 10, in allocate_layer_lines
+    return allocate_conv_lines(lparams) 
+  File "/home/ubuntu/znnphi_interface/code/znet/src/znet_generator/layers/conv.py", line 117, in allocate_conv_lines
+    lines += fill_tensor('{}_kernel'.format(l["name"]), blocked_kernel)
+  File "/home/ubuntu/znnphi_interface/code/znet/src/znet_generator/layers/common.py", line 26, in fill_tensor
+    write_values_to_file(values, data_path)
+  File "/home/ubuntu/znnphi_interface/code/znet/src/znet_generator/layers/common.py", line 17, in write_values_to_file
+    f.write("{} ".format(str(v)))
+KeyboardInterrupt
+Makefile:85: recipe for target 'src/generated/znet.cpp' failed
+make: *** [src/generated/znet.cpp] Error 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

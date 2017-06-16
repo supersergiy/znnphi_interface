@@ -130,6 +130,11 @@ znn::phi::Znet::Znet(std::string weights_path)
 	tensors["conv4_d4_bias"] = new znn::phi::hbw_array<float>(80);
 	readArrayFromFile(tensors["conv4_d4_kernel"]->data(), weights_path + "conv4_d4_kernel.data");
 	tensors["conv4_d4_bias"]->set_to_const(0);
+	layers["scale6_d3"] = new znn::phi::ScaleLayer(2, 64, 18, 24);
+	tensors["scale_scale6_d3"] = new znn::phi::hbw_array<float>(64);
+	tensors["bias_scale6_d3"] = new znn::phi::hbw_array<float>(64);
+	readArrayFromFile(tensors["scale_scale6_d3"]->data(), weights_path + "scale_scale6_d3.data");
+	readArrayFromFile(tensors["bias_scale6_d3"]->data(), weights_path + "bias_scale6_d3.data");
 	layers["conv4_d1"] = new znn::phi::ConvWrapper(2, 36, 36, 18, 96, 1, 3, 0, 1, false);
 	tensors["conv4_d1_kernel"] = new znn::phi::hbw_array<float>(14400);
 	tensors["conv4_d1_bias"] = new znn::phi::hbw_array<float>(40);
@@ -160,11 +165,14 @@ znn::phi::Znet::Znet(std::string weights_path)
 	tensors["convf6_d2_bias"] = new znn::phi::hbw_array<float>(48);
 	readArrayFromFile(tensors["convf6_d2_kernel"]->data(), weights_path + "convf6_d2_kernel.data");
 	tensors["convf6_d2_bias"]->set_to_const(0);
+	layers["elu5_d4"] = new znn::phi::EluLayer(2, 80, 18, 12);
 	layers["convf6_d4"] = new znn::phi::ConvWrapper(2, 80, 80, 18, 12, 1, 3, 0, 1, false);
 	tensors["convf6_d4_kernel"] = new znn::phi::hbw_array<float>(57600);
 	tensors["convf6_d4_bias"] = new znn::phi::hbw_array<float>(80);
 	readArrayFromFile(tensors["convf6_d4_kernel"]->data(), weights_path + "convf6_d4_kernel.data");
 	tensors["convf6_d4_bias"]->set_to_const(0);
+	layers["elu5_d2"] = new znn::phi::EluLayer(2, 48, 18, 48);
+	layers["elu5_d1"] = new znn::phi::EluLayer(2, 36, 18, 96);
 	layers["conv6_d4"] = new znn::phi::ConvWrapper(2, 80, 80, 18, 12, 3, 1, 1, 0, false);
 	tensors["conv6_d4_kernel"] = new znn::phi::hbw_array<float>(19200);
 	tensors["conv6_d4_bias"] = new znn::phi::hbw_array<float>(80);
@@ -220,11 +228,13 @@ znn::phi::Znet::Znet(std::string weights_path)
 	tensors["convf5_d2_bias"] = new znn::phi::hbw_array<float>(48);
 	readArrayFromFile(tensors["convf5_d2_kernel"]->data(), weights_path + "convf5_d2_kernel.data");
 	tensors["convf5_d2_bias"]->set_to_const(0);
+	layers["sum4_d1"] = new znn::phi::EltwiseLayer(2, 36, 18, 96, 1);
 	layers["bn2_d3"] = new znn::phi::ScaleLayer(2, 48, 18, 48);
 	tensors["scale_bn2_d3"] = new znn::phi::hbw_array<float>(48);
 	tensors["bias_bn2_d3"] = new znn::phi::hbw_array<float>(48);
 	readArrayFromFile(tensors["scale_bn2_d3"]->data(), weights_path + "scale_bn2_d3.data");
 	readArrayFromFile(tensors["bias_bn2_d3"]->data(), weights_path + "bias_bn2_d3.data");
+	layers["elu0_d1"] = new znn::phi::EluLayer(2, 36, 18, 96);
 	layers["bn2_d1"] = new znn::phi::ScaleLayer(2, 36, 18, 96);
 	tensors["scale_bn2_d1"] = new znn::phi::hbw_array<float>(40);
 	tensors["bias_bn2_d1"] = new znn::phi::hbw_array<float>(40);
@@ -235,21 +245,27 @@ znn::phi::Znet::Znet(std::string weights_path)
 	tensors["bias_bn3_d3"] = new znn::phi::hbw_array<float>(64);
 	readArrayFromFile(tensors["scale_bn3_d3"]->data(), weights_path + "scale_bn3_d3.data");
 	readArrayFromFile(tensors["bias_bn3_d3"]->data(), weights_path + "bias_bn3_d3.data");
+	layers["sum4_d2"] = new znn::phi::EltwiseLayer(2, 48, 18, 48, 1);
 	layers["conv2_d5"] = new znn::phi::ConvWrapper(2, 96, 96, 18, 6, 3, 1, 1, 0, false);
 	tensors["conv2_d5_kernel"] = new znn::phi::hbw_array<float>(27648);
 	tensors["conv2_d5_bias"] = new znn::phi::hbw_array<float>(96);
 	readArrayFromFile(tensors["conv2_d5_kernel"]->data(), weights_path + "conv2_d5_kernel.data");
 	tensors["conv2_d5_bias"]->set_to_const(0);
+	layers["sum4_d4"] = new znn::phi::EltwiseLayer(2, 80, 18, 12, 1);
+	layers["elu0_d0"] = new znn::phi::EluLayer(2, 28, 18, 192);
 	layers["bn2_d2"] = new znn::phi::ScaleLayer(2, 48, 18, 48);
 	tensors["scale_bn2_d2"] = new znn::phi::hbw_array<float>(48);
 	tensors["bias_bn2_d2"] = new znn::phi::hbw_array<float>(48);
 	readArrayFromFile(tensors["scale_bn2_d2"]->data(), weights_path + "scale_bn2_d2.data");
 	readArrayFromFile(tensors["bias_bn2_d2"]->data(), weights_path + "bias_bn2_d2.data");
+	layers["elu0_d2"] = new znn::phi::EluLayer(2, 48, 18, 48);
 	layers["bn2_d0"] = new znn::phi::ScaleLayer(2, 28, 18, 192);
 	tensors["scale_bn2_d0"] = new znn::phi::hbw_array<float>(32);
 	tensors["bias_bn2_d0"] = new znn::phi::hbw_array<float>(32);
 	readArrayFromFile(tensors["scale_bn2_d0"]->data(), weights_path + "scale_bn2_d0.data");
 	readArrayFromFile(tensors["bias_bn2_d0"]->data(), weights_path + "bias_bn2_d0.data");
+	layers["elu0_d4"] = new znn::phi::EluLayer(2, 80, 18, 12);
+	layers["elu0_d5"] = new znn::phi::EluLayer(2, 96, 18, 6);
 	layers["bn2_d5"] = new znn::phi::ScaleLayer(2, 96, 18, 6);
 	tensors["scale_bn2_d5"] = new znn::phi::hbw_array<float>(96);
 	tensors["bias_bn2_d5"] = new znn::phi::hbw_array<float>(96);
@@ -265,11 +281,52 @@ znn::phi::Znet::Znet(std::string weights_path)
 	tensors["conv2_d3_bias"] = new znn::phi::hbw_array<float>(64);
 	readArrayFromFile(tensors["conv2_d3_kernel"]->data(), weights_path + "conv2_d3_kernel.data");
 	tensors["conv2_d3_bias"]->set_to_const(0);
+	layers["elu2_d3"] = new znn::phi::EluLayer(2, 48, 18, 48);
 	layers["conv2_d1"] = new znn::phi::ConvWrapper(2, 36, 36, 18, 96, 1, 3, 0, 1, false);
 	tensors["conv2_d1_kernel"] = new znn::phi::hbw_array<float>(14400);
 	tensors["conv2_d1_bias"] = new znn::phi::hbw_array<float>(40);
 	readArrayFromFile(tensors["conv2_d1_kernel"]->data(), weights_path + "conv2_d1_kernel.data");
 	tensors["conv2_d1_bias"]->set_to_const(0);
+	layers["elu6_d2"] = new znn::phi::EluLayer(2, 48, 18, 48);
+	layers["elu6_d3"] = new znn::phi::EluLayer(2, 64, 18, 24);
+	layers["elu6_d0"] = new znn::phi::EluLayer(2, 28, 18, 192);
+	layers["elu2_d1"] = new znn::phi::EluLayer(2, 36, 18, 96);
+	layers["scale3_d3"] = new znn::phi::ScaleLayer(2, 64, 18, 24);
+	tensors["scale_scale3_d3"] = new znn::phi::hbw_array<float>(64);
+	tensors["bias_scale3_d3"] = new znn::phi::hbw_array<float>(64);
+	readArrayFromFile(tensors["scale_scale3_d3"]->data(), weights_path + "scale_scale3_d3.data");
+	readArrayFromFile(tensors["bias_scale3_d3"]->data(), weights_path + "bias_scale3_d3.data");
+	layers["elu6_d4"] = new znn::phi::EluLayer(2, 80, 18, 12);
+	layers["scale1_d3"] = new znn::phi::ScaleLayer(2, 36, 18, 96);
+	tensors["scale_scale1_d3"] = new znn::phi::hbw_array<float>(40);
+	tensors["bias_scale1_d3"] = new znn::phi::hbw_array<float>(40);
+	readArrayFromFile(tensors["scale_scale1_d3"]->data(), weights_path + "scale_scale1_d3.data");
+	readArrayFromFile(tensors["bias_scale1_d3"]->data(), weights_path + "bias_scale1_d3.data");
+	layers["scale1_d2"] = new znn::phi::ScaleLayer(2, 48, 18, 48);
+	tensors["scale_scale1_d2"] = new znn::phi::hbw_array<float>(48);
+	tensors["bias_scale1_d2"] = new znn::phi::hbw_array<float>(48);
+	readArrayFromFile(tensors["scale_scale1_d2"]->data(), weights_path + "scale_scale1_d2.data");
+	readArrayFromFile(tensors["bias_scale1_d2"]->data(), weights_path + "bias_scale1_d2.data");
+	layers["scale1_d1"] = new znn::phi::ScaleLayer(2, 36, 18, 96);
+	tensors["scale_scale1_d1"] = new znn::phi::hbw_array<float>(40);
+	tensors["bias_scale1_d1"] = new znn::phi::hbw_array<float>(40);
+	readArrayFromFile(tensors["scale_scale1_d1"]->data(), weights_path + "scale_scale1_d1.data");
+	readArrayFromFile(tensors["bias_scale1_d1"]->data(), weights_path + "bias_scale1_d1.data");
+	layers["scale1_d0"] = new znn::phi::ScaleLayer(2, 28, 18, 192);
+	tensors["scale_scale1_d0"] = new znn::phi::hbw_array<float>(32);
+	tensors["bias_scale1_d0"] = new znn::phi::hbw_array<float>(32);
+	readArrayFromFile(tensors["scale_scale1_d0"]->data(), weights_path + "scale_scale1_d0.data");
+	readArrayFromFile(tensors["bias_scale1_d0"]->data(), weights_path + "bias_scale1_d0.data");
+	layers["scale1_d5"] = new znn::phi::ScaleLayer(2, 96, 18, 6);
+	tensors["scale_scale1_d5"] = new znn::phi::hbw_array<float>(96);
+	tensors["bias_scale1_d5"] = new znn::phi::hbw_array<float>(96);
+	readArrayFromFile(tensors["scale_scale1_d5"]->data(), weights_path + "scale_scale1_d5.data");
+	readArrayFromFile(tensors["bias_scale1_d5"]->data(), weights_path + "bias_scale1_d5.data");
+	layers["scale1_d4"] = new znn::phi::ScaleLayer(2, 80, 18, 12);
+	tensors["scale_scale1_d4"] = new znn::phi::hbw_array<float>(80);
+	tensors["bias_scale1_d4"] = new znn::phi::hbw_array<float>(80);
+	readArrayFromFile(tensors["scale_scale1_d4"]->data(), weights_path + "scale_scale1_d4.data");
+	readArrayFromFile(tensors["bias_scale1_d4"]->data(), weights_path + "bias_scale1_d4.data");
 	layers["bn6_d4"] = new znn::phi::ScaleLayer(2, 80, 18, 12);
 	tensors["scale_bn6_d4"] = new znn::phi::hbw_array<float>(80);
 	tensors["bias_bn6_d4"] = new znn::phi::hbw_array<float>(80);
@@ -295,6 +352,36 @@ znn::phi::Znet::Znet(std::string weights_path)
 	tensors["bias_bn6_d0"] = new znn::phi::hbw_array<float>(32);
 	readArrayFromFile(tensors["scale_bn6_d0"]->data(), weights_path + "scale_bn6_d0.data");
 	readArrayFromFile(tensors["bias_bn6_d0"]->data(), weights_path + "bias_bn6_d0.data");
+	layers["scale0_d4"] = new znn::phi::ScaleLayer(2, 80, 18, 12);
+	tensors["scale_scale0_d4"] = new znn::phi::hbw_array<float>(80);
+	tensors["bias_scale0_d4"] = new znn::phi::hbw_array<float>(80);
+	readArrayFromFile(tensors["scale_scale0_d4"]->data(), weights_path + "scale_scale0_d4.data");
+	readArrayFromFile(tensors["bias_scale0_d4"]->data(), weights_path + "bias_scale0_d4.data");
+	layers["scale0_d5"] = new znn::phi::ScaleLayer(2, 96, 18, 6);
+	tensors["scale_scale0_d5"] = new znn::phi::hbw_array<float>(96);
+	tensors["bias_scale0_d5"] = new znn::phi::hbw_array<float>(96);
+	readArrayFromFile(tensors["scale_scale0_d5"]->data(), weights_path + "scale_scale0_d5.data");
+	readArrayFromFile(tensors["bias_scale0_d5"]->data(), weights_path + "bias_scale0_d5.data");
+	layers["scale0_d0"] = new znn::phi::ScaleLayer(2, 28, 18, 192);
+	tensors["scale_scale0_d0"] = new znn::phi::hbw_array<float>(32);
+	tensors["bias_scale0_d0"] = new znn::phi::hbw_array<float>(32);
+	readArrayFromFile(tensors["scale_scale0_d0"]->data(), weights_path + "scale_scale0_d0.data");
+	readArrayFromFile(tensors["bias_scale0_d0"]->data(), weights_path + "bias_scale0_d0.data");
+	layers["scale0_d1"] = new znn::phi::ScaleLayer(2, 36, 18, 96);
+	tensors["scale_scale0_d1"] = new znn::phi::hbw_array<float>(40);
+	tensors["bias_scale0_d1"] = new znn::phi::hbw_array<float>(40);
+	readArrayFromFile(tensors["scale_scale0_d1"]->data(), weights_path + "scale_scale0_d1.data");
+	readArrayFromFile(tensors["bias_scale0_d1"]->data(), weights_path + "bias_scale0_d1.data");
+	layers["scale0_d2"] = new znn::phi::ScaleLayer(2, 48, 18, 48);
+	tensors["scale_scale0_d2"] = new znn::phi::hbw_array<float>(48);
+	tensors["bias_scale0_d2"] = new znn::phi::hbw_array<float>(48);
+	readArrayFromFile(tensors["scale_scale0_d2"]->data(), weights_path + "scale_scale0_d2.data");
+	readArrayFromFile(tensors["bias_scale0_d2"]->data(), weights_path + "bias_scale0_d2.data");
+	layers["scale0_d3"] = new znn::phi::ScaleLayer(2, 28, 18, 192);
+	tensors["scale_scale0_d3"] = new znn::phi::hbw_array<float>(32);
+	tensors["bias_scale0_d3"] = new znn::phi::hbw_array<float>(32);
+	readArrayFromFile(tensors["scale_scale0_d3"]->data(), weights_path + "scale_scale0_d3.data");
+	readArrayFromFile(tensors["bias_scale0_d3"]->data(), weights_path + "bias_scale0_d3.data");
 	layers["bn0_d5"] = new znn::phi::ScaleLayer(2, 96, 18, 6);
 	tensors["scale_bn0_d5"] = new znn::phi::hbw_array<float>(96);
 	tensors["bias_bn0_d5"] = new znn::phi::hbw_array<float>(96);
@@ -345,27 +432,128 @@ znn::phi::Znet::Znet(std::string weights_path)
 	tensors["bias_bn5_d2"] = new znn::phi::hbw_array<float>(48);
 	readArrayFromFile(tensors["scale_bn5_d2"]->data(), weights_path + "scale_bn5_d2.data");
 	readArrayFromFile(tensors["bias_bn5_d2"]->data(), weights_path + "bias_bn5_d2.data");
+	layers["elu4_d4"] = new znn::phi::EluLayer(2, 80, 18, 12);
+	layers["elu5_d3"] = new znn::phi::EluLayer(2, 64, 18, 24);
+	layers["elu4_d0"] = new znn::phi::EluLayer(2, 28, 18, 192);
+	layers["elu4_d1"] = new znn::phi::EluLayer(2, 36, 18, 96);
+	layers["elu4_d2"] = new znn::phi::EluLayer(2, 48, 18, 48);
+	layers["elu4_d3"] = new znn::phi::EluLayer(2, 64, 18, 24);
+	layers["elu6_d1"] = new znn::phi::EluLayer(2, 36, 18, 96);
+	layers["elu5_d0"] = new znn::phi::EluLayer(2, 28, 18, 192);
+	layers["scale4_d0"] = new znn::phi::ScaleLayer(2, 28, 18, 192);
+	tensors["scale_scale4_d0"] = new znn::phi::hbw_array<float>(32);
+	tensors["bias_scale4_d0"] = new znn::phi::hbw_array<float>(32);
+	readArrayFromFile(tensors["scale_scale4_d0"]->data(), weights_path + "scale_scale4_d0.data");
+	readArrayFromFile(tensors["bias_scale4_d0"]->data(), weights_path + "bias_scale4_d0.data");
+	layers["scale4_d1"] = new znn::phi::ScaleLayer(2, 36, 18, 96);
+	tensors["scale_scale4_d1"] = new znn::phi::hbw_array<float>(40);
+	tensors["bias_scale4_d1"] = new znn::phi::hbw_array<float>(40);
+	readArrayFromFile(tensors["scale_scale4_d1"]->data(), weights_path + "scale_scale4_d1.data");
+	readArrayFromFile(tensors["bias_scale4_d1"]->data(), weights_path + "bias_scale4_d1.data");
+	layers["scale4_d2"] = new znn::phi::ScaleLayer(2, 48, 18, 48);
+	tensors["scale_scale4_d2"] = new znn::phi::hbw_array<float>(48);
+	tensors["bias_scale4_d2"] = new znn::phi::hbw_array<float>(48);
+	readArrayFromFile(tensors["scale_scale4_d2"]->data(), weights_path + "scale_scale4_d2.data");
+	readArrayFromFile(tensors["bias_scale4_d2"]->data(), weights_path + "bias_scale4_d2.data");
+	layers["scale4_d3"] = new znn::phi::ScaleLayer(2, 64, 18, 24);
+	tensors["scale_scale4_d3"] = new znn::phi::hbw_array<float>(64);
+	tensors["bias_scale4_d3"] = new znn::phi::hbw_array<float>(64);
+	readArrayFromFile(tensors["scale_scale4_d3"]->data(), weights_path + "scale_scale4_d3.data");
+	readArrayFromFile(tensors["bias_scale4_d3"]->data(), weights_path + "bias_scale4_d3.data");
+	layers["scale4_d4"] = new znn::phi::ScaleLayer(2, 80, 18, 12);
+	tensors["scale_scale4_d4"] = new znn::phi::hbw_array<float>(80);
+	tensors["bias_scale4_d4"] = new znn::phi::hbw_array<float>(80);
+	readArrayFromFile(tensors["scale_scale4_d4"]->data(), weights_path + "scale_scale4_d4.data");
+	readArrayFromFile(tensors["bias_scale4_d4"]->data(), weights_path + "bias_scale4_d4.data");
 	layers["bn1_d3"] = new znn::phi::ScaleLayer(2, 36, 18, 96);
 	tensors["scale_bn1_d3"] = new znn::phi::hbw_array<float>(40);
 	tensors["bias_bn1_d3"] = new znn::phi::hbw_array<float>(40);
 	readArrayFromFile(tensors["scale_bn1_d3"]->data(), weights_path + "scale_bn1_d3.data");
 	readArrayFromFile(tensors["bias_bn1_d3"]->data(), weights_path + "bias_bn1_d3.data");
+	layers["scale2_d2"] = new znn::phi::ScaleLayer(2, 48, 18, 48);
+	tensors["scale_scale2_d2"] = new znn::phi::hbw_array<float>(48);
+	tensors["bias_scale2_d2"] = new znn::phi::hbw_array<float>(48);
+	readArrayFromFile(tensors["scale_scale2_d2"]->data(), weights_path + "scale_scale2_d2.data");
+	readArrayFromFile(tensors["bias_scale2_d2"]->data(), weights_path + "bias_scale2_d2.data");
+	layers["scale2_d3"] = new znn::phi::ScaleLayer(2, 48, 18, 48);
+	tensors["scale_scale2_d3"] = new znn::phi::hbw_array<float>(48);
+	tensors["bias_scale2_d3"] = new znn::phi::hbw_array<float>(48);
+	readArrayFromFile(tensors["scale_scale2_d3"]->data(), weights_path + "scale_scale2_d3.data");
+	readArrayFromFile(tensors["bias_scale2_d3"]->data(), weights_path + "bias_scale2_d3.data");
+	layers["scale2_d0"] = new znn::phi::ScaleLayer(2, 28, 18, 192);
+	tensors["scale_scale2_d0"] = new znn::phi::hbw_array<float>(32);
+	tensors["bias_scale2_d0"] = new znn::phi::hbw_array<float>(32);
+	readArrayFromFile(tensors["scale_scale2_d0"]->data(), weights_path + "scale_scale2_d0.data");
+	readArrayFromFile(tensors["bias_scale2_d0"]->data(), weights_path + "bias_scale2_d0.data");
+	layers["scale2_d1"] = new znn::phi::ScaleLayer(2, 36, 18, 96);
+	tensors["scale_scale2_d1"] = new znn::phi::hbw_array<float>(40);
+	tensors["bias_scale2_d1"] = new znn::phi::hbw_array<float>(40);
+	readArrayFromFile(tensors["scale_scale2_d1"]->data(), weights_path + "scale_scale2_d1.data");
+	readArrayFromFile(tensors["bias_scale2_d1"]->data(), weights_path + "bias_scale2_d1.data");
 	layers["bn1_d0"] = new znn::phi::ScaleLayer(2, 28, 18, 192);
 	tensors["scale_bn1_d0"] = new znn::phi::hbw_array<float>(32);
 	tensors["bias_bn1_d0"] = new znn::phi::hbw_array<float>(32);
 	readArrayFromFile(tensors["scale_bn1_d0"]->data(), weights_path + "scale_bn1_d0.data");
 	readArrayFromFile(tensors["bias_bn1_d0"]->data(), weights_path + "bias_bn1_d0.data");
+	layers["scale2_d4"] = new znn::phi::ScaleLayer(2, 80, 18, 12);
+	tensors["scale_scale2_d4"] = new znn::phi::hbw_array<float>(80);
+	tensors["bias_scale2_d4"] = new znn::phi::hbw_array<float>(80);
+	readArrayFromFile(tensors["scale_scale2_d4"]->data(), weights_path + "scale_scale2_d4.data");
+	readArrayFromFile(tensors["bias_scale2_d4"]->data(), weights_path + "bias_scale2_d4.data");
+	layers["scale2_d5"] = new znn::phi::ScaleLayer(2, 96, 18, 6);
+	tensors["scale_scale2_d5"] = new znn::phi::hbw_array<float>(96);
+	tensors["bias_scale2_d5"] = new znn::phi::hbw_array<float>(96);
+	readArrayFromFile(tensors["scale_scale2_d5"]->data(), weights_path + "scale_scale2_d5.data");
+	readArrayFromFile(tensors["bias_scale2_d5"]->data(), weights_path + "bias_scale2_d5.data");
 	layers["bn1_d1"] = new znn::phi::ScaleLayer(2, 36, 18, 96);
 	tensors["scale_bn1_d1"] = new znn::phi::hbw_array<float>(40);
 	tensors["bias_bn1_d1"] = new znn::phi::hbw_array<float>(40);
 	readArrayFromFile(tensors["scale_bn1_d1"]->data(), weights_path + "scale_bn1_d1.data");
 	readArrayFromFile(tensors["bias_bn1_d1"]->data(), weights_path + "bias_bn1_d1.data");
+	layers["Scale4"] = new znn::phi::ScaleLayer(2, 80, 18, 12);
+	tensors["scale_Scale4"] = new znn::phi::hbw_array<float>(80);
+	tensors["bias_Scale4"] = new znn::phi::hbw_array<float>(80);
+	readArrayFromFile(tensors["scale_Scale4"]->data(), weights_path + "scale_Scale4.data");
+	readArrayFromFile(tensors["bias_Scale4"]->data(), weights_path + "bias_Scale4.data");
+	layers["ELU1"] = new znn::phi::EluLayer(2, 64, 18, 24);
+	layers["ELU2"] = new znn::phi::EluLayer(2, 64, 18, 24);
+	layers["ELU3"] = new znn::phi::EluLayer(2, 64, 18, 24);
+	layers["ELU4"] = new znn::phi::EluLayer(2, 80, 18, 12);
+	layers["Scale1"] = new znn::phi::ScaleLayer(2, 64, 18, 24);
+	tensors["scale_Scale1"] = new znn::phi::hbw_array<float>(64);
+	tensors["bias_Scale1"] = new znn::phi::hbw_array<float>(64);
+	readArrayFromFile(tensors["scale_Scale1"]->data(), weights_path + "scale_Scale1.data");
+	readArrayFromFile(tensors["bias_Scale1"]->data(), weights_path + "bias_Scale1.data");
+	layers["Scale2"] = new znn::phi::ScaleLayer(2, 64, 18, 24);
+	tensors["scale_Scale2"] = new znn::phi::hbw_array<float>(64);
+	tensors["bias_Scale2"] = new znn::phi::hbw_array<float>(64);
+	readArrayFromFile(tensors["scale_Scale2"]->data(), weights_path + "scale_Scale2.data");
+	readArrayFromFile(tensors["bias_Scale2"]->data(), weights_path + "bias_Scale2.data");
+	layers["Scale3"] = new znn::phi::ScaleLayer(2, 64, 18, 24);
+	tensors["scale_Scale3"] = new znn::phi::hbw_array<float>(64);
+	tensors["bias_Scale3"] = new znn::phi::hbw_array<float>(64);
+	readArrayFromFile(tensors["scale_Scale3"]->data(), weights_path + "scale_Scale3.data");
+	readArrayFromFile(tensors["bias_Scale3"]->data(), weights_path + "bias_Scale3.data");
+	layers["sum0_d5"] = new znn::phi::EltwiseLayer(2, 96, 18, 6, 1);
+	layers["sum0_d4"] = new znn::phi::EltwiseLayer(2, 80, 18, 12, 1);
+	layers["sum0_d1"] = new znn::phi::EltwiseLayer(2, 36, 18, 96, 1);
+	layers["sum0_d0"] = new znn::phi::EltwiseLayer(2, 28, 18, 192, 1);
+	layers["sum0_d3"] = new znn::phi::EltwiseLayer(2, 64, 18, 24, 1);
+	layers["sum0_d2"] = new znn::phi::EltwiseLayer(2, 48, 18, 48, 1);
 	layers["block_input"] = new znn::phi::BlockDataLayer(2, 1, 18, 192);
 	layers["conv6_d0"] = new znn::phi::ConvWrapper(2, 28, 28, 18, 192, 1, 3, 0, 1, false);
 	tensors["conv6_d0_kernel"] = new znn::phi::hbw_array<float>(9216);
 	tensors["conv6_d0_bias"] = new znn::phi::hbw_array<float>(32);
 	readArrayFromFile(tensors["conv6_d0_kernel"]->data(), weights_path + "conv6_d0_kernel.data");
 	tensors["conv6_d0_bias"]->set_to_const(0);
+	layers["elu7_d0"] = new znn::phi::EluLayer(2, 28, 18, 192);
+	layers["sum4_d0"] = new znn::phi::EltwiseLayer(2, 28, 18, 192, 1);
+	layers["elu1_d3"] = new znn::phi::EluLayer(2, 36, 18, 96);
+	layers["elu1_d2"] = new znn::phi::EluLayer(2, 48, 18, 48);
+	layers["elu1_d1"] = new znn::phi::EluLayer(2, 36, 18, 96);
+	layers["elu1_d0"] = new znn::phi::EluLayer(2, 28, 18, 192);
+	layers["elu1_d5"] = new znn::phi::EluLayer(2, 96, 18, 6);
+	layers["elu1_d4"] = new znn::phi::EluLayer(2, 80, 18, 12);
 	layers["conv5_d2"] = new znn::phi::ConvWrapper(2, 48, 48, 18, 48, 3, 1, 1, 0, false);
 	tensors["conv5_d2_kernel"] = new znn::phi::hbw_array<float>(6912);
 	tensors["conv5_d2_bias"] = new znn::phi::hbw_array<float>(48);
@@ -376,6 +564,7 @@ znn::phi::Znet::Znet(std::string weights_path)
 	tensors["conv5_d3_bias"] = new znn::phi::hbw_array<float>(64);
 	readArrayFromFile(tensors["conv5_d3_kernel"]->data(), weights_path + "conv5_d3_kernel.data");
 	tensors["conv5_d3_bias"]->set_to_const(0);
+	layers["elu3_d3"] = new znn::phi::EluLayer(2, 64, 18, 24);
 	layers["conv5_d1"] = new znn::phi::ConvWrapper(2, 36, 36, 18, 96, 1, 3, 0, 1, false);
 	tensors["conv5_d1_kernel"] = new znn::phi::hbw_array<float>(14400);
 	tensors["conv5_d1_bias"] = new znn::phi::hbw_array<float>(40);
@@ -426,12 +615,38 @@ znn::phi::Znet::Znet(std::string weights_path)
 	tensors["conv7_d0_bias"] = new znn::phi::hbw_array<float>(32);
 	readArrayFromFile(tensors["conv7_d0_kernel"]->data(), weights_path + "conv7_d0_kernel.data");
 	readArrayFromFile(tensors["conv7_d0_bias"]->data(), weights_path + "conv7_d0_bias.data");
+	layers["merge_d3"] = new znn::phi::EltwiseLayer(2, 28, 18, 192, 1);
 	layers["unblock_output"] = new znn::phi::UnblockDataLayer(2, 3, 18, 192);
 	layers["bn4_d0"] = new znn::phi::ScaleLayer(2, 28, 18, 192);
 	tensors["scale_bn4_d0"] = new znn::phi::hbw_array<float>(32);
 	tensors["bias_bn4_d0"] = new znn::phi::hbw_array<float>(32);
 	readArrayFromFile(tensors["scale_bn4_d0"]->data(), weights_path + "scale_bn4_d0.data");
 	readArrayFromFile(tensors["bias_bn4_d0"]->data(), weights_path + "bias_bn4_d0.data");
+	layers["scale5_d4"] = new znn::phi::ScaleLayer(2, 80, 18, 12);
+	tensors["scale_scale5_d4"] = new znn::phi::hbw_array<float>(80);
+	tensors["bias_scale5_d4"] = new znn::phi::hbw_array<float>(80);
+	readArrayFromFile(tensors["scale_scale5_d4"]->data(), weights_path + "scale_scale5_d4.data");
+	readArrayFromFile(tensors["bias_scale5_d4"]->data(), weights_path + "bias_scale5_d4.data");
+	layers["scale5_d3"] = new znn::phi::ScaleLayer(2, 64, 18, 24);
+	tensors["scale_scale5_d3"] = new znn::phi::hbw_array<float>(64);
+	tensors["bias_scale5_d3"] = new znn::phi::hbw_array<float>(64);
+	readArrayFromFile(tensors["scale_scale5_d3"]->data(), weights_path + "scale_scale5_d3.data");
+	readArrayFromFile(tensors["bias_scale5_d3"]->data(), weights_path + "bias_scale5_d3.data");
+	layers["scale5_d2"] = new znn::phi::ScaleLayer(2, 48, 18, 48);
+	tensors["scale_scale5_d2"] = new znn::phi::hbw_array<float>(48);
+	tensors["bias_scale5_d2"] = new znn::phi::hbw_array<float>(48);
+	readArrayFromFile(tensors["scale_scale5_d2"]->data(), weights_path + "scale_scale5_d2.data");
+	readArrayFromFile(tensors["bias_scale5_d2"]->data(), weights_path + "bias_scale5_d2.data");
+	layers["scale5_d1"] = new znn::phi::ScaleLayer(2, 36, 18, 96);
+	tensors["scale_scale5_d1"] = new znn::phi::hbw_array<float>(40);
+	tensors["bias_scale5_d1"] = new znn::phi::hbw_array<float>(40);
+	readArrayFromFile(tensors["scale_scale5_d1"]->data(), weights_path + "scale_scale5_d1.data");
+	readArrayFromFile(tensors["bias_scale5_d1"]->data(), weights_path + "bias_scale5_d1.data");
+	layers["scale5_d0"] = new znn::phi::ScaleLayer(2, 28, 18, 192);
+	tensors["scale_scale5_d0"] = new znn::phi::hbw_array<float>(32);
+	tensors["bias_scale5_d0"] = new znn::phi::hbw_array<float>(32);
+	readArrayFromFile(tensors["scale_scale5_d0"]->data(), weights_path + "scale_scale5_d0.data");
+	readArrayFromFile(tensors["bias_scale5_d0"]->data(), weights_path + "bias_scale5_d0.data");
 	layers["convf1_d3"] = new znn::phi::ConvWrapper(2, 64, 64, 18, 24, 1, 3, 0, 1, false);
 	tensors["convf1_d3_kernel"] = new znn::phi::hbw_array<float>(36864);
 	tensors["convf1_d3_bias"] = new znn::phi::hbw_array<float>(64);
@@ -477,41 +692,71 @@ znn::phi::Znet::Znet(std::string weights_path)
 	tensors["bias_bn4_d1"] = new znn::phi::hbw_array<float>(40);
 	readArrayFromFile(tensors["scale_bn4_d1"]->data(), weights_path + "scale_bn4_d1.data");
 	readArrayFromFile(tensors["bias_bn4_d1"]->data(), weights_path + "bias_bn4_d1.data");
+	layers["sum4_d3"] = new znn::phi::EltwiseLayer(2, 64, 18, 24, 1);
+	layers["scale6_d4"] = new znn::phi::ScaleLayer(2, 80, 18, 12);
+	tensors["scale_scale6_d4"] = new znn::phi::hbw_array<float>(80);
+	tensors["bias_scale6_d4"] = new znn::phi::hbw_array<float>(80);
+	readArrayFromFile(tensors["scale_scale6_d4"]->data(), weights_path + "scale_scale6_d4.data");
+	readArrayFromFile(tensors["bias_scale6_d4"]->data(), weights_path + "bias_scale6_d4.data");
 	layers["bn4_d2"] = new znn::phi::ScaleLayer(2, 48, 18, 48);
 	tensors["scale_bn4_d2"] = new znn::phi::hbw_array<float>(48);
 	tensors["bias_bn4_d2"] = new znn::phi::hbw_array<float>(48);
 	readArrayFromFile(tensors["scale_bn4_d2"]->data(), weights_path + "scale_bn4_d2.data");
 	readArrayFromFile(tensors["bias_bn4_d2"]->data(), weights_path + "bias_bn4_d2.data");
+	layers["scale6_d2"] = new znn::phi::ScaleLayer(2, 48, 18, 48);
+	tensors["scale_scale6_d2"] = new znn::phi::hbw_array<float>(48);
+	tensors["bias_scale6_d2"] = new znn::phi::hbw_array<float>(48);
+	readArrayFromFile(tensors["scale_scale6_d2"]->data(), weights_path + "scale_scale6_d2.data");
+	readArrayFromFile(tensors["bias_scale6_d2"]->data(), weights_path + "bias_scale6_d2.data");
 	layers["bn4_d4"] = new znn::phi::ScaleLayer(2, 80, 18, 12);
 	tensors["scale_bn4_d4"] = new znn::phi::hbw_array<float>(80);
 	tensors["bias_bn4_d4"] = new znn::phi::hbw_array<float>(80);
 	readArrayFromFile(tensors["scale_bn4_d4"]->data(), weights_path + "scale_bn4_d4.data");
 	readArrayFromFile(tensors["bias_bn4_d4"]->data(), weights_path + "bias_bn4_d4.data");
+	layers["scale6_d0"] = new znn::phi::ScaleLayer(2, 28, 18, 192);
+	tensors["scale_scale6_d0"] = new znn::phi::hbw_array<float>(32);
+	tensors["bias_scale6_d0"] = new znn::phi::hbw_array<float>(32);
+	readArrayFromFile(tensors["scale_scale6_d0"]->data(), weights_path + "scale_scale6_d0.data");
+	readArrayFromFile(tensors["bias_scale6_d0"]->data(), weights_path + "bias_scale6_d0.data");
+	layers["scale6_d1"] = new znn::phi::ScaleLayer(2, 36, 18, 96);
+	tensors["scale_scale6_d1"] = new znn::phi::hbw_array<float>(40);
+	tensors["bias_scale6_d1"] = new znn::phi::hbw_array<float>(40);
+	readArrayFromFile(tensors["scale_scale6_d1"]->data(), weights_path + "scale_scale6_d1.data");
+	readArrayFromFile(tensors["bias_scale6_d1"]->data(), weights_path + "bias_scale6_d1.data");
 	layers["bn5_d1"] = new znn::phi::ScaleLayer(2, 36, 18, 96);
 	tensors["scale_bn5_d1"] = new znn::phi::hbw_array<float>(40);
 	tensors["bias_bn5_d1"] = new znn::phi::hbw_array<float>(40);
 	readArrayFromFile(tensors["scale_bn5_d1"]->data(), weights_path + "scale_bn5_d1.data");
 	readArrayFromFile(tensors["bias_bn5_d1"]->data(), weights_path + "bias_bn5_d1.data");
+	layers["elu2_d4"] = new znn::phi::EluLayer(2, 80, 18, 12);
 	layers["conv2_d4"] = new znn::phi::ConvWrapper(2, 80, 80, 18, 12, 3, 1, 1, 0, false);
 	tensors["conv2_d4_kernel"] = new znn::phi::hbw_array<float>(19200);
 	tensors["conv2_d4_bias"] = new znn::phi::hbw_array<float>(80);
 	readArrayFromFile(tensors["conv2_d4_kernel"]->data(), weights_path + "conv2_d4_kernel.data");
 	tensors["conv2_d4_bias"]->set_to_const(0);
+	layers["elu2_d2"] = new znn::phi::EluLayer(2, 48, 18, 48);
 	layers["conv2_d2"] = new znn::phi::ConvWrapper(2, 48, 48, 18, 48, 3, 1, 1, 0, false);
 	tensors["conv2_d2_kernel"] = new znn::phi::hbw_array<float>(6912);
 	tensors["conv2_d2_bias"] = new znn::phi::hbw_array<float>(48);
 	readArrayFromFile(tensors["conv2_d2_kernel"]->data(), weights_path + "conv2_d2_kernel.data");
 	tensors["conv2_d2_bias"]->set_to_const(0);
+	layers["elu2_d0"] = new znn::phi::EluLayer(2, 28, 18, 192);
 	layers["conv2_d0"] = new znn::phi::ConvWrapper(2, 28, 28, 18, 192, 1, 3, 0, 1, false);
 	tensors["conv2_d0_kernel"] = new znn::phi::hbw_array<float>(9216);
 	tensors["conv2_d0_bias"] = new znn::phi::hbw_array<float>(32);
 	readArrayFromFile(tensors["conv2_d0_kernel"]->data(), weights_path + "conv2_d0_kernel.data");
 	tensors["conv2_d0_bias"]->set_to_const(0);
+	layers["elu2_d5"] = new znn::phi::EluLayer(2, 96, 18, 6);
 	layers["bn5_d4"] = new znn::phi::ScaleLayer(2, 80, 18, 12);
 	tensors["scale_bn5_d4"] = new znn::phi::hbw_array<float>(80);
 	tensors["bias_bn5_d4"] = new znn::phi::hbw_array<float>(80);
 	readArrayFromFile(tensors["scale_bn5_d4"]->data(), weights_path + "scale_bn5_d4.data");
 	readArrayFromFile(tensors["bias_bn5_d4"]->data(), weights_path + "bias_bn5_d4.data");
+	layers["elui"] = new znn::phi::EluLayer(2, 28, 18, 192);
+	layers["Eltwise4"] = new znn::phi::EltwiseLayer(2, 36, 18, 96, 1);
+	layers["Eltwise3"] = new znn::phi::EltwiseLayer(2, 48, 18, 48, 1);
+	layers["Eltwise2"] = new znn::phi::EltwiseLayer(2, 64, 18, 24, 1);
+	layers["Eltwise1"] = new znn::phi::EltwiseLayer(2, 80, 18, 12, 1);
 	layers["pool_d2"] = new znn::phi::MaxPoolingLayer(2, 36, 18, 96, 1, 2, 1, 2);
 	layers["pool_d3"] = new znn::phi::MaxPoolingLayer(2, 48, 18, 48, 1, 2, 1, 2);
 	layers["bn5_d0"] = new znn::phi::ScaleLayer(2, 28, 18, 192);
@@ -527,6 +772,7 @@ znn::phi::Znet::Znet(std::string weights_path)
 	readArrayFromFile(tensors["bias_bn5_d3"]->data(), weights_path + "bias_bn5_d3.data");
 	layers["pool_d4"] = new znn::phi::MaxPoolingLayer(2, 64, 18, 24, 1, 2, 1, 2);
 	layers["pool_d5"] = new znn::phi::MaxPoolingLayer(2, 80, 18, 12, 1, 2, 1, 2);
+	layers["elu0_d3"] = new znn::phi::EluLayer(2, 28, 18, 192);
 	layers["bn4_d3"] = new znn::phi::ScaleLayer(2, 64, 18, 24);
 	tensors["scale_bn4_d3"] = new znn::phi::hbw_array<float>(64);
 	tensors["bias_bn4_d3"] = new znn::phi::hbw_array<float>(64);
@@ -553,6 +799,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["block_input"]->forward(tensors["user_input"]->data(), tensors["input"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -581,6 +828,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elui"]->forward(tensors["convi"]->data(), tensors["convi"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -610,6 +858,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale0_d0"]->forward(tensors["conv0_d0"]->data(), tensors["conv0_d0"]->data(), tensors["scale_scale0_d0"]->data(), tensors["bias_scale0_d0"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -619,6 +868,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu0_d0"]->forward(tensors["conv0_d0"]->data(), tensors["conv0_d0"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -648,6 +898,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale1_d0"]->forward(tensors["conv1_d0"]->data(), tensors["conv1_d0"]->data(), tensors["scale_scale1_d0"]->data(), tensors["bias_scale1_d0"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -657,6 +908,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu1_d0"]->forward(tensors["conv1_d0"]->data(), tensors["conv1_d0"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -676,6 +928,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["sum0_d0"]->forward(tensors["conv2_d0"]->data(), tensors["sum0_d0"]->data(), tensors["conv0_d0"]->data(), NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -695,6 +948,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale2_d0"]->forward(tensors["sum0_d0"]->data(), tensors["sum0_d0"]->data(), tensors["scale_scale2_d0"]->data(), tensors["bias_scale2_d0"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -704,6 +958,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu2_d0"]->forward(tensors["sum0_d0"]->data(), tensors["sum0_d0"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -713,6 +968,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["pool_d1"]->forward(tensors["sum0_d0"]->data(), tensors["pool_d1"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -742,6 +998,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale0_d1"]->forward(tensors["conv0_d1"]->data(), tensors["conv0_d1"]->data(), tensors["scale_scale0_d1"]->data(), tensors["bias_scale0_d1"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -751,6 +1008,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu0_d1"]->forward(tensors["conv0_d1"]->data(), tensors["conv0_d1"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -780,6 +1038,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale1_d1"]->forward(tensors["conv1_d1"]->data(), tensors["conv1_d1"]->data(), tensors["scale_scale1_d1"]->data(), tensors["bias_scale1_d1"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -789,6 +1048,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu1_d1"]->forward(tensors["conv1_d1"]->data(), tensors["conv1_d1"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -808,6 +1068,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["sum0_d1"]->forward(tensors["conv2_d1"]->data(), tensors["sum0_d1"]->data(), tensors["conv0_d1"]->data(), NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -827,6 +1088,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale2_d1"]->forward(tensors["sum0_d1"]->data(), tensors["sum0_d1"]->data(), tensors["scale_scale2_d1"]->data(), tensors["bias_scale2_d1"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -836,6 +1098,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu2_d1"]->forward(tensors["sum0_d1"]->data(), tensors["sum0_d1"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -845,6 +1108,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["pool_d2"]->forward(tensors["sum0_d1"]->data(), tensors["pool_d2"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -874,6 +1138,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale0_d2"]->forward(tensors["conv0_d2"]->data(), tensors["conv0_d2"]->data(), tensors["scale_scale0_d2"]->data(), tensors["bias_scale0_d2"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -883,6 +1148,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu0_d2"]->forward(tensors["conv0_d2"]->data(), tensors["conv0_d2"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -922,6 +1188,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale1_d2"]->forward(tensors["conv1_d2"]->data(), tensors["conv1_d2"]->data(), tensors["scale_scale1_d2"]->data(), tensors["bias_scale1_d2"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -931,6 +1198,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu1_d2"]->forward(tensors["conv1_d2"]->data(), tensors["conv1_d2"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -960,6 +1228,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["sum0_d2"]->forward(tensors["conv2_d2"]->data(), tensors["sum0_d2"]->data(), tensors["conv0_d2"]->data(), NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -979,6 +1248,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale2_d2"]->forward(tensors["sum0_d2"]->data(), tensors["sum0_d2"]->data(), tensors["scale_scale2_d2"]->data(), tensors["bias_scale2_d2"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -988,6 +1258,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu2_d2"]->forward(tensors["sum0_d2"]->data(), tensors["sum0_d2"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -997,6 +1268,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["pool_d3"]->forward(tensors["sum0_d2"]->data(), tensors["pool_d3"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1026,6 +1298,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["Scale1"]->forward(tensors["conv0_d3"]->data(), tensors["conv0_d3"]->data(), tensors["scale_Scale1"]->data(), tensors["bias_Scale1"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1035,6 +1308,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["ELU1"]->forward(tensors["conv0_d3"]->data(), tensors["conv0_d3"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1074,6 +1348,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["Scale2"]->forward(tensors["conv1_d3"]->data(), tensors["conv1_d3"]->data(), tensors["scale_Scale2"]->data(), tensors["bias_Scale2"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1083,6 +1358,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["ELU2"]->forward(tensors["conv1_d3"]->data(), tensors["conv1_d3"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1112,6 +1388,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["sum0_d3"]->forward(tensors["conv2_d3"]->data(), tensors["sum0_d3"]->data(), tensors["conv0_d3"]->data(), NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1131,6 +1408,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["Scale3"]->forward(tensors["sum0_d3"]->data(), tensors["sum0_d3"]->data(), tensors["scale_Scale3"]->data(), tensors["bias_Scale3"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1140,6 +1418,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["ELU3"]->forward(tensors["sum0_d3"]->data(), tensors["sum0_d3"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1149,6 +1428,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["pool_d4"]->forward(tensors["sum0_d3"]->data(), tensors["pool_d4"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1178,6 +1458,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale0_d4"]->forward(tensors["conv0_d4"]->data(), tensors["conv0_d4"]->data(), tensors["scale_scale0_d4"]->data(), tensors["bias_scale0_d4"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1187,6 +1468,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu0_d4"]->forward(tensors["conv0_d4"]->data(), tensors["conv0_d4"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1226,6 +1508,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale1_d4"]->forward(tensors["conv1_d4"]->data(), tensors["conv1_d4"]->data(), tensors["scale_scale1_d4"]->data(), tensors["bias_scale1_d4"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1235,6 +1518,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu1_d4"]->forward(tensors["conv1_d4"]->data(), tensors["conv1_d4"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1264,6 +1548,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["sum0_d4"]->forward(tensors["conv2_d4"]->data(), tensors["sum0_d4"]->data(), tensors["conv0_d4"]->data(), NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1283,6 +1568,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale2_d4"]->forward(tensors["sum0_d4"]->data(), tensors["sum0_d4"]->data(), tensors["scale_scale2_d4"]->data(), tensors["bias_scale2_d4"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1292,6 +1578,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu2_d4"]->forward(tensors["sum0_d4"]->data(), tensors["sum0_d4"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1301,6 +1588,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["pool_d5"]->forward(tensors["sum0_d4"]->data(), tensors["pool_d5"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1330,6 +1618,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale0_d5"]->forward(tensors["conv0_d5"]->data(), tensors["conv0_d5"]->data(), tensors["scale_scale0_d5"]->data(), tensors["bias_scale0_d5"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1339,6 +1628,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu0_d5"]->forward(tensors["conv0_d5"]->data(), tensors["conv0_d5"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1378,6 +1668,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale1_d5"]->forward(tensors["conv1_d5"]->data(), tensors["conv1_d5"]->data(), tensors["scale_scale1_d5"]->data(), tensors["bias_scale1_d5"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1387,6 +1678,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu1_d5"]->forward(tensors["conv1_d5"]->data(), tensors["conv1_d5"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1416,6 +1708,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["sum0_d5"]->forward(tensors["conv2_d5"]->data(), tensors["sum0_d5"]->data(), tensors["conv0_d5"]->data(), NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1435,6 +1728,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale2_d5"]->forward(tensors["sum0_d5"]->data(), tensors["sum0_d5"]->data(), tensors["scale_scale2_d5"]->data(), tensors["bias_scale2_d5"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1444,6 +1738,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu2_d5"]->forward(tensors["sum0_d5"]->data(), tensors["sum0_d5"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1462,6 +1757,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["Eltwise1"]->forward(tensors["Deconvolution1"]->data(), tensors["Eltwise1"]->data(), tensors["sum0_d4"]->data(), NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1481,6 +1777,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["Scale4"]->forward(tensors["Eltwise1"]->data(), tensors["Eltwise1"]->data(), tensors["scale_Scale4"]->data(), tensors["bias_Scale4"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1490,6 +1787,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["ELU4"]->forward(tensors["Eltwise1"]->data(), tensors["Eltwise1"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1519,6 +1817,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale4_d4"]->forward(tensors["conv4_d4"]->data(), tensors["conv4_d4"]->data(), tensors["scale_scale4_d4"]->data(), tensors["bias_scale4_d4"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1528,6 +1827,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu4_d4"]->forward(tensors["conv4_d4"]->data(), tensors["conv4_d4"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1567,6 +1867,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale5_d4"]->forward(tensors["conv5_d4"]->data(), tensors["conv5_d4"]->data(), tensors["scale_scale5_d4"]->data(), tensors["bias_scale5_d4"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1576,6 +1877,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu5_d4"]->forward(tensors["conv5_d4"]->data(), tensors["conv5_d4"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1605,6 +1907,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["sum4_d4"]->forward(tensors["conv6_d4"]->data(), tensors["sum4_d4"]->data(), tensors["conv4_d4"]->data(), NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1624,6 +1927,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale6_d4"]->forward(tensors["sum4_d4"]->data(), tensors["sum4_d4"]->data(), tensors["scale_scale6_d4"]->data(), tensors["bias_scale6_d4"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1633,6 +1937,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu6_d4"]->forward(tensors["sum4_d4"]->data(), tensors["sum4_d4"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1651,6 +1956,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["Eltwise2"]->forward(tensors["Deconvolution2"]->data(), tensors["Eltwise2"]->data(), tensors["sum0_d3"]->data(), NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1670,6 +1976,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale3_d3"]->forward(tensors["Eltwise2"]->data(), tensors["Eltwise2"]->data(), tensors["scale_scale3_d3"]->data(), tensors["bias_scale3_d3"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1679,6 +1986,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu3_d3"]->forward(tensors["Eltwise2"]->data(), tensors["Eltwise2"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1708,6 +2016,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale4_d3"]->forward(tensors["conv4_d3"]->data(), tensors["conv4_d3"]->data(), tensors["scale_scale4_d3"]->data(), tensors["bias_scale4_d3"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1717,6 +2026,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu4_d3"]->forward(tensors["conv4_d3"]->data(), tensors["conv4_d3"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1756,6 +2066,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale5_d3"]->forward(tensors["conv5_d3"]->data(), tensors["conv5_d3"]->data(), tensors["scale_scale5_d3"]->data(), tensors["bias_scale5_d3"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1765,6 +2076,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu5_d3"]->forward(tensors["conv5_d3"]->data(), tensors["conv5_d3"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1794,6 +2106,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["sum4_d3"]->forward(tensors["conv6_d3"]->data(), tensors["sum4_d3"]->data(), tensors["conv4_d3"]->data(), NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1813,6 +2126,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale6_d3"]->forward(tensors["sum4_d3"]->data(), tensors["sum4_d3"]->data(), tensors["scale_scale6_d3"]->data(), tensors["bias_scale6_d3"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1822,6 +2136,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu6_d3"]->forward(tensors["sum4_d3"]->data(), tensors["sum4_d3"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1840,6 +2155,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["Eltwise3"]->forward(tensors["Deconvolution3"]->data(), tensors["Eltwise3"]->data(), tensors["sum0_d2"]->data(), NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1859,6 +2175,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale2_d3"]->forward(tensors["Eltwise3"]->data(), tensors["Eltwise3"]->data(), tensors["scale_scale2_d3"]->data(), tensors["bias_scale2_d3"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1868,6 +2185,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu2_d3"]->forward(tensors["Eltwise3"]->data(), tensors["Eltwise3"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1897,6 +2215,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale4_d2"]->forward(tensors["conv4_d2"]->data(), tensors["conv4_d2"]->data(), tensors["scale_scale4_d2"]->data(), tensors["bias_scale4_d2"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1906,6 +2225,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu4_d2"]->forward(tensors["conv4_d2"]->data(), tensors["conv4_d2"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1945,6 +2265,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale5_d2"]->forward(tensors["conv5_d2"]->data(), tensors["conv5_d2"]->data(), tensors["scale_scale5_d2"]->data(), tensors["bias_scale5_d2"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1954,6 +2275,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu5_d2"]->forward(tensors["conv5_d2"]->data(), tensors["conv5_d2"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -1983,6 +2305,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["sum4_d2"]->forward(tensors["conv6_d2"]->data(), tensors["sum4_d2"]->data(), tensors["conv4_d2"]->data(), NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -2002,6 +2325,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale6_d2"]->forward(tensors["sum4_d2"]->data(), tensors["sum4_d2"]->data(), tensors["scale_scale6_d2"]->data(), tensors["bias_scale6_d2"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -2011,6 +2335,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu6_d2"]->forward(tensors["sum4_d2"]->data(), tensors["sum4_d2"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -2029,6 +2354,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["Eltwise4"]->forward(tensors["Deconvolution4"]->data(), tensors["Eltwise4"]->data(), tensors["sum0_d1"]->data(), NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -2048,6 +2374,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale1_d3"]->forward(tensors["Eltwise4"]->data(), tensors["Eltwise4"]->data(), tensors["scale_scale1_d3"]->data(), tensors["bias_scale1_d3"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -2057,6 +2384,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu1_d3"]->forward(tensors["Eltwise4"]->data(), tensors["Eltwise4"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -2086,6 +2414,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale4_d1"]->forward(tensors["conv4_d1"]->data(), tensors["conv4_d1"]->data(), tensors["scale_scale4_d1"]->data(), tensors["bias_scale4_d1"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -2095,6 +2424,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu4_d1"]->forward(tensors["conv4_d1"]->data(), tensors["conv4_d1"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -2124,6 +2454,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale5_d1"]->forward(tensors["conv5_d1"]->data(), tensors["conv5_d1"]->data(), tensors["scale_scale5_d1"]->data(), tensors["bias_scale5_d1"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -2133,6 +2464,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu5_d1"]->forward(tensors["conv5_d1"]->data(), tensors["conv5_d1"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -2152,6 +2484,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["sum4_d1"]->forward(tensors["conv6_d1"]->data(), tensors["sum4_d1"]->data(), tensors["conv4_d1"]->data(), NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -2171,6 +2504,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale6_d1"]->forward(tensors["sum4_d1"]->data(), tensors["sum4_d1"]->data(), tensors["scale_scale6_d1"]->data(), tensors["bias_scale6_d1"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -2180,6 +2514,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu6_d1"]->forward(tensors["sum4_d1"]->data(), tensors["sum4_d1"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -2198,6 +2533,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["merge_d3"]->forward(tensors["deconv_d3"]->data(), tensors["merge_d3"]->data(), tensors["sum0_d0"]->data(), NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -2217,6 +2553,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale0_d3"]->forward(tensors["merge_d3"]->data(), tensors["merge_d3"]->data(), tensors["scale_scale0_d3"]->data(), tensors["bias_scale0_d3"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -2226,6 +2563,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu0_d3"]->forward(tensors["merge_d3"]->data(), tensors["merge_d3"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -2255,6 +2593,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale4_d0"]->forward(tensors["conv4_d0"]->data(), tensors["conv4_d0"]->data(), tensors["scale_scale4_d0"]->data(), tensors["bias_scale4_d0"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -2264,6 +2603,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu4_d0"]->forward(tensors["conv4_d0"]->data(), tensors["conv4_d0"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -2293,6 +2633,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale5_d0"]->forward(tensors["conv5_d0"]->data(), tensors["conv5_d0"]->data(), tensors["scale_scale5_d0"]->data(), tensors["bias_scale5_d0"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -2302,6 +2643,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu5_d0"]->forward(tensors["conv5_d0"]->data(), tensors["conv5_d0"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -2321,6 +2663,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["sum4_d0"]->forward(tensors["conv6_d0"]->data(), tensors["sum4_d0"]->data(), tensors["conv4_d0"]->data(), NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -2340,6 +2683,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["scale6_d0"]->forward(tensors["sum4_d0"]->data(), tensors["sum4_d0"]->data(), tensors["scale_scale6_d0"]->data(), tensors["bias_scale6_d0"]->data());
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -2349,6 +2693,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu6_d0"]->forward(tensors["sum4_d0"]->data(), tensors["sum4_d0"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -2368,6 +2713,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["elu7_d0"]->forward(tensors["conv7_d0"]->data(), tensors["conv7_d0"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
@@ -2395,6 +2741,7 @@ void znn::phi::Znet::forward(void)
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < 1; i++) {
+			layers["unblock_output"]->forward(tensors["output"]->data(), tensors["user_output"]->data(), NULL, NULL);
 		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();

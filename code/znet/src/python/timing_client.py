@@ -11,7 +11,7 @@ weights_path       = "/home/ubuntu/znnphi_interface/code/znet/nets/unet.h5"
 
 z = pznet.znet(net_path, weights_path)
 
-in_dim   = [1, 1, 18, 192, 192]
+in_dim   = [2, 1, 18, 192, 192]
 in_a     = np.zeros(in_dim, dtype=np.float).flatten()
 out_a    = z.forward(in_a)
 

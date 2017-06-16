@@ -17,11 +17,13 @@ def read_in_weights(net, weights_path):
                 l["bias_data"] = lweights[1][:]
             else:
                 l["bias_data"] = None
-        elif l["type"] == "bnorm":
+        elif l["type"] in ["bnorm", "scale"]:
             lweights = weights[lname].values()
+
             l["scale_data"] = lweights[0][:]
             l["bias_data"]  = lweights[1][:]
-            if len(lweights) > 2:
+
+            if len(lweights) > 2: 
                 scale_factor = lweights[2][:]
                 if scale_factor.size != 1:
                     import pdb; pdb.set_trace()

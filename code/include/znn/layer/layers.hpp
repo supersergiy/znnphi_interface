@@ -3,3 +3,5 @@
   #include <znn/layer/unblock_data.hpp>
   #include <znn/layer/pool/pool.hpp>
   #include <znn/layer/scale.hpp>
+  #include <znn/layer/elu.hpp>
+  #include <znn/layer/eltwise.hpp>

@@ -1,6 +1,9 @@
-from conv   import allocate_conv_lines 
-from pool   import allocate_pool_lines 
-from bnorm  import allocate_bnorm_lines
+from conv    import allocate_conv_lines 
+from pool    import allocate_pool_lines 
+from bnorm   import allocate_bnorm_lines
+from elu     import allocate_elu_lines
+from scale   import allocate_scale_lines 
+from eltwise import allocate_eltwise_lines 
 from block_input    import allocate_block_input_lines
 from unblock_output import allocate_unblock_output_lines
 
@@ -16,6 +19,12 @@ def allocate_layer_lines(lparams):
       return allocate_unblock_output_lines(lparams) 
    elif lt == "bnorm":
       return allocate_bnorm_lines(lparams) 
+   elif lt == "elu":
+      return allocate_elu_lines(lparams) 
+   elif lt == "scale":
+      return allocate_scale_lines(lparams) 
+   elif lt == "eltwise":
+      return allocate_eltwise_lines(lparams) 
    else:
       return [] 
    '''

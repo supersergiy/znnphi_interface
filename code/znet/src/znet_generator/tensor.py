@@ -14,3 +14,5 @@ class Tensor:
         self.memory_size *= dim[2]
         self.memory_size *= dim[3]
         self.memory_size *= dim[4]
+        
+        self.who_touched_me = []

@@ -43,8 +43,6 @@ public:
 
       od  = id  / kd;
       ohw = ihw / khw;
-
-      std::cout << bn << " " << fm << " " << rounded_fm << " " << id << " " << ihw << std::endl;
    }
 
    void forward(float const* __restrict i, float* __restrict o, 

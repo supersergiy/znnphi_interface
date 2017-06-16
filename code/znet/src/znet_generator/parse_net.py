@@ -31,7 +31,10 @@ def parse_net(net_path):
       lparams = layer_info[name]
       bot_tensor = None
       if lparams["bot"]:
-         bot_tensor = tensors[lparams["bot"]]
+         if isinstance(lparams["bot"], list):
+             bot_tensor = tensors[lparams["bot"][0]] #TODO: possible source of unlimited future bugs
+         else:
+             bot_tensor = tensors[lparams["bot"]]
 
       set_layer_dim(lparams, bot_tensor)
 

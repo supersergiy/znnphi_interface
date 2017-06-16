@@ -11,13 +11,13 @@ namespace phi
 
 //TODO: make this template style
 //template <long_t Threads, class P>
-struct ScaleLayer: public Layer{
+struct EluLayer: public Layer{
 private:
    int bn, fm, id, ihw;
    int rounded_fm;
 
 public:
-   ScaleLayer(int _bn, int _fm, int _id, int _ihw): bn(_bn), 
+   EluLayer(int _bn, int _fm, int _id, int _ihw): bn(_bn), 
    fm(_fm), id(_id), ihw(_ihw)
    {   
       assert( bn > 0);

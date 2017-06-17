@@ -33,23 +33,22 @@ public:
    {
       typedef float const (*in_tp)[rounded_fm/SIMD_WIDTH][id][ihw][ihw][SIMD_WIDTH];
       typedef float (*out_tp)[rounded_fm/SIMD_WIDTH][id][ihw][ihw][SIMD_WIDTH];
-
+      
+      assert(i == 0);
       out_tp o_array = reinterpret_cast<out_tp>(o);
       in_tp i_array = reinterpret_cast<in_tp>(i);
 
-#pragma parallel
       for (int b = 0; b < bn; ++b) {
-         for (int f = 0; f < fm/SIMD_WIDTH; f++) {
+         for (int f = 0; f < rounded_fm/SIMD_WIDTH; f++) {
             for (int d = 0; d < id; ++d) {
                for (int h = 0; h < ihw; ++h) {
                   for (int w = 0; w < ihw; ++w) {
                      for (int s = 0; s < SIMD_WIDTH; ++s) {
+                        o_array[b][f][d][h][w][s] = i_array[b][f][d][h][w][s];//* scale[f*SIMD_WIDTH + s] + bias[f*SIMD_WIDTH + s];
                         if (i_array[b][f][d][h][w][s] < 0.0f) {
                            o_array[b][f][d][h][w][s] = exp(i_array[b][f][d][h][w][s]) - 1.0f;
                         }
-                        else {
-                           o_array[b][f][d][h][w][s] = i_array[b][f][d][h][w][s];
-                        }
+                        //o_array[b][f][d][h][w][s] = 1.0 ;
                      }
                   }
                }

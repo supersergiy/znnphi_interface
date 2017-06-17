@@ -9,7 +9,9 @@ def read_in_weights(net, weights_path):
     weights = h5py.File(weights_path) ['data']
 
     for (lname, l) in iteritems(layer_info):
-        if l["type"] == "conv":
+        if l["type"] in ["conv", "deconv"]:
+            if "ht" in l["name"]:
+                continue
             lweights = weights[lname].values()
             l["kernel_data"] = lweights[0][:]
 

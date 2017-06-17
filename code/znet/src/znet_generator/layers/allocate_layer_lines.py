@@ -1,4 +1,5 @@
 from conv    import allocate_conv_lines 
+from deconv  import allocate_deconv_lines 
 from pool    import allocate_pool_lines 
 from bnorm   import allocate_bnorm_lines
 from elu     import allocate_elu_lines
@@ -11,6 +12,8 @@ def allocate_layer_lines(lparams):
    lt = lparams["type"]
    if lt == "conv":
       return allocate_conv_lines(lparams) 
+   if lt == "deconv":
+      return allocate_deconv_lines(lparams) 
    elif lt == "pool":
       return allocate_pool_lines(lparams) 
    elif lt == "block_input":
@@ -28,11 +31,6 @@ def allocate_layer_lines(lparams):
    else:
       return [] 
    '''
-   elif lt == "ELU":
-   elif lt == "deconv":
    elif lt == "Sigmoid":
-   elif lt == "Scale":
-   elif lt == "Eltwise":
-      #TODO: do I need to reset dimensions here?
    else:
       raise Exception("Unsupported Layer: {}".format(lt))'''

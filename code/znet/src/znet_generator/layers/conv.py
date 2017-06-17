@@ -48,6 +48,8 @@ def parse_conv(json_param):
     params["bias_size"] = round_to_simd(params["bias_dim"][0])
     
     params["activation"] = None
+    params["cores"] = 2
+    params["ht"]    = 2
     return params
 
 def block_kernel(kernel, lparam):
@@ -102,7 +104,7 @@ def allocate_conv_lines(lparam):
         activate = "false"
     allocation_params = (l["bn"], l["ifm"], l["ofm"], l["id"], l["ihw"],
                          l["kernel_dim"][2], l["kernel_dim"][3],
-                         l["pad"][0],  l["pad"][1], activate)
+                         l["pad"][0],  l["pad"][1], activate, l["cores"], l["ht"])
 
     param_str = generate_param_string(allocation_params)
     lines = []

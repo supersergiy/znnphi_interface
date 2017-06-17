@@ -54,7 +54,6 @@ public:
       out_tp o_array = reinterpret_cast<out_tp>(o);
       in_tp i_array = reinterpret_cast<in_tp>(i);
 
-#pragma parallel
       for (int b = 0; b < bn; ++b) {
          for (int f = 0;  f < fm / SIMD_WIDTH; f++) {
             for (int d = 0; d < id; d += stride_d) {

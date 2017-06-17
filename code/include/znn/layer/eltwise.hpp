@@ -42,7 +42,7 @@ public:
       out_tp o_array = reinterpret_cast<out_tp>(o);
       in_tp i_array1 = reinterpret_cast<in_tp>(i1);
       in_tp i_array2 = reinterpret_cast<in_tp>(i2);
-      return;
+
       switch(mode) {
       case MODE_SUM:
 #pragma parallel

@@ -1,5 +1,6 @@
 from conv    import parse_conv
 from deconv  import parse_deconv
+from deconv  import parse_deconv
 from pool    import parse_pool
 from bnorm   import parse_bnorm 
 from elu     import parse_elu

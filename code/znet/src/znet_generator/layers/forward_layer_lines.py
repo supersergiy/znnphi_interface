@@ -4,7 +4,7 @@ def forward_layer_lines(lparams):
    l  = lparams
 
    lines = []
-   if lt == "conv":
+   if lt in ["conv", "deconv"]:
        params  = 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
        params += 'tensors["{}"]->data(), tensors["{}"]->data()'.format(l["kernel"], l["bias"])
        lines.append('layers["{}"]->forward({});'.format(l["name"], params))
@@ -22,8 +22,8 @@ def forward_layer_lines(lparams):
        lines.append('layers["{}"]->forward({});'.format(l["name"], params))
 
    return lines 
-   '''
-   elif lt == "deconv":
+  
+   '''elif lt == "deconv":
    elif lt == "Sigmoid":
    elif lt == "Eltwise":
       #TODO: do I need to reset dimensions here?

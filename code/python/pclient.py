@@ -6,53 +6,20 @@ import h5py
 import sys
 
 
-input_dim    = [1, 8, 18, 192, 192]
-ofm          = 28
-kernel_dim   = [1, 3, 3]
-layers       = ["conv", "elu"]
-
-layers_prefix = '_'.join(layers)
 base =     '/home/ubuntu/znnphi_interface/code/znet/reference/'
-net_file = 'nets/{}_{}_{}_{}_{}_{}_x{}_{}_{}_o{}.prototxt'.format(layers_prefix,
-                                                                    input_dim[0],
-                                                                    input_dim[1],
-                                                                    input_dim[2],
-                                                                    input_dim[3],
-                                                                    input_dim[4],
-                                                                    kernel_dim[0],
-                                                                    kernel_dim[1],
-                                                                    kernel_dim[2],
-                                                                    ofm)
-weights_file = 'data/weights/weights_{}_{}_{}_{}_{}_r.h5'.format(
-                                                                ofm,
-                                                                input_dim[1], #ifm
-                                                                kernel_dim[0],
-                                                                kernel_dim[1],
-                                                                kernel_dim[2])
 
-input_file = 'data/inputs/input_{}_{}_{}_{}_{}_r.h5'.format(input_dim[0],
-                                                            input_dim[1],
-                                                            input_dim[2],
-                                                            input_dim[3],
-                                                            input_dim[4])
+net_file = 'nets/net.prototxt'
 
-reference_file = 'data/reference/reference_{}_{}_{}_{}_{}_{}_x{}_{}_{}_o{}_r.h5'.format(layers_prefix,
-                                                                                        input_dim[0],
-                                                                                        input_dim[1],
-                                                                                        input_dim[2],
-                                                                                        input_dim[3],
-                                                                                        input_dim[4],
-                                                                                        kernel_dim[0],
-                                                                                        kernel_dim[1],
-                                                                                        kernel_dim[2],
-                                                                                        ofm)
+weights_file = 'data/weights/weights_r.h5'
+
+input_file = 'data/inputs/input.h5'
+
+reference_file = 'data/reference/reference.h5'
+
 net_path       = os.path.join(base, net_file)
 weights_path   = os.path.join(base, weights_file)
 input_path     = os.path.join(base, input_file)
 reference_path = os.path.join(base, reference_file)
-
-#input_path  = sys.argv[1]
-#output_path = sys.argv[2]
 
 z = pznet.znet(net_path, weights_path)
 

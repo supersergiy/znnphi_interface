@@ -4,9 +4,9 @@ layer {
   top: "input"
   input_param {
     shape {
-      dim: 2 
+      dim: 1 
       dim: 1
-      dim: 18
+      dim: 18 
       dim: 192
       dim: 192
     }

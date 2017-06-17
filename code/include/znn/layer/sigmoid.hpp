@@ -2,6 +2,7 @@
 #include <znn/layer/common.hpp>
 #include <iostream>
 #include <assert.h>
+#include <tgmath.h>
 
 namespace znn 
 {
@@ -10,13 +11,13 @@ namespace phi
 
 //TODO: make this template style
 //template <long_t Threads, class P>
-struct ScaleLayer: public Layer{
+struct SigmoidLayer: public Layer{
 private:
    int bn, fm, id, ihw;
    int rounded_fm;
 
 public:
-   ScaleLayer(int _bn, int _fm, int _id, int _ihw): bn(_bn), 
+   SigmoidLayer(int _bn, int _fm, int _id, int _ihw): bn(_bn), 
    fm(_fm), id(_id), ihw(_ihw)
    {   
       assert( bn > 0);
@@ -28,7 +29,7 @@ public:
    }
 
    void forward(float const* __restrict i, float* __restrict o, 
-     float const* __restrict scale, float const* __restrict bias)
+     float const* __restrict dummy1, float const* __restrict dummy2)
    {
       typedef float const (*in_tp)[rounded_fm/SIMD_WIDTH][id][ihw][ihw][SIMD_WIDTH];
       typedef float (*out_tp)[rounded_fm/SIMD_WIDTH][id][ihw][ihw][SIMD_WIDTH];
@@ -42,7 +43,7 @@ public:
                for (int h = 0; h < ihw; ++h) {
                   for (int w = 0; w < ihw; ++w) {
                      for (int s = 0; s < SIMD_WIDTH; ++s)
-                        o_array[b][f][d][h][w][s] = i_array[b][f][d][h][w][s] * scale[f*SIMD_WIDTH + s] + bias[f*SIMD_WIDTH + f];
+                        o_array[b][f][d][h][w][s] = 0.5f * std::tanh(0.5f*i_array[b][f][d][h][w][s]) + 0.5f;
                   }
                }
             }

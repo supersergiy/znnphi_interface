@@ -1,3 +1,4 @@
+#pragma once
 #include <assert.h>
 #include <znn/layer/layer.hpp>
 #include <znn/layer/common.hpp>

@@ -54,19 +54,21 @@ def allocate_deconv_lines(lparam):
 
     allocation_params = (l["bn"], l["ifm"], l["ofm"], l["id"], l["ihw"],
                          l["kernel_dim"][2], l["kernel_dim"][3],
-                         l["stride"][0],  l["stride"][1])
+                         l["stride"][0],  l["stride"][1], 
+                         'tensors["{}"]->data()'.format(l["kernel"]), 
+                         'tensors["{}"]->data()'.format(l["bias"]))
 
     param_str = generate_param_string(allocation_params)
     lines = []
-    #allocate layer
-    lines.append('layers["{}"] = new znn::phi::DeconvLayer({});'.format(l["name"],
-                                                                        param_str))
     #allocate weights 
     lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                               l["kernel"], l["kernel_size"]))
 
     lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                                   l["bias"], l["bias_size"]))
+    #allocate layer
+    lines.append('layers["{}"] = new znn::phi::DeconvLayer({});'.format(l["name"],
+                                                                        param_str))
     #initialize weights
     kernel = l["kernel_data"] 
     blocked_kernel = block_kernel(kernel, l)

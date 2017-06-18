@@ -42,7 +42,7 @@ public:
                for (int h = 0; h < ihw; ++h) {
                   for (int w = 0; w < ihw; ++w) {
                      for (int s = 0; s < SIMD_WIDTH; ++s)
-                        o_array[b][f][d][h][w][s] = i_array[b][f][d][h][w][s] * scale[f*SIMD_WIDTH + s] + bias[f*SIMD_WIDTH + f];
+                        o_array[b][f][d][h][w][s] = i_array[b][f][d][h][w][s] * scale[f*SIMD_WIDTH + s] + bias[f*SIMD_WIDTH + s];
                   }
                }
             }

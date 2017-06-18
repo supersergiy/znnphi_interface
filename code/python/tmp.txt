@@ -80,6 +80,7 @@ Generating the network...
 Done!
 icpc: command line warning #10006: ignoring unknown option '-Wdate-time'
 icpc: warning #10315: specifying -lm before files may supersede the Intel(R) math library and affect performance
+icpc: command line remark #10411: option '-openmp' is deprecated and will be removed in a future release. Please use the replacement option '-qopenmp'
 make: Leaving directory '/home/ubuntu/znnphi_interface/code/znet'
 
 
@@ -179,57 +180,19 @@ make: Leaving directory '/home/ubuntu/znnphi_interface/code/znet'
 
 
 
+1 2
+1 2
+1 2
+1 2
+1 2
 Starting Forward Pass
-convi: 0.104355
-conv0_d0: 0.142896
-conv1_d0: 0.142355
-conv2_d0: 0.142145
-conv0_d1: 0.0442497
-conv1_d1: 0.0553115
-conv2_d1: 0.0548706
-conv0_d2: 0.0169433
-convf1_d2: 0.0201471
-conv1_d2: 0.0085554
-convf2_d2: 0.0201101
-conv2_d2: 0.0087155
-conv0_d3: 0.0084452
-convf1_d3: 0.0101895
-conv1_d3: 0.0035861
-convf2_d3: 0.0101526
-conv2_d3: 0.0036224
-conv0_d4: 0.0033891
-convf1_d4: 0.0039982
-conv1_d4: 0.0014157
-convf2_d4: 0.0039924
-conv2_d4: 0.0013897
-conv0_d5: 0.0012912
-convf1_d5: 0.0014684
-conv1_d5: 0.0005356
-convf2_d5: 0.001464
-conv2_d5: 0.0005113
-conv4_d4: 0.004344
-convf5_d4: 0.0040169
-conv5_d4: 0.0014079
-convf6_d4: 0.0040175
-conv6_d4: 0.0013658
-conv4_d3: 0.0112269
-convf5_d3: 0.0101756
-conv5_d3: 0.003565
-convf6_d3: 0.0101925
-conv6_d3: 0.003565
-conv4_d2: 0.0201063
-convf5_d2: 0.0201542
-conv5_d2: 0.0087128
-convf6_d2: 0.0202021
-conv6_d2: 0.008587
-conv4_d1: 0.0549048
-conv5_d1: 0.055216
-conv6_d1: 0.0548799
-conv4_d0: 0.141841
-conv5_d0: 0.142559
-conv6_d0: 0.141559
-conv7_d0: 0.141525
-average:16.8029
+Deconvolution1: 0.003187
+Deconvolution2: 0.004096
+Deconvolution3: 0.010569
+Deconvolution4: 0.031752
+deconv_d3: 0.097109
+score: 0.269371
+average:0.416145
 Forward Finished
 5
 1 3 18 192 192 

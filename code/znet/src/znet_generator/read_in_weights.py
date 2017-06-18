@@ -1,5 +1,6 @@
 import h5py 
 from six import iteritems
+import numpy as np
 
 def read_in_weights(net, weights_path):
     lines = []
@@ -19,7 +20,7 @@ def read_in_weights(net, weights_path):
                 l["bias_data"] = lweights[1][:]
             else:
                 l["bias_data"] = None
-        elif l["type"] in ["bnorm", "scale"]:
+        elif l["type"] in ["scale"]:
             lweights = weights[lname].values()
 
             l["scale_data"] = lweights[0][:]
@@ -28,10 +29,29 @@ def read_in_weights(net, weights_path):
             if len(lweights) > 2: 
                 scale_factor = lweights[2][:]
                 if scale_factor.size != 1:
-                    import pdb; pdb.set_trace()
                     raise Exception("wtf")
                 l["scale_data"] *= scale_factor 
                 l["bias_data"]  *= scale_factor 
+        elif l["type"] in ["bnorm"]:
+            lweights = weights[lname].values()
+
+            mean_data = lweights[0][:]
+            var_data  = lweights[1][:] 
+            var_data += 0.00001
+            std_data  = np.sqrt(var_data)
+
+            if len(lweights) > 2: 
+                scale_factor = lweights[2][:]
+                if scale_factor.size != 1:
+                    import pdb; pdb.set_trace()
+                    raise Exception("wtf")
+                mean_data *= scale_factor 
+                std_data  *= scale_factor 
+
+            l["bias_data"]  = -1.0 * np.divide(mean_data, std_data)
+            l["scale_data"] = 1.0  / std_data
+
+
 
     lines.append('')
     return lines

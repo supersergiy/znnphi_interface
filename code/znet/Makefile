@@ -43,7 +43,8 @@ CS_FLAGS		=
 CS_LD_FLAGS		=       -lpthread
 
 FPIC	=	-fPIC
-CXXINCLUDES	=	-I$(ZNNPHI_PATH)/code/include -I$(ZNNPHI_PATH)/code/include/znn -I$(ZNNPHI_PATH)/ -I./src/
+MKL_INCLUDE_PATH =/opt/intel/mkl/include
+CXXINCLUDES	=	-I$(ZNNPHI_PATH)/code/include -I$(ZNNPHI_PATH)/code/include/znn -I$(ZNNPHI_PATH)/ -I./src/ -I${MKL_INCLUDE_PATH}
 
 #CXXWARN		=	-Wall -Wextra -Wno-format -Wno-unknown-pragmas -Wno-unused-variable -Wno-return-type -Wno-unused-parameter
 CXXERR		=   -fmax-errors=5
@@ -71,7 +72,8 @@ OPT_LDFLAGS		=	$(COMMON_LDFLAGS) $(CS_LD_FLAGS) $(LD_OPTIMIZATION_FLAGS)
 CXXFLAGS	=	$(OPT_FLAGS)
 CXXLDFLAGS	=	$(OPT_LDFLAGS)
 
-LD_FLAGS    =   -lznnphiconv
+LD_FLAGS    =   -L/opt/intel/mkl/lib/intel64 -lpthread -openmp -Wl,--start-group -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5 -Wl,--end-group -lmkl_avx2 -lznnphiconv 
+
 
 PY_INTERFACE_FLAGS = `python-config --cflags --ldflags` -Isrc/python/pybind11/include -fPIC 
 
@@ -80,6 +82,7 @@ PY_INTERFACE_FLAGS = `python-config --cflags --ldflags` -Isrc/python/pybind11/in
 #NET_NAME = small_layer
 #N = nets/${NET_NAME}.json
 #W = nets/${NET_NAME}.h5
+
 
 src/generated/znet.cpp:  $(shell find src/znet_generator -type f) $(N) $(W)
 	rm -rf out
@@ -94,14 +97,14 @@ out/znet_numpy_wrapper.o: src/python/znet_numpy_wrapper.cpp
 	$(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) -fPIC -c $^ -o $@
 
 py: out/znet.o out/znet_numpy_wrapper.o 
-	$(CXX) $^ -lznnphiconv -shared -o out/znet.so 
+	$(CXX) $^ $(LD_FLAGS) -shared -o out/znet.so 
 ifneq ($(strip $(O)),)
 	${CP} -r out/znet.so $(O)
 	${CP} -r out/weights $(O)
 endif
 
 bin: out/client.o out/znet.o 
-	$(CXX) $(CXXFLAGS) $(AVX2_FLAGS) $(LD_FLAGS) $^ -o out/znet.bin
+	$(CXX) $(CXXFLAGS) $(LD_FLAGS) $^ -o out/znet.bin
 gen: src/generated/znet.cpp 
 rerun: clean gen bin
 	./out/znet.bin

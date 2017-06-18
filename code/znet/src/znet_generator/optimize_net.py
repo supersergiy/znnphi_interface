@@ -103,7 +103,6 @@ def make_elus_inplace(net):
 
 
 def optimize_net(net):
-    return
     generate_layer_order_info(net)
     expand_convs(net)
 

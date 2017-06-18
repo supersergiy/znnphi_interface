@@ -2,7 +2,7 @@ from six import iteritems
 import h5py
 import numpy as np
 
-from codegen import generate_function, timeit
+from codegen import generate_function, timeit, print_tensor_lines
 
 from layers import allocate_layer_lines, forward_layer_lines
 
@@ -70,7 +70,8 @@ def forward_all_layers_lines(net):
     for lname in layer_order:
        l = layer_info[lname]
        #lines.append('std::cout << "Running {}!\\n";'.format(l["name"]))
-       lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
+       if l["type"] == "deconv":
+           lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
        #lines += forward_layer_lines(l)
        #lines.append('std::cout << "{} Finished!\\n";'.format(l["name"]))
 

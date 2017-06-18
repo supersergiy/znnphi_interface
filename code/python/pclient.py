@@ -29,10 +29,10 @@ in_a     = in_file["input"][:]
 out_a    = z.forward(in_a)
 reference_file = h5py.File(reference_path)
 reference_a = reference_file["data"][:]
-
+np.set_printoptions(precision=2)
 diff_a = reference_a - out_a
 error = ssq = np.sum(diff_a**2)
-
+ref_a = reference_a
 fd = diff_a.flatten()
 fo = out_a.flatten()
 fr = reference_a.flatten()

@@ -4,57 +4,96 @@ import numpy as np
 import sys
 import json
 
-FILLER = sys.argv[1] 
-MODE = sys.argv[2] 
+FILLER = 'r'
 
 with open("params.json", 'rb') as f:
-	params = json.load(f)
+   params = json.load(f)
 
-kernels = params["kernels"] 
+kernels = params["kernels"]
 ofms    = params["ofms"]
-inputs  = params["inputs"] 
+inputs  = params["inputs"]
+layers  = params["layers"]
 
-if MODE == "w":
-	for in_d in inputs:
-		for k in kernels:
-			for ofm in ofms:
-				ifm = in_d[1]
+in_d = inputs[0]
+k    = kernels[0]
+ofm  = ofms[0]
 
-				dim0 = (ofm, ifm, k[0], k[1], k[2])
-				dim1 = (ofm,)	
+def generate(dim):
+  if FILLER == 'r':
+     return np.random.uniform(low=-2.0, high=2.0, size=dim)
+  else:
+     return np.array(range(np.prod(dim))).reshape(dim)
 
-				suffix = "_".join(map(str, dim0))
-				prefix = "data/conv/"
+def generate_layer_weights(lname, ltype, f, in_d, ofm):
+    prefix = "data/{}/".format(lname)
 
-				out_file_path = "data/weights/weight_{}_{}.h5".format(suffix, FILLER)
-				name0 = "0"
-				name1 = "1"
+    ifm = in_d[1]
+    if ltype == "conv":
 
-				f = h5py.File(out_file_path, "w")
-				dset0 = f.create_dataset(prefix + name0, dim0, dtype='f')
-				dset1 = f.create_dataset(prefix + name1, dim1, dtype='f')
+        dim0 = (ofm, ifm, k[0], k[1], k[2])
+        dim1 = (ofm,)
 
-				if FILLER == 'r':
-					dset0[...] = np.random.rand(*dim0)
-					dset1[...] = np.random.rand(*dim1)
-				else:
-					dset0[...] = np.array(range(np.prod(dim0))).reshape(dim0)
-					dset1[...] = np.array(range(np.prod(dim1))).reshape(dim1)
-if MODE == "i":
-	for in_d in inputs:
-			dim0 = in_d 
+        name0 = "0"
+        name1 = "1"
 
-			suffix = "_".join(map(str, dim0))
-			prefix = ""
+        dset0 = f.create_dataset(prefix + name0, dim0, dtype='f')
+        dset1 = f.create_dataset(prefix + name1, dim1, dtype='f')
 
-			out_file_path = "data/inputs/input_{}_{}.h5".format(suffix, FILLER)
-			name0 = "input"
+        dset0[...] = generate(dim0)
+        dset1[...] = generate(dim1)
 
-			f = h5py.File(out_file_path, "w")
-			dset0 = f.create_dataset(prefix + name0, dim0, dtype='f')
+    if ltype == "scale":
+        dim0 = (ofm,)
+        dim1 = (ofm,)
 
-			if FILLER == 'r':
-				dset0[...] = np.random.rand(*dim0)
-			else:
-				dset0[...] = np.array(range(np.prod(dim0))).reshape(dim0)
-			#dset1[...] = np.random.rand(*dim1)
+        name0 = "0"
+        name1 = "1"
+
+        dset0 = f.create_dataset(prefix + name0, dim0, dtype='f')
+        dset1 = f.create_dataset(prefix + name1, dim1, dtype='f')
+
+        dset0[...] = np.ones(dim0)#generate(dim0)
+        dset1[...] = np.zeros(dim1)#generate(dim1)
+
+    if ltype == "bnorm":
+        dim0 = (ifm,)
+        dim1 = (ifm,)
+        dim2 = (1,)
+
+        name0 = "0"
+        name1 = "1"
+        name2 = "2"
+
+        dset0 = f.create_dataset(prefix + name0, dim0, dtype='f')
+        dset1 = f.create_dataset(prefix + name1, dim1, dtype='f')
+        dset2 = f.create_dataset(prefix + name2, dim2, dtype='f')
+
+        dset0[...] = generate(dim0)
+        dset1[...] = generate(dim1) + 2.0
+        dset2[...] = generate(dim2) 
+
+
+def generate_all_weights():
+      out_file_path = "data/weights/weights_{}.h5".format(FILLER)
+      f = h5py.File(out_file_path, "w")
+
+      for i in range(len(layers)):
+          generate_layer_weights("{}_{}".format(layers[i], i), layers[i], f, in_d, ofm)
+
+
+def generate_inputs():
+       dim0 = in_d
+
+       suffix = "_".join(map(str, dim0))
+       prefix = ""
+
+       out_file_path = "data/inputs/input.h5".format(suffix, FILLER)
+       name0 = "input"
+
+       f = h5py.File(out_file_path, "w")
+       dset0 = f.create_dataset(prefix + name0, dim0, dtype='f')
+
+       dset0[...] = generate(dim0)
+
+generate_all_weights()
+generate_inputs()

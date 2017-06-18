@@ -1,0 +1,6 @@
+ layer {
+   name: "eltwise_[LAYER_NUMBER]"
+   type: "Eltwise"
+   bottom: "[BOT_TENSOR]"
+   top: "[TOP_TENSOR]"
+ }

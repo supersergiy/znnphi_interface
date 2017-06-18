@@ -1,8 +1,8 @@
 layer {
-  name: "conv"
+  name: "conv_[LAYER_NUMBER]"
   type: "Convolution"
-  bottom: "input"
-  top: "conv_o"
+  bottom: "[BOT_TENSOR]"
+  top: "[TOP_TENSOR]"
   convolution_param {
     num_output: [OFM] 
     bias_term: true

@@ -25,6 +25,10 @@ public:
         assert( id > 0);
 
         ofm = znn::phi::roundToSimd(ifm); 
+        std::cout << bn << std::endl;
+        std::cout << ifm << std::endl;
+        std::cout << id << std::endl;
+        std::cout << ihw<< std::endl;
     }
 
     void forward(float const* __restrict i, float* __restrict o, 

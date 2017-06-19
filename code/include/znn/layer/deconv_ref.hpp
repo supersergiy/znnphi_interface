@@ -26,7 +26,7 @@ private:
    UnblockDataLayer unblocker;
 public:
    DeconvLayer(int _bn, int _ifm, int _ofm, int _id, int _ihw, int _kd, int _khw, 
-     int _stride_d, int _stride_hw): bn(_bn), 
+     int _stride_d, int _stride_hw, float* kernel=NULL, float* bias=NULL): bn(_bn), 
    ifm(_ifm), ofm(_ofm), id(_id), ihw(_ihw),
    kd(_kd), khw(_khw),
    stride_d(_stride_d),
@@ -65,11 +65,9 @@ public:
       in_tp  i_array = reinterpret_cast<in_tp>(i);
       ker_tp ker_array = reinterpret_cast<ker_tp>(kernel);
       
-      blocker.forward(i, o, NULL, NULL);
-      unblocker.forward(i, o, NULL, NULL);
       
       
-/*      for (int b = 0; b < bn; ++b) {
+      for (int b = 0; b < bn; ++b) {
          for (int fo = 0;  fo < ofm / SIMD_WIDTH; fo++) {
             for (int so = 0; so < SIMD_WIDTH; so++) { 
                for (int d = 0; d < od; d++) {
@@ -80,13 +78,13 @@ public:
                            for (int fi = 0;  fi < ifm / SIMD_WIDTH; fi++) {
                               for (int si = 0; si < SIMD_WIDTH; si++) { 
                         
-                              //for (int pd = 0; pd < kd; pd++) { 
+                              for (int pd = 0; pd < kd; pd++) { 
                                  for (int ph = 0; ph < khw; ph++) { 
                                     for (int pw = 0; pw < khw; pw++) { 
-                                       o_array[b][fo][d][h][w][so] += i_array[b][fi][d][2*h+ph][2*w+pw][si]*ker_array[fo][fi][1][ph][pw][so][si];
+                                       o_array[b][fo][d][h][w][so] += i_array[b][fi][d][khw*h+ph][khw*w+pw][si]*ker_array[fo][fi][pd][ph][pw][so][si];
                                     }
                                  }
-                              //}
+                              }
                            }
                         }
 
@@ -95,7 +93,7 @@ public:
                }
             }
          }
-      }*/
+      }
    }
 };
 

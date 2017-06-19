@@ -26,7 +26,6 @@ private:
    float *bias_template;
    float *kernel_template;
 
-   float *scrambled_output;
    float *preblock_output;
    float *unblocked_input;
 
@@ -35,20 +34,14 @@ private:
 
 public:
    DeconvLayer(int _bn, int _ifm, int _ofm, int _id, int _ihw, int _kd, int _khw, 
-     int _stride_d, int _stride_hw, float *kernel=NULL, float *bias=NULL): 
-   blocker(_bn, _ofm, _id*_kd, _ihw*_khw),
-   unblocker(_bn, _ifm, _id, _ihw)
+     int _stride_d, int _stride_hw, float *kernel=NULL, float *bias=NULL): bn(_bn), 
+   ifm(_ifm), ofm(_ofm), id(_id), ihw(_ihw),
+   kd(_kd), khw(_khw),
+   stride_d(_stride_d),
+   stride_hw(_stride_hw),
+   blocker(_bn, _ifm, _id, _ihw),
+   unblocker(_bn, _ofm, _id*_kd, _ihw*_khw)
    {   
-      bn = _bn; 
-      ifm = _ifm;
-      ofm = _ofm;
-      id  = _id; 
-      ihw = _ihw;
-      kd = _kd;
-      khw = _khw;
-      stride_d = _stride_d;
-      stride_hw = _stride_hw;
-
       assert( bn > 0);
       assert( fm > 0);
       assert( id > 0);
@@ -58,6 +51,9 @@ public:
 
       assert(stride_d  == kd);
       assert(stride_hw == khw);
+
+      assert(kd  == 1);
+      assert(khw == 2);
 
       rounded_ifm = ((ifm + SIMD_WIDTH - 1) / SIMD_WIDTH) * SIMD_WIDTH;
       rounded_ofm = ((ofm + SIMD_WIDTH - 1) / SIMD_WIDTH) * SIMD_WIDTH;
@@ -78,8 +74,7 @@ public:
          kernel_template = NULL;
       }
 
-      preblock_output  = new float[bn*ofm*od*ohw*ohw];
-      scrambles_output = new float[bn*ofm*od*ohw*ohw];
+      preblock_output = new float[bn*ofm*od*ohw*ohw];
       unblocked_input  = new float[bn*ifm*id*ohw*ohw];
    }
 
@@ -88,7 +83,6 @@ public:
       bias_template = new float[bn*ofm*od*ohw*ohw];
       typedef float (*bt_tp)[ofm][od][ohw][ohw];
       bt_tp bias_template_a = reinterpret_cast<bt_tp>(bias_template);
-
       for (int b = 0; b < bn; b++) {
          for (int f = 0; f < ofm; f++){
             for (int d = 0; d < od; d++) {
@@ -106,17 +100,15 @@ public:
    {
       kernel_template = new float[ifm*ofm*kd*khw*khw];
       typedef float (*kt_tp)[ifm];
-      typedef float (*k_tp)[ofm][kd][khw][khw];
       kt_tp kernel_template_a = reinterpret_cast<kt_tp>(kernel_template);
-      k_tp kernel_a           = reinterpret_cast<k_tp>(kernel); 
+      kt_tp kernel_a          = reinterpret_cast<kt_tp>(kernel); 
       int row = 0;
       for (int fo = 0; fo < ofm; fo++) {
          for (int d = 0; d < kd; d++) {
             for (int h = 0; h < khw; h++) {
                for (int w = 0; w < khw; w++) {
                   for (int fi = 0; fi < ifm; fi++)  {
-                     kernel_template_a[row][fi] = kernel_a[fi][fo][d][h][w];                    
-                     //std::cout << row << " " << fi << " = " << kernel_template_a[row][fi] << std::endl;
+                     kernel_template_a[row][fi] = kernel_a[fo][fi];  
                   }
                   row++;
                }
@@ -130,81 +122,36 @@ public:
       delete kernel_template;
       delete unblocked_input;
       delete preblock_output;
-      delete scambled_output;
-   }
-
-   void unscramble_output(float* scrambled, float* unscrambled)
-   {
-      typedef float (*scrambled_tp)[ofm][khw*khw*kd][id*ihw*ihw];
-      typedef float (*unscrambled_tp)[ofm][od][ohw][ohw];
-
-      scrambled_tp   s_a = reinterpret_cast<scrambled_tp>   scrambled;
-      unscrambled_tp u_a = reinterpret_cast<unscrambled_tp> unscrambled;
-
-      for (int b = 0; b < bn; b++) {
-         for (int f = 0; f < ofm; f++){
-            for (int d = 0; d < od; d++) {
-               for (int h = 0; h < ohw; h++) {
-                  for (int w = 0; w < ohw; w++) {
-                  }
-               }
-            }
-         }
-      }
    }
 
    void forward(float const* __restrict i, float* __restrict o, 
-     float const* __restrict runtime_kernel, float const* __restrict runtime_bias)
+     float const* __restrict kernel, float const* __restrict bias)
    {
       typedef float const (*in_tp)[rounded_ifm/SIMD_WIDTH][id][ihw][ihw][SIMD_WIDTH];
       typedef float (*out_tp)[rounded_ofm/SIMD_WIDTH][od][ohw][ohw][SIMD_WIDTH];
       out_tp o_array = reinterpret_cast<out_tp>(o);
       in_tp  i_array = reinterpret_cast<in_tp>(i);
       
+      assert(kernel == NULL);
+      assert(bias   == NULL);
+
+
       unblocker.forward(i, unblocked_input, NULL, NULL);
       std::memcpy(preblock_output, bias_template, bn*ofm*od*ohw*ohw*sizeof(float));
 
       const float one=1;
-      const MKL_INT kernel_rows = ofm*kd*khw*khw;
-      const MKL_INT kernel_cols = ifm;
-      const MKL_INT input_cols  = bn*id*ihw*ihw; 
-      const MKL_INT input_rows  = ifm; 
-      const MKL_INT output_rows = kernel_rows; 
-      const MKL_INT output_cols = input_cols;
-      const char no_transpose = 'n';
+      const int kernel_rows = ofm*kd*khw*khw;
+      const int output_rows = kernel_rows; 
+      const int input_cols  = bn*id*ihw*ihw; 
+      const int input_rows  = ifm; 
+      const char no_transpose = 'N';
 
-      //for each batch
-      std::cout << std::endl;
-      std::cout << "Unblocked input: "<< std::endl;
-      for (int i = 0; i < 36; i++) {
-         std::cout<< unblocked_input[i] << " ";
-      }
-      std::cout << std::endl;
-      std::cout << kernel_rows << std::endl;
-      std::cout << input_cols  << std::endl;
-      std::cout << input_rows  << std::endl;
-      std::cout << std::endl;
-      for (int b = 0; b < bn; b++) {
-         cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, kernel_rows, input_cols, input_rows, 
-                      one, kernel_template, kernel_cols, 
-                      unblocked_input + input_rows*input_cols*sizeof(float), input_cols, 
-                      one, scrambled_output + output_rows*output_cols*sizeof(float), output_cols);
-         //This one needs data in column major order:
-         //sgemm(&no_transpose, &no_transpose, &kernel_rows, &input_cols, &input_rows, 
-         //      &one, kernel_template, &kernel_cols, 
-         //      unblocked_input, &input_cols, 
-         //      &one, preblock_output, &output_cols);
-      } 
-      //unscramble the output into preblock output
-      unscramble_output(scrambled_output, preblock_output);
-      std::cout << std::endl;
-      std::cout << "Preblocked output: "<< std::endl;
-      for (int i = 0; i < 72; i++) {
-         std::cout<< preblock_output[i] << " ";
-      }
-      std::cout << std::endl;
-   
+      sgemm(&no_transpose, &no_transpose, &kernel_rows, &input_cols, &input_rows, 
+            &one, kernel_template, &kernel_rows, unblocked_input, &input_rows, &one, 
+            preblock_output, &output_rows);
+
       blocker.forward(preblock_output, o, NULL, NULL);
+      
    }
 };
 

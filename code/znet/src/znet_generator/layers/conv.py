@@ -22,6 +22,8 @@ def set_conv_dim(params, bot_tensor):
 	top_dim[i] = (bot_tensor.dim[i] - params["kernel_dim"][i] +
 		                         2*params["pad"][i - 2]) / params["stride"][i - 2] + 1
     params["top_dim"] = top_dim
+    params["bot_dim"] = bot_tensor.dim
+    params["bot_size"] = bot_tensor.memory_size
 
 def parse_conv(json_param):
     params = {}
@@ -108,6 +110,20 @@ def allocate_conv_lines(lparam):
 
     param_str = generate_param_string(allocation_params)
     lines = []
+    ######
+    if (l["pad"][0] != 0 or l["pad"][1] != 0): 
+        lparam["padder"] = "{}_padder".format(l["name"])
+        lparam["padded_bot"] = "{}_padded".format(l["name"])
+
+        pad_params = (l["bn"], l["ifm"], l["id"], l["ihw"], l["pad"][0],  l["pad"][1])
+        pad_params_str = generate_param_string(pad_params)
+
+        lines.append('layers["{}"] = new znn::phi::PadLayer({});'.format(l["name"],
+                                                                         pad_param_str))
+        lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(n, lparam["bot_size"])
+        
+
+    ######
     #allocate layer
     lines.append('layers["{}"] = new znn::phi::ConvWrapper({});'.format(l["name"],
                                                                         param_str))
@@ -132,3 +148,6 @@ def allocate_conv_lines(lparam):
 
     return lines
 
+def forward_conv_lines(lparam):
+    lines = []
+    return lines

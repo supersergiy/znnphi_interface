@@ -4,7 +4,9 @@ def forward_layer_lines(lparams):
    l  = lparams
 
    lines = []
-   if lt in ["conv", "deconv"]:
+   if lt in ["conv"]:
+       lines += forward_conv_lies()
+   elif lt in ["deconv"]:
        params  = 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
        params += 'tensors["{}"]->data(), tensors["{}"]->data()'.format(l["kernel"], l["bias"])
        lines.append('layers["{}"]->forward({});'.format(l["name"], params))

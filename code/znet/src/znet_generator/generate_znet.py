@@ -71,6 +71,7 @@ def forward_all_layers_lines(net):
        l = layer_info[lname]
        #lines.append('std::cout << "Running {}!\\n";'.format(l["name"]))
        lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
+       #lines += print_tensor_lines(l["top"])
        #lines += forward_layer_lines(l)
        #lines.append('std::cout << "{} Finished!\\n";'.format(l["name"]))
 

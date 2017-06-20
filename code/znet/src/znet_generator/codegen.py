@@ -3,6 +3,9 @@ import os
 def print_tensor_lines(tname):
     lines = []
     lines.append('for (int i = 0; i < tensors["{}"]->num_elements(); i++) {{'.format(tname))
+    lines.append('  if (i % SIMD_WIDTH == 0) {')
+    lines.append('      cout << "|"  << " ";'.format(tname))
+    lines.append('  }')
     lines.append('  cout << tensors["{}"]->data()[i] << " ";'.format(tname))
     lines.append('}')
     lines.append('std::cout << std::endl;')

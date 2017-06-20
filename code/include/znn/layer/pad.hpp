@@ -15,7 +15,15 @@ struct PadLayer: public Layer{
 private:
    int bn, fm, id, ihw, padd, padhw;
    int rounded_fm;
-   
+
+private:
+   void zero_out(void* a, size_t bytes) 
+   {
+      if (bytes > 0) {
+         memset(a, 0, bytes); 
+      }
+   }
+
 public:
    PadLayer(int _bn, int _fm, int _id, int _ihw, int _padd, int _padhw): bn(_bn), 
    fm(_fm), id(_id), ihw(_ihw), padd(_padd), padhw(_padhw)
@@ -32,37 +40,56 @@ public:
      float const* __restrict dummy1, float const* __restrict dummy2)
    {
       typedef float const (*in_tp)[rounded_fm/SIMD_WIDTH][id][ihw][ihw][SIMD_WIDTH];
-      typedef float (*out_tp)[rounded_fm/SIMD_WIDTH][id+padd][ihw+padhw][ihw+padhw][SIMD_WIDTH];
+      typedef float (*out_tp)[rounded_fm/SIMD_WIDTH][id+2*padd][ihw+2*padhw][ihw+2*padhw][SIMD_WIDTH];
       
       out_tp o_array = reinterpret_cast<out_tp>(o);
       in_tp i_array = reinterpret_cast<in_tp>(i);
      
-      int d_size = (ihw + padhw) * (ihw + padhw) * SIMD_WIDTH;
-      int h_size = (ihw + padhw) * SIMD_WIDTH;
+      int d_size = (ihw + 2*padhw) * (ihw + 2*padhw) * SIMD_WIDTH;
+      int h_size = (ihw + 2*padhw) * SIMD_WIDTH;
       int w_size = SIMD_WIDTH;
+
+      size_t w_copy_bytes = ihw*w_size*sizeof(float);
+      size_t w_pad_bytes  = padhw*w_size*sizeof(float);
+      size_t h_pad_bytes  = padhw*h_size*sizeof(float);
+      size_t d_pad_bytes  = padd*d_size*sizeof(float);
+
+      std::cout << "Copy:  " << w_copy_bytes << " bytes\n";
+      std::cout << "W pad: " << w_pad_bytes << " bytes\n";
+      std::cout << "W pad: " << h_pad_bytes << " bytes\n";
+      std::cout << "D pad: " << d_pad_bytes << " bytes\n";
 
       for (int b = 0; b < bn; ++b) {
          for (int f = 0; f < rounded_fm/SIMD_WIDTH; f++) {
             int od = 0;
-            int oh = 0;
-            int ow = 0;
-
-            memset(o_array[b][f][od], 0.0f, d_size*sizeof(float));
+            std::cout << "Padding D...\n";
+            zero_out(o_array[b][f][od], d_pad_bytes); 
             od += padd;
             for (int d = 0; d < id; ++d, ++od) {
-               memset(o_array[b][f][od][oh], 0.0f, h_size*sizeof(float));
+               int oh = 0;
+               std::cout << "Padding H...\n";
+               zero_out(o_array[b][f][od][oh], h_pad_bytes); 
                oh += padhw;
                for (int h = 0; h < ihw; ++h, ++oh) {
-                  memset(o_array[b][f][od][oh][0], 0.0f, w_size*sizeof(float));
+                  int ow = 0;
+                  std::cout << "Padding W...\n";
+                  zero_out(o_array[b][f][od][oh][ow], w_pad_bytes); 
                   ow += padhw;
-                  memcpy(o_array[b][f][od][oh][ow], i_array[b][f][id][ih][0], ihw*w_size*sizeof(float));
+
+                  void*       output_row_start = o_array[b][f][od][oh][ow];
+                  const void* input_row_start  = i_array[b][f][d][h][0];
+                  memcpy(output_row_start, input_row_start, w_copy_bytes); 
                   ow += ihw;
-                  memset(o_array[b][f][od][oh][ow], 0.0f, w_size*sizeof(float));
+
+                  std::cout << "Padding W...\n";
+                  zero_out(o_array[b][f][od][oh][ow], w_pad_bytes); 
 
                }
-               memset(o_array[b][f][od][oh], 0.0f, h_size*sizeof(float));
+               std::cout << "Padding H...\n";
+               zero_out(o_array[b][f][od][oh], h_size*sizeof(float));
             }
-            memset(o_array[b][f][od], 0.0f, d_size*sizeof(float));
+            std::cout << "Padding D...\n";
+            zero_out(o_array[b][f][od], d_pad_bytes); 
          }
       }
    }

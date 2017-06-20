@@ -1,6 +1,5 @@
 import json
 from operator import mul
-from collections import deque
 
 from tensor import Tensor
 from layers import parse_layer, set_layer_dim
@@ -18,7 +17,7 @@ def parse_net(net_path):
 
    json_layers  = net["layer"]
    tensors      = {}
-   layer_order  = deque()
+   layer_order  = [] 
    layer_info   = {}
    net = (tensors, layer_info, layer_order)
 
@@ -56,7 +55,7 @@ def add_block_input(net):
                         "top": "input", 
                         "bot_dim": tensors["input"].dim
                    }
-    layer_order.appendleft("block_input")
+    layer_order.insert(0, "block_input")
     layer_info["block_input"] = block_params
     tensors["user_input"] = Tensor(block_params["bot_dim"])
 

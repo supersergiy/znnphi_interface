@@ -1,3 +1,5 @@
+from tensor import Tensor
+
 #TODO: fix this shitty code
 def generate_layer_order_info(net):
     tensors, layer_info, layer_order  = net
@@ -52,7 +54,7 @@ def expand_convs(net):
                     #remove the consumed layer
                     print "Removing {}!".format(next_name)
                     del layer_info[next_name]
-                    order_of_next = list(layer_order).index(next_name)
+                    order_of_next = layer_order.index(next_name)
                     layer_order.remove(next_name)
                     #update the local shortcuts
                     next_name = l["next"]
@@ -82,27 +84,46 @@ def consume_elu(layer_info, lname, next_name):
     l = layer_info[lname]
     l["activation"] = "elu"
 
-def make_elus_inplace(net):
+def handle_padding(net):
     tensors, layer_info, layer_order  = net
-
-    for lname in layer_order:
+    for lname in list(layer_order):
         l = layer_info[lname]
-        if l["type"] == "elu":
-            import pdb; pdb.set_trace()
-            rename_to   = l["bot"]
-            rename_from = l["top"]
-            print "Renaming {} to {}...".format(rename_from, rename_to)
-
-            l["top"] = l["bot"]
-
-            for other_lname in layer_order:
-               other_l = layer_info[other_lname] 
-               if other_l["bot"] == rename_from:
-                   other_l["bot"] = rename_to
-            del tensors[rename_from]
+        if l["type"] == "conv" and (l["pad"][0] != 0 or l["pad"][1] != 0):
+            #set up pad params
+            padder_name = "{}_padder".format(lname)
+            pad_param   = {}
+            pad_param["name"]  = padder_name
+            pad_param["type"]  = "pad"
+            pad_param["bn"]    = l["bn"] 
+            pad_param["ifm"]   = l["ifm"] 
+            pad_param["id"]    = l["id"] 
+            pad_param["ihw"]   = l["ihw"] 
+            pad_param["padd"]  = l["pad"][0]
+            pad_param["padhw"] = l["pad"][1]
+            padded_dim = [ l["bn"], l["ifm"], 
+                           l["id"]+2*l["pad"][0], 
+                           l["ihw"]+2*l["pad"][1],
+                           l["ihw"]+2*l["pad"][1] ] 
+            pad_param["top_dim"] = padded_dim
+            #rewire tensors
+            
+            pad_param["bot"] = l["bot"]
+            pad_param["top"] = "{}_padded".format(l["bot"])
+            tensors[pad_param["top"]] = Tensor(pad_param["top_dim"]) 
+            l["bot"] = pad_param["top"]
+            pad_param["top_dim"] = l["bot_dim"]
+            
+            l["id"]  =  padded_dim[2]
+            l["ihw"] = padded_dim[3]
+            l["pad"] = [0, 0, 0]
+            #add pad layer 
+            convs_order = layer_order.index(lname)
+            layer_order.insert(convs_order - 1, padder_name)
+            layer_info[padder_name] = pad_param
 
 
 def optimize_net(net):
     generate_layer_order_info(net)
     expand_convs(net)
+    handle_padding(net)
 

@@ -4,23 +4,23 @@ def forward_layer_lines(lparams):
    l  = lparams
 
    lines = []
+   params = '' 
    if lt in ["conv", "deconv"]:
-       params  = 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
+       params+= 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
        params += 'tensors["{}"]->data(), tensors["{}"]->data()'.format(l["kernel"], l["bias"])
-       lines.append('layers["{}"]->forward({});'.format(l["name"], params))
-   elif lt in ["pool", "block_input", "unblock_output", "elu"]:
-       params  = 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
+   elif lt in ["pool", "block_input", "unblock_output", "elu", "pad"]:
+       params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
        params += 'NULL, NULL'
-       lines.append('layers["{}"]->forward({});'.format(l["name"], params))
    elif lt in ["bnorm", "scale"]:
-       params  = 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
+       params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
        params += 'tensors["{}"]->data(), tensors["{}"]->data()'.format(l["scale"], l["bias"])
-       lines.append('layers["{}"]->forward({});'.format(l["name"], params))
    elif lt in ["eltwise"]:
-       params  = 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"][0], l["top"])
+       params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"][0], l["top"])
        params += 'tensors["{}"]->data(), NULL'.format(l["bot"][1]) 
-       lines.append('layers["{}"]->forward({});'.format(l["name"], params))
+   elif lt in ["input"]:
+       return lines
 
+   lines.append('layers["{}"]->forward({});'.format(l["name"], params))
    return lines 
   
    '''elif lt == "deconv":

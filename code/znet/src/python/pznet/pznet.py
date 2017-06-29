@@ -17,9 +17,8 @@ class znet:
                                           )))
 
         self.working_folder =  os.path.join(my_folder, '.tmp/')
-        if not os.path.exists(self.working_folder):
-
-            os.makedirs(self.working_folder)
+        #if not os.path.exists(self.working_folder):
+        #    os.makedirs(self.working_folder)
         sys.path.append(self.working_folder)
 
         self.net = self._load_net(prototxt_path, weights_path)
@@ -35,6 +34,7 @@ class znet:
                                                          h5_weights_path,
                                                          self.working_folder)
         os.system(make_command) #compiles the znet.so and copies it to the working folder along with the weights
+
         import znet
         znet_weights_path = os.path.join(self.working_folder, './weights/')
         znet_weights_abspath = os.path.abspath(znet_weights_path)

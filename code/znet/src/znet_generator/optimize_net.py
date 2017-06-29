@@ -1,4 +1,5 @@
 from tensor import Tensor
+import numpy as np
 
 #TODO: fix this shitty code
 def generate_layer_order_info(net):
@@ -49,16 +50,20 @@ def expand_convs(net):
                         consume_scale(layer_info, lname, next_name)
                     else:#if next_l["type"] == "elu":
                         consume_elu(layer_info, lname, next_name)
+
                     #update the next link
                     l["next"] = next_l["next"]
+                    l["top"]  = next_l["top"]
+
                     #remove the consumed layer
                     print "Removing {}!".format(next_name)
                     del layer_info[next_name]
                     order_of_next = layer_order.index(next_name)
                     layer_order.remove(next_name)
+
                     #update the local shortcuts
                     next_name = l["next"]
-                    if next_name == "many":
+                    if next_name == "many" or next_name is None:
                         break
                     next_l    = layer_info[next_name]
 
@@ -66,17 +71,21 @@ def consume_scale(layer_info, lname, next_name):
     next_l = layer_info[next_name]
     l      = layer_info[lname]
 
+    if l["bias_data"] is None:
+        l["bias_data"] = np.zeros(l["ofm"], dtype=np.float)
+
     kernel = l["kernel_data"]
     bias   = l["bias_data"]
-
+ 
     scale_multipliers = next_l["scale_data"]
     scale_bias        = next_l["bias_data"]
-
+    
     for ofm in range(l["ofm"]):
         kernel[:][ofm][:][:][:] *= scale_multipliers[ofm]
-        if not bias is None:
-            bias[ofm] *= scale_multipliers[ofm]
-            bias[ofm] += scale_bias[ofm]
+        bias[ofm] *= scale_multipliers[ofm]
+        bias[ofm] += scale_bias[ofm]
+
+
     if bias is None:
         bias = scale_bias
 
@@ -100,10 +109,12 @@ def handle_padding(net):
             pad_param["ihw"]   = l["ihw"] 
             pad_param["padd"]  = l["pad"][0]
             pad_param["padhw"] = l["pad"][1]
+
             padded_dim = [ l["bn"], l["ifm"], 
                            l["id"]+2*l["pad"][0], 
                            l["ihw"]+2*l["pad"][1],
                            l["ihw"]+2*l["pad"][1] ] 
+
             pad_param["top_dim"] = padded_dim
             #rewire tensors
             
@@ -118,12 +129,39 @@ def handle_padding(net):
             l["pad"] = [0, 0, 0]
             #add pad layer 
             convs_order = layer_order.index(lname)
-            layer_order.insert(convs_order - 1, padder_name)
+            layer_order.insert(convs_order, padder_name)
             layer_info[padder_name] = pad_param
 
+def stride1_deconv_to_conv(net):
+    tensors, layer_info, layer_order  = net
+    for lname in list(layer_order):
+        l = layer_info[lname]
+        if l["type"] == "deconv" and l["stride"] == [1,1,1]:
+            l["type"] = "conv"
+
+            #add padding to the input for equivalance
+            for i in range(3):
+                l["pad"][i] = (l["json_kernel_size"][i] - 1) - l["pad"][i]
+                if l["pad"][i] < 0:
+                    raise Exception("Deconv negative padding is not supported yet")
+            
+            #conv kernel is OFMxIFMxZXY, deconv kernel is IFMxOFMxZXY
+            l["kernel_dim"][0] = l["ofm"]
+            l["kernel_dim"][1] = l["ifm"]
+
+            l["kernel_data"] = conv_to_deconv_kernel(l["kernel_data"])
+
+def conv_to_deconv_kernel(conv_kernel):
+    deconv_kernel = np.swapaxes(conv_kernel, 0, 1)
+    deconv_kernel = np.flip(deconv_kernel, 2) 
+    deconv_kernel = np.flip(deconv_kernel, 3) 
+    deconv_kernel = np.flip(deconv_kernel, 4) 
+    return deconv_kernel
 
 def optimize_net(net):
     generate_layer_order_info(net)
     expand_convs(net)
+    stride1_deconv_to_conv(net)
     handle_padding(net)
+
 

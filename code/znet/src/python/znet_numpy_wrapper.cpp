@@ -24,7 +24,10 @@ class ZnetNumpyWrapper {
             std::cerr << "Expected " << zn->input_size << " elements, but got " << in_info.size << std::endl;
             exit(EXIT_FAILURE);
          }
+         std::cerr << "Copying " << zn->input_size*sizeof(float) << " bytes into the user input. " << std::endl;
+
          std::memcpy(zn->tensors["user_input"]->data(), in_ptr, zn->input_size*sizeof(float));
+
          /*std::cout << "I think python input is like:\n";
          for (int i = 0; i < 10; i++) {
 
@@ -39,19 +42,9 @@ class ZnetNumpyWrapper {
 
          zn->forward();
          std::cout << "Forward Finished\n";
-			auto out_data = zn->tensors["user_output"]->data();
+         auto out_data = zn->tensors["user_output"]->data();
 
-         std::cout << zn->out_dim << std::endl;
-         for (int i = 0; i < 5; i ++) {
-            std::cout << zn->out_shape[i] << " "; 
-         }
-         std::cout << std::endl;
-         for (int i = 0; i < 5; i ++) {
-            std::cout << zn->out_strides[i] << " "; 
-         }
-         std::cout << std::endl;
-
-		   return py::array(py::buffer_info(out_data, sizeof(float),
+         return py::array(py::buffer_info(out_data, sizeof(float),
                                           py::format_descriptor<float>::format(),
                                           zn->out_dim, zn->out_shape, zn->out_strides));
       }

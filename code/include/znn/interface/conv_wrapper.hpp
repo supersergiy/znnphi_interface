@@ -2,7 +2,7 @@
 #include "conv_layer.hpp"
 #include <znn/layer/layer.hpp>
 
-#define DEFAULT_HT 1 
+#define DEFAULT_HT 2 
 #define DEFAULT_CORES 2 
 
 namespace znn

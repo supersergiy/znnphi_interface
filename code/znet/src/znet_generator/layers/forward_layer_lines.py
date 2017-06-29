@@ -8,7 +8,7 @@ def forward_layer_lines(lparams):
    if lt in ["conv", "deconv"]:
        params+= 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
        params += 'tensors["{}"]->data(), tensors["{}"]->data()'.format(l["kernel"], l["bias"])
-   elif lt in ["pool", "block_input", "unblock_output", "elu", "pad"]:
+   elif lt in ["pool", "block_input", "unblock_output", "elu", "pad", "sigmoid"]:
        params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
        params += 'NULL, NULL'
    elif lt in ["bnorm", "scale"]:

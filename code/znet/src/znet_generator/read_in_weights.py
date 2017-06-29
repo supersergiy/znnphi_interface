@@ -11,8 +11,6 @@ def read_in_weights(net, weights_path):
 
     for (lname, l) in iteritems(layer_info):
         if l["type"] in ["conv", "deconv"]:
-            if "ht" in l["name"]:
-                continue
             lweights = weights[lname].values()
             l["kernel_data"] = lweights[0][:]
 
@@ -37,18 +35,20 @@ def read_in_weights(net, weights_path):
 
             mean_data = lweights[0][:]
             var_data  = lweights[1][:] 
-            var_data += 0.00001
-            std_data  = np.sqrt(var_data)
 
             if len(lweights) > 2: 
                 scale_factor = lweights[2][:]
                 if scale_factor.size != 1:
                     import pdb; pdb.set_trace()
                     raise Exception("wtf")
-                mean_data *= scale_factor 
-                std_data  *= scale_factor 
+                if (scale_factor != 0):
+                    mean_data /= scale_factor 
+                    var_data  /= scale_factor 
 
-            l["bias_data"]  = -1.0 * np.divide(mean_data, std_data)
+            var_data += 0.00001
+            std_data  = np.sqrt(var_data)
+
+            l["bias_data"]  = -1*np.divide(mean_data, std_data)
             l["scale_data"] = 1.0  / std_data
 
 

@@ -13,6 +13,7 @@ typedef ConvEngine<Cores_v, HT_v, BN_v,
 
 ConvLayer::~ConvLayer()
 {
+    delete convEngine;
 }
 
 ConvLayer::ConvLayer()

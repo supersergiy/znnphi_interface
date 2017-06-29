@@ -3,6 +3,7 @@ from deconv  import set_deconv_dim
 from pool    import set_pool_dim
 from bnorm   import set_bnorm_dim
 from elu     import set_elu_dim 
+from sigmoid import set_sigmoid_dim 
 from scale   import set_scale_dim 
 from eltwise import set_eltwise_dim 
 
@@ -20,6 +21,8 @@ def set_layer_dim(lparams, bot_tensor):
       set_bnorm_dim(lparams, bot_tensor)
    elif lt == "elu":
       set_elu_dim(lparams, bot_tensor)
+   elif lt == "sigmoid":
+      set_sigmoid_dim(lparams, bot_tensor)
    elif lt == "scale":
       set_scale_dim(lparams, bot_tensor)
    elif lt == "eltwise":

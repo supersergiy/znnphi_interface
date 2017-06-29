@@ -22,7 +22,7 @@ z = pznet.znet(net_path, weights_path)
 
 np.set_printoptions(precision=2)
 in_file  = h5py.File(input_path)
-in_a     = np.random.rand(4,4) 
+in_a     = np.random.rand(1, 1, 18, 192, 192)
 out_a    = z.forward(in_a)
 
 fo = out_a.flatten()

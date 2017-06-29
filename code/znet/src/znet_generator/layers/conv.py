@@ -51,7 +51,7 @@ def parse_conv(json_param):
     
     params["activation"] = None
     params["cores"] = 2
-    params["ht"]    = 2
+    params["ht"]    = 1 
     return params
 
 def block_kernel(kernel, lparam):
@@ -100,16 +100,22 @@ def block_bias(bias, lparam):
 
 def allocate_conv_lines(lparam):
     l = lparam
-    if l["activation"] == "elu":
+
+    if "activation" in l and l["activation"] == "elu":
         activate = "true"
     else:
         activate = "false"
+    cores = l.get("cores", 2)
+    ht    = l.get("ht",    1)
+
     allocation_params = (l["bn"], l["ifm"], l["ofm"], l["id"], l["ihw"],
                          l["kernel_dim"][2], l["kernel_dim"][3],
-                         l["pad"][0],  l["pad"][1], activate, l["cores"], l["ht"])
+                         l["pad"][0],  l["pad"][1], 
+                         activate, cores, ht)
 
     param_str = generate_param_string(allocation_params)
     lines = []
+
     #allocate layer
     lines.append('layers["{}"] = new znn::phi::ConvWrapper({});'.format(l["name"],
                                                                         param_str))

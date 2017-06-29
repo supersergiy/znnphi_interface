@@ -8,7 +8,7 @@ def set_deconv_dim(params, bot_tensor):
     params["id"]  = bot_tensor.dim[2]
     params["ihw"] = bot_tensor.dim[3]
 
-    params["kernel_dim"]  = [params["ofm"], params["ifm"]]
+    params["kernel_dim"]  = [params["ifm"], params["ofm"]]
     params["kernel_dim"] += params["json_kernel_size"]
 
     params["kernel_size"]  = params["kernel_dim"][2] * params["kernel_dim"][3] * params["kernel_dim"][4]
@@ -21,7 +21,9 @@ def set_deconv_dim(params, bot_tensor):
     for i in [2, 3, 4]:
 	top_dim[i]  = params["stride"][i - 2] * (bot_tensor.dim[i] - 1)
         top_dim[i] += params["kernel_dim"][i] - 2*params["pad"][i - 2]
+
     params["top_dim"] = top_dim
+    params["bot_dim"] = bot_tensor.dim
 
 def parse_deconv(json_param):
     params = {}
@@ -49,6 +51,7 @@ def parse_deconv(json_param):
 
     return params
 
+
 def allocate_deconv_lines(lparam):
     l = lparam
 
@@ -66,21 +69,20 @@ def allocate_deconv_lines(lparam):
 
     lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                                   l["bias"], l["bias_size"]))
-    #allocate layer
-    lines.append('layers["{}"] = new znn::phi::DeconvLayer({});'.format(l["name"],
-                                                                        param_str))
     #initialize weights
-    kernel = l["kernel_data"] 
-    blocked_kernel = block_kernel(kernel, l)
-    lines += fill_tensor('{}_kernel'.format(l["name"]), blocked_kernel)
+    kernel = l["kernel_data"]
+    lines += fill_tensor('{}_kernel'.format(l["name"]), kernel.flatten())
 
-    bias = l["bias_data"] 
+    bias = l["bias_data"]
 
     if bias is None: 
         lines += zero_out_tensor('{}_bias'.format(l["name"])) #TODO: don't actually have to allocate all tensors, but then have to allocate one biggest one
     else:
-        blocked_bias = block_bias(bias, l)
-        lines += fill_tensor('{}_bias'.format(l["name"]), blocked_bias)
+        #blocked_bias = block_bias(bias, l)
+        lines += fill_tensor('{}_bias'.format(l["name"]), bias.flatten() )
 
+    #allocate layer
+    lines.append('layers["{}"] = new znn::phi::DeconvLayer({});'.format(l["name"],
+                                                                        param_str))
     return lines
 

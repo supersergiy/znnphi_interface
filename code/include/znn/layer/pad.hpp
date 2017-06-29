@@ -54,26 +54,19 @@ public:
       size_t h_pad_bytes  = padhw*h_size*sizeof(float);
       size_t d_pad_bytes  = padd*d_size*sizeof(float);
 
-      std::cout << "Copy:  " << w_copy_bytes << " bytes\n";
-      std::cout << "W pad: " << w_pad_bytes << " bytes\n";
-      std::cout << "W pad: " << h_pad_bytes << " bytes\n";
-      std::cout << "D pad: " << d_pad_bytes << " bytes\n";
 
       for (int b = 0; b < bn; ++b) {
          for (int f = 0; f < rounded_fm/SIMD_WIDTH; f++) {
             int od = 0;
-            std::cout << "Padding D...\n";
-            zero_out(o_array[b][f][od], d_pad_bytes); 
+            //zero_out(o_array[b][f][od], d_pad_bytes); 
             od += padd;
             for (int d = 0; d < id; ++d, ++od) {
                int oh = 0;
-               std::cout << "Padding H...\n";
-               zero_out(o_array[b][f][od][oh], h_pad_bytes); 
+               //zero_out(o_array[b][f][od][oh], h_pad_bytes); 
                oh += padhw;
                for (int h = 0; h < ihw; ++h, ++oh) {
                   int ow = 0;
-                  std::cout << "Padding W...\n";
-                  zero_out(o_array[b][f][od][oh][ow], w_pad_bytes); 
+                  //zero_out(o_array[b][f][od][oh][ow], w_pad_bytes); 
                   ow += padhw;
 
                   void*       output_row_start = o_array[b][f][od][oh][ow];
@@ -81,15 +74,12 @@ public:
                   memcpy(output_row_start, input_row_start, w_copy_bytes); 
                   ow += ihw;
 
-                  std::cout << "Padding W...\n";
-                  zero_out(o_array[b][f][od][oh][ow], w_pad_bytes); 
+                  //zero_out(o_array[b][f][od][oh][ow], w_pad_bytes); 
 
                }
-               std::cout << "Padding H...\n";
-               zero_out(o_array[b][f][od][oh], h_size*sizeof(float));
+               //zero_out(o_array[b][f][od][oh], h_size*sizeof(float));
             }
-            std::cout << "Padding D...\n";
-            zero_out(o_array[b][f][od], d_pad_bytes); 
+            //zero_out(o_array[b][f][od], d_pad_bytes); 
          }
       }
    }

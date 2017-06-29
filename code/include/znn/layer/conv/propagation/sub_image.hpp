@@ -22,7 +22,7 @@
                         ZNN_PRAGMA(SIMD_WIDTH)\
                         for (long_t i = 0; i < SIMD_WIDTH; i++) {\
                            if (base[i] < 0.0f) {\
-                              base[i] = 0.0f;std::exp(static_cast<float>(base[i])) - 1.0;\
+                              base[i] = std::exp(static_cast<float>(base[i])) - 1.0;\
                            }\
                         }\
                        }

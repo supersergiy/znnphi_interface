@@ -16,15 +16,15 @@ private:
    int rounded_fm;
 
 public:
-   ScaleLayer(int _bn, int _fm, int _id, int _ihw): bn(_bn), 
-   fm(_fm), id(_id), ihw(_ihw)
+   ScaleLayer(int _bn, int _fm, int _id, int _ihw): bn(_bn), id(_id), ihw(_ihw)
    {   
+      fm = _fm;
+      rounded_fm = ((fm + SIMD_WIDTH - 1) / SIMD_WIDTH) * SIMD_WIDTH;
+
       assert( bn > 0);
       assert( fm > 0);
       assert( id > 0);
       assert(ihw > 0);
-
-      rounded_fm = ((fm + SIMD_WIDTH - 1) / SIMD_WIDTH) * SIMD_WIDTH;
    }
 
    void forward(float const* __restrict i, float* __restrict o, 
@@ -41,8 +41,11 @@ public:
             for (int d = 0; d < id; ++d) {
                for (int h = 0; h < ihw; ++h) {
                   for (int w = 0; w < ihw; ++w) {
-                     for (int s = 0; s < SIMD_WIDTH; ++s)
-                        o_array[b][f][d][h][w][s] = i_array[b][f][d][h][w][s] * scale[f*SIMD_WIDTH + s] + bias[f*SIMD_WIDTH + s];
+                     for (int s = 0; s < SIMD_WIDTH; ++s) {
+                        if (f*SIMD_WIDTH + s < fm) {
+                           o_array[b][f][d][h][w][s] = i_array[b][f][d][h][w][s] * scale[f*SIMD_WIDTH + s] + bias[f*SIMD_WIDTH + s];
+                        }
+                     }
                   }
                }
             }

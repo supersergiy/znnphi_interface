@@ -3,6 +3,7 @@ from deconv  import allocate_deconv_lines
 from pool    import allocate_pool_lines 
 from bnorm   import allocate_bnorm_lines
 from elu     import allocate_elu_lines
+from sigmoid import allocate_sigmoid_lines
 from pad     import allocate_pad_lines
 from scale   import allocate_scale_lines 
 from eltwise import allocate_eltwise_lines 
@@ -31,6 +32,8 @@ def allocate_layer_lines(lparams):
       return allocate_eltwise_lines(lparams) 
    elif lt == "pad":
       return allocate_pad_lines(lparams) 
+   elif lt == "sigmoid":
+      return allocate_sigmoid_lines(lparams) 
    elif lt == "input":
       return []
    else:

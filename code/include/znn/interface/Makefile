@@ -92,7 +92,7 @@ FORCE:
 
 %.d: ./%.cpp
 	$(ECHO) "[CXX] dependencies $<"
-	$(CXX) $(DEPFLAGS) $(AVX512_FLAGS) -MF $@ $<remake
+	$(CXX) $(DEPFLAGS) $(AVX2_FLAGS) -MF $@ $<remake
 
 %.o: ./%.cpp FORCE
 ifeq ($(LAYER_EXISTS),0)
@@ -106,8 +106,8 @@ endif
 %.so: ./%.o
 ifeq ($(LAYER_EXISTS),0)
 	$(ECHO) "[CXX] creating shared lib $@" 
-	$(ECHO) $(CXX) $(DLFLAGS) $(CXXLDFLAGS) -o $@ $< -ldl
-	$(CXX)         $(DLFLAGS) $(CXXLDFLAGS) -o $@ $< -ldl
+	$(ECHO) $(CXX) $(DLFLAGS) $(CXXLDFLAGS) $(AVX2_FLAGS) -o $@ $< -ldl
+	$(CXX)         $(DLFLAGS) $(CXXLDFLAGS) $(AVX2_FLAGS) -o $@ $< -ldl
 else 
 	$(ECHO) 
 endif

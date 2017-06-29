@@ -8,9 +8,9 @@ import sys
 
 base =     '/home/ubuntu/znnphi_interface/code/znet/reference/'
 
-net_file = 'nets/net.prototxt'
+net_file = 'unet/unet.prototxt'
 
-weights_file = 'data/weights/weights_r.h5'
+weights_file = 'unet/unet.h5'
 
 input_file = 'data/inputs/input.h5'
 
@@ -27,17 +27,22 @@ z = pznet.znet(net_path, weights_path)
 in_file  = h5py.File(input_path)
 in_a     = in_file["input"][:]
 out_a    = z.forward(in_a)
+
 reference_file = h5py.File(reference_path)
 reference_a = reference_file["data"][:]
 np.set_printoptions(precision=2)
 diff_a = reference_a - out_a
 error = ssq = np.sum(diff_a**2)
 ref_a = reference_a
+
 fd = diff_a.flatten()
 fo = out_a.flatten()
 fr = reference_a.flatten()
 boo = np.argmax(fd)
-if error > 0.1:
+
+error = min(np.max(diff_a/out_a), np.sum(diff_a**2))
+
+if error > 1.0:
     print "Not congrats! Error == {}".format(error)
 else:
     print "Congrats! All pass"

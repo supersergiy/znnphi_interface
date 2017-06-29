@@ -45,9 +45,8 @@ public:
 
       switch(mode) {
       case MODE_SUM:
-#pragma parallel
          for (int b = 0; b < bn; ++b) {
-            for (int f = 0; f < fm/SIMD_WIDTH; f++) {
+            for (int f = 0; f < rounded_fm/SIMD_WIDTH; f++) {
                for (int d = 0; d < id; ++d) {
                   for (int h = 0; h < ihw; ++h) {
                      for (int w = 0; w < ihw; ++w) {
@@ -61,9 +60,8 @@ public:
          }
          break;
       case MODE_PROD:
-#pragma parallel
          for (int b = 0; b < bn; ++b) {
-            for (int f = 0; f < fm/SIMD_WIDTH; f++) {
+            for (int f = 0; rounded_fm < fm/SIMD_WIDTH; f++) {
                for (int d = 0; d < id; ++d) {
                   for (int h = 0; h < ihw; ++h) {
                      for (int w = 0; w < ihw; ++w) {
@@ -77,9 +75,8 @@ public:
          }
          break;
 case MODE_MAX:
-#pragma parallel
          for (int b = 0; b < bn; ++b) {
-            for (int f = 0; f < fm/SIMD_WIDTH; f++) {
+            for (int f = 0; f < rounded_fm/SIMD_WIDTH; f++) {
                for (int d = 0; d < id; ++d) {
                   for (int h = 0; h < ihw; ++h) {
                      for (int w = 0; w < ihw; ++w) {

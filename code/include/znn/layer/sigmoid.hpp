@@ -2,7 +2,7 @@
 #include <znn/layer/common.hpp>
 #include <iostream>
 #include <assert.h>
-#include <tgmath.h>
+//#include <math.h> 
 
 namespace znn 
 {
@@ -15,7 +15,7 @@ struct SigmoidLayer: public Layer{
 private:
    int bn, fm, id, ihw;
    int rounded_fm;
-   int full, partial
+   int full, partial;
 
 public:
    SigmoidLayer(int _bn, int _fm, int _id, int _ihw): bn(_bn), 
@@ -27,7 +27,7 @@ public:
       assert(ihw > 0);
 
       rounded_fm = ((fm + SIMD_WIDTH - 1) / SIMD_WIDTH) * SIMD_WIDTH;
-      ful     = fm / SIMD_WIDTH;
+      full    = fm / SIMD_WIDTH;
       partial = fm % SIMD_WIDTH;
    }
 
@@ -45,8 +45,10 @@ public:
             for (int d = 0; d < id; ++d) {
                for (int h = 0; h < ihw; ++h) {
                   for (int w = 0; w < ihw; ++w) {
-                     for (int s = 0; s < SIMD_WIDTH; ++s)
-                        o_array[b][f][d][h][w][s] = 0.5f * std::tanh(0.5f*i_array[b][f][d][h][w][s]) + 0.5f;
+                     for (int s = 0; s < SIMD_WIDTH; ++s) {
+                        o_array[b][f][d][h][w][s] = 1.0 / (1.0 + expf(-i_array[b][f][d][h][w][s]));
+                        //o_array[b][f][d][h][w][s] = 0.5f * std::tanh(0.5f*i_array[b][f][d][h][w][s]) + 0.5f;
+                     } 
                   }
                }
             }
@@ -59,14 +61,13 @@ public:
                for (int h = 0; h < ihw; ++h) {
                   for (int w = 0; w < ihw; ++w) {
                      for (int s = 0; s < SIMD_WIDTH; ++s) { 
-                        //o_array[b][f][d][h][w][s] = 1. / (1. + std::exp(-i_array[b][f][d][h][w][s]);
-                        o_array[b][f][d][h][w][s] = 0.5f * std::tanh(0.5f*i_array[b][f][d][h][w][s]) + 0.5f;
+                        o_array[b][f][d][h][w][s] = 1.0 / (1.0 + expf(-i_array[b][f][d][h][w][s]));
+                        //o_array[b][f][d][h][w][s] = 0.5f * std::tanh(0.5f*i_array[b][f][d][h][w][s]) + 0.5f;
                      }
                   }
                }
             }
          }
-
       }
    }
 };

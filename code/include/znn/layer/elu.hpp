@@ -35,6 +35,7 @@ public:
       typedef float (*out_tp)[rounded_fm/SIMD_WIDTH][id][ihw][ihw][SIMD_WIDTH];
       in_tp i_array = reinterpret_cast<in_tp>(i);
       out_tp o_array = reinterpret_cast<out_tp>(o);
+      
 
       for (int b = 0; b < bn; ++b) {
          for (int f = 0; f < rounded_fm/SIMD_WIDTH; f++) {
@@ -48,8 +49,8 @@ public:
                            o_array[b][f][d][h][w][s] = i_array[b][f][d][h][w][s];
                            //o_array[b][f][d][h][w][s] = i_array[b][f][d][h][w][s];
                            //std::cout << "i after: " << i_array[b][f][d][h][w][s] << std::endl;
-                           if (i_array[b][f][d][h][w][s] < 0.0) {
-                              o_array[b][f][d][h][w][s] = exp(i_array[b][f][d][h][w][s]) - 1.0;
+                           if (i_array[b][f][d][h][w][s] < 0.0 ) {
+                              o_array[b][f][d][h][w][s] = expf(i_array[b][f][d][h][w][s]) - 1.0;
                               //std::cout << "o: " << o_array[b][f][d][h][w][s] << std::endl;
                            }
                         }

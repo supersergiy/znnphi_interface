@@ -68,13 +68,13 @@ def forward_all_layers_lines(net):
     for lname in layer_order:
        l = layer_info[lname]
        #lines.append('std::cout << "Running {}!\\n";'.format(l["name"]))
+       #lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
+       #lines += forward_layer_lines(l)
        lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
 
-       if lname == "deconv_0":
            #lines += print_tensor_part_lines(l["top"])
-           lines += print_tensor_lines(l["bot"])
+       #    lines += print_tensor_lines(l["bot"])
            #lines += print_tensor_lines(l["top"])
-       #lines += forward_layer_lines(l)
        #lines.append('std::cout << "{} Finished!\\n";'.format(l["name"]))
        count += 1
 
@@ -85,7 +85,7 @@ def forward_all_layers_lines(net):
 def forward_body_lines(net):
     tensors, layer_info, layer_order = net
     lines = []
-    lines += timeit(forward_all_layers_lines(net), 1, "average:")
+    lines += timeit(forward_all_layers_lines(net), 20, "average:")
 
     lines.append('')
     return lines

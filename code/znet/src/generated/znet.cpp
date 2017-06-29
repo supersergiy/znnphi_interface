@@ -681,7 +681,7 @@ void znn::phi::Znet::forward(void)
 {
 	{
 	auto begin = std::chrono::high_resolution_clock::now();
-	for (int i = 0; i < 1; i++) {
+	for (int i = 0; i < 20; i++) {
 		std::cout << "Starting Forward Pass\n";
 		{
 		auto begin = std::chrono::high_resolution_clock::now();
@@ -2467,7 +2467,7 @@ void znn::phi::Znet::forward(void)
 	auto end = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 	double secs = static_cast<double>(duration) / 1000000;
-	std::cout << "average:" << secs/1 << "\n";
+	std::cout << "average:" << secs/20 << "\n";
 	}
 	
 }

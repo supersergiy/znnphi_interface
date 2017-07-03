@@ -12,7 +12,8 @@ namespace propagation
 {
 
 typedef void (*executable_t)(float const* __restrict, float* __restrict,
-                             float const* __restrict, float const* __restrict);
+                             float const* __restrict, float const* __restrict,
+                             float const* __restrict);
 
 using exec_vector = std::vector<std::vector<executable_t>>;
 

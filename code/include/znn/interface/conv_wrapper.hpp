@@ -11,6 +11,8 @@ namespace phi
 {
 
 class ConvWrapper : public Layer{
+   using Layer::forward;
+
 private:
     ConvLayer *conv_layer;
     CreateConvLayer_fp  createConvLayer;
@@ -31,7 +33,8 @@ public:
 
     void forward(float const* __restrict in, float *out,
                  float const* __restrict ker,
-                 float const* __restrict bi);
+                 float const* __restrict bi,
+                 float const* __restrict scale);
 };
 
 }

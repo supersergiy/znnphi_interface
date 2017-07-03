@@ -32,6 +32,7 @@ private:
     float*       out_;
     float const* kernels_;
     float const* biases_;
+    float const* scale_;
 
 public:
     full_layer(kernel_launcher* l)
@@ -45,19 +46,21 @@ public:
             fns[i] = [i, this]() {
                 for (auto const& e : this->executables[i])
                 {
-                    e(this->in_, this->out_, this->kernels_, this->biases_);
+                    e(this->in_, this->out_, this->kernels_, this->biases_, this->scale_);
                 }
             };
         }
     }
 
     void execute(float const* __restrict i, float* __restrict o,
-                 float const* __restrict k, float const* __restrict b)
+                 float const* __restrict k, float const* __restrict b,
+                 float const* __restrict s)
     {
         in_      = i;
         out_     = o;
         kernels_ = k;
         biases_  = b;
+        scale_   = s;
         launcher->launch(&(fns[0]));
     }
 

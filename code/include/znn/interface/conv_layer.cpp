@@ -24,9 +24,10 @@ ConvLayer::ConvLayer()
 
 void ConvLayer::compute(float const* __restrict in, float *out, 
                         float const* __restrict ker, 
-                        float const* __restrict bi)
+                        float const* __restrict bi,
+                        float const* __restrict scale)
 {
-    reinterpret_cast<parametrizedConvEngine*>(convEngine)->compute(in, out, ker, bi);
+    reinterpret_cast<parametrizedConvEngine*>(convEngine)->compute(in, out, ker, bi, scale);
 }
 
 }

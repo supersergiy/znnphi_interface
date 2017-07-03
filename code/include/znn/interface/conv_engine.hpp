@@ -58,9 +58,10 @@ public:
     }
     
     void compute(float const* __restrict in, float* out, 
-                 float const* __restrict ker, float const* __restrict bi)
+                 float const* __restrict ker, float const* __restrict bi,
+                 float const* __restrict scale)
     {
-        plan->execute(in, out, ker, bi);
+        plan->execute(in, out, ker, bi, scale);
     }
 };
 }

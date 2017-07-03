@@ -159,9 +159,10 @@ ConvWrapper::~ConvWrapper()
 
 void ConvWrapper::forward(float const* __restrict in, float *out, 
                           float const* __restrict ker, 
-                          float const* __restrict bi)
+                          float const* __restrict bi, 
+                          float const* __restrict scale)
 {
-    conv_layer->compute(in, out, ker, bi);
+    conv_layer->compute(in, out, ker, bi, scale);
 }
 
 }

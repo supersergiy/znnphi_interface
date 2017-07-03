@@ -1,0 +1,7 @@
+[CXX] compiling conv_layer.cpp
+@icpc -std=c++14 -c -MMD -MP -MT conv_layer.o -MF conv_layer.T -DZNN_NO_CUDA -DZNN_NO_HBW -DZNN_NUM_CORES=64 -I../../../../code/include -I../../../../code/include/znn -I../../../.. -Wall -Wextra -Wno-format -Wno-unknown-pragmas -fmax-errors=5 -DNDEBUG -O3 -ipo -fp-model fast=2 -mkl=sequential -fno-rtti -fno-exceptions -mkl=sequential -DZNN_AVX2 -march=core-avx2 -DBN_v=1 -DIFM_v=28 -DOFM_v=28 -DID_v=18 -DIHW_v=192 -DKD_v=1 -DKHW_v=3 -DPADD_v=0 -DPADHW_v=1 -DCores_v=2 -DHT_v=2 -DACTIVATION_v=0 -o conv_layer.o conv_layer.cpp
+[CXX] creating shared lib conv_layer.so
+@icpc -std=c++14 -fPIC -shared -mkl=sequential -static-intel -DNDEBUG -O3 -DZNN_AVX2 -march=core-avx2 -o conv_layer.so conv_layer.o -ldl
+icpc: warning #10237: -lcilkrts linked in dynamically, static library not available
+[Make] Placing the lib into ../../../../lib/conv_layer_1_28_28_18_192_1_3_0_1_0_2_2_.so
+let's go

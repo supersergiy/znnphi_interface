@@ -11,6 +11,8 @@ namespace phi
 {
 
 class ConvWrapper : public Layer{
+   using Layer::forward;
+
 private:
     ConvLayer *conv_layer;
     CreateConvLayer_fp  createConvLayer;
@@ -19,19 +21,20 @@ private:
 public:
     ConvWrapper(int bn, int ifm, int ofm, int id,
                     int ihw, int kd, int khw,
-                    int padd=0, int padhw=0, bool Activation=false,
+                    int padd=0, int padhw=0, bool Activation=false, bool AddOrOverwrite=false,
                     int cores=DEFAULT_CORES, int ht=DEFAULT_HT);
    
     void init(int bn, int ifm, int ofm, int id,
                       int ihw, int kd, int khw,
-                      int padd=0, int padhw=0, bool Activation=false,
+                      int padd=0, int padhw=0, bool Activation=false, bool AddOrOverwrite=false,
                       int cores=DEFAULT_CORES, int ht=DEFAULT_HT);
    
     ~ConvWrapper(void);
 
     void forward(float const* __restrict in, float *out,
                  float const* __restrict ker,
-                 float const* __restrict bi);
+                 float const* __restrict bi,
+                 float const* __restrict scale);
 };
 
 }

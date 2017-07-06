@@ -56,12 +56,12 @@ double benchmark_single_forward(std::string const& lname = "layer")
         conv_traits<KD, KHW * KHW, 1>, conv_traits<KHW, KHW, 1>,
         conv_traits<KHW, 1, 1>>;
 
-    full_layer<Cores * HT, orig_prob, false> plan(&kl);
+    full_layer<Cores * HT, orig_prob, false, false> plan(&kl);
 
     long_t iters = 2 * Cores;
     for (long_t i = 0; i < iters; ++i)
     {
-        plan.execute(in.data(), out.data(), ker.data(), bi.data());
+        plan.execute(in.data(), out.data(), ker.data(), bi.data(), NULL);
     }
 
     //std::cout << "ok real measurement" << std::endl;
@@ -71,7 +71,7 @@ double benchmark_single_forward(std::string const& lname = "layer")
     for (long_t i = 0; i < iters; ++i)
     {
         // auto begin2 = std::chrono::high_resolution_clock::now();
-        plan.execute(in.data(), out.data(), ker.data(), bi.data());
+        plan.execute(in.data(), out.data(), ker.data(), bi.data(), NULL);
         // auto end2 = std::chrono::high_resolution_clock::now();
         // auto duration2 =
         // std::chrono::duration_cast<std::chrono::microseconds>

@@ -25,7 +25,7 @@ AVX_FLAGS   =   -DZNN_AVX -xAVX $(ZNN_TUNE)
 AVX2_FLAGS  =   -DZNN_AVX2 -march=core-avx2 $(ZNN_TUNE)                                   
 AVX512_FLAGS    =   -DZNN_AVX512 -xMIC-AVX512 $(ZNN_TUNE)                                 
 KNC_FLAGS   =   -DZNN_KNC -mmic $(ZNN_TUNE)
-CORES_FLAG  =   -DZNN_NUM_CORES=64
+CORES_FLAG  =   -DZNN_NUM_CORES=2
 
 STANDARD_FLAG	=	-std=c++14
 STD_FLAG	=
@@ -67,10 +67,11 @@ DLFLAGS		= 	-fPIC -shared
 # user gives these params to make layer
 PARAM_DEFS  = -DBN_v=${BN} -DIFM_v=${IFM} -DOFM_v=${OFM} -DID_v=${ID} \
 				  -DIHW_v=${IHW} -DKD_v=${KD} -DKHW_v=${KHW} -DPADD_v=${PADD} \
-				  -DPADHW_v=${PADHW} -DCores_v=${CORES} -DHT_v=${HT} -DACTIVATION_v=${ACTIVATION}
+				  -DPADHW_v=${PADHW} -DCores_v=${CORES} -DHT_v=${HT} -DACTIVATION_v=${ACTIVATION} \
+				  -DADDorOVERWRITE_v=${ADDorOVERWRITE}
 
 # Note the trailing _ 
-LAYER_NAME  =  conv_layer_${BN}_${IFM}_${OFM}_${ID}_${IHW}_${KD}_${KHW}_${PADD}_${PADHW}_${ACTIVATION}_${CORES}_${HT}_.so
+LAYER_NAME  =  conv_layer_${BN}_${IFM}_${OFM}_${ID}_${IHW}_${KD}_${KHW}_${PADD}_${PADHW}_${ACTIVATION}_$(ADDorOVERWRITE)_${CORES}_${HT}_.so
 
 LAYER_SO_PATH = ${BASE}/lib/${LAYER_NAME}
 
@@ -97,8 +98,8 @@ FORCE:
 %.o: ./%.cpp FORCE
 ifeq ($(LAYER_EXISTS),0)
 	$(ECHO) "[CXX] compiling $<"
-	$(ECHO) $(CXX) -c $(CXXFLAGS) $(AVX2_FLAGS) $(PARAM_DEFS) -o $@ $<
-	$(CXX)         -c $(CXXFLAGS) $(AVX2_FLAGS) $(PARAM_DEFS) -o $@ $<
+	$(ECHO) $(CXX) -c $(CXXFLAGS)  $(AVX2_FLAGS) $(PARAM_DEFS) -o $@ $<
+	$(CXX)         -c $(CXXFLAGS)  $(AVX2_FLAGS) $(PARAM_DEFS) -o $@ $<
 else
 	$(ECHO)
 endif
@@ -127,7 +128,17 @@ endif
 all: clean dl
 
 test_wrapper.bin: FORCE
-	$(CXX) $(CXXFLAGS) $(AVX_FLAGS) $(LD_FLAGS) -lznnphiconv ./test/test_wrapper.cpp -o $@
+	$(CXX) $(CXXFLAGS) $(AVX2_FLAGS) $(LD_FLAGS) -lznnphiconv ./test/test_wrapper.cpp -o $@
+
+test_engine.bin: test/test_engine.cpp  FORCE
+	$(ECHO) $(CXX) -c $(CXXFLAGS)  $(AVX2_FLAGS) $(PARAM_DEFS) $<
+	$(CXX) -c $(CXXFLAGS)  $(AVX2_FLAGS) $(PARAM_DEFS) $<
+	$(ECHO) $(CXX) test_engine.o  $(CXXLDFLAGS) $(AVX2_FLAGS) -o $@
+	$(CXX) test_engine.o  $(CXXFLAGS) $(CXXLDFLAGS) $(AVX2_FLAGS) -o $@
+
+test_no_so.bin: FORCE
+	$(ECHO) $(CXX) conv_layer.o test_no_so.o $(CXXLDFLAGS) $(AVX2_FLAGS) 
+	$(CXX) conv_layer.o test_no_so.o $(CXXLDFLAGS) $(AVX2_FLAGS) 
 clean:
 	$(RM) -rf ./*.o ./*.so ./*.S *.bin 
 

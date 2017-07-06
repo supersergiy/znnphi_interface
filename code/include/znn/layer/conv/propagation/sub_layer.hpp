@@ -12,13 +12,13 @@ namespace phi
 namespace propagation
 {
 
-template <class P, bool Activation>
+template <class P>
 struct sub_layer
 {
 private:
     using sub  = typename P::sub_problem;
     using full = typename P::original_problem;
-
+    
     static_assert(P::threads == 1, "threads more than 1");
 
 private:
@@ -32,9 +32,12 @@ private:
     static constexpr long_t ik_stride        = full::ik_stride;
     static constexpr long_t ok_stride        = full::ok_stride;
 
+    static constexpr bool Activation     = P::activation;
+    static constexpr bool AddOrOverwrite = P::add_or_overwrite;
+
     template <bool First, bool ApplyActivation>
     using sub_task = full_image<
-        First, ApplyActivation, SIMD_WIDTH, image_traits<sub::d_len, full::image_d::in_stride,
+        First, ApplyActivation, AddOrOverwrite, SIMD_WIDTH, image_traits<sub::d_len, full::image_d::in_stride,
                                         full::image_d::out_stride>,
         image_traits<sub::h_len, full::image_h::in_stride,
                      full::image_h::out_stride>,
@@ -55,21 +58,23 @@ private:
         sub::h_from * full::image_h::out_stride +
         sub::w_from * full::image_w::out_stride;
 
-    static constexpr long_t bias_offset = sub::ofm_from * SIMD_WIDTH;
+    static constexpr long_t bias_offset  = sub::ofm_from * SIMD_WIDTH;
+    static constexpr long_t scale_offset = sub::ofm_from * SIMD_WIDTH;
 
     static constexpr long_t kernel_offset = sub::ofm_from * full::ok_stride;
 
 private:
     static void execute_single(float const* __restrict i, float* __restrict o,
                                float const* __restrict k,
-                               float const* __restrict b)
+                               float const* __restrict b,
+                               float const* __restrict s)
     {
         if (ifm_len == 1) 
         {
             for (long_t ofm = 0; ofm < ofm_len; ++ofm)
             {
                 sub_task<true, Activation>::execute(i, o + ofm * ofm_stride,
-                                        k + ofm * ok_stride, b + ofm * SIMD_WIDTH);
+                                        k + ofm * ok_stride, b + ofm * SIMD_WIDTH, s + ofm * SIMD_WIDTH);
             }
         }
         else 
@@ -77,32 +82,34 @@ private:
             for (long_t ofm = 0; ofm < ofm_len; ++ofm)
             {
                 sub_task<true, false>::execute(i, o + ofm * ofm_stride,
-                                        k + ofm * ok_stride, b + ofm * SIMD_WIDTH);
+                                        k + ofm * ok_stride, b + ofm * SIMD_WIDTH, s + ofm * SIMD_WIDTH);
                 for (long_t ifm = 1; ifm < ifm_len - 1; ++ifm)
                 {
                     sub_task<false, false>::execute(i + ifm * ifm_stride,
                                              o + ofm * ofm_stride,
                                              k + ifm * ik_stride + ofm * ok_stride,
-                                             b + ofm * SIMD_WIDTH);
+                                             b + ofm * SIMD_WIDTH, s + ofm * SIMD_WIDTH);
                 }
                 sub_task<false, Activation>::execute(i + (ifm_len - 1) * ifm_stride,
                                                o + ofm * ofm_stride,
                                                k + (ifm_len - 1) * ik_stride 
                                                                  + ofm * ok_stride,
-                                               b + ofm * SIMD_WIDTH);
+                                               b + ofm * SIMD_WIDTH, s + ofm * SIMD_WIDTH);
             }
         }
     }
 
 public:
     static void execute(float const* __restrict i, float* __restrict o,
-                        float const* __restrict k, float const* __restrict b)
+                        float const* __restrict k, float const* __restrict b,
+                        float const* __restrict s)
     {
         for (long_t bs = 0; bs < batch_size; ++bs)
         {
             execute_single(i + in_offset + bs * in_batch_stride,
                            o + out_offset + bs * out_batch_stride,
-                           k + kernel_offset, b + bias_offset);
+                           k + kernel_offset, b + bias_offset,
+                           s + scale_offset);
         }
     }
 
@@ -114,11 +121,12 @@ public:
     }
 };
 
-template <bool Activation>
-struct sub_layer<null_problem_t, Activation>
+template <>
+struct sub_layer<null_problem_t>
 {
     static void execute(float const* __restrict, float* __restrict,
-                        float const* __restrict, float const* __restrict)
+                        float const* __restrict, float const* __restrict,
+                        float const* __restrict s)
     {
     }
 

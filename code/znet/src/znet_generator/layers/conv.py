@@ -49,9 +49,15 @@ def parse_conv(json_param):
     params["bias_dim"] = [params["ofm"]]
     params["bias_size"] = round_to_simd(params["bias_dim"][0])
     
-    params["activation"] = None
+    params["activation"]    = None
+
+    params["additive_conv"] = False
+    params["scale"] = "{}_scale".format(params["name"])
+    params["scale_size"] = round_to_simd(params["ofm"]) 
+    params["scale_data"] = None
+
     params["cores"] = 2
-    params["ht"]    = 1 
+    params["ht"]    = 2 
     return params
 
 def block_kernel(kernel, lparam):
@@ -105,13 +111,19 @@ def allocate_conv_lines(lparam):
         activate = "true"
     else:
         activate = "false"
+
+    if "additive_conv" in l and l["additive_conv"] == True:
+        add_to_output = "true"
+    else:
+        add_to_output = "false"
+
     cores = l.get("cores", 2)
     ht    = l.get("ht",    1)
 
     allocation_params = (l["bn"], l["ifm"], l["ofm"], l["id"], l["ihw"],
                          l["kernel_dim"][2], l["kernel_dim"][3],
                          l["pad"][0],  l["pad"][1], 
-                         activate, cores, ht)
+                         activate, add_to_output, cores, ht)
 
     param_str = generate_param_string(allocation_params)
     lines = []
@@ -137,9 +149,23 @@ def allocate_conv_lines(lparam):
     else:
         blocked_bias = block_bias(bias, l)
         lines += fill_tensor('{}_bias'.format(l["name"]), blocked_bias)
+    
+    if "additive_conv" in l and l["additive_conv"]:
+        lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
+                                                  l["scale"], l["scale_size"]))
+        lines += fill_tensor('{}'.format(l["scale"]), l["scale_data"])
 
     return lines
 
-def forward_conv_lines(lparam):
-    lines = []
-    return lines
+def conv_forward_params(lparam):
+    l = lparam 
+    params = ''
+    params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
+    params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["kernel"], l["bias"])
+
+    if "additive_conv" in l and l["additive_conv"]:
+        params += 'tensors["{}"]->data()'.format(l["scale"])
+    else:
+        params += 'NULL '.format()
+
+    return params 

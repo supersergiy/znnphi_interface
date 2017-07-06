@@ -1,0 +1,119 @@
+rm: cannot remove '/home/ubuntu/znnphi_interface/lib/*': No such file or directory
+ipo: remark #11001: performing single-file optimizations
+ipo: remark #11006: generating object file /tmp/ipo_icpcGWHfKk.o
+[CXX] compiling conv_layer.cpp
+@icpc -std=c++14 -c -MMD -MP -MT conv_layer.o -MF conv_layer.T -DZNN_NO_CUDA -DZNN_NO_HBW -DZNN_NUM_CORES=64 -I../../../../code/include -I../../../../code/include/znn -I../../../.. -Wall -Wextra -Wno-format -Wno-unknown-pragmas -fmax-errors=5 -DNDEBUG -O3 -ipo -fp-model fast=2 -mkl=sequential -fno-rtti -fno-exceptions -mkl=sequential -DBN_v=1 -DIFM_v=28 -DOFM_v=28 -DID_v=18 -DIHW_v=192 -DKD_v=1 -DKHW_v=3 -DPADD_v=0 -DPADHW_v=1 -DCores_v=2 -DHT_v=2 -DACTIVATION_v=0 -DADDorOVERWRITE_v=0 -o conv_layer.o conv_layer.cpp
+In file included from ../../../../code/include/znn/layer/conv/propagation/blocking.hpp(3),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_image.hpp(3),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_layer/problem.hpp(3),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_layer.hpp(4),
+                 from ../../../../code/include/znn/interface/conv_engine.hpp(3),
+                 from conv_layer.cpp(1):
+../../../../code/include/znn/intrin.hpp(138): error: #error directive: "NEED SOME AVX DEFINED"
+  #error "NEED SOME AVX DEFINED"
+   ^
+
+In file included from ../../../../code/include/znn/layer/conv/propagation/full_image.hpp(3),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_layer/problem.hpp(3),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_layer.hpp(4),
+                 from ../../../../code/include/znn/interface/conv_engine.hpp(3),
+                 from conv_layer.cpp(1):
+../../../../code/include/znn/layer/conv/propagation/blocking.hpp(26): error: identifier "SIMD_W_BLOCK" is undefined
+          pick_best(W, (W + SIMD_W_BLOCK - 1) / SIMD_W_BLOCK, SIMD_W_BLOCK);
+                            ^
+
+In file included from ../../../../code/include/znn/layer/conv/propagation/full_image.hpp(3),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_layer/problem.hpp(3),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_layer.hpp(4),
+                 from ../../../../code/include/znn/interface/conv_engine.hpp(3),
+                 from conv_layer.cpp(1):
+../../../../code/include/znn/layer/conv/propagation/blocking.hpp(30): error: identifier "SIMD_MAX_BLOCK" is undefined
+      static const long_t rem_for_h = SIMD_MAX_BLOCK / w;
+                                      ^
+
+In file included from ../../../../code/include/znn/layer/conv/propagation/sub_image.hpp(5),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_image.hpp(4),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_layer/problem.hpp(3),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_layer.hpp(4),
+                 from ../../../../code/include/znn/interface/conv_engine.hpp(3),
+                 from conv_layer.cpp(1):
+../../../../code/include/znn/util/conditional_load.hpp(15): error: identifier "SIMD_FLOAT" is undefined
+      typename std::enable_if<ZERO, SIMD_FLOAT>::type
+                                    ^
+
+In file included from ../../../../code/include/znn/layer/conv/propagation/sub_image.hpp(5),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_image.hpp(4),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_layer/problem.hpp(3),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_layer.hpp(4),
+                 from ../../../../code/include/znn/interface/conv_engine.hpp(3),
+                 from conv_layer.cpp(1):
+../../../../code/include/znn/util/conditional_load.hpp(23): error: identifier "SIMD_FLOAT" is undefined
+      typename std::enable_if<!ZERO, SIMD_FLOAT>::type
+                                     ^
+
+compilation aborted for conv_layer.cpp (code 4)
+Makefile:100: recipe for target 'conv_layer.o' failed
+make: *** [conv_layer.o] Error 4
+/home/ubuntu/znnphi_interface/lib/conv_layer_1_28_28_18_192_1_3_0_1_0_0_2_2_.so: cannot open shared object file: No such file or directory
+
+real	0m0.423s
+user	0m0.356s
+sys	0m0.048s
+[CXX] compiling conv_layer.cpp
+@icpc -std=c++14 -c -MMD -MP -MT conv_layer.o -MF conv_layer.T -DZNN_NO_CUDA -DZNN_NO_HBW -DZNN_NUM_CORES=64 -I../../../../code/include -I../../../../code/include/znn -I../../../.. -Wall -Wextra -Wno-format -Wno-unknown-pragmas -fmax-errors=5 -DNDEBUG -O3 -ipo -fp-model fast=2 -mkl=sequential -fno-rtti -fno-exceptions -mkl=sequential -DBN_v=1 -DIFM_v=28 -DOFM_v=28 -DID_v=18 -DIHW_v=192 -DKD_v=1 -DKHW_v=3 -DPADD_v=0 -DPADHW_v=1 -DCores_v=2 -DHT_v=2 -DACTIVATION_v=0 -DADDorOVERWRITE_v=0 -o conv_layer.o conv_layer.cpp
+In file included from ../../../../code/include/znn/layer/conv/propagation/blocking.hpp(3),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_image.hpp(3),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_layer/problem.hpp(3),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_layer.hpp(4),
+                 from ../../../../code/include/znn/interface/conv_engine.hpp(3),
+                 from conv_layer.cpp(1):
+../../../../code/include/znn/intrin.hpp(138): error: #error directive: "NEED SOME AVX DEFINED"
+  #error "NEED SOME AVX DEFINED"
+   ^
+
+In file included from ../../../../code/include/znn/layer/conv/propagation/full_image.hpp(3),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_layer/problem.hpp(3),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_layer.hpp(4),
+                 from ../../../../code/include/znn/interface/conv_engine.hpp(3),
+                 from conv_layer.cpp(1):
+../../../../code/include/znn/layer/conv/propagation/blocking.hpp(26): error: identifier "SIMD_W_BLOCK" is undefined
+          pick_best(W, (W + SIMD_W_BLOCK - 1) / SIMD_W_BLOCK, SIMD_W_BLOCK);
+                            ^
+
+In file included from ../../../../code/include/znn/layer/conv/propagation/full_image.hpp(3),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_layer/problem.hpp(3),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_layer.hpp(4),
+                 from ../../../../code/include/znn/interface/conv_engine.hpp(3),
+                 from conv_layer.cpp(1):
+../../../../code/include/znn/layer/conv/propagation/blocking.hpp(30): error: identifier "SIMD_MAX_BLOCK" is undefined
+      static const long_t rem_for_h = SIMD_MAX_BLOCK / w;
+                                      ^
+
+In file included from ../../../../code/include/znn/layer/conv/propagation/sub_image.hpp(5),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_image.hpp(4),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_layer/problem.hpp(3),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_layer.hpp(4),
+                 from ../../../../code/include/znn/interface/conv_engine.hpp(3),
+                 from conv_layer.cpp(1):
+../../../../code/include/znn/util/conditional_load.hpp(15): error: identifier "SIMD_FLOAT" is undefined
+      typename std::enable_if<ZERO, SIMD_FLOAT>::type
+                                    ^
+
+In file included from ../../../../code/include/znn/layer/conv/propagation/sub_image.hpp(5),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_image.hpp(4),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_layer/problem.hpp(3),
+                 from ../../../../code/include/znn/layer/conv/propagation/full_layer.hpp(4),
+                 from ../../../../code/include/znn/interface/conv_engine.hpp(3),
+                 from conv_layer.cpp(1):
+../../../../code/include/znn/util/conditional_load.hpp(23): error: identifier "SIMD_FLOAT" is undefined
+      typename std::enable_if<!ZERO, SIMD_FLOAT>::type
+                                     ^
+
+compilation aborted for conv_layer.cpp (code 4)
+Makefile:100: recipe for target 'conv_layer.o' failed
+make: *** [conv_layer.o] Error 4
+/home/ubuntu/znnphi_interface/lib/conv_layer_1_28_28_18_192_1_3_0_1_0_0_2_2_.so: cannot open shared object file: No such file or directory
+
+real	0m0.417s
+user	0m0.332s
+sys	0m0.068s

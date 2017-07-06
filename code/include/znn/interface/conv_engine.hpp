@@ -10,7 +10,7 @@ namespace phi
 using namespace propagation;
 
 template <long_t Cores, long_t HT, long_t B, long_t IFM, long_t OFM, long_t ID,
-          long_t IHW, long_t KD, long_t KHW, long_t PADD=0, long_t PADHW=0, bool Activation=false>
+          long_t IHW, long_t KD, long_t KHW, long_t PADD=0, long_t PADHW=0, bool Activation=false, bool AddOrOverwrite=false>
 class ConvEngine
 {
 private:
@@ -42,13 +42,13 @@ private:
 
 private:
     kernel_launcher *kl;
-    full_layer<Cores*HT, orig_prob, Activation> *plan;
+    full_layer<Cores*HT, orig_prob, Activation, AddOrOverwrite> *plan;
 
 public:
     ConvEngine() 
     {
         kl = new kernel_launcher(Cores, HT, 0);
-        plan = new full_layer<Cores * HT, orig_prob, Activation>(kl);
+        plan = new full_layer<Cores * HT, orig_prob, Activation, AddOrOverwrite>(kl);
     }
      
     ~ConvEngine() 
@@ -58,9 +58,10 @@ public:
     }
     
     void compute(float const* __restrict in, float* out, 
-                 float const* __restrict ker, float const* __restrict bi)
+                 float const* __restrict ker, float const* __restrict bi,
+                 float const* __restrict scale)
     {
-        plan->execute(in, out, ker, bi);
+        plan->execute(in, out, ker, bi, scale);
     }
 };
 }

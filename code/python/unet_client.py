@@ -40,9 +40,9 @@ fo = out_a.flatten()
 fr = reference_a.flatten()
 boo = np.argmax(fd)
 
-error = max(np.max(diff_a/out_a), np.sum(diff_a**2))
+error = np.sum(diff_a**2)
 
-if error > 1.0:
+if np.isnan(error) or error > 1.0:
     print "Not congrats! Error == {}".format(error)
 else:
     print "Congrats! All pass"

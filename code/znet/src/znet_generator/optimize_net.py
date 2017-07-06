@@ -1,5 +1,7 @@
 from tensor import Tensor
 import numpy as np
+import copy
+from   layers import set_layer_dim
 
 #TODO: fix this shitty code
 def generate_layer_order_info(net):
@@ -106,6 +108,42 @@ def consume_elu(layer_info, lname, next_name):
 
 def handle_padding(net):
     tensors, layer_info, layer_order  = net
+
+    #handle_implicit_paddings(net)
+    insert_explicit_paddings(net) 
+
+def remove_padding_from_conv(net, conv_name):
+    tensors, layer_info, layer_order  = net
+    l = layer_info[conv_name]
+
+    l["id"]  += 2 * l["pad"][0] 
+    l["ihw"] += 2 * l["pad"][1]
+
+    l["pad"] = [0, 0, 0]
+
+
+def handle_implicit_paddings(net):
+    tensors, layer_info, layer_order  = net
+    for lname in list(layer_order):
+        l = layer_info[lname]
+        
+        if l["type"] == "conv":
+            next_name = l["next"]
+            if next_name in layer_info and layer_info[next_name]["type"] == "conv":
+                next_l = layer_info[next_name]
+                if next_l["pad"][0] != 0 and next_l["pad"][1] == 0:
+                    #import pdb; pdb.set_trace()
+                    print "Output paddiing for {}!".format(l["name"])
+                    l["output_pad"] = copy.copy(next_l["pad"])
+                    #l["output_pad"] = [1, 0, 0]
+                    l["top_dim"][2] += 2 * l["output_pad"][0]
+                    tensors[l["top"]] = Tensor(l["top_dim"]) 
+                    
+                    remove_padding_from_conv(net, next_name)
+                    set_layer_dim(next_l, tensors[l["top"]]) 
+
+def insert_explicit_paddings(net):
+    tensors, layer_info, layer_order  = net
     for lname in list(layer_order):
         l = layer_info[lname]
         if l["type"] == "conv" and (l["pad"][0] != 0 or l["pad"][1] != 0):
@@ -127,17 +165,18 @@ def handle_padding(net):
                            l["ihw"]+2*l["pad"][1] ] 
 
             pad_param["top_dim"] = padded_dim
+
             #rewire tensors
-            
             pad_param["bot"] = l["bot"]
             pad_param["top"] = "{}_padded".format(l["bot"])
             tensors[pad_param["top"]] = Tensor(pad_param["top_dim"]) 
+
             l["bot"] = pad_param["top"]
             pad_param["top_dim"] = l["bot_dim"]
-            
-            l["id"]  =  padded_dim[2]
-            l["ihw"] = padded_dim[3]
-            l["pad"] = [0, 0, 0]
+           
+            #modify the conv layer params to remove padding
+            remove_padding_from_conv(net, lname)
+
             #add pad layer 
             convs_order = layer_order.index(lname)
             layer_order.insert(convs_order, padder_name)

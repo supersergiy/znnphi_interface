@@ -250,18 +250,18 @@ struct sub_image_3d
     {
         SIMD_FLOAT vout[RD][RH][RW], vwt; // Expected to be in the register file
          
-        znn_pragma(unroll(rd))
-        for (long_t rd = 0; rd < rd; ++rd)
+        ZNN_PRAGMA(unroll(RD))
+        for (long_t rd = 0; rd < RD; ++rd)
         {
-            znn_pragma(unroll(rh))
-            for (long_t rh = 0; rh < rh; ++rh)
+            ZNN_PRAGMA(unroll(RH))
+            for (long_t rh = 0; rh < RH; ++rh)
             {
-                znn_pragma(unroll(rw))
-                for (long_t rw = 0; rw < rw; ++rw)
+                ZNN_PRAGMA(unroll(RW))
+                for (long_t rw = 0; rw < RW; ++rw)
                 {
                     vout[rd][rh][rw] = load_or_set_initial_value<Bias, AddOrOverwrite>(
-                        o + rd * id::out_stride + rh * ih::out_stride +
-                            rw * iw::out_stride,
+                        o + rd * ID::out_stride + rh * IH::out_stride +
+                            rw * IW::out_stride,
                         b, scale);
                 }
             }

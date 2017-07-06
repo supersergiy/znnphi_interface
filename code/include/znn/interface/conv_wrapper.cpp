@@ -23,7 +23,7 @@ namespace phi
 std::string generateParamString(
                          int bn, int ifm, int ofm, int id,
                          int ihw, int kd, int khw,
-                         int padd, int padhw, bool Activation,
+                         int padd, int padhw, bool Activation, bool AddOrOverwrite,
                          int cores, int ht,
                          const char* delim)
 {
@@ -40,6 +40,7 @@ std::string generateParamString(
     params.push_back(std::to_string(padd));
     params.push_back(std::to_string(padhw));
     params.push_back(std::to_string(Activation));
+    params.push_back(std::to_string(AddOrOverwrite));
     params.push_back(std::to_string(cores));
     params.push_back(std::to_string(ht));
     
@@ -51,7 +52,7 @@ std::string generateParamString(
 std::string generateLayerSOName(
                         int bn, int ifm, int ofm, int id,
                         int ihw, int kd, int khw,
-                        int padd, int padhw, bool Activation,
+                        int padd, int padhw, bool Activation, bool AddOrOverwrite,
                         int cores, int ht)
 {
     const char delim[] = "_";
@@ -61,7 +62,7 @@ std::string generateLayerSOName(
     const char *znnphi_path = std::getenv("ZNNPHI_PATH");
 
     param_string = generateParamString(bn, ifm, ofm, id, ihw, kd, khw, 
-                                       padd, padhw, Activation, cores, ht, delim);
+                                       padd, padhw, Activation, AddOrOverwrite, cores, ht, delim);
 
     generated_name << znnphi_path << "/lib/";
     generated_name << "conv_layer_" << param_string << ".so";
@@ -72,7 +73,7 @@ std::string generateLayerSOName(
 std::string generateCompileSOCommand(std::string& dl_filename,
                         int bn, int ifm, int ofm, int id,
                         int ihw, int kd, int khw,
-                        int padd, int padhw, bool Activation,
+                        int padd, int padhw, bool Activation, bool AddOrOverwrite,
                         int cores, int ht)
 {
     std::ostringstream command_string;
@@ -91,6 +92,7 @@ std::string generateCompileSOCommand(std::string& dl_filename,
     command_string << " PADD=" << padd << " PADHW=" << padhw; 
     command_string << " CORES=" << cores << " HT=" << ht; 
     command_string << " ACTIVATION=" << Activation;
+    command_string << " ADDorOVERWRITE=" << AddOrOverwrite;
     return command_string.str(); 
 }
 
@@ -105,17 +107,17 @@ void handleSOError(void)
 
 void *loadConvLayerSO(int bn, int ifm, int ofm, int id,
                         int ihw, int kd, int khw,
-                        int padd, int padhw, bool Activation,
+                        int padd, int padhw, bool Activation, bool AddOrOverwrite,
                         int cores, int ht)
 {
     std::string dl_filename;
     std::string compile_command;
     
     dl_filename = generateLayerSOName(bn, ifm, ofm, id, ihw, kd, khw, padd, 
-                                      padhw, Activation, cores, ht);
+                                      padhw, Activation, AddOrOverwrite, cores, ht);
 
     compile_command = generateCompileSOCommand(dl_filename,
-                          bn, ifm, ofm, id, ihw, kd, khw, padd, padhw, Activation, cores, ht);
+                          bn, ifm, ofm, id, ihw, kd, khw, padd, padhw, Activation, AddOrOverwrite, cores, ht);
     //compile_command += " &>/dev/null; "; 
 
     //std::cout << (compile_command.c_str());
@@ -128,7 +130,7 @@ void *loadConvLayerSO(int bn, int ifm, int ofm, int id,
     double secs = static_cast<double>(duration) / 1000000;
 
     std::string param = generateParamString(bn, ifm, ofm, id, ihw, kd, khw,
-                                       padd, padhw, Activation, cores, ht, "_");
+                                       padd, padhw, Activation, AddOrOverwrite, cores, ht, "_");
     void *handle = dlopen(dl_filename.c_str(), RTLD_NOW);
     handleSOError();
 
@@ -140,11 +142,11 @@ void *loadConvLayerSO(int bn, int ifm, int ofm, int id,
 //void ConvWrapper::init(int bn, int ifm, int ofm, int id,
 ConvWrapper::ConvWrapper(int bn, int ifm, int ofm, int id,
                          int ihw, int kd, int khw,
-                         int padd, int padhw, bool Activation,
+                         int padd, int padhw, bool Activation, bool AddOrOverwrite,
                          int cores, int ht)
 {
     void *layer_handle = loadConvLayerSO(bn, ifm, ofm, id, ihw, kd, khw, 
-                                             padd, padhw, Activation, cores, ht);
+                                             padd, padhw, Activation, AddOrOverwrite, cores, ht);
     createConvLayer = (CreateConvLayer_fp) dlsym(layer_handle, "createConvLayer");
     handleSOError();
     destroyConvLayer = (DestroyConvLayer_fp) dlsym(layer_handle, "destroyConvLayer");

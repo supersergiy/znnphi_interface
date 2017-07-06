@@ -12,13 +12,13 @@ namespace phi
 namespace propagation
 {
 
-template <class P, bool Activation>
+template <class P>
 struct sub_layer
 {
 private:
     using sub  = typename P::sub_problem;
     using full = typename P::original_problem;
-
+    
     static_assert(P::threads == 1, "threads more than 1");
 
 private:
@@ -32,9 +32,12 @@ private:
     static constexpr long_t ik_stride        = full::ik_stride;
     static constexpr long_t ok_stride        = full::ok_stride;
 
+    static constexpr bool Activation     = P::activation;
+    static constexpr bool AddOrOverwrite = P::add_or_overwrite;
+
     template <bool First, bool ApplyActivation>
     using sub_task = full_image<
-        First, ApplyActivation, SIMD_WIDTH, image_traits<sub::d_len, full::image_d::in_stride,
+        First, ApplyActivation, AddOrOverwrite, SIMD_WIDTH, image_traits<sub::d_len, full::image_d::in_stride,
                                         full::image_d::out_stride>,
         image_traits<sub::h_len, full::image_h::in_stride,
                      full::image_h::out_stride>,
@@ -101,20 +104,12 @@ public:
                         float const* __restrict k, float const* __restrict b,
                         float const* __restrict s)
     {
-        const float* initial_scalers;
-        if (s == NULL) {
-            initial_scalers = NULL;
-        }
-        else {
-            initial_scalers = s + scale_offset;
-        }
-
         for (long_t bs = 0; bs < batch_size; ++bs)
         {
             execute_single(i + in_offset + bs * in_batch_stride,
                            o + out_offset + bs * out_batch_stride,
                            k + kernel_offset, b + bias_offset,
-                           initial_scalers);
+                           s + scale_offset);
         }
     }
 
@@ -126,8 +121,8 @@ public:
     }
 };
 
-template <bool Activation>
-struct sub_layer<null_problem_t, Activation>
+template <>
+struct sub_layer<null_problem_t>
 {
     static void execute(float const* __restrict, float* __restrict,
                         float const* __restrict, float const* __restrict,

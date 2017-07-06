@@ -92,13 +92,9 @@ def consume_scale(layer_info, lname, next_name):
         bias[ofm] *= scale_multipliers[ofm]
         bias[ofm] += scale_bias[ofm]
 
-    
+
     if bias is None:
         bias = scale_bias
-
-    if "additive_conv" in l and l["additive_conv"]:
-        for ofm in range(l["ofm"]):
-            l["scale_data"][ofm] *= scale_multipliers[ofm]
 
 def consume_elu(layer_info, lname, next_name):
     l = layer_info[lname]
@@ -205,9 +201,9 @@ def eliminate_adds(net):
     
 def optimize_net(net):
     generate_layer_order_info(net)
-    eliminate_adds(net)
     expand_convs(net)
     stride1_deconv_to_conv(net)
+    eliminate_adds(net)
     handle_padding(net)
 
 

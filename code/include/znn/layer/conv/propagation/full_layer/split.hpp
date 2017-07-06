@@ -20,6 +20,10 @@ private:
     static_assert(P::threads % N == 0, "threads not divisible by N");
     static constexpr long_t len = sub::b_len / N;
 
+    static constexpr bool activation       = P::activation;
+    static constexpr bool add_or_overwrite = P::add_or_overwrite;
+
+
 public:
     template <long_t K>
     struct part
@@ -28,7 +32,8 @@ public:
             P::threads / N, typename P::original_problem,
             sub_problem_t<sub::b_from + K * len, len, sub::ofm_from,
                           sub::ofm_len, sub::d_from, sub::d_len, sub::h_from,
-                          sub::h_len, sub::w_from, sub::w_len>>;
+                          sub::h_len, sub::w_from, sub::w_len>,
+                          activation, add_or_overwrite>;
     };
     template <long_t K>
     using part_t = typename part<K>::type;
@@ -39,7 +44,8 @@ public:
             P::threads, typename P::original_problem,
             sub_problem_t<sub::b_from + N * len, sub::b_len % N, sub::ofm_from,
                           sub::ofm_len, sub::d_from, sub::d_len, sub::h_from,
-                          sub::h_len, sub::w_from, sub::w_len>>>;
+                          sub::h_len, sub::w_from, sub::w_len>,
+                          activation, add_or_overwrite>>;
 };
 
 // Splitting the problem along output feature-map sets
@@ -51,6 +57,8 @@ private:
     static_assert(sub::ofm_len >= N, "ofm too small");
     static_assert(P::threads % N == 0, "threads not divisible by N");
     static constexpr long_t len = sub::ofm_len / N;
+    static constexpr bool activation       = P::activation;
+    static constexpr bool add_or_overwrite = P::add_or_overwrite;
 
 public:
     template <long_t K>
@@ -60,7 +68,9 @@ public:
             P::threads / N, typename P::original_problem,
             sub_problem_t<sub::b_from, sub::b_len, sub::ofm_from + K * len, len,
                           sub::d_from, sub::d_len, sub::h_from, sub::h_len,
-                          sub::w_from, sub::w_len>>;
+                          sub::w_from, sub::w_len>,
+                          activation,
+                          add_or_overwrite>;
     };
     template <long_t K>
     using part_t = typename part<K>::type;
@@ -71,7 +81,9 @@ public:
             P::threads, typename P::original_problem,
             sub_problem_t<sub::b_from, sub::b_len, sub::ofm_from + N * len,
                           sub::ofm_len % N, sub::d_from, sub::d_len,
-                          sub::h_from, sub::h_len, sub::w_from, sub::w_len>>>;
+                          sub::h_from, sub::h_len, sub::w_from, sub::w_len>,
+                          activation,
+                          add_or_overwrite>>;
 };
 
 template <class P, long_t N>
@@ -85,6 +97,9 @@ private:
     static constexpr long_t full       = sub::d_len % N;
     static constexpr long_t full_start = sub::d_from + (len + 1) * full;
 
+    static constexpr bool activation       = P::activation;
+    static constexpr bool add_or_overwrite = P::add_or_overwrite;
+
 public:
     template <long_t K>
     struct part
@@ -95,7 +110,9 @@ public:
                           (K < full) ? sub::d_from + (len + 1) * K
                                      : full_start + len*(K - full),
                           (K < full) ? len + 1 : len, sub::h_from, sub::h_len,
-                          sub::w_from, sub::w_len>>;
+                          sub::w_from, sub::w_len>,
+                          activation, 
+                          add_or_overwrite>;
     };
 
     template <long_t K>
@@ -115,6 +132,9 @@ private:
     static constexpr long_t full       = sub::h_len % N;
     static constexpr long_t full_start = sub::h_from + (len + 1) * full;
 
+    static constexpr bool activation       = P::activation;
+    static constexpr bool add_or_overwrite = P::add_or_overwrite;
+
 public:
     template <long_t K>
     struct part
@@ -125,7 +145,9 @@ public:
                           sub::d_from, sub::d_len,
                           (K < full) ? sub::h_from + (len + 1) * K
                                      : full_start + len*(K - full),
-                          (K < full) ? len + 1 : len, sub::w_from, sub::w_len>>;
+                          (K < full) ? len + 1 : len, sub::w_from, sub::w_len>,
+                          activation,
+                          add_or_overwrite>;
     };
 
     template <long_t K>
@@ -141,9 +163,13 @@ private:
     using sub = typename P::sub_problem;
     static_assert(sub::w_len >= N, "width too small");
     static_assert(P::threads % N == 0, "threads not divisible by N");
+
     static constexpr long_t len        = sub::w_len / N;
     static constexpr long_t full       = sub::w_len % N;
     static constexpr long_t full_start = sub::w_from + (len + 1) * full;
+
+    static constexpr bool activation       = P::activation;
+    static constexpr bool add_or_overwrite = P::add_or_overwrite;
 
 public:
     template <long_t K>
@@ -155,7 +181,9 @@ public:
                           sub::d_from, sub::d_len, sub::h_from, sub::h_len,
                           (K < full) ? sub::w_from + (len + 1) * K
                                      : full_start + len*(K - full),
-                          (K < full) ? len + 1 : len>>;
+                          (K < full) ? len + 1 : len>,
+                          activation,
+                          add_or_overwrite>;
     };
 
     template <long_t K>
@@ -167,13 +195,16 @@ public:
 template <class P, long_t N>
 struct nosplit_t
 {
+    static constexpr bool activation       = P::activation;
+    static constexpr bool add_or_overwrite = P::add_or_overwrite;
+
     template <long_t K>
     struct part
     {
         using type =
             std::conditional_t<(K > 0), null_problem_t,
                                problem_t<1, typename P::original_problem,
-                                         typename P::sub_problem>>;
+                                         typename P::sub_problem, activation, add_or_overwrite>>;
     };
 
     template <long_t K>

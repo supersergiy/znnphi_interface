@@ -190,8 +190,7 @@ struct sub_image_2d
                              s) *
                                 SIMD_WIDTH);
 
-                        //ZNN_PRAGMA(unroll(RH)
-#pragma unroll(RH)
+                        ZNN_PRAGMA(unroll(RH))
                         for (long_t rh = 0; rh < RH; ++rh)
                         {
                             ZNN_PRAGMA(unroll(RW))

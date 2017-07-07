@@ -21,32 +21,32 @@ weights_path   = os.path.join(base, weights_file)
 input_path     = os.path.join(base, input_file)
 reference_path = os.path.join(base, reference_file)
 
-z = pznet.znet(net_path, weights_path)
-
-
 in_file  = h5py.File(input_path)
 in_a     = in_file["input"][:]
-out_a    = z.forward(in_a)
 
-reference_file = h5py.File(reference_path)
-reference_a = reference_file["data"][:]
-np.set_printoptions(precision=2)
-diff_a = reference_a - out_a
-error = ssq = np.sum(diff_a**2)
-ref_a = reference_a
+z = pznet.znet(net_path, weights_path)
 
-fd = diff_a.flatten()
-fo = out_a.flatten()
-fr = reference_a.flatten()
-boo = np.argmax(fd)
+for i in range(100):
+    out_a    = z.forward(in_a)
 
-error = np.sum(diff_a**2)
+    reference_file = h5py.File(reference_path)
+    reference_a = reference_file["data"][:]
+    np.set_printoptions(precision=2)
+    diff_a = reference_a - out_a
+    error = ssq = np.sum(diff_a**2)
+    ref_a = reference_a
 
-if np.isnan(error) or error > 1.0:
-    print "Not congrats! Error == {}".format(error)
-else:
-    print "Congrats! All pass"
-import pdb; pdb.set_trace()
+    fd = diff_a.flatten()
+    fo = out_a.flatten()
+    fr = reference_a.flatten()
+    boo = np.argmax(fd)
+
+    error = np.sum(diff_a**2)
+
+    if np.isnan(error) or error > 0.010:
+        print "Not congrats! Error == {}".format(error)
+    else:
+        print "Congrats! All pass. Error == {}".format(error)
 #out_file = h5py.File(output_path)
 #out_file.create_dataset("data", data=out_a)
 

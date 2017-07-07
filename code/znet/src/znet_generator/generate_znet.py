@@ -73,7 +73,8 @@ def forward_all_layers_lines(net):
        #lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
 
        #lines += print_tensor_part_lines(l["top"])
-       #lines += print_tensor_lines(l["bot"])
+       #if l["name"] != "input":
+       #    lines += print_tensor_lines(l["top"])
        #lines += print_tensor_lines(l["top"])
        #lines.append('std::cout << "{} Finished!\\n";'.format(l["name"]))
        count += 1
@@ -85,7 +86,7 @@ def forward_all_layers_lines(net):
 def forward_body_lines(net):
     tensors, layer_info, layer_order = net
     lines = []
-    lines += timeit(forward_all_layers_lines(net), 20, "average:")
+    lines += timeit(forward_all_layers_lines(net), 1, "average:")
 
     lines.append('')
     return lines

@@ -34,6 +34,27 @@ def generate_layer_order_info(net):
 
         last_toucher[l["top"]] = lname
 
+def substitute_tensor(net, replace_from, replace_with, starting_layer=None):
+    tensors, layer_info, layer_order  = net
+    
+    from_index = 0
+    if not starting_layer is None:
+        from_index = layer_order.index(starting_layer) + 1
+
+    for i in range(from_index, len(layer_order)):
+        lname = layer_order[i]
+        l     = layer_info[lname]
+
+        if isinstance(l["bot"], list):
+            for i in range(len(l["bot"])):
+                if l["bot"][i] == replace_from:
+                    l["bot"][i] =replace_with 
+
+        else:
+            if l["bot"] == replace_from:
+                l["bot"] = replace_with 
+            
+         
 def expand_convs(net):
     tensors, layer_info, layer_order  = net
     for lname in layer_order:
@@ -53,9 +74,8 @@ def expand_convs(net):
                     else:#if next_l["type"] == "elu":
                         consume_elu(layer_info, lname, next_name)
 
-                    #update the next link
+                    substitute_tensor(net, next_l["top"], l["top"], lname)
                     l["next"] = next_l["next"]
-                    l["top"]  = next_l["top"]
 
                     #remove the consumed layer
                     delete_layer(net, next_name)
@@ -171,6 +191,7 @@ def conv_to_deconv_kernel(conv_kernel):
 
 def eliminate_adds(net):
     tensors, layer_info, layer_order  = net
+    count = 0
 
     for lname in (layer_order):
         l = layer_info[lname]
@@ -191,7 +212,7 @@ def eliminate_adds(net):
                     l["top"] = next_l["bot"][1]
                 else:
                     l["top"] = next_l["bot"][0]
-                
+                 
                 sum_receiver = next_l["next"]
                 if sum_receiver not in layer_info:
                     raise Exception("Bad sum receiver")
@@ -202,7 +223,10 @@ def eliminate_adds(net):
 
                 #remove eltwise
                 delete_layer(net, next_name)
-    
+                count += 1
+                if count > 100:
+		    break
+
 def optimize_net(net):
     generate_layer_order_info(net)
     eliminate_adds(net)

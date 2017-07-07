@@ -6,6 +6,17 @@ python src/znet_generator/main.py /home/ubuntu/znnphi_interface/code/znet/src/py
 Parsing the network spec...
 Loading the weights...
 Optimizing the net...
+Removing sum0_d0!
+Removing sum0_d1!
+Removing sum0_d2!
+Removing sum0_d3!
+Removing sum0_d4!
+Removing sum0_d5!
+Removing sum4_d4!
+Removing sum4_d3!
+Removing sum4_d2!
+Removing sum4_d1!
+Removing sum4_d0!
 Removing elui!
 Removing bn0_d0!
 Removing scale0_d0!
@@ -13,87 +24,108 @@ Removing elu0_d0!
 Removing bn1_d0!
 Removing scale1_d0!
 Removing elu1_d0!
+Removing bn2_d0!
+Removing scale2_d0!
+Removing elu2_d0!
 Removing bn0_d1!
 Removing scale0_d1!
 Removing elu0_d1!
 Removing bn1_d1!
 Removing scale1_d1!
 Removing elu1_d1!
+Removing bn2_d1!
+Removing scale2_d1!
+Removing elu2_d1!
 Removing bn0_d2!
 Removing scale0_d2!
 Removing elu0_d2!
 Removing bn1_d2!
 Removing scale1_d2!
 Removing elu1_d2!
+Removing bn2_d2!
+Removing scale2_d2!
+Removing elu2_d2!
 Removing BatchNorm1!
 Removing Scale1!
 Removing ELU1!
 Removing BatchNorm2!
 Removing Scale2!
 Removing ELU2!
+Removing BatchNorm3!
+Removing Scale3!
+Removing ELU3!
 Removing bn0_d4!
 Removing scale0_d4!
 Removing elu0_d4!
 Removing bn1_d4!
 Removing scale1_d4!
 Removing elu1_d4!
+Removing bn2_d4!
+Removing scale2_d4!
+Removing elu2_d4!
 Removing bn0_d5!
 Removing scale0_d5!
 Removing elu0_d5!
 Removing bn1_d5!
 Removing scale1_d5!
 Removing elu1_d5!
+Removing bn2_d5!
+Removing scale2_d5!
+Removing elu2_d5!
 Removing bn4_d4!
 Removing scale4_d4!
 Removing elu4_d4!
 Removing bn5_d4!
 Removing scale5_d4!
 Removing elu5_d4!
+Removing bn6_d4!
+Removing scale6_d4!
+Removing elu6_d4!
 Removing bn4_d3!
 Removing scale4_d3!
 Removing elu4_d3!
 Removing bn5_d3!
 Removing scale5_d3!
 Removing elu5_d3!
+Removing bn6_d3!
+Removing scale6_d3!
+Removing elu6_d3!
 Removing bn4_d2!
 Removing scale4_d2!
 Removing elu4_d2!
 Removing bn5_d2!
 Removing scale5_d2!
 Removing elu5_d2!
+Removing bn6_d2!
+Removing scale6_d2!
+Removing elu6_d2!
 Removing bn4_d1!
 Removing scale4_d1!
 Removing elu4_d1!
 Removing bn5_d1!
 Removing scale5_d1!
 Removing elu5_d1!
+Removing bn6_d1!
+Removing scale6_d1!
+Removing elu6_d1!
 Removing bn4_d0!
 Removing scale4_d0!
 Removing elu4_d0!
 Removing bn5_d0!
 Removing scale5_d0!
 Removing elu5_d0!
+Removing bn6_d0!
+Removing scale6_d0!
+Removing elu6_d0!
 Removing elu7_d0!
 Generating the network...
    Generating constructors...
-Traceback (most recent call last):
-  File "src/znet_generator/main.py", line 26, in <module>
-    generate_znet(net, out_path)
-  File "/home/ubuntu/znnphi_interface/code/znet/src/znet_generator/generate_znet.py", line 108, in generate_znet
-    constructor_body      = constructor_body_lines(net)
-  File "/home/ubuntu/znnphi_interface/code/znet/src/znet_generator/generate_znet.py", line 58, in constructor_body_lines
-    lines += allocate_all_layers_lines(net)
-  File "/home/ubuntu/znnphi_interface/code/znet/src/znet_generator/generate_znet.py", line 13, in allocate_all_layers_lines
-    lines += allocate_layer_lines(l)
-  File "/home/ubuntu/znnphi_interface/code/znet/src/znet_generator/layers/allocate_layer_lines.py", line 16, in allocate_layer_lines
-    return allocate_conv_lines(lparams) 
-  File "/home/ubuntu/znnphi_interface/code/znet/src/znet_generator/layers/conv.py", line 142, in allocate_conv_lines
-    blocked_kernel = block_kernel(kernel, l)
-  File "/home/ubuntu/znnphi_interface/code/znet/src/znet_generator/layers/conv.py", line 95, in block_kernel
-    blocked_kernel[znnphi_index] = kernel[ofm][ifm][kz][kx][ky]
-KeyboardInterrupt
-Makefile:95: recipe for target 'src/generated/znet.cpp' failed
-make: *** [src/generated/znet.cpp] Error 1
+   Generating foward pass...
+Done!
+icpc: command line warning #10006: ignoring unknown option '-Wdate-time'
+icpc: warning #10315: specifying -lm before files may supersede the Intel(R) math library and affect performance
+icpc: command line remark #10411: option '-openmp' is deprecated and will be removed in a future release. Please use the replacement option '-qopenmp'
+make: Leaving directory '/home/ubuntu/znnphi_interface/code/znet'
 
 
 
@@ -201,191 +233,501 @@ make: *** [src/generated/znet.cpp] Error 1
 1 2
 Copying 2654208 bytes into the user input. 
 Starting Forward Pass
-Running block_input!
-Running input!
-Running convi_padder!
-Running convi!
-Running conv0_d0_padder!
-Running conv0_d0!
-Running conv1_d0_padder!
-Running conv1_d0!
-Running conv2_d0_padder!
-Running conv2_d0!
-Running sum0_d0!
-Running bn2_d0!
-Running scale2_d0!
-Running elu2_d0!
-Running pool_d1!
-Running conv0_d1_padder!
-Running conv0_d1!
-Running conv1_d1_padder!
-Running conv1_d1!
-Running conv2_d1_padder!
-Running conv2_d1!
-Running sum0_d1!
-Running bn2_d1!
-Running scale2_d1!
-Running elu2_d1!
-Running pool_d2!
-Running conv0_d2_padder!
-Running conv0_d2!
-Running convf1_d2_padder!
-Running convf1_d2!
-Running conv1_d2_padder!
-Running conv1_d2!
-Running convf2_d2_padder!
-Running convf2_d2!
-Running conv2_d2_padder!
-Running conv2_d2!
-Running sum0_d2!
-Running bn2_d2!
-Running scale2_d2!
-Running elu2_d2!
-Running pool_d3!
-Running conv0_d3_padder!
-Running conv0_d3!
-Running convf1_d3_padder!
-Running convf1_d3!
-Running conv1_d3_padder!
-Running conv1_d3!
-Running convf2_d3_padder!
-Running convf2_d3!
-Running conv2_d3_padder!
-Running conv2_d3!
-Running sum0_d3!
-Running BatchNorm3!
-Running Scale3!
-Running ELU3!
-Running pool_d4!
-Running conv0_d4_padder!
-Running conv0_d4!
-Running convf1_d4_padder!
-Running convf1_d4!
-Running conv1_d4_padder!
-Running conv1_d4!
-Running convf2_d4_padder!
-Running convf2_d4!
-Running conv2_d4_padder!
-Running conv2_d4!
-Running sum0_d4!
-Running bn2_d4!
-Running scale2_d4!
-Running elu2_d4!
-Running pool_d5!
-Running conv0_d5_padder!
-Running conv0_d5!
-Running convf1_d5_padder!
-Running convf1_d5!
-Running conv1_d5_padder!
-Running conv1_d5!
-Running convf2_d5_padder!
-Running convf2_d5!
-Running conv2_d5_padder!
-Running conv2_d5!
-Running sum0_d5!
-Running bn2_d5!
-Running scale2_d5!
-Running elu2_d5!
-Running Deconvolution1!
-Running Eltwise1!
-Running BatchNorm4!
-Running Scale4!
-Running ELU4!
-Running conv4_d4_padder!
-Running conv4_d4!
-Running convf5_d4_padder!
-Running convf5_d4!
-Running conv5_d4_padder!
-Running conv5_d4!
-Running convf6_d4_padder!
-Running convf6_d4!
-Running conv6_d4_padder!
-Running conv6_d4!
-Running sum4_d4!
-Running bn6_d4!
-Running scale6_d4!
-Running elu6_d4!
-Running Deconvolution2!
-Running Eltwise2!
-Running bn3_d3!
-Running scale3_d3!
-Running elu3_d3!
-Running conv4_d3_padder!
-Running conv4_d3!
-Running convf5_d3_padder!
-Running convf5_d3!
-Running conv5_d3_padder!
-Running conv5_d3!
-Running convf6_d3_padder!
-Running convf6_d3!
-Running conv6_d3_padder!
-Running conv6_d3!
-Running sum4_d3!
-Running bn6_d3!
-Running scale6_d3!
-Running elu6_d3!
-Running Deconvolution3!
-Running Eltwise3!
-Running bn2_d3!
-Running scale2_d3!
-Running elu2_d3!
-Running conv4_d2_padder!
-Running conv4_d2!
-Running convf5_d2_padder!
-Running convf5_d2!
-Running conv5_d2_padder!
-Running conv5_d2!
-Running convf6_d2_padder!
-Running convf6_d2!
-Running conv6_d2_padder!
-Running conv6_d2!
-Running sum4_d2!
-Running bn6_d2!
-Running scale6_d2!
-Running elu6_d2!
-Running Deconvolution4!
-Running Eltwise4!
-Running bn1_d3!
-Running scale1_d3!
-Running elu1_d3!
-Running conv4_d1_padder!
-Running conv4_d1!
-Running conv5_d1_padder!
-Running conv5_d1!
-Running conv6_d1_padder!
-Running conv6_d1!
-Running sum4_d1!
-Running bn6_d1!
-Running scale6_d1!
-Running elu6_d1!
-Running deconv_d3!
-Running merge_d3!
-Running bn0_d3!
-Running scale0_d3!
-Running elu0_d3!
-Running conv4_d0_padder!
-Running conv4_d0!
-Running conv5_d0_padder!
-Running conv5_d0!
-Running conv6_d0_padder!
-Running conv6_d0!
-Running sum4_d0!
-Running bn6_d0!
-Running scale6_d0!
-Running elu6_d0!
-Running conv7_d0_padder!
-Running conv7_d0!
-Running score_padder!
-Running score!
-Running output!
-Running unblock_output!
-average:2.25945
+average:1.70346
 Forward Finished
-Traceback (most recent call last):
-  File "./unet_client.py", line 29, in <module>
-    out_a    = z.forward(in_a)
-  File "/home/ubuntu/znnphi_interface/code/znet/src/python/pznet/pznet.py", line 45, in forward
-    return self.net.forward(input_tensor)
-  File "/home/ubuntu/.local/lib/python2.7/site-packages/numpy/core/_internal.py", line 423, in _dtype_from_pep3118
-    def _dtype_from_pep3118(spec, byteorder='@', is_subdtype=False):
-KeyboardInterrupt
+Not congrats! Error == 3.13150572777
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62715
+Forward Finished
+Not congrats! Error == 2.68096852303
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.6274
+Forward Finished
+Not congrats! Error == 2.77290868759
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62914
+Forward Finished
+Not congrats! Error == 2.77604365349
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62645
+Forward Finished
+Not congrats! Error == 2.77614974976
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62645
+Forward Finished
+Not congrats! Error == 2.7761592865
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62886
+Forward Finished
+Not congrats! Error == 2.77615976334
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62392
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62387
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62382
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.6248
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62444
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62372
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62471
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62483
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62473
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62444
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62416
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62912
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.64167
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62598
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.6312
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.63215
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62916
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.63092
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62382
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62373
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62591
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62586
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62384
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62876
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62619
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62456
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62394
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62569
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.6236
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62332
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62433
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.623
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62437
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62342
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.625
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.6241
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62367
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62321
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.623
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62595
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62289
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62558
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62602
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62365
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62691
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62485
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62387
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.6241
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62501
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62507
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62577
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62505
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62412
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62479
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.6251
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.6237
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62426
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62419
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.67416
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62515
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62307
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62316
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62476
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62548
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62332
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62345
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62373
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62355
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.623
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62403
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62456
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62376
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62375
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62394
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62344
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62639
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62311
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62425
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62325
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62298
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62346
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62413
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62419
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62343
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62401
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62357
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62353
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62535
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62348
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62505
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.6255
+Forward Finished
+Not congrats! Error == 2.77615904808
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62357
+Forward Finished
+Not congrats! Error == 2.77615857124
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+average:1.62281
+Forward Finished
+Not congrats! Error == 2.77615904808

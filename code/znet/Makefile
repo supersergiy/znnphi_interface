@@ -87,7 +87,7 @@ PY_INTERFACE_FLAGS = `python-config --cflags --ldflags` -Isrc/python/pybind11/in
 out/client.o: src/client.cpp 
 	$(CXX) $(CXXFLAGS) -fPIC -c $^ -o $@
 out/znet.o: src/generated/znet.cpp 
-	$(CXX) $(CXXFLAGS) -fPIC -c $^ -o $@
+	$(CXX) $(CXXFLAGS) $(AVX2_FLAGS)-fPIC -c $^ -o $@
 out/znet_numpy_wrapper.o: src/python/znet_numpy_wrapper.cpp 
 	$(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) -fPIC -c $^ -o $@
 

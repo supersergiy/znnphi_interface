@@ -38,6 +38,8 @@ def parse_conv(json_param):
         params["pad"]     = json_conv_param["pad"]
     else:
         params["pad"]     = [0, 0, 0]
+    params["out_pad"]     = [0, 0, 0]
+
     params["stride"]  = json_conv_param["stride"]
     
     params["ofm"] = json_conv_param["num_output"]
@@ -55,7 +57,6 @@ def parse_conv(json_param):
     params["scale"] = "{}_scale".format(params["name"])
     params["scale_size"] = round_to_simd(params["ofm"]) 
     params["scale_data"] = None
-
     params["cores"] = 2
     params["ht"]    = 2 
     return params
@@ -106,6 +107,8 @@ def block_bias(bias, lparam):
 
 def allocate_conv_lines(lparam):
     l = lparam
+    if l["pad"][0] != 0 or l["pad"][1] != 0:
+        raise Exception("Unhandled padding!")
 
     if "activation" in l and l["activation"] == "elu":
         activate = "true"
@@ -117,12 +120,18 @@ def allocate_conv_lines(lparam):
     else:
         add_to_output = "false"
 
+    out_padd  = 0
+    out_padhw = 0
+    if "output_pad" in l:
+        out_padd  = l["output_pad"][0]
+        out_padhw = l["output_pad"][1]
+        
     cores = l.get("cores", 2)
     ht    = l.get("ht",    1)
 
     allocation_params = (l["bn"], l["ifm"], l["ofm"], l["id"], l["ihw"],
                          l["kernel_dim"][2], l["kernel_dim"][3],
-                         l["pad"][0],  l["pad"][1], 
+                         out_padd, out_padhw, 
                          activate, add_to_output, cores, ht)
 
     param_str = generate_param_string(allocation_params)

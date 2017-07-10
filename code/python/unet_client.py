@@ -26,7 +26,7 @@ in_a     = in_file["input"][:]
 
 z = pznet.znet(net_path, weights_path)
 
-for i in range(100):
+for i in range(2):
     out_a    = z.forward(in_a)
 
     reference_file = h5py.File(reference_path)

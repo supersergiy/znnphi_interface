@@ -1,5 +1,7 @@
 #include <znn/layer/layer.hpp>
 #include <znn/layer/common.hpp>
+#include <znn/intrin.hpp>
+#include <znn/types.hpp>
 #include <iostream>
 #include <assert.h>
 
@@ -36,16 +38,19 @@ public:
       out_tp o_array = reinterpret_cast<out_tp>(o);
       in_tp i_array = reinterpret_cast<in_tp>(i);
 
-      for (int b = 0; b < bn; ++b) {
-         for (int f = 0; f < rounded_fm/SIMD_WIDTH; f++) {
+      SIMD_FLOAT i_r, s_r, b_r, res; 
+
+      for (int f = 0; f < rounded_fm/SIMD_WIDTH; f++) {
+         s_r = SIMD_LOAD(scale + f*SIMD_WIDTH);
+         b_r = SIMD_LOAD(bias  + f*SIMD_WIDTH);
+
+         for (int b = 0; b < bn; ++b) {
             for (int d = 0; d < id; ++d) {
                for (int h = 0; h < ihw; ++h) {
                   for (int w = 0; w < ihw; ++w) {
-                     for (int s = 0; s < SIMD_WIDTH; ++s) {
-                        if (f*SIMD_WIDTH + s < fm) {
-                           o_array[b][f][d][h][w][s] = i_array[b][f][d][h][w][s] * scale[f*SIMD_WIDTH + s] + bias[f*SIMD_WIDTH + s];
-                        }
-                     }
+                     i_r = SIMD_LOAD(i_array[b][f][d][h][w]);
+                     res = SIMD_FMADD(i_r, s_r, b_r);
+                     SIMD_STORE(o_array[b][f][d][h][w], res);
                   }
                }
             }

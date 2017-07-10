@@ -118,6 +118,34 @@ Removing bn6_d0!
 Removing scale6_d0!
 Removing elu6_d0!
 Removing elu7_d0!
+Output paddiing for convi!
+Output paddiing for conv1_d0!
+Output paddiing for conv1_d1!
+Output paddiing for convf1_d2!
+Output paddiing for conv1_d2!
+Output paddiing for convf2_d2!
+Output paddiing for convf1_d3!
+Output paddiing for conv1_d3!
+Output paddiing for convf2_d3!
+Output paddiing for convf1_d4!
+Output paddiing for conv1_d4!
+Output paddiing for convf2_d4!
+Output paddiing for convf1_d5!
+Output paddiing for conv1_d5!
+Output paddiing for convf2_d5!
+Output paddiing for convf5_d4!
+Output paddiing for conv5_d4!
+Output paddiing for convf6_d4!
+Output paddiing for convf5_d3!
+Output paddiing for conv5_d3!
+Output paddiing for convf6_d3!
+Output paddiing for convf5_d2!
+Output paddiing for conv5_d2!
+Output paddiing for convf6_d2!
+Output paddiing for conv5_d1!
+Output paddiing for conv5_d0!
+Output paddiing for conv6_d0!
+Output paddiing for conv7_d0!
 Generating the network...
    Generating constructors...
    Generating foward pass...
@@ -233,501 +261,51 @@ make: Leaving directory '/home/ubuntu/znnphi_interface/code/znet'
 1 2
 Copying 2654208 bytes into the user input. 
 Starting Forward Pass
-average:1.70346
-Forward Finished
-Not congrats! Error == 3.13150572777
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62715
-Forward Finished
-Not congrats! Error == 2.68096852303
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.6274
-Forward Finished
-Not congrats! Error == 2.77290868759
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62914
-Forward Finished
-Not congrats! Error == 2.77604365349
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62645
-Forward Finished
-Not congrats! Error == 2.77614974976
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62645
-Forward Finished
-Not congrats! Error == 2.7761592865
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62886
-Forward Finished
-Not congrats! Error == 2.77615976334
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62392
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62387
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62382
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.6248
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62444
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62372
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62471
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62483
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62473
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62444
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62416
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62912
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.64167
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62598
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.6312
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.63215
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62916
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.63092
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62382
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62373
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62591
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62586
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62384
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62876
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62619
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62456
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62394
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62569
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.6236
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62332
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62433
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.623
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62437
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62342
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.625
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.6241
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62367
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62321
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.623
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62595
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62289
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62558
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62602
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62365
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62691
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62485
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62387
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.6241
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62501
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62507
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62577
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62505
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62412
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62479
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.6251
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.6237
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62426
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62419
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.67416
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62515
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62307
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62316
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62476
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62548
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62332
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62345
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62373
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62355
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.623
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62403
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62456
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62376
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62375
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62394
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62344
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62639
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62311
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62425
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62325
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62298
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62346
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62413
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62419
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62343
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62401
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62357
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62353
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62535
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62348
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62505
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.6255
-Forward Finished
-Not congrats! Error == 2.77615904808
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62357
-Forward Finished
-Not congrats! Error == 2.77615857124
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-average:1.62281
-Forward Finished
-Not congrats! Error == 2.77615904808
+Running BatchNorm4!
+BatchNorm4: 0.000199
+Running Scale4!
+Scale4: 4.1e-05
+Running bn3_d3!
+bn3_d3: 0.000567
+Running scale3_d3!
+scale3_d3: 0.000126
+Running bn2_d3!
+bn2_d3: 0.001036
+Running scale2_d3!
+scale2_d3: 0.000401
+Running bn1_d3!
+bn1_d3: 0.002957
+Running scale1_d3!
+scale1_d3: 0.002554
+Running bn0_d3!
+bn0_d3: 0.009095
+Running scale0_d3!
+scale0_d3: 0.008884
+average:0.025907
+Forward Finished
+Not congrats! Error == 839.140136719
+Copying 2654208 bytes into the user input. 
+Starting Forward Pass
+Running BatchNorm4!
+BatchNorm4: 0.000103
+Running Scale4!
+Scale4: 4.1e-05
+Running bn3_d3!
+bn3_d3: 0.000284
+Running scale3_d3!
+scale3_d3: 0.000126
+Running bn2_d3!
+bn2_d3: 0.000843
+Running scale2_d3!
+scale2_d3: 0.00038
+Running bn1_d3!
+bn1_d3: 0.002812
+Running scale1_d3!
+scale1_d3: 0.002667
+Running bn0_d3!
+bn0_d3: 0.008902
+Running scale0_d3!
+scale0_d3: 0.008868
+average:0.025074
+Forward Finished
+Not congrats! Error == 839.140136719

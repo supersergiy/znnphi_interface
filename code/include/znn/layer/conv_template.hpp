@@ -1,6 +1,6 @@
 #pragma once
 
-#include "layer/conv/propagation/full_layer.hpp"
+#include <znn/layer/conv/propagation/full_layer.hpp> 
 
 namespace znn
 {
@@ -10,8 +10,9 @@ namespace phi
 using namespace propagation;
 
 template <long_t Cores, long_t HT, long_t B, long_t IFM, long_t OFM, long_t ID,
-          long_t IHW, long_t KD, long_t KHW, long_t OUT_PADD=0, long_t OUT_PADHW=0, bool Activation=false, bool AddOrOverwrite=false>
-class ConvEngine
+          long_t IHW, long_t KD, long_t KHW, long_t OUT_PADD=0, long_t OUT_PADHW=0, 
+          bool Activation=false, bool AddOrOverwrite=false>
+class ConvTemplate
 {
 private:
     static const long_t IFM2 =
@@ -24,7 +25,7 @@ private:
 
  
     static const long_t OW_STRIDE = SIMD_WIDTH; 
-    static const long_t OH_STRIDE = (OHW + 2 * OUT_PADHW) * OW_STRIDE;//?? 
+    static const long_t OH_STRIDE = (OHW + 2 * OUT_PADHW) * OW_STRIDE;
     static const long_t OD_STRIDE = (OHW + 2 * OUT_PADHW) * OH_STRIDE; 
 
     static const long_t OFM_STRIDE = (OD + 2 * OUT_PADD) * OD_STRIDE; 
@@ -57,13 +58,13 @@ private:
     full_layer<Cores*HT, orig_prob, Activation, AddOrOverwrite> *plan;
 
 public:
-    ConvEngine() 
+    ConvTemplate() 
     {
         kl = new kernel_launcher(Cores, HT, 0);
         plan = new full_layer<Cores * HT, orig_prob, Activation, AddOrOverwrite>(kl);
     }
      
-    ~ConvEngine() 
+    ~ConvTemplate() 
     {
         delete plan;
         delete kl;

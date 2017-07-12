@@ -64,38 +64,16 @@ CXXFLAGS   	=	$(OPT_FLAGS)
 CXXLDFLAGS	=	$(OPT_LDFLAGS)
 DLFLAGS		= 	-fPIC -shared 
 
-# user gives these params to make layer
-PARAM_DEFS  = -DBN_v=${BN} -DIFM_v=${IFM} -DOFM_v=${OFM} -DID_v=${ID} \
-				  -DIHW_v=${IHW} -DKD_v=${KD} -DKHW_v=${KHW} -DPADD_v=${PADD} \
-				  -DPADHW_v=${PADHW} -DCores_v=${CORES} -DHT_v=${HT} -DACTIVATION_v=${ACTIVATION} \
-				  -DADDorOVERWRITE_v=${ADDorOVERWRITE}
 
-# Note the trailing _ 
-LAYER_NAME  =  conv_layer_${BN}_${IFM}_${OFM}_${ID}_${IHW}_${KD}_${KHW}_${PADD}_${PADHW}_${ACTIVATION}_$(ADDorOVERWRITE)_${CORES}_${HT}_.so
-
-LAYER_SO_PATH = ${BASE}/lib/${LAYER_NAME}
-
-ifneq ("$(wildcard $(LAYER_SO_PATH))","")
+ifneq ("$(wildcard $(O))","")
 	LAYER_EXISTS=1
 else
 	LAYER_EXISTS=0
 endif
 
-UNAME_S = $(shell uname -s)
-
-ifeq ($(UNAME_S),Linux)
-	LIB_DEST=/usr/lib
-else
-	LIB_DEST=/usr/lib64
-endif
-
 FORCE:
 
-%.d: ./%.cpp
-	$(ECHO) "[CXX] dependencies $<"
-	$(CXX) $(DEPFLAGS) $(AVX2_FLAGS) -MF $@ $<remake
-
-%.o: ./%.cpp FORCE
+./.tmp/%.o: ./.tmp/%.cpp FORCE
 ifeq ($(LAYER_EXISTS),0)
 	$(ECHO) "[CXX] compiling $<"
 	$(ECHO) $(CXX) -c $(CXXFLAGS)  $(AVX2_FLAGS) $(PARAM_DEFS) -o $@ $<
@@ -104,41 +82,21 @@ else
 	$(ECHO)
 endif
 
-%.so: ./%.o
+./.tmp/%.so: ./.tmp/%.o
 ifeq ($(LAYER_EXISTS),0)
 	$(ECHO) "[CXX] creating shared lib $@" 
 	$(ECHO) $(CXX) $(DLFLAGS) $(CXXLDFLAGS) $(AVX2_FLAGS) -o $@ $< -ldl
 	$(CXX)         $(DLFLAGS) $(CXXLDFLAGS) $(AVX2_FLAGS) -o $@ $< -ldl
+	$(MV)   $@ $(O)
 else 
 	$(ECHO) 
 endif
 
-.PHONY: wrapper, layer, all, clean, remake 
-wrapper: conv_wrapper.so 
-ifeq ($(LAYER_EXISTS),0)
-	$(ECHO) ${UNAME_S}
-	$(ECHO) ${LIB_DEST}
-	sudo mv ${HERE}/$<     ${LIB_DEST}/libznnphiconv.so
-endif
-layer: conv_layer.so
-ifeq ($(LAYER_EXISTS),0)
-	$(ECHO) "[Make] Placing the lib into ${LAYER_SO_PATH}"
-	mv ${HERE}/$< ${LAYER_SO_PATH} 
-endif
-all: clean dl
+all: clean test_jit.bin 
 
-test_wrapper.bin: FORCE
-	$(CXX) $(CXXFLAGS) $(AVX2_FLAGS) $(LD_FLAGS) -lznnphiconv ./test/test_wrapper.cpp -o $@
+test_jit.bin: FORCE
+	$(CXX) $(CXXFLAGS) $(AVX2_FLAGS) $(LD_FLAGS) -lznnphiconv ./test/test_jit.cpp -o $@
 
-test_engine.bin: test/test_engine.cpp  FORCE
-	$(ECHO) $(CXX) -c $(CXXFLAGS)  $(AVX2_FLAGS) $(PARAM_DEFS) $<
-	$(CXX) -c $(CXXFLAGS)  $(AVX2_FLAGS) $(PARAM_DEFS) $<
-	$(ECHO) $(CXX) test_engine.o  $(CXXLDFLAGS) $(AVX2_FLAGS) -o $@
-	$(CXX) test_engine.o  $(CXXFLAGS) $(CXXLDFLAGS) $(AVX2_FLAGS) -o $@
-
-test_no_so.bin: FORCE
-	$(ECHO) $(CXX) conv_layer.o test_no_so.o $(CXXLDFLAGS) $(AVX2_FLAGS) 
-	$(CXX) conv_layer.o test_no_so.o $(CXXLDFLAGS) $(AVX2_FLAGS) 
 clean:
 	$(RM) -rf ./*.o ./*.so ./*.S *.bin 
 

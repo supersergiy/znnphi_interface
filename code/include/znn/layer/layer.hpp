@@ -26,5 +26,8 @@ class Layer {
         virtual ~Layer() {};
 };
 
+
+typedef Layer* (*CreateLayer_fp)();
+typedef void  (*DestroyLayer_fp)();
 }
 }

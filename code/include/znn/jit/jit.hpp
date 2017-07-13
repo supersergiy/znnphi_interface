@@ -38,7 +38,7 @@ void *jitGetHandle(std::string params)
    }
 
    fscanf(python_out, "%1024s", dl_filename);
-   //std::cout << dl_filename << "!" << std::endl; 
+   std::cout << dl_filename << "!" << std::endl; 
 
    void *handle = dlopen(dl_filename, RTLD_NOW);
    handleDLError();
@@ -53,9 +53,12 @@ Layer* jitMakeLayer(std::string layer_type, std::string layer_params)
 
    void  *layer_handle = jitGetHandle(params.str()); 
 
-   Layer *result = ((CreateLayer_fp) dlsym(layer_handle, "createLayer"))();//TODO::what about layer deletion?
-   std::cout << result << std::endl;
+   void* creator = dlsym(layer_handle, "createLayer");
    handleDLError();
+
+   Layer *result = ((CreateLayer_fp)creator)(); 
+   std::cout << result << std::endl;
+   result->flops();
    return result;
 }
 

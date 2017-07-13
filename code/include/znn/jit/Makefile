@@ -95,8 +95,8 @@ endif
 all: clean test_jit.bin 
 
 test_jit.bin: FORCE
-	$(ECHO) $(CXX) $(CXXFLAGS) $(AVX2_FLAGS) $(LD_FLAGS) -lznnphiconv ./test/test_jit.cpp -o $@ -ldl
-	$(CXX) $(CXXFLAGS) $(AVX2_FLAGS) $(LD_FLAGS) -lznnphiconv ./test/test_jit.cpp -o $@ -ldl
+	$(ECHO) $(CXX) $(CXXFLAGS) $(AVX2_FLAGS) ./test/test_jit.cpp -o $@ 
+	$(CXX) $(CXXFLAGS) $(AVX2_FLAGS) ./test/test_jit.cpp -o $@ 
 
 clean:
 	$(RM) -rf ./*.o ./*.so ./*.S *.bin 

@@ -22,7 +22,11 @@ class Layer {
             std::cerr << "Not implemented" << std::endl;
             exit(EXIT_FAILURE);
         };
-
+        
+        virtual void flops()
+        {
+           std::cout << "Flops not set" << std::endl;
+        }
         virtual ~Layer() {};
 };
 

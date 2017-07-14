@@ -6,10 +6,10 @@
 
 int main()
 {
-   std::string params = "CORES=1 HT=1 BN=1 IFM=1 OFM=1 ID=1 IHW=2 KD=1 KHW=1 OUT_PADD=1 OUT_PADHW=1 Activation=0 AddOrOverwrite=0";
+   std::string params = "BN=1 IFM=1 OFM=28 ID=18 IHW=196 KD=1 KHW=5 OUT_PADD=0 OUT_PADHW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2";
    znn::phi::Layer* l=znn::phi::jitMakeLayer("conv", params);
-   znn::phi::hbw_array<float> a(100000000), b(1000000000), c(100000), d(100000), e(10000);
+   znn::phi::hbw_array<float> a(5531904), b(21678336), c(6400), d(32), e(32);
    std::cout << "Running 1...!\n";
-   l->forward(a.data(), b.data(), c.data(), d.data(), e.data());
+   l->forward(a.data(), b.data(), c.data(), d.data(), NULL); 
    std::cout << "Done!\n";
 }

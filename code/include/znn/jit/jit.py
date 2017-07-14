@@ -34,14 +34,11 @@ def create_wrapper(args):
         raise Exception("Not implemented layer")
 
 def create_conv_wrapper(args):
-    activation = "true" if args["activation"] else "false"
-    add_or_overwrite = "true" if args["addoroverwrite"] else "false"
-
     template_params = ", ".join([ args["cores"], args["ht"],
                                   args["bn"], args["ifm"], args["ofm"], 
                                   args["id"], args["ihw"], args["kd"], args["khw"], 
                                   args["out_padd"], args["out_padhw"],
-                                  activation, add_or_overwrite ]) 
+                                  args["activation"], args["addoroverwrite"]]) 
     pid = os.getpid()
     wrapper_name = ".tmp/{}.cpp".format(pid) 
 
@@ -67,7 +64,7 @@ def compile_dl(args):
     
     compile_command = 'make -s -C {} {} O={} 2> /dev/null'.format(my_path, target_name, out_path)
     os.system(compile_command)
-    check_call(['rm', "-f", wrapper_path], stderr=STDOUT)
+    #check_call(['rm', "-f", wrapper_path], stderr=STDOUT)
 
 def main():
     args = {}

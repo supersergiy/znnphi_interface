@@ -75,12 +75,8 @@ public:
                  float const* __restrict ker, float const* __restrict bi,
                  float const* __restrict scale)
     {
+        std::cout << AddOrOverwrite <<"\n";
         plan->execute(in, out + OUT_OFFSET, ker, bi, scale);
-    }
-
-    void flops(void)
-    {
-      std::cout << "I'm here, G\n";
     }
 };
 

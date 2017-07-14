@@ -68,9 +68,9 @@ def forward_all_layers_lines(net):
     for lname in layer_order:
        l = layer_info[lname]
        #lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
-       if l["type"] in ["scale", "bnorm"]:
-           lines.append('std::cout << "Running {}!\\n";'.format(l["name"]))
-           lines += forward_layer_lines(l)
+       #if l["type"] in ["scale", "bnorm"]:
+       lines.append('std::cout << "Running {}!\\n";'.format(l["name"]))
+       lines += forward_layer_lines(l)
           #lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
 
        #lines += print_tensor_part_lines(l["top"])

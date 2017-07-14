@@ -78,8 +78,8 @@ FORCE:
 $(ZNNJIT_PATH)/.tmp/%.so: $(ZNNJIT_PATH)/.tmp/%.cpp FORCE
 ifeq ($(LAYER_EXISTS),0)
 	$(CXX)         -c $(CXXFLAGS)  $(AVX2_FLAGS) $(PARAM_DEFS) -o $<.o $<
-
 	$(CXX)         $(DLFLAGS) $(CXXLDFLAGS) $(AVX2_FLAGS) -o $@ $<.o -ldl
+	$(RM)   $<.o
 	$(MV)   $@ $(O)
 else 
 	$(ECHO) 

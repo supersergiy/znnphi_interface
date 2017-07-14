@@ -66,15 +66,8 @@ def compile_dl(args):
     print out_path
     
     compile_command = 'make -s -C {} {} O={} 2> /dev/null'.format(my_path, target_name, out_path)
-    with open(os.devnull, 'wb') as devnull:
-        #check_call(['make', target_name, "O={}".format(out_path)], stderr=STDOUT, cwd=my_path)
-        #subprocess.call(compile_command, shell=True)
-        #print compile_command
-        
-        #check_call(compile_command)
-        os.system(compile_command)
-        #subprocess.call(compile_command)
-        #check_call(['rm', "-f", wrapper_path], stderr=STDOUT)
+    os.system(compile_command)
+    check_call(['rm', "-f", wrapper_path], stderr=STDOUT)
 
 def main():
     args = {}

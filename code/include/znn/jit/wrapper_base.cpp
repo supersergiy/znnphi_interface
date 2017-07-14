@@ -8,7 +8,8 @@ typedef [LAYER_NAME]Template<[TEMPLATE_PARAMS]> parametrized_template_layer;
 
 extern "C" Layer* createLayer(void)
 {
-    return reinterpret_cast<Layer*>(new parametrized_template_layer());
+   Layer *result = reinterpret_cast<Layer*>(new parametrized_template_layer());
+   return result;
 }
 
 }

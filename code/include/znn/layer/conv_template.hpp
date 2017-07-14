@@ -1,6 +1,7 @@
 #pragma once
 
 #include <znn/layer/conv/propagation/full_layer.hpp> 
+#include <znn/layer/layer.hpp>
 
 namespace znn
 {
@@ -8,12 +9,12 @@ namespace phi
 {
 
 using namespace propagation;
-
 template <long_t Cores, long_t HT, long_t B, long_t IFM, long_t OFM, long_t ID,
           long_t IHW, long_t KD, long_t KHW, long_t OUT_PADD=0, long_t OUT_PADHW=0, 
           bool Activation=false, bool AddOrOverwrite=false>
-class ConvTemplate
+class ConvTemplate: public Layer
 {
+    using Layer::forward;
 private:
     static const long_t IFM2 =
             SIMD_WIDTH * ((IFM + SIMD_WIDTH - 1) / SIMD_WIDTH);
@@ -70,12 +71,18 @@ public:
         delete kl;
     }
     
-    void compute(float const* __restrict in, float* out, 
+    void forward(float const* __restrict in, float* out, 
                  float const* __restrict ker, float const* __restrict bi,
                  float const* __restrict scale)
     {
         plan->execute(in, out + OUT_OFFSET, ker, bi, scale);
     }
+
+    void flops(void)
+    {
+      std::cout << "I'm here, G\n";
+    }
 };
+
 }
 } // namespace znn::phi

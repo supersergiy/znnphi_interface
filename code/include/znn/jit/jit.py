@@ -2,6 +2,9 @@
 import sys
 import os
 from subprocess import  STDOUT, check_call
+import subprocess
+
+my_path = sys.path[0]
 
 def parse_args():
     args = {}
@@ -37,12 +40,13 @@ def create_conv_wrapper(args):
     template_params = ", ".join([ args["cores"], args["ht"],
                                   args["bn"], args["ifm"], args["ofm"], 
                                   args["id"], args["ihw"], args["kd"], args["khw"], 
-                                  args["padd"], args["padhw"],
+                                  args["out_padd"], args["out_padhw"],
                                   activation, add_or_overwrite ]) 
     pid = os.getpid()
-    wrapper_name = "./.tmp/{}.cpp".format(pid) 
-    with open("./wrapper_base.cpp", 'r') as in_f:
-        with open(wrapper_name, 'w') as out_f:
+    wrapper_name = ".tmp/{}.cpp".format(pid) 
+
+    with open("{}/wrapper_base.cpp".format(my_path), 'r') as in_f:
+        with open("{}/{}".format(my_path, wrapper_name), 'w') as out_f:
             for l in in_f: 
                 out_f.write(l.replace("[LAYER_NAME]",      "Conv").
                               replace("[TEMPLATE_PARAMS]", template_params))
@@ -51,14 +55,26 @@ def create_conv_wrapper(args):
 
 def compile_dl(args):
     out_name = get_out_name(args)
-    out_path = "../../../../lib/{}".format(out_name)
+    znnphi_path = os.environ["ZNNPHI_PATH"]
+
+    out_path = "{}/lib/{}".format(znnphi_path, out_name)
 
     wrapper_name = create_wrapper(args)
-    print "./" + out_path
+    wrapper_path = "{}/{}".format(my_path, wrapper_name)
 
+    target_name = wrapper_path.replace(".cpp", ".so")
+    print out_path
+    
+    compile_command = 'make -s -C {} {} O={} 2> /dev/null'.format(my_path, target_name, out_path)
     with open(os.devnull, 'wb') as devnull:
-        check_call(['make', wrapper_name.replace(".cpp", ".so"), "O={}".format(out_path)], stdout=devnull, stderr=STDOUT)
-        check_call(['rm', "-f", wrapper_name], stdout=devnull, stderr=STDOUT)
+        #check_call(['make', target_name, "O={}".format(out_path)], stderr=STDOUT, cwd=my_path)
+        #subprocess.call(compile_command, shell=True)
+        #print compile_command
+        
+        #check_call(compile_command)
+        os.system(compile_command)
+        #subprocess.call(compile_command)
+        #check_call(['rm', "-f", wrapper_path], stderr=STDOUT)
 
 def main():
     args = {}

@@ -1,5 +1,5 @@
 import copy
-from common import round_to_simd, generate_param_string, S, fill_tensor, zero_out_tensor
+from common import round_to_simd, S, fill_tensor, zero_out_tensor
 import numpy as np
 
 def set_conv_dim(params, bot_tensor):
@@ -116,9 +116,9 @@ def allocate_conv_lines(lparam):
         activate = "false"
 
     if "additive_conv" in l and l["additive_conv"] == True:
-        add_to_output = "true"
+        add_or_overwrite = "true"
     else:
-        add_to_output = "false"
+        add_or_overwrite  = "false"
 
     out_padd  = 0
     out_padhw = 0
@@ -128,18 +128,18 @@ def allocate_conv_lines(lparam):
         
     cores = l.get("cores", 2)
     ht    = l.get("ht",    1)
+    
+    params = (l["bn"], l["ifm"], l["ofm"], l["id"], l["ihw"],
+             l["kernel_dim"][2], l["kernel_dim"][3],
+             out_padd, out_padhw, 
+             activate, add_or_overwrite, cores, ht)
 
-    allocation_params = (l["bn"], l["ifm"], l["ofm"], l["id"], l["ihw"],
-                         l["kernel_dim"][2], l["kernel_dim"][3],
-                         out_padd, out_padhw, 
-                         activate, add_to_output, cores, ht)
+    params_str = '"BN={} IFM={} OFM={} ID={} IHW={} KD={} KHW={} OUT_PADD={} OUT_PADHW={} ACTIVATION={} ADDOROVERWRITE={} CORES={} HT={}"'.format(*params)
 
-    param_str = generate_param_string(allocation_params)
     lines = []
-
     #allocate layer
-    lines.append('layers["{}"] = new znn::phi::ConvWrapper({});'.format(l["name"],
-                                                                        param_str))
+    lines.append('layers["{}"] = znn::phi::jitMakeLayer("{}", {});'.format(l["name"], l["type"], params_str))
+
     #allocate weights 
     lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                               l["kernel"], l["kernel_size"]))

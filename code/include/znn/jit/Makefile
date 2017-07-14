@@ -71,22 +71,15 @@ else
 	LAYER_EXISTS=0
 endif
 
+ZNNJIT_PATH = $(ZNNPHI_PATH)/code/include/znn/jit
+
 FORCE:
 
-./.tmp/%.o: ./.tmp/%.cpp FORCE
+$(ZNNJIT_PATH)/.tmp/%.so: $(ZNNJIT_PATH)/.tmp/%.cpp FORCE
 ifeq ($(LAYER_EXISTS),0)
-	$(ECHO) "[CXX] compiling $<"
-	$(ECHO) $(CXX) -c $(CXXFLAGS)  $(AVX2_FLAGS) $(PARAM_DEFS) -o $@ $<
-	$(CXX)         -c $(CXXFLAGS)  $(AVX2_FLAGS) $(PARAM_DEFS) -o $@ $<
-else
-	$(ECHO)
-endif
+	$(CXX)         -c $(CXXFLAGS)  $(AVX2_FLAGS) $(PARAM_DEFS) -o $<.o $<
 
-./.tmp/%.so: ./.tmp/%.o
-ifeq ($(LAYER_EXISTS),0)
-	$(ECHO) "[CXX] creating shared lib $@" 
-	$(ECHO) $(CXX) $(DLFLAGS) $(CXXLDFLAGS) $(AVX2_FLAGS) -o $@ $< -ldl
-	$(CXX)         $(DLFLAGS) $(CXXLDFLAGS) $(AVX2_FLAGS) -o $@ $< -ldl
+	$(CXX)         $(DLFLAGS) $(CXXLDFLAGS) $(AVX2_FLAGS) -o $@ $<.o -ldl
 	$(MV)   $@ $(O)
 else 
 	$(ECHO) 
@@ -98,6 +91,9 @@ test_jit.bin: FORCE
 	$(ECHO) $(CXX) $(CXXFLAGS) $(AVX2_FLAGS) ./test/test_jit.cpp -o $@ 
 	$(CXX) $(CXXFLAGS) $(AVX2_FLAGS) ./test/test_jit.cpp -o $@ 
 
+client.bin: FORCE
+	$(ECHO) $(CXX) $(CXXFLAGS) $(AVX2_FLAGS) ./client.cpp -o $@ 
+	$(CXX) $(CXXFLAGS) $(AVX2_FLAGS) ./client.cpp -o $@ 
 clean:
 	$(RM) -rf ./*.o ./*.so ./*.S *.bin 
 

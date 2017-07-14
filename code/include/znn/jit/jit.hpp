@@ -1,4 +1,3 @@
-#define _GLIBCXX_USE_CXX11_ABI 0
 #include <sys/wait.h>
 #include <string.h>
 #include <stdlib.h>
@@ -8,7 +7,9 @@
 #include <sstream>
 
 #include <znn/layer/layer.hpp>
-#define PYTHON_COMPILE_SCRIPT "python ./jit.py"
+#define PYTHON_COMPILE_SCRIPT_REL_P "/code/include/znn/jit/jit.py"
+
+#define DEBUG 1
 
 namespace znn {
 namespace phi {
@@ -25,11 +26,18 @@ void handleDLError(void)
 void *jitGetHandle(std::string params)
 {
    char dl_filename[1024];
-   std::stringstream compile_command;
+   char *znnphi_path = getenv("ZNNPHI_PATH");
 
-   compile_command << PYTHON_COMPILE_SCRIPT << " " << params;
-   compile_command << " 2> /dev/null"; // to silence the guy
+   std::stringstream compile_command;
+   
+   compile_command << znnphi_path << PYTHON_COMPILE_SCRIPT_REL_P << " " << params;
+   
+#ifdef DEBUG
    std::cout << compile_command.str() << std::endl;
+#else
+   compile_command << " 2> /dev/null"; 
+#endif
+
    FILE* python_out = popen(compile_command.str().c_str(), "r");
 
    if (python_out == NULL) {
@@ -38,7 +46,9 @@ void *jitGetHandle(std::string params)
    }
 
    fscanf(python_out, "%1024s", dl_filename);
-   std::cout << dl_filename << "!" << std::endl; 
+#ifdef DEBUG
+   std::cout << "dl_filename: " << dl_filename << std::endl; 
+#endif
 
    void *handle = dlopen(dl_filename, RTLD_NOW);
    handleDLError();
@@ -57,8 +67,6 @@ Layer* jitMakeLayer(std::string layer_type, std::string layer_params)
    handleDLError();
 
    Layer *result = ((CreateLayer_fp)creator)(); 
-   std::cout << result << std::endl;
-   result->flops();
    return result;
 }
 

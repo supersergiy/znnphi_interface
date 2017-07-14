@@ -97,7 +97,7 @@ def generate_znet(net, out_path):
     #includes
     lines.append('#include <iostream>')
     lines.append('#include <chrono>')
-    lines.append('#include <znn/interface/conv_wrapper.hpp>')
+    lines.append('#include <znn/jit/jit.hpp>')
     lines.append('#include <znn/layer/layers.hpp>')
     lines.append('#include <cstring>')
     lines.append('#include <znet.hpp>')

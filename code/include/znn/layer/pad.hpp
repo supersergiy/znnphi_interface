@@ -44,7 +44,7 @@ public:
       
       out_tp o_array = reinterpret_cast<out_tp>(o);
       in_tp i_array = reinterpret_cast<in_tp>(i);
-     
+    
       int d_size = (ihw + 2*padhw) * (ihw + 2*padhw) * SIMD_WIDTH;
       int h_size = (ihw + 2*padhw) * SIMD_WIDTH;
       int w_size = SIMD_WIDTH;

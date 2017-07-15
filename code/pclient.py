@@ -21,7 +21,8 @@ weights_path   = os.path.join(base, weights_file)
 input_path     = os.path.join(base, input_file)
 reference_path = os.path.join(base, reference_file)
 
-z = pznet.znet(net_path, weights_path)
+z = pznet.znet()
+z.create_net(net_path, weights_path)
 
 
 in_file  = h5py.File(input_path)
@@ -39,9 +40,9 @@ fr = reference_a.flatten()
 boo = np.argmax(fd)
 if error > 0.1:
     print "Not congrats! Error == {}".format(error)
+    import pdb; pdb.set_trace()
 else:
     print "Congrats! All pass"
-import pdb; pdb.set_trace()
 #out_file = h5py.File(output_path)
 #out_file.create_dataset("data", data=out_a)
 

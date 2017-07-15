@@ -129,7 +129,7 @@ def consume_elu(layer_info, lname, next_name):
 def handle_padding(net):
     tensors, layer_info, layer_order  = net
 
-    handle_implicit_paddings(net)
+    #handle_implicit_paddings(net)
     insert_explicit_paddings(net) 
 
 def remove_padding_from_conv(net, conv_name):
@@ -138,7 +138,7 @@ def remove_padding_from_conv(net, conv_name):
 
     l["id"]  += 2 * l["pad"][0] 
     l["ihw"] += 2 * l["pad"][1]
-
+    
     l["pad"] = [0, 0, 0]
 
 
@@ -153,19 +153,19 @@ def handle_implicit_paddings(net):
             next_name = l["next"]
             if next_name in layer_info and layer_info[next_name]["type"] == "conv":
                 next_l = layer_info[next_name]
-                if next_l["pad"][0] != 0 or next_l["pad"][1] != 0:
+                if next_l["pad"][0] == 0 and next_l["pad"][1] != 0:
                     count += 1
+                    if count > 00:
+                        break
                     print "Output paddiing for {}!".format(l["name"])
                     l["output_pad"] = copy.copy(next_l["pad"])
                     l["top_dim"][2] += 2 * l["output_pad"][0]
                     l["top_dim"][3] += 2 * l["output_pad"][1]
                     l["top_dim"][4] += 2 * l["output_pad"][1]
                     tensors[l["top"]] = Tensor(l["top_dim"]) 
-                    
+
                     remove_padding_from_conv(net, next_name)
                     set_layer_dim(next_l, tensors[l["top"]]) 
-                    if count > 28:
-                        break;
 
 def insert_explicit_paddings(net):
     tensors, layer_info, layer_order  = net
@@ -199,7 +199,6 @@ def insert_explicit_paddings(net):
             l["bot"] = pad_param["top"]
             pad_param["top_dim"] = l["bot_dim"]
            
-            #modify the conv layer params to remove padding
             remove_padding_from_conv(net, lname)
 
             #add pad layer 
@@ -267,13 +266,10 @@ def eliminate_adds(net):
 
                 #remove eltwise
                 delete_layer(net, next_name)
-                count += 1
-                if count > 100:
-		    break
 
 def optimize_net(net):
     generate_layer_order_info(net)
-    eliminate_adds(net)
+    #eliminate_adds(net)
     expand_convs(net)
     stride1_deconv_to_conv(net)
     handle_padding(net)

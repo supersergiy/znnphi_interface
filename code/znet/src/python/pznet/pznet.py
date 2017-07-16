@@ -10,7 +10,11 @@ class znet:
     #FOR NOW we assume that we always have only one network,
     #so we can work inside the repo like real scrubs
 
-    def __init__(self, prototxt_path, weights_path):
+    def __init__(self):
+        self.net = None
+        
+
+    def create_net(self, prototxt_path, h5_weights_path):
         my_folder      = os.path.dirname(os.path.abspath(
                                             inspect.getfile(
                                              inspect.currentframe()
@@ -21,14 +25,12 @@ class znet:
         #    os.makedirs(self.working_folder)
         sys.path.append(self.working_folder)
 
-        self.net = self._load_net(prototxt_path, weights_path)
-
-
-    def _load_net(self, prototxt_path, h5_weights_path):
         json_net_path = os.path.join(self.working_folder, 'net.json')
         convert_prototxt_to_json(prototxt_path, json_net_path)
+        
+        znnphi_path = os.environ["ZNNPHI_PATH"]
+        mothership_folder = '{}/code/znet'.format(znnphi_path)
 
-        mothership_folder = '/home/ubuntu/znnphi_interface/code/znet'
         make_command  = 'make -C {} py N={} W={} O={}'.format(mothership_folder,
                                                          json_net_path,
                                                          h5_weights_path,
@@ -39,7 +41,12 @@ class znet:
         znet_weights_path = os.path.join(self.working_folder, './weights/')
         znet_weights_abspath = os.path.abspath(znet_weights_path)
 
-        return znet.znet(znet_weights_abspath + '/') #TODO: fix this ugly thing with / having to be there
+        self.net = znet.znet(znet_weights_abspath + '/') #TODO: fix this ugly thing with / having to be there
+
+    def load_net(self, path_to_net):
+        sys.path.append(path_to_net)
+        import znet
+        self.net = znet.znet(os.path.join(path_to_net, "weights/"))
 
     def forward(self, input_tensor):
         return self.net.forward(input_tensor)

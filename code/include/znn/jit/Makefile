@@ -25,7 +25,7 @@ AVX_FLAGS   =   -DZNN_AVX -xAVX $(ZNN_TUNE)
 AVX2_FLAGS  =   -DZNN_AVX2 -march=core-avx2 $(ZNN_TUNE)                                   
 AVX512_FLAGS    =   -DZNN_AVX512 -xMIC-AVX512 $(ZNN_TUNE)                                 
 KNC_FLAGS   =   -DZNN_KNC -mmic $(ZNN_TUNE)
-CORES_FLAG  =   -DZNN_NUM_CORES=64
+CORES_FLAG  =   -DZNN_NUM_CORES=2
 
 STANDARD_FLAG	=	-std=c++14
 STD_FLAG	=
@@ -64,70 +64,36 @@ CXXFLAGS   	=	$(OPT_FLAGS)
 CXXLDFLAGS	=	$(OPT_LDFLAGS)
 DLFLAGS		= 	-fPIC -shared 
 
-# user gives these params to make layer
-PARAM_DEFS  = -DBN_v=${BN} -DIFM_v=${IFM} -DOFM_v=${OFM} -DID_v=${ID} \
-				  -DIHW_v=${IHW} -DKD_v=${KD} -DKHW_v=${KHW} -DPADD_v=${PADD} \
-				  -DPADHW_v=${PADHW} -DCores_v=${CORES} -DHT_v=${HT} -DACTIVATION_v=${ACTIVATION}
 
-# Note the trailing _ 
-LAYER_NAME  =  conv_layer_${BN}_${IFM}_${OFM}_${ID}_${IHW}_${KD}_${KHW}_${PADD}_${PADHW}_${ACTIVATION}_${CORES}_${HT}_.so
-
-LAYER_SO_PATH = ${BASE}/lib/${LAYER_NAME}
-
-ifneq ("$(wildcard $(LAYER_SO_PATH))","")
+ifneq ("$(wildcard $(O))","")
 	LAYER_EXISTS=1
 else
 	LAYER_EXISTS=0
 endif
 
-UNAME_S = $(shell uname -s)
-
-ifeq ($(UNAME_S),Linux)
-	LIB_DEST=/usr/lib
-else
-	LIB_DEST=/usr/lib64
-endif
+ZNNJIT_PATH = $(ZNNPHI_PATH)/code/include/znn/jit
 
 FORCE:
 
-%.d: ./%.cpp
-	$(ECHO) "[CXX] dependencies $<"
-	$(CXX) $(DEPFLAGS) $(AVX2_FLAGS) -MF $@ $<remake
-
-%.o: ./%.cpp FORCE
+$(ZNNJIT_PATH)/.tmp/%.so: $(ZNNJIT_PATH)/.tmp/%.cpp FORCE
 ifeq ($(LAYER_EXISTS),0)
-	$(ECHO) "[CXX] compiling $<"
-	$(ECHO) $(CXX) -c $(CXXFLAGS) $(AVX2_FLAGS) $(PARAM_DEFS) -o $@ $<
-	$(CXX)         -c $(CXXFLAGS) $(AVX2_FLAGS) $(PARAM_DEFS) -o $@ $<
-else
-	$(ECHO)
-endif
-
-%.so: ./%.o
-ifeq ($(LAYER_EXISTS),0)
-	$(ECHO) "[CXX] creating shared lib $@" 
-	$(ECHO) $(CXX) $(DLFLAGS) $(CXXLDFLAGS) $(AVX2_FLAGS) -o $@ $< -ldl
-	$(CXX)         $(DLFLAGS) $(CXXLDFLAGS) $(AVX2_FLAGS) -o $@ $< -ldl
+	$(CXX)         -c $(CXXFLAGS)  $(AVX2_FLAGS) $(PARAM_DEFS) -o $<.o $<
+	$(CXX)         $(DLFLAGS) $(CXXLDFLAGS) $(AVX2_FLAGS) -o $@ $<.o -ldl
+	$(RM)   $<.o
+	$(MV)   $@ $(O)
 else 
 	$(ECHO) 
 endif
 
-.PHONY: wrapper, layer, all, clean, remake 
-wrapper: conv_wrapper.so 
-ifeq ($(LAYER_EXISTS),0)
-	$(ECHO) ${UNAME_S}
-	$(ECHO) ${LIB_DEST}
-	sudo mv ${HERE}/$<     ${LIB_DEST}/libznnphiconv.so
-endif
-layer: conv_layer.so
-ifeq ($(LAYER_EXISTS),0)
-	$(ECHO) "[Make] Placing the lib into ${LAYER_SO_PATH}"
-	mv ${HERE}/$< ${LAYER_SO_PATH} 
-endif
-all: clean dl
+all: clean test_jit.bin 
 
-test_wrapper.bin: FORCE
-	$(CXX) $(CXXFLAGS) $(AVX_FLAGS) $(LD_FLAGS) -lznnphiconv ./test/test_wrapper.cpp -o $@
+test_jit.bin: FORCE
+	$(ECHO) $(CXX) $(CXXFLAGS) $(AVX2_FLAGS) ./test/test_jit.cpp -o $@ 
+	$(CXX) $(CXXFLAGS) $(AVX2_FLAGS) ./test/test_jit.cpp -o $@ 
+
+client.bin: FORCE
+	$(ECHO) $(CXX) $(CXXFLAGS) $(AVX2_FLAGS) ./client.cpp -o $@ 
+	$(CXX) $(CXXFLAGS) $(AVX2_FLAGS) ./client.cpp -o $@ 
 clean:
 	$(RM) -rf ./*.o ./*.so ./*.S *.bin 
 

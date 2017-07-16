@@ -70,10 +70,9 @@ def forward_all_layers_lines(net):
        #lines.append('std::cout << "Running {}!\\n";'.format(l["name"]))
        lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
 
-       if lname == "deconv_0":
-           #lines += print_tensor_part_lines(l["top"])
-           lines += print_tensor_lines(l["bot"])
-           #lines += print_tensor_lines(l["top"])
+       #lines += print_tensor_part_lines(l["top"])
+       #lines += print_tensor_lines(l["bot"])
+       #lines += print_tensor_lines(l["top"])
        #lines += forward_layer_lines(l)
        #lines.append('std::cout << "{} Finished!\\n";'.format(l["name"]))
        count += 1
@@ -95,7 +94,6 @@ def generate_znet(net, out_path):
     #includes
     lines.append('#include <iostream>')
     lines.append('#include <chrono>')
-    lines.append('#include <znn/interface/conv_wrapper.hpp>')
     lines.append('#include <znn/layer/layers.hpp>')
     lines.append('#include <cstring>')
     lines.append('#include <znet.hpp>')

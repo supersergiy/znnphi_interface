@@ -41,7 +41,7 @@ def parse_conv(json_param):
     params["out_pad"]     = [0, 0, 0]
 
     params["stride"]  = json_conv_param["stride"]
-    
+     
     params["ofm"] = json_conv_param["num_output"]
     
     params["json_kernel_size"] = json_conv_param["kernel_size"]
@@ -57,6 +57,7 @@ def parse_conv(json_param):
     params["scale"] = "{}_scale".format(params["name"])
     params["scale_size"] = round_to_simd(params["ofm"]) 
     params["scale_data"] = None
+
     params["cores"] = 2
     params["ht"]    = 2 
     return params
@@ -107,8 +108,6 @@ def block_bias(bias, lparam):
 
 def allocate_conv_lines(lparam):
     l = lparam
-    if l["pad"][0] != 0 or l["pad"][1] != 0:
-        raise Exception("Unhandled padding!")
 
     if "activation" in l and l["activation"] == "elu":
         activate = "true"
@@ -116,30 +115,34 @@ def allocate_conv_lines(lparam):
         activate = "false"
 
     if "additive_conv" in l and l["additive_conv"] == True:
-        add_or_overwrite = "true"
+        add_to_output = "true"
     else:
-        add_or_overwrite = "false"
+        add_to_output = "false"
+
+    cores = l.get("cores", 2)
+    ht    = l.get("ht",    1)
+
+    if l["pad"][0] != 0 or l["pad"][1] != 0:
+        raise Exception("Unhandled padding!")
+
 
     out_padd  = 0
     out_padhw = 0
     if "output_pad" in l:
         out_padd  = l["output_pad"][0]
         out_padhw = l["output_pad"][1]
-        
-    cores = l.get("cores", 2)
-    ht    = l.get("ht",    1)
 
+    allocation_params = (l["bn"], l["ifm"], l["ofm"], l["id"], l["ihw"],
+                         l["kernel_dim"][2], l["kernel_dim"][3],
+                         out_padd, out_padhw, 
+                         activate, add_to_output, cores, ht)
+
+    param_str = generate_param_string(allocation_params)
     lines = []
 
     #allocate layer
-    params = (l["bn"], l["ifm"], l["ofm"], l["id"], l["ihw"],
-              l["kernel_dim"][2], l["kernel_dim"][3],
-              out_padd, out_padhw, 
-              activate, add_or_overwrite, cores, ht)
-
-    params_str = '"BN={} IFM={} OFM={} ID={} IHW={} KD={} KHW={} OUT_PADD={} OUT_PADHW={} ACTIVATION={} ADDOROVERWRITE={} CORES={} HT={}"'.format(*params)
-
-    lines.append('layers["{}"] = znn::phi::jitMakeLayer("{}", {});'.format(l["name"], l["type"], params_str))
+    lines.append('layers["{}"] = new znn::phi::ConvWrapper({});'.format(l["name"],
+                                                                        param_str))
     #allocate weights 
     lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                               l["kernel"], l["kernel_size"]))

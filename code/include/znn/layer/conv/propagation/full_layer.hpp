@@ -14,7 +14,7 @@ namespace phi
 namespace propagation
 {
 
-template <long_t Threads, class P, bool Activation>
+template <long_t Threads, class P, bool Activation, bool AddToOutput>
 struct full_layer
 {
 private:
@@ -22,7 +22,7 @@ private:
         sub_problem_t<0, P::batch_size, 0, P::ofm_len, 0, P::image_d::size, 0,
                       P::image_h::size, 0, P::image_w::size>;
 
-    using problem = problem_t<Threads, P, full_sub_problem>;
+    using problem = problem_t<Threads, P, full_sub_problem, Activation, AddToOutput>;
 
     kernel_launcher*                   launcher;
     std::vector<std::function<void()>> fns;
@@ -32,6 +32,7 @@ private:
     float*       out_;
     float const* kernels_;
     float const* biases_;
+    float const* scale_;
 
 public:
     full_layer(kernel_launcher* l)
@@ -39,25 +40,28 @@ public:
         , fns(Threads)
         , executables(Threads)
     {
-        scheduler<problem, Activation>::schedule(0, executables);
+        scheduler<problem>::schedule(0, executables);
         for (long_t i = 0; i < Threads; ++i)
         {
             fns[i] = [i, this]() {
                 for (auto const& e : this->executables[i])
                 {
-                    e(this->in_, this->out_, this->kernels_, this->biases_);
+                    e(this->in_, this->out_, this->kernels_, this->biases_, this->scale_);
                 }
             };
         }
     }
 
     void execute(float const* __restrict i, float* __restrict o,
-                 float const* __restrict k, float const* __restrict b)
+                 float const* __restrict k, float const* __restrict b,
+                 float const* __restrict s)
     {
         in_      = i;
         out_     = o;
         kernels_ = k;
         biases_  = b;
+        scale_   = s;
+
         launcher->launch(&(fns[0]));
     }
 

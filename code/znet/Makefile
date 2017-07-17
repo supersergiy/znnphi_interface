@@ -68,8 +68,8 @@ COMMON_LDFLAGS		=	$(HBW_LD_FLAG)
 DBG_LDFLAGS		=	$(COMMON_LDFLAGS) $(CS_LD_FLAGS) -g
 OPT_LDFLAGS		=	$(COMMON_LDFLAGS) $(CS_LD_FLAGS) $(LD_OPTIMIZATION_FLAGS)
 
-CXXFLAGS	=	$(DBG_FLAGS)
-#CXXFLAGS	=	$(OPT_FLAGS)
+#CXXFLAGS	=	$(DBG_FLAGS)
+CXXFLAGS	=	$(OPT_FLAGS)
 CXXLDFLAGS	=	$(OPT_LDFLAGS)
 
 LD_FLAGS    =   -L/opt/intel/mkl/lib/intel64 -lpthread -openmp -Wl,--start-group -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5 -Wl,--end-group -lmkl_avx2 -lznnphiconv 
@@ -84,17 +84,18 @@ PY_INTERFACE_FLAGS = `python-config --cflags --ldflags` -Isrc/python/pybind11/in
 #W = nets/${NET_NAME}.h5
 
 
-src/generated/znet.cpp:  $(shell find src/znet_generator -type f) $(N) $(W)
+out/client.o: src/client.cpp 
+	$(CXX) $(CXXFLAGS) -fPIC -c $^ -o $@
+out/znet.o: src/generated/znet.cpp 
+	$(CXX) $(CXXFLAGS) $(AVX2_FLAGS)-fPIC -c $^ -o $@
+out/znet_numpy_wrapper.o: src/python/znet_numpy_wrapper.cpp 
+	$(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) -fPIC -c $^ -o $@
+
+src/generated/znet.cpp:  $(shell find src/znet_generator -type f -name "*.py") $(N) $(W)
 	rm -rf out
 	${MKDIR_P} out
 	${MKDIR_P} out/weights
 	python src/znet_generator/main.py $(N) $(W) src/generated/znet.cpp
-out/client.o: src/client.cpp 
-	$(CXX) -g $(CXXFLAGS) -fPIC -c $^ -o $@
-out/znet.o: src/generated/znet.cpp 
-	$(CXX) $(CXXFLAGS) -fPIC -c $^ -o $@
-out/znet_numpy_wrapper.o: src/python/znet_numpy_wrapper.cpp 
-	$(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) -fPIC -c $^ -o $@
 
 py: out/znet.o out/znet_numpy_wrapper.o 
 	$(CXX) $^ $(LD_FLAGS) -shared -o out/znet.so 

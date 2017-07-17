@@ -55,6 +55,7 @@ namespace propagation
 
 template <bool   Bias,                    // load or set to bias
           bool   Activation,
+          bool   AddOrOverwrite,
           long_t IFMs,                    // number of input images
           class ID, class IH, class IW,   // image traits
           class CD, class CH, class CW,   // convolution traits
@@ -65,13 +66,15 @@ struct sub_image;
 struct sub_image_dummy
 {
     static void execute(float const* __restrict, float* __restrict,
-                        float const* __restrict, float const* __restrict)
+                        float const* __restrict, float const* __restrict, 
+                        float const* __restrict)
     {
     }
 };
 
 template <bool   Bias,                  // load or set to bias
           bool   Activation,
+          bool   AddOrOverwrite,
           long_t IFMs,                  // number of input images
           class ID, class IH, class IW, // image traits
           class CD, class CH, class CW, // convolution traits
@@ -80,15 +83,16 @@ template <bool   Bias,                  // load or set to bias
 struct sub_image_1d
 {
     static void execute(float const* __restrict i, float* __restrict o,
-                        float const* __restrict k, float const* __restrict b)
+                        float const* __restrict k, float const* __restrict b,
+                        float const* __restrict scale)// scale factor for values initially in o 
     {
         SIMD_FLOAT vout[RW], vwt; // Expected to be in the register file
 
+        // load initial values to vout
         ZNN_PRAGMA(unroll(RW))
         for (long_t rw = 0; rw < RW; ++rw)
         {
-            vout[rw] =
-                conditional_load_or_bias<Bias>(o + rw * IW::out_stride, b);
+            vout[rw] = load_or_set_initial_value<Bias, AddOrOverwrite>(o + rw * IW::out_stride, b, scale);
         }
 
         for (long_t kd = 0; kd < CD::size; ++kd)
@@ -145,6 +149,7 @@ struct sub_image_1d
 
 template <bool   Bias,                  // load or set to bias
           bool   Activation,
+          bool   AddOrOverwrite,
           long_t IFMs,                  // number of input images
           class ID, class IH, class IW, // image traits
           class CD, class CH, class CW, // convolution traits
@@ -153,19 +158,19 @@ template <bool   Bias,                  // load or set to bias
 struct sub_image_2d
 {
     static void execute(float const* __restrict i, float* __restrict o,
-                        float const* __restrict k, float const* __restrict b)
+                        float const* __restrict k, float const* __restrict b,
+                        float const* __restrict scale)// scale factor for values initially in o 
     {
         SIMD_FLOAT vout[RH][RW], vwt; // Expected to be in the register file
 
-        //ZNN_PRAGMA(unroll(RH))
-        #pragma unroll(RH)
+        ZNN_PRAGMA(unroll(RH))
         for (long_t rh = 0; rh < RH; ++rh)
         {
             ZNN_PRAGMA(unroll(RW))
             for (long_t rw = 0; rw < RW; ++rw)
             {
-                vout[rh][rw] = conditional_load_or_bias<Bias>(
-                    o + rh * IH::out_stride + rw * IW::out_stride, b);
+                vout[rh][rw] = load_or_set_initial_value<Bias, AddOrOverwrite>(
+                                   o + rh * IH::out_stride + rw * IW::out_stride, b, scale);
             }
         }
 
@@ -185,8 +190,7 @@ struct sub_image_2d
                              s) *
                                 SIMD_WIDTH);
 
-                        //ZNN_PRAGMA(unroll(RH)
-#pragma unroll(RH)
+                        ZNN_PRAGMA(unroll(RH))
                         for (long_t rh = 0; rh < RH; ++rh)
                         {
                             ZNN_PRAGMA(unroll(RW))
@@ -231,6 +235,7 @@ struct sub_image_2d
 
 template <bool   Bias,                    // load or set to bias
           bool   Activation,
+          bool   AddOrOverwrite,
           long_t IFMs,                    // number of input images
           class ID, class IH, class IW,   // image traits
           class CD, class CH, class CW,   // convolution traits
@@ -239,23 +244,24 @@ template <bool   Bias,                    // load or set to bias
 struct sub_image_3d
 {
     static void execute(float const* __restrict i, float* __restrict o,
-                        float const* __restrict k, float const* __restrict b)
+                        float const* __restrict k, float const* __restrict b,
+                        float const* __restrict scale)// scale factor for values initially in o 
     {
         SIMD_FLOAT vout[RD][RH][RW], vwt; // Expected to be in the register file
-
-        ZNN_PRAGMA(unroll(RD))
-        for (long_t rd = 0; rd < RD; ++rd)
+         
+        znn_pragma(unroll(rd))
+        for (long_t rd = 0; rd < rd; ++rd)
         {
-            ZNN_PRAGMA(unroll(RH))
-            for (long_t rh = 0; rh < RH; ++rh)
+            znn_pragma(unroll(rh))
+            for (long_t rh = 0; rh < rh; ++rh)
             {
-                ZNN_PRAGMA(unroll(RW))
-                for (long_t rw = 0; rw < RW; ++rw)
+                znn_pragma(unroll(rw))
+                for (long_t rw = 0; rw < rw; ++rw)
                 {
-                    vout[rd][rh][rw] = conditional_load_or_bias<Bias>(
-                        o + rd * ID::out_stride + rh * IH::out_stride +
-                            rw * IW::out_stride,
-                        b);
+                    vout[rd][rh][rw] = load_or_set_initial_value<Bias, AddOrOverwrite>(
+                        o + rd * id::out_stride + rh * ih::out_stride +
+                            rw * iw::out_stride,
+                        b, scale);
                 }
             }
         }
@@ -331,6 +337,7 @@ struct sub_image_3d
 
 template <bool   Bias,                    // load or set to bias
           bool   Activation,
+          bool   AddOrOverwrite,
           long_t IFMs,                    // number of input images
           class ID, class IH, class IW,   // image traits
           class CD, class CH, class CW,   // convolution traits
@@ -341,10 +348,10 @@ struct sub_image
           RD == 0 || RH == 0 || RW == 0, sub_image_dummy,
           std::conditional_t<
               RD == 1 && RH == 1,
-              sub_image_1d<Bias, Activation, IFMs, ID, IH, IW, CD, CH, CW, RW>,
-              std::conditional_t<RD == 1, sub_image_2d<Bias, Activation, IFMs, ID, IH, IW,
+              sub_image_1d<Bias, Activation, AddOrOverwrite, IFMs, ID, IH, IW, CD, CH, CW, RW>,
+              std::conditional_t<RD == 1, sub_image_2d<Bias, Activation, AddOrOverwrite, IFMs, ID, IH, IW,
                                                        CD, CH, CW, RH, RW>,
-                                 sub_image_3d<Bias, Activation, IFMs, ID, IH, IW, CD, CH,
+                                 sub_image_3d<Bias, Activation, AddOrOverwrite, IFMs, ID, IH, IW, CD, CH,
                                               CW, RD, RH, RW>>>>
 {
 };

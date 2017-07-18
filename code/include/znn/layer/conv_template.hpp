@@ -10,7 +10,10 @@ namespace phi
 
 using namespace propagation;
 template <long_t Cores, long_t HT, long_t B, long_t IFM, long_t OFM, long_t ID,
-          long_t IHW, long_t KD, long_t KHW, long_t OUT_PADD=0, long_t OUT_PADHW=0, 
+          long_t IHW, long_t KD, long_t KHW, 
+          long_t OUT_PADD_FRONT=0, long_t OUT_PADD_BACK=0,
+          long_t OUT_PADH_FRONT=0, long_t OUT_PADW_FRONT=0, long_t OUT_PADHW_BACK=0,
+          long_t OUT_STRIDE_D=1, long_t OUT_STRIDE_HW=1,
           bool Activation=false, bool AddOrOverwrite=false>
 class ConvTemplate: public Layer
 {
@@ -25,16 +28,16 @@ private:
     static const long_t OHW = IHW + 1 - KHW;
 
  
-    static const long_t OW_STRIDE = SIMD_WIDTH; 
-    static const long_t OH_STRIDE = (OHW + 2 * OUT_PADHW) * OW_STRIDE;
-    static const long_t OD_STRIDE = (OHW + 2 * OUT_PADHW) * OH_STRIDE; 
+    static const long_t OW_SINGLE_STRIDE = SIMD_WIDTH; 
+    static const long_t OH_SINGLE_STRIDE = (OHW + OUT_PADW_FRONT + OUT_PADHW_BACK) * OW_SINGLE_STRIDE;
+    static const long_t OD_SINGLE_STRIDE = (OHW + OUT_PADH_FRONT + OUT_PADHW_BACK) * OH_SINGLE_STRIDE; 
 
-    static const long_t OFM_STRIDE = (OD + 2 * OUT_PADD) * OD_STRIDE; 
+    static const long_t OFM_STRIDE = (OD + OUT_PADD_FRONT + OUT_PADD_BACK) * OD_SINGLE_STRIDE; 
     static const long_t IFM_STRIDE = ID * IHW * IHW * SIMD_WIDTH;
 
-    static const long_t OUT_OFFSET =  OW_STRIDE * OUT_PADHW + 
-                                      OH_STRIDE * OUT_PADHW +
-                                      OD_STRIDE * OUT_PADD;
+    static const long_t OUT_OFFSET =  OW_SINGLE_STRIDE * OUT_PADH_FRONT + 
+                                      OH_SINGLE_STRIDE * OUT_PADW_FRONT +
+                                      OD_SINGLE_STRIDE * OUT_PADD_FRONT;
     
 
     using orig_prob = original_problem_t<
@@ -47,9 +50,9 @@ private:
             KD * KHW * KHW * SIMD_WIDTH * SIMD_WIDTH, // kernel in stride
         KD * KHW * KHW * SIMD_WIDTH * SIMD_WIDTH * IFM2 /
             SIMD_WIDTH, // kernel out stride
-        image_traits<OD, IHW * IHW * SIMD_WIDTH, OD_STRIDE>,
-        image_traits<OHW, IHW * SIMD_WIDTH, OH_STRIDE>,
-        image_traits<OHW, SIMD_WIDTH, OW_STRIDE>,
+        image_traits<OD, IHW * IHW * SIMD_WIDTH, OUT_STRIDE_D*OD_SINGLE_STRIDE>,
+        image_traits<OHW, IHW * SIMD_WIDTH, OUT_STRIDE_HW*OH_SINGLE_STRIDE>,
+        image_traits<OHW, SIMD_WIDTH, OUT_STRIDE_HW*OW_SINGLE_STRIDE>,
         conv_traits<KD, KHW * KHW, 1>, conv_traits<KHW, KHW, 1>,
         conv_traits<KHW, 1, 1>>;
 

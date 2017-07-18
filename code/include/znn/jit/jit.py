@@ -37,7 +37,9 @@ def create_conv_wrapper(args):
     template_params = ", ".join([ args["cores"], args["ht"],
                                   args["bn"], args["ifm"], args["ofm"], 
                                   args["id"], args["ihw"], args["kd"], args["khw"], 
-                                  args["out_padd"], args["out_padhw"],
+                                  args["out_padd_front"], args["out_padd_back"],
+                                  args["out_padh_front"], args["out_padw_front"], args["out_padhw_back"],
+                                  args["out_stride_d"], args["out_stride_hw"],
                                   args["activation"], args["addoroverwrite"]]) 
     pid = os.getpid()
     wrapper_name = ".tmp/{}.cpp".format(pid) 
@@ -62,7 +64,8 @@ def compile_dl(args):
     target_name = wrapper_path.replace(".cpp", ".so")
     print out_path
     
-    compile_command = 'make -s -C {} {} O={} 2> /dev/null'.format(my_path, target_name, out_path)
+    compile_command = 'make -s -C {} {} O={}'.format(my_path, target_name, out_path)
+    #compile_comman  += '2> /dev/null'
     os.system(compile_command)
     check_call(['rm', "-f", wrapper_path], stderr=STDOUT)
 

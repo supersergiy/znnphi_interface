@@ -134,10 +134,18 @@ def allocate_conv_lines(lparam):
     #allocate layer
     params = (l["bn"], l["ifm"], l["ofm"], l["id"], l["ihw"],
               l["kernel_dim"][2], l["kernel_dim"][3],
-              out_padd, out_padhw, 
+              out_padd, out_padd, out_padhw, out_padhw, out_padhw,
               activate, add_or_overwrite, cores, ht)
 
-    params_str = '"BN={} IFM={} OFM={} ID={} IHW={} KD={} KHW={} OUT_PADD={} OUT_PADHW={} ACTIVATION={} ADDOROVERWRITE={} CORES={} HT={}"'.format(*params)
+    params_template  = '"'
+    params_template += 'BN={} IFM={} OFM={} ID={} IHW={} KD={} KHW={} '
+    params_template += 'OUT_PADD_FRONT={} OUT_PADD_BACK={} '
+    params_template += 'OUT_PADH_FRONT={} OUT_PADW_FRONT={} OUT_PADHW_BACK={} '
+    params_template += 'OUT_STRIDE_D=1 OUT_STRIDE_HW=1 '
+    params_template += 'ACTIVATION={} ADDOROVERWRITE={} CORES={} HT={}'
+    params_template += '"'
+    
+    params_str = params_template.format(*params)
 
     lines.append('layers["{}"] = znn::phi::jitMakeLayer("{}", {});'.format(l["name"], l["type"], params_str))
     #allocate weights 

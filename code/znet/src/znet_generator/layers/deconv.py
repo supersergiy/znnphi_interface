@@ -58,7 +58,8 @@ def allocate_deconv_lines(lparam):
     allocation_params = (l["bn"], l["ifm"], l["ofm"], l["id"], l["ihw"],
                          l["kernel_dim"][2], l["kernel_dim"][3],
                          l["stride"][0],  l["stride"][1], 
-                         'tensors["{}"]->data()'.format(l["kernel"]), 
+    #                     0, 0, 0, 0,
+                         'tensors["{}"]->data()'.format(l["kernel"]),
                          'tensors["{}"]->data()'.format(l["bias"]))
 
     param_str = generate_param_string(allocation_params)
@@ -82,7 +83,6 @@ def allocate_deconv_lines(lparam):
         lines += fill_tensor('{}_bias'.format(l["name"]), bias.flatten() )
 
     #allocate layer
-    lines.append('layers["{}"] = new znn::phi::DeconvLayer({});'.format(l["name"],
-                                                                        param_str))
+    lines.append('layers["{}"] = new znn::phi::DeconvLayer({});'.format(l["name"], param_str))
     return lines
 

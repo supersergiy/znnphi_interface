@@ -120,24 +120,45 @@ def allocate_conv_lines(lparam):
     else:
         add_or_overwrite = "false"
 
-    out_padd  = 0
-    out_padhw = 0
+    out_padd_front  = 0
+    out_padd_back   = 0
+
+    out_padh_front  = 0
+    out_padw_front  = 0
+    out_padhw_back  = 0
+
     if "output_pad" in l:
-        out_padd  = l["output_pad"][0]
-        out_padhw = l["output_pad"][1]
+        out_padd_front  = l["output_pad"][0]
+        out_padd_back   = l["output_pad"][0]
+
+        out_padh_front  = l["output_pad"][1]
+        out_padw_front  = l["output_pad"][1]
+        out_padhw_back  = l["output_pad"][1]
+
+    out_stride_d = 1
+    out_stride_hw = 1
         
     cores = l.get("cores", 2)
     ht    = l.get("ht",    1)
 
     lines = []
-
     #allocate layer
     params = (l["bn"], l["ifm"], l["ofm"], l["id"], l["ihw"],
               l["kernel_dim"][2], l["kernel_dim"][3],
-              out_padd, out_padhw, 
+              out_padd_front, out_padd_back,
+              out_padh_front, out_padw_front, out_padhw_back,
+              out_stride_d, out_stride_hw,
               activate, add_or_overwrite, cores, ht)
 
-    params_str = '"BN={} IFM={} OFM={} ID={} IHW={} KD={} KHW={} OUT_PADD={} OUT_PADHW={} ACTIVATION={} ADDOROVERWRITE={} CORES={} HT={}"'.format(*params)
+    params_template  = '"' 
+    params_template += 'BN={} IFM={} OFM={} ID={} IHW={} KD={} KHW={} '
+    params_template += 'OUT_PADD_FRONT={}  OUT_PADD_BACK={} '
+    params_template += 'OUT_PADH_FRONT={} OUT_PADW_FRONT={} OUT_PADHW_BACK={} ' 
+    params_template += 'OUT_STRIDE_D={} OUT_STRIDE_HW={} '
+    params_template += 'ACTIVATION={} ADDOROVERWRITE={} CORES={} HT={} '
+    params_template += '"' 
+
+    params_str = params_template.format(*params)
 
     lines.append('layers["{}"] = znn::phi::jitMakeLayer("{}", {});'.format(l["name"], l["type"], params_str))
     #allocate weights 

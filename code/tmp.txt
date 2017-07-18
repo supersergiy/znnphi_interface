@@ -6,6 +6,17 @@ python src/znet_generator/main.py /home/ubuntu/znnphi_interface/code/znet/src/py
 Parsing the network spec...
 Loading the weights...
 Optimizing the net...
+Removing sum0_d0!
+Removing sum0_d1!
+Removing sum0_d2!
+Removing sum0_d3!
+Removing sum0_d4!
+Removing sum0_d5!
+Removing sum4_d4!
+Removing sum4_d3!
+Removing sum4_d2!
+Removing sum4_d1!
+Removing sum4_d0!
 Removing elui!
 Removing bn0_d0!
 Removing scale0_d0!
@@ -13,67 +24,127 @@ Removing elu0_d0!
 Removing bn1_d0!
 Removing scale1_d0!
 Removing elu1_d0!
+Removing bn2_d0!
+Removing scale2_d0!
+Removing elu2_d0!
 Removing bn0_d1!
 Removing scale0_d1!
 Removing elu0_d1!
 Removing bn1_d1!
 Removing scale1_d1!
 Removing elu1_d1!
+Removing bn2_d1!
+Removing scale2_d1!
+Removing elu2_d1!
 Removing bn0_d2!
 Removing scale0_d2!
 Removing elu0_d2!
 Removing bn1_d2!
 Removing scale1_d2!
 Removing elu1_d2!
+Removing bn2_d2!
+Removing scale2_d2!
+Removing elu2_d2!
 Removing BatchNorm1!
 Removing Scale1!
 Removing ELU1!
 Removing BatchNorm2!
 Removing Scale2!
 Removing ELU2!
+Removing BatchNorm3!
+Removing Scale3!
+Removing ELU3!
 Removing bn0_d4!
 Removing scale0_d4!
 Removing elu0_d4!
 Removing bn1_d4!
 Removing scale1_d4!
 Removing elu1_d4!
+Removing bn2_d4!
+Removing scale2_d4!
+Removing elu2_d4!
 Removing bn0_d5!
 Removing scale0_d5!
 Removing elu0_d5!
 Removing bn1_d5!
 Removing scale1_d5!
 Removing elu1_d5!
+Removing bn2_d5!
+Removing scale2_d5!
+Removing elu2_d5!
 Removing bn4_d4!
 Removing scale4_d4!
 Removing elu4_d4!
 Removing bn5_d4!
 Removing scale5_d4!
 Removing elu5_d4!
+Removing bn6_d4!
+Removing scale6_d4!
+Removing elu6_d4!
 Removing bn4_d3!
 Removing scale4_d3!
 Removing elu4_d3!
 Removing bn5_d3!
 Removing scale5_d3!
 Removing elu5_d3!
+Removing bn6_d3!
+Removing scale6_d3!
+Removing elu6_d3!
 Removing bn4_d2!
 Removing scale4_d2!
 Removing elu4_d2!
 Removing bn5_d2!
 Removing scale5_d2!
 Removing elu5_d2!
+Removing bn6_d2!
+Removing scale6_d2!
+Removing elu6_d2!
 Removing bn4_d1!
 Removing scale4_d1!
 Removing elu4_d1!
 Removing bn5_d1!
 Removing scale5_d1!
 Removing elu5_d1!
+Removing bn6_d1!
+Removing scale6_d1!
+Removing elu6_d1!
 Removing bn4_d0!
 Removing scale4_d0!
 Removing elu4_d0!
 Removing bn5_d0!
 Removing scale5_d0!
 Removing elu5_d0!
+Removing bn6_d0!
+Removing scale6_d0!
+Removing elu6_d0!
 Removing elu7_d0!
+Output paddiing for convi!
+Output paddiing for conv1_d0!
+Output paddiing for conv1_d1!
+Output paddiing for convf1_d2!
+Output paddiing for conv1_d2!
+Output paddiing for convf2_d2!
+Output paddiing for convf1_d3!
+Output paddiing for conv1_d3!
+Output paddiing for convf2_d3!
+Output paddiing for convf1_d4!
+Output paddiing for conv1_d4!
+Output paddiing for convf2_d4!
+Output paddiing for convf1_d5!
+Output paddiing for conv1_d5!
+Output paddiing for convf2_d5!
+Output paddiing for convf5_d4!
+Output paddiing for conv5_d4!
+Output paddiing for convf6_d4!
+Output paddiing for convf5_d3!
+Output paddiing for conv5_d3!
+Output paddiing for convf6_d3!
+Output paddiing for convf5_d2!
+Output paddiing for conv5_d2!
+Output paddiing for convf6_d2!
+Output paddiing for conv5_d1!
+Output paddiing for conv5_d0!
+Output paddiing for conv7_d0!
 Generating the network...
    Generating constructors...
    Generating foward pass...
@@ -82,474 +153,109 @@ icpc: command line warning #10006: ignoring unknown option '-Wdate-time'
 icpc: warning #10315: specifying -lm before files may supersede the Intel(R) math library and affect performance
 icpc: command line remark #10411: option '-openmp' is deprecated and will be removed in a future release. Please use the replacement option '-qopenmp'
 make: Leaving directory '/home/ubuntu/znnphi_interface/code/znet'
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=28 OFM=36 ID=18 IHW=98 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_28_98_1_3_36_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=28 OFM=28 ID=18 IHW=194 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_28_194_1_3_28_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=48 OFM=64 ID=18 IHW=26 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_48_26_1_3_64_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=36 OFM=48 ID=18 IHW=50 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_36_50_1_3_48_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=80 OFM=96 ID=18 IHW=8 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_80_8_1_3_96_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=64 OFM=80 ID=18 IHW=14 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_64_14_1_3_80_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=64 OFM=64 ID=18 IHW=26 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_64_26_1_3_64_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=80 OFM=80 ID=18 IHW=14 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_80_14_1_3_80_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=36 OFM=36 ID=18 IHW=98 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_36_98_1_3_36_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=28 OFM=28 ID=18 IHW=194 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_28_194_1_3_28_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=28 OFM=28 ID=18 IHW=194 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_28_194_1_3_28_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=64 OFM=64 ID=20 IHW=24 KD=3 KHW=1 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_20_64_24_3_1_64_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=48 OFM=48 ID=20 IHW=48 KD=3 KHW=1 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_20_48_48_3_1_48_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=48 OFM=48 ID=18 IHW=50 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_48_50_1_3_48_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=80 OFM=80 ID=18 IHW=14 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_80_14_1_3_80_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=80 OFM=80 ID=20 IHW=12 KD=3 KHW=1 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_20_80_12_3_1_80_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=80 OFM=80 ID=18 IHW=14 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_80_14_1_3_80_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=64 OFM=64 ID=18 IHW=26 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_64_26_1_3_64_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=48 OFM=48 ID=18 IHW=50 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_48_50_1_3_48_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=96 OFM=96 ID=20 IHW=6 KD=3 KHW=1 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_20_96_6_3_1_96_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=64 OFM=64 ID=20 IHW=24 KD=3 KHW=1 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_20_64_24_3_1_64_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=36 OFM=36 ID=18 IHW=98 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_36_98_1_3_36_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=28 OFM=3 ID=18 IHW=196 KD=1 KHW=5 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=1
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_1_18_28_196_1_5_3_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=48 OFM=48 ID=18 IHW=50 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_48_50_1_3_48_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=36 OFM=36 ID=18 IHW=98 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_36_98_1_3_36_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=64 OFM=64 ID=18 IHW=26 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_64_26_1_3_64_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=28 OFM=28 ID=18 IHW=194 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_28_194_1_3_28_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=48 OFM=48 ID=20 IHW=48 KD=3 KHW=1 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_20_48_48_3_1_48_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=64 OFM=64 ID=20 IHW=24 KD=3 KHW=1 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_20_64_24_3_1_64_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=36 OFM=36 ID=18 IHW=98 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_36_98_1_3_36_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=80 OFM=80 ID=20 IHW=12 KD=3 KHW=1 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_20_80_12_3_1_80_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=80 OFM=80 ID=20 IHW=12 KD=3 KHW=1 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_20_80_12_3_1_80_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=96 OFM=96 ID=20 IHW=6 KD=3 KHW=1 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_20_96_6_3_1_96_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=48 OFM=48 ID=20 IHW=48 KD=3 KHW=1 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_20_48_48_3_1_48_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=64 OFM=64 ID=20 IHW=24 KD=3 KHW=1 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_20_64_24_3_1_64_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=28 OFM=28 ID=18 IHW=194 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_28_194_1_3_28_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=36 OFM=36 ID=18 IHW=98 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_36_98_1_3_36_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=28 ID=18 IHW=196 KD=1 KHW=5 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_1_196_1_5_28_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=28 OFM=28 ID=18 IHW=194 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_28_194_1_3_28_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=64 OFM=64 ID=18 IHW=26 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_64_26_1_3_64_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=48 OFM=48 ID=18 IHW=50 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_48_50_1_3_48_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=96 OFM=96 ID=18 IHW=8 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_96_8_1_3_96_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=80 OFM=80 ID=18 IHW=14 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_80_14_1_3_80_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=80 OFM=80 ID=18 IHW=14 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_80_14_1_3_80_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=96 OFM=96 ID=18 IHW=8 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_96_8_1_3_96_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=48 OFM=48 ID=18 IHW=50 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_48_50_1_3_48_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=64 OFM=64 ID=18 IHW=26 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_64_26_1_3_64_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=80 OFM=80 ID=20 IHW=12 KD=3 KHW=1 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_20_80_12_3_1_80_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=48 OFM=48 ID=20 IHW=48 KD=3 KHW=1 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_20_48_48_3_1_48_0_0.so
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=28 OFM=28 ID=18 IHW=194 KD=1 KHW=3 OUT_PADD=0 OUT_PADHW=0 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_28_194_1_3_28_0_0.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=28 OFM=36 ID=18 IHW=98 KD=1 KHW=3 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_28_98_1_3_36_0_0_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=28 OFM=28 ID=18 IHW=194 KD=1 KHW=3 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_28_194_1_3_28_0_0_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=48 OFM=64 ID=18 IHW=26 KD=1 KHW=3 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_48_26_1_3_64_0_0_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=36 OFM=48 ID=18 IHW=50 KD=1 KHW=3 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_36_50_1_3_48_0_0_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=80 OFM=96 ID=18 IHW=8 KD=1 KHW=3 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_80_8_1_3_96_0_0_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=64 OFM=80 ID=18 IHW=14 KD=1 KHW=3 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_64_14_1_3_80_0_0_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=64 OFM=64 ID=18 IHW=26 KD=1 KHW=3 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_64_26_1_3_64_0_0_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=80 OFM=80 ID=18 IHW=14 KD=1 KHW=3 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_80_14_1_3_80_0_0_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=36 OFM=36 ID=18 IHW=98 KD=1 KHW=3 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_36_98_1_3_36_0_0_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=28 OFM=28 ID=18 IHW=194 KD=1 KHW=3 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=1 OUT_PADW_FRONT=1 OUT_PADHW_BACK=1 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_28_194_1_3_28_0_0_1_1_1_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=28 OFM=28 ID=18 IHW=194 KD=1 KHW=3 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_28_194_1_3_28_0_0_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=64 OFM=64 ID=20 IHW=24 KD=3 KHW=1 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=true CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_true_1_2_2_20_64_24_3_1_64_0_0_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=48 OFM=48 ID=20 IHW=48 KD=3 KHW=1 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=true CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_true_1_2_2_20_48_48_3_1_48_0_0_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=48 OFM=48 ID=18 IHW=50 KD=1 KHW=3 OUT_PADD_FRONT=1  OUT_PADD_BACK=1 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_48_50_1_3_48_1_1_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=80 OFM=80 ID=18 IHW=14 KD=1 KHW=3 OUT_PADD_FRONT=1  OUT_PADD_BACK=1 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_80_14_1_3_80_1_1_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=80 OFM=80 ID=20 IHW=12 KD=3 KHW=1 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=true CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_true_1_2_2_20_80_12_3_1_80_0_0_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=80 OFM=80 ID=18 IHW=14 KD=1 KHW=3 OUT_PADD_FRONT=1  OUT_PADD_BACK=1 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_80_14_1_3_80_1_1_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=64 OFM=64 ID=18 IHW=26 KD=1 KHW=3 OUT_PADD_FRONT=1  OUT_PADD_BACK=1 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_64_26_1_3_64_1_1_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=48 OFM=48 ID=18 IHW=50 KD=1 KHW=3 OUT_PADD_FRONT=1  OUT_PADD_BACK=1 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_48_50_1_3_48_1_1_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=96 OFM=96 ID=20 IHW=6 KD=3 KHW=1 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=true CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_true_1_2_2_20_96_6_3_1_96_0_0_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=64 OFM=64 ID=20 IHW=24 KD=3 KHW=1 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=true CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_true_1_2_2_20_64_24_3_1_64_0_0_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=36 OFM=36 ID=18 IHW=98 KD=1 KHW=3 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=true CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_true_1_2_2_18_36_98_1_3_36_0_0_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=28 OFM=3 ID=18 IHW=196 KD=1 KHW=5 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=1 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_1_18_28_196_1_5_3_0_0_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=48 OFM=48 ID=18 IHW=50 KD=1 KHW=3 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_48_50_1_3_48_0_0_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=36 OFM=36 ID=18 IHW=98 KD=1 KHW=3 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=true CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_true_1_2_2_18_36_98_1_3_36_0_0_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=64 OFM=64 ID=18 IHW=26 KD=1 KHW=3 OUT_PADD_FRONT=1  OUT_PADD_BACK=1 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_64_26_1_3_64_1_1_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=28 OFM=28 ID=18 IHW=194 KD=1 KHW=3 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=true CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_true_1_2_2_18_28_194_1_3_28_0_0_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=48 OFM=48 ID=20 IHW=48 KD=3 KHW=1 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=1 OUT_PADW_FRONT=1 OUT_PADHW_BACK=1 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_20_48_48_3_1_48_0_0_1_1_1_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=64 OFM=64 ID=20 IHW=24 KD=3 KHW=1 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=1 OUT_PADW_FRONT=1 OUT_PADHW_BACK=1 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_20_64_24_3_1_64_0_0_1_1_1_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=36 OFM=36 ID=18 IHW=98 KD=1 KHW=3 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=1 OUT_PADW_FRONT=1 OUT_PADHW_BACK=1 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_36_98_1_3_36_0_0_1_1_1_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=80 OFM=80 ID=20 IHW=12 KD=3 KHW=1 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=1 OUT_PADW_FRONT=1 OUT_PADHW_BACK=1 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_20_80_12_3_1_80_0_0_1_1_1_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=80 OFM=80 ID=20 IHW=12 KD=3 KHW=1 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=1 OUT_PADW_FRONT=1 OUT_PADHW_BACK=1 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_20_80_12_3_1_80_0_0_1_1_1_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=96 OFM=96 ID=20 IHW=6 KD=3 KHW=1 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=1 OUT_PADW_FRONT=1 OUT_PADHW_BACK=1 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_20_96_6_3_1_96_0_0_1_1_1_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=48 OFM=48 ID=20 IHW=48 KD=3 KHW=1 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=1 OUT_PADW_FRONT=1 OUT_PADHW_BACK=1 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_20_48_48_3_1_48_0_0_1_1_1_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=64 OFM=64 ID=20 IHW=24 KD=3 KHW=1 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=1 OUT_PADW_FRONT=1 OUT_PADHW_BACK=1 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_20_64_24_3_1_64_0_0_1_1_1_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=28 OFM=28 ID=18 IHW=194 KD=1 KHW=3 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=1 OUT_PADW_FRONT=1 OUT_PADHW_BACK=1 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_28_194_1_3_28_0_0_1_1_1_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=36 OFM=36 ID=18 IHW=98 KD=1 KHW=3 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=1 OUT_PADW_FRONT=1 OUT_PADHW_BACK=1 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_36_98_1_3_36_0_0_1_1_1_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=28 ID=18 IHW=196 KD=1 KHW=5 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=1 OUT_PADW_FRONT=1 OUT_PADHW_BACK=1 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_1_196_1_5_28_0_0_1_1_1_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=28 OFM=28 ID=18 IHW=194 KD=1 KHW=3 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=2 OUT_PADW_FRONT=2 OUT_PADHW_BACK=2 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_false_1_2_2_18_28_194_1_3_28_0_0_2_2_2_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=64 OFM=64 ID=18 IHW=26 KD=1 KHW=3 OUT_PADD_FRONT=1  OUT_PADD_BACK=1 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_64_26_1_3_64_1_1_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=48 OFM=48 ID=18 IHW=50 KD=1 KHW=3 OUT_PADD_FRONT=1  OUT_PADD_BACK=1 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_48_50_1_3_48_1_1_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=96 OFM=96 ID=18 IHW=8 KD=1 KHW=3 OUT_PADD_FRONT=1  OUT_PADD_BACK=1 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_96_8_1_3_96_1_1_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=80 OFM=80 ID=18 IHW=14 KD=1 KHW=3 OUT_PADD_FRONT=1  OUT_PADD_BACK=1 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_80_14_1_3_80_1_1_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=80 OFM=80 ID=18 IHW=14 KD=1 KHW=3 OUT_PADD_FRONT=1  OUT_PADD_BACK=1 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_80_14_1_3_80_1_1_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=96 OFM=96 ID=18 IHW=8 KD=1 KHW=3 OUT_PADD_FRONT=1  OUT_PADD_BACK=1 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_96_8_1_3_96_1_1_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=48 OFM=48 ID=18 IHW=50 KD=1 KHW=3 OUT_PADD_FRONT=1  OUT_PADD_BACK=1 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_48_50_1_3_48_1_1_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=64 OFM=64 ID=18 IHW=26 KD=1 KHW=3 OUT_PADD_FRONT=1  OUT_PADD_BACK=1 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_false_false_1_2_2_18_64_26_1_3_64_1_1_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=80 OFM=80 ID=20 IHW=12 KD=3 KHW=1 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=true CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_true_1_2_2_20_80_12_3_1_80_0_0_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=48 OFM=48 ID=20 IHW=48 KD=3 KHW=1 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=true CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_true_1_2_2_20_48_48_3_1_48_0_0_0_0_0_1_1.so
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=28 OFM=28 ID=18 IHW=194 KD=1 KHW=3 OUT_PADD_FRONT=0  OUT_PADD_BACK=0 OUT_PADH_FRONT=0 OUT_PADW_FRONT=0 OUT_PADHW_BACK=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=true CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_true_1_2_2_18_28_194_1_3_28_0_0_0_0_0_1_1.so
 1 2
 1 2
 1 2
 1 2
 1 2
 Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-block_input: 0.010022
-input: 0
-convi_padder: 0.004133
-convi: 0.117426
-conv0_d0_padder: 0.015379
-conv0_d0: 0.076276
-conv1_d0_padder: 0.015106
-conv1_d0: 0.075841
-conv2_d0_padder: 0.015024
-conv2_d0: 0.067449
-sum0_d0: 0.020333
-bn2_d0: 0.014516
-scale2_d0: 0.014491
-elu2_d0: 0.152748
-pool_d1: 0.051944
-conv0_d1_padder: 0.003896
-conv0_d1: 0.024239
-conv1_d1_padder: 0.004874
-conv1_d1: 0.029681
-conv2_d1_padder: 0.004912
-conv2_d1: 0.026826
-sum0_d1: 0.006629
-bn2_d1: 0.004523
-scale2_d1: 0.004551
-elu2_d1: 0.223099
-pool_d2: 0.017792
-conv0_d2_padder: 0.001306
-conv0_d2: 0.009187
-convf1_d2_padder: 0.001704
-convf1_d2: 0.009908
-conv1_d2_padder: 0.001522
-conv1_d2: 0.006263
-convf2_d2_padder: 0.001599
-convf2_d2: 0.009902
-conv2_d2_padder: 0.001496
-conv2_d2: 0.005445
-sum0_d2: 0.001983
-bn2_d2: 0.001415
-scale2_d2: 0.001399
-elu2_d2: 0.012943
-pool_d3: 0.005063
-conv0_d3_padder: 0.000642
-conv0_d3: 0.004652
-convf1_d3_padder: 0.000576
-convf1_d3: 0.00576
-conv1_d3_padder: 0.000697
-conv1_d3: 0.002682
-convf2_d3_padder: 0.000545
-convf2_d3: 0.00577
-conv2_d3_padder: 0.000785
-conv2_d3: 0.002405
-sum0_d3: 0.000884
-BatchNorm3: 0.000477
-Scale3: 0.000459
-ELU3: 0.008031
-pool_d4: 0.001663
-conv0_d4_padder: 0.000235
-conv0_d4: 0.001998
-convf1_d4_padder: 0.00033
-convf1_d4: 0.002275
-conv1_d4_padder: 0.000267
-conv1_d4: 0.001046
-convf2_d4_padder: 0.000291
-convf2_d4: 0.002273
-conv2_d4_padder: 0.000264
-conv2_d4: 0.000997
-sum0_d4: 0.000254
-bn2_d4: 0.000157
-scale2_d4: 0.000156
-elu2_d4: 0.002142
-pool_d5: 0.000578
-conv0_d5_padder: 9.8e-05
-conv0_d5: 0.00078
-convf1_d5_padder: 0.000117
-convf1_d5: 0.000852
-conv1_d5_padder: 9.8e-05
-conv1_d5: 0.000378
-convf2_d5_padder: 0.000132
-convf2_d5: 0.000845
-conv2_d5_padder: 8.9e-05
-conv2_d5: 0.000389
-sum0_d5: 7.5e-05
-bn2_d5: 5.1e-05
-scale2_d5: 5e-05
-elu2_d5: 0.000858
-Deconvolution1: 0.004136
-Eltwise1: 0.000263
-BatchNorm4: 0.000153
-Scale4: 0.00015
-ELU4: 0.002291
-conv4_d4_padder: 0.000317
-conv4_d4: 0.002407
-convf5_d4_padder: 0.000332
-convf5_d4: 0.002284
-conv5_d4_padder: 0.000245
-conv5_d4: 0.001037
-convf6_d4_padder: 0.000313
-convf6_d4: 0.002289
-conv6_d4_padder: 0.00024
-conv6_d4: 0.000998
-sum4_d4: 0.000257
-bn6_d4: 0.000156
-scale6_d4: 0.000156
-elu6_d4: 0.002033
-Deconvolution2: 0.00708
-Eltwise2: 0.000858
-bn3_d3: 0.00046
-scale3_d3: 0.000459
-elu3_d3: 0.007787
-conv4_d3_padder: 0.000804
-conv4_d3: 0.006168
-convf5_d3_padder: 0.000578
-convf5_d3: 0.005754
-conv5_d3_padder: 0.000804
-conv5_d3: 0.002669
-convf6_d3_padder: 0.000619
-convf6_d3: 0.005674
-conv6_d3_padder: 0.000715
-conv6_d3: 0.002435
-sum4_d3: 0.000855
-bn6_d3: 0.000477
-scale6_d3: 0.00046
-elu6_d3: 0.0058
-Deconvolution3: 0.019149
-Eltwise3: 0.001863
-bn2_d3: 0.001406
-scale2_d3: 0.001383
-elu2_d3: 0.018689
-conv4_d2_padder: 0.001565
-conv4_d2: 0.010677
-convf5_d2_padder: 0.001641
-convf5_d2: 0.010258
-conv5_d2_padder: 0.001448
-conv5_d2: 0.006298
-convf6_d2_padder: 0.001583
-convf6_d2: 0.009943
-conv6_d2_padder: 0.001651
-conv6_d2: 0.005545
-sum4_d2: 0.002076
-bn6_d2: 0.001438
-scale6_d2: 0.001391
-elu6_d2: 0.02579
-Deconvolution4: 0.05992
-Eltwise4: 0.006501
-bn1_d3: 0.004749
-scale1_d3: 0.004731
-elu1_d3: 0.052145
-conv4_d1_padder: 0.005098
-conv4_d1: 0.029762
-conv5_d1_padder: 0.004917
-conv5_d1: 0.029795
-conv6_d1_padder: 0.00494
-conv6_d1: 0.026936
-sum4_d1: 0.006647
-bn6_d1: 0.004654
-scale6_d1: 0.004659
-elu6_d1: 0.08553
-deconv_d3: 0.186752
-merge_d3: 0.020012
-bn0_d3: 0.01428
-scale0_d3: 0.014313
-elu0_d3: 0.232688
-conv4_d0_padder: 0.015466
-conv4_d0: 0.07557
-conv5_d0_padder: 0.014795
-conv5_d0: 0.076242
-conv6_d0_padder: 0.01491
-conv6_d0: 0.067362
-sum4_d0: 0.019673
-bn6_d0: 0.014206
-scale6_d0: 0.014273
-elu6_d0: 0.152821
-conv7_d0_padder: 0.015107
-conv7_d0: 0.076037
-score_padder: 0.015194
-score: 0.067551
-output: 0.013736
-unblock_output: 0.003884
-average:2.77844
-Forward Finished
-Congrats! All pass. Error == 1.40755318512e-07
-Copying 2654208 bytes into the user input. 
-Starting Forward Pass
-block_input: 0.00955
-input: 0
-convi_padder: 0.003748
-convi: 0.117073
-conv0_d0_padder: 0.01491
-conv0_d0: 0.075982
-conv1_d0_padder: 0.015043
-conv1_d0: 0.075154
-conv2_d0_padder: 0.014583
-conv2_d0: 0.067295
-sum0_d0: 0.020026
-bn2_d0: 0.014459
-scale2_d0: 0.014597
-elu2_d0: 0.152745
-pool_d1: 0.051566
-conv0_d1_padder: 0.003702
-conv0_d1: 0.024003
-conv1_d1_padder: 0.004534
-conv1_d1: 0.029376
-conv2_d1_padder: 0.004588
-conv2_d1: 0.026802
-sum0_d1: 0.006139
-bn2_d1: 0.00453
-scale2_d1: 0.004558
-elu2_d1: 0.059531
-pool_d2: 0.017289
-conv0_d2_padder: 0.001167
-conv0_d2: 0.008928
-convf1_d2_padder: 0.001226
-convf1_d2: 0.009769
-conv1_d2_padder: 0.001202
-conv1_d2: 0.006146
-convf2_d2_padder: 0.001293
-convf2_d2: 0.009746
-conv2_d2_padder: 0.001183
-conv2_d2: 0.00536
-sum0_d2: 0.001752
-bn2_d2: 0.00144
-scale2_d2: 0.001385
-elu2_d2: 0.012944
-pool_d3: 0.004726
-conv0_d3_padder: 0.000336
-conv0_d3: 0.004628
-convf1_d3_padder: 0.000442
-convf1_d3: 0.00563
-conv1_d3_padder: 0.000388
-conv1_d3: 0.00259
-convf2_d3_padder: 0.000433
-convf2_d3: 0.005933
-conv2_d3_padder: 0.000467
-conv2_d3: 0.002349
-sum0_d3: 0.000579
-BatchNorm3: 0.000498
-Scale3: 0.000475
-ELU3: 0.008034
-pool_d4: 0.001576
-conv0_d4_padder: 0.000123
-conv0_d4: 0.001929
-convf1_d4_padder: 0.000196
-convf1_d4: 0.002235
-conv1_d4_padder: 0.000134
-conv1_d4: 0.001
-convf2_d4_padder: 0.000153
-convf2_d4: 0.002248
-conv2_d4_padder: 0.000144
-conv2_d4: 0.000957
-sum0_d4: 0.000145
-bn2_d4: 0.000156
-scale2_d4: 0.000155
-elu2_d4: 0.002161
-pool_d5: 0.000534
-conv0_d5_padder: 5.7e-05
-conv0_d5: 0.000766
-convf1_d5_padder: 6.6e-05
-convf1_d5: 0.000836
-conv1_d5_padder: 5.9e-05
-conv1_d5: 0.000374
-convf2_d5_padder: 7.8e-05
-convf2_d5: 0.000832
-conv2_d5_padder: 5.7e-05
-conv2_d5: 0.000356
-sum0_d5: 4.3e-05
-bn2_d5: 5.1e-05
-scale2_d5: 5e-05
-elu2_d5: 0.000859
-Deconvolution1: 0.001897
-Eltwise1: 0.000167
-BatchNorm4: 0.000151
-Scale4: 0.00015
-ELU4: 0.002263
-conv4_d4_padder: 0.000179
-conv4_d4: 0.00271
-convf5_d4_padder: 0.000188
-convf5_d4: 0.002243
-conv5_d4_padder: 0.000125
-conv5_d4: 0.000999
-convf6_d4_padder: 0.000175
-convf6_d4: 0.002244
-conv6_d4_padder: 0.000134
-conv6_d4: 0.000951
-sum4_d4: 0.000156
-bn6_d4: 0.000156
-scale6_d4: 0.000156
-elu6_d4: 0.002017
-Deconvolution2: 0.004925
-Eltwise2: 0.000553
-bn3_d3: 0.00046
-scale3_d3: 0.000459
-elu3_d3: 0.007788
-conv4_d3_padder: 0.00041
-conv4_d3: 0.00605
-convf5_d3_padder: 0.000437
-convf5_d3: 0.005618
-conv5_d3_padder: 0.000448
-conv5_d3: 0.002574
-convf6_d3_padder: 0.000495
-convf6_d3: 0.005618
-conv6_d3_padder: 0.000404
-conv6_d3: 0.002281
-sum4_d3: 0.000526
-bn6_d3: 0.000478
-scale6_d3: 0.000473
-elu6_d3: 0.0058
-Deconvolution3: 0.014947
-Eltwise3: 0.001633
-bn2_d3: 0.001408
-scale2_d3: 0.001398
-elu2_d3: 0.018701
-conv4_d2_padder: 0.001259
-conv4_d2: 0.010516
-convf5_d2_padder: 0.001315
-convf5_d2: 0.00976
-conv5_d2_padder: 0.001364
-conv5_d2: 0.006189
-convf6_d2_padder: 0.001256
-convf6_d2: 0.009856
-conv6_d2_padder: 0.001366
-conv6_d2: 0.005383
-sum4_d2: 0.001825
-bn6_d2: 0.001416
-scale6_d2: 0.001416
-elu6_d2: 0.025744
-Deconvolution4: 0.048916
-Eltwise4: 0.006305
-bn1_d3: 0.004713
-scale1_d3: 0.004678
-elu1_d3: 0.052101
-conv4_d1_padder: 0.004729
-conv4_d1: 0.029451
-conv5_d1_padder: 0.004583
-conv5_d1: 0.029502
-conv6_d1_padder: 0.004616
-conv6_d1: 0.026832
-sum4_d1: 0.006181
-bn6_d1: 0.004688
-scale6_d1: 0.004674
-elu6_d1: 0.085561
-deconv_d3: 0.15926
-merge_d3: 0.019819
-bn0_d3: 0.014401
-scale0_d3: 0.014377
-elu0_d3: 0.23267
-conv4_d0_padder: 0.015071
-conv4_d0: 0.075844
-conv5_d0_padder: 0.014378
-conv5_d0: 0.07585
-conv6_d0_padder: 0.014515
-conv6_d0: 0.066961
-sum4_d0: 0.019531
-bn6_d0: 0.014234
-scale6_d0: 0.014207
-elu6_d0: 0.152764
-conv7_d0_padder: 0.014895
-conv7_d0: 0.075651
-score_padder: 0.014806
-score: 0.068188
-output: 0.013314
-unblock_output: 0.003676
-average:2.54388
-Forward Finished
-Congrats! All pass. Error == 1.40755318512e-07

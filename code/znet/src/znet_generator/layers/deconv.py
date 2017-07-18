@@ -1,6 +1,6 @@
 import copy
 from common import round_to_simd, generate_param_string, S, fill_tensor, zero_out_tensor
-from conv   import block_kernel, block_bias
+import numpy as np
 
 def set_deconv_dim(params, bot_tensor):
     params["bn"]  = bot_tensor.dim[0]
@@ -51,6 +51,42 @@ def parse_deconv(json_param):
 
     return params
 
+def block_kernel(kernel, lparam):
+    kdim = lparam["kernel_dim"]
+    kernel = kernel.reshape(kdim)
+    blocked_kernel = np.array([0.0]*lparam['kernel_size'])
+
+    def h5ker_to_znnphiker(ifm, ofm, kz, kx, ky):
+        total_ofms = round_to_simd(kdim[0])
+        total_ifms = round_to_simd(kdim[1])
+
+        offset = ofm/S
+        offset *= total_ifms/S
+        offset += ifm/S
+        offset *= kdim[2]
+        offset += kz
+        offset *= kdim[3]
+        offset += kx
+        offset *= kdim[4]
+        offset += ky
+        offset *= S
+        offset += ifm % S
+        offset *= S
+        offset += ofm % S
+        return offset
+
+    # h5 weight format: ifm-ofm-kz-kx-ky
+    # output format: ofm/S-ifm/S-kz-kx-ky-ifm%S-ofm%S
+
+    for ifm in range(kdim[0]):
+        for ofm in range(kdim[1]):
+            for kz in range(kdim[2]):
+                for kx in range(kdim[3]):
+                    for ky in range(kdim[4]):
+                        znnphi_index = h5ker_to_znnphiker(ifm, ofm, kz, kx, ky)
+                        blocked_kernel[znnphi_index] = kernel[ifm][ofm][kz][kx][ky]
+    return blocked_kernel
+
 
 def allocate_deconv_lines(lparam):
     l = lparam
@@ -58,7 +94,8 @@ def allocate_deconv_lines(lparam):
     allocation_params = (l["bn"], l["ifm"], l["ofm"], l["id"], l["ihw"],
                          l["kernel_dim"][2], l["kernel_dim"][3],
                          l["stride"][0],  l["stride"][1], 
-                         'tensors["{}"]->data()'.format(l["kernel"]), 
+                         #0, 0, 0, 0,
+                         'tensors["{}"]->data()'.format(l["kernel"]),
                          'tensors["{}"]->data()'.format(l["bias"]))
 
     param_str = generate_param_string(allocation_params)
@@ -71,6 +108,7 @@ def allocate_deconv_lines(lparam):
                                                   l["bias"], l["bias_size"]))
     #initialize weights
     kernel = l["kernel_data"]
+    blocked_kernel = block_kernel(kernel, l)
     lines += fill_tensor('{}_kernel'.format(l["name"]), kernel.flatten())
 
     bias = l["bias_data"]

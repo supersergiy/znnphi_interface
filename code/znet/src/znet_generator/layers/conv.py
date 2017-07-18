@@ -86,7 +86,7 @@ def block_kernel(kernel, lparam):
         return offset
 
     # h5 weight format: ofm-ifm-kz-kx-ky
-    # output format: ofm/S-ifm/S-kz-kx-ky-ofm%S-ifm%S
+    # output format: ofm/S-ifm/S-kz-kx-ky-ifm%S-ofm%S
     for ofm in range(kdim[0]):
         for ifm in range(kdim[1]):
             for kz in range(kdim[2]):
@@ -94,7 +94,6 @@ def block_kernel(kernel, lparam):
                     for ky in range(kdim[4]):
                         znnphi_index = h5ker_to_znnphiker(ofm, ifm, kz, kx, ky)
                         blocked_kernel[znnphi_index] = kernel[ofm][ifm][kz][kx][ky]
-
     return blocked_kernel
 
 
@@ -134,13 +133,13 @@ def allocate_conv_lines(lparam):
     #allocate layer
     params = (l["bn"], l["ifm"], l["ofm"], l["id"], l["ihw"],
               l["kernel_dim"][2], l["kernel_dim"][3],
-              out_padd, out_padd, out_padhw, out_padhw, out_padhw,
+              0, out_padd, 0, 0, out_padhw,
               activate, add_or_overwrite, cores, ht)
 
     params_template  = '"'
     params_template += 'BN={} IFM={} OFM={} ID={} IHW={} KD={} KHW={} '
-    params_template += 'OUT_PADD_FRONT={} OUT_PADD_BACK={} '
-    params_template += 'OUT_PADH_FRONT={} OUT_PADW_FRONT={} OUT_PADHW_BACK={} '
+    params_template += 'OUT_D_SKIP={} OUT_PADD={} '
+    params_template += 'OUT_H_SKIP={} OUT_W_SKIP={} OUT_PADHW={} '
     params_template += 'OUT_STRIDE_D=1 OUT_STRIDE_HW=1 '
     params_template += 'ACTIVATION={} ADDOROVERWRITE={} CORES={} HT={}'
     params_template += '"'

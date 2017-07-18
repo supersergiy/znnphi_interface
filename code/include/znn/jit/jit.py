@@ -37,8 +37,8 @@ def create_conv_wrapper(args):
     template_params = ", ".join([ args["cores"], args["ht"],
                                   args["bn"], args["ifm"], args["ofm"], 
                                   args["id"], args["ihw"], args["kd"], args["khw"], 
-                                  args["out_padd_front"], args["out_padd_back"],
-                                  args["out_padh_front"], args["out_padw_front"], args["out_padhw_back"],
+                                  args["out_d_skip"], args["out_padd"],
+                                  args["out_h_skip"], args["out_w_skip"], args["out_padhw"],
                                   args["out_stride_d"], args["out_stride_hw"],
                                   args["activation"], args["addoroverwrite"]]) 
     pid = os.getpid()

@@ -1,3 +1,4 @@
+#pragma once
 #include <sys/wait.h>
 #include <string.h>
 #include <stdlib.h>

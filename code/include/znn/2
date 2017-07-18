@@ -11,8 +11,8 @@ namespace phi
 using namespace propagation;
 template <long_t Cores, long_t HT, long_t B, long_t IFM, long_t OFM, long_t ID,
           long_t IHW, long_t KD, long_t KHW, 
-          long_t OUT_D_SKIP=0, long_t OUT_PADD=0,
-          long_t OUT_H_SKIP=0, long_t OUT_W_SKIP=0, long_t OUT_PADHW=0,
+          long_t OUT_PADD_FRONT=0, long_t OUT_PADD_BACK=0,
+          long_t OUT_PADH_FRONT=0, long_t OUT_PADW_FRONT=0, long_t OUT_PADHW_BACK=0,
           long_t OUT_STRIDE_D=1, long_t OUT_STRIDE_HW=1,
           bool Activation=false, bool AddOrOverwrite=false>
 class ConvTemplate: public Layer
@@ -28,22 +28,20 @@ private:
     static const long_t OHW = IHW + 1 - KHW;
 
     static const long_t OW_SINGLE_STRIDE = SIMD_WIDTH; 
-    static const long_t OW_TOTAL_STRIDE  = OW_SINGLE_STRIDE*OUT_STRIDE_HW;
+    static const long_t OH_SINGLE_STRIDE = (OHW + OUT_PADW_FRONT + OUT_PADHW_BACK) * OW_SINGLE_STRIDE;
+    static const long_t OD_SINGLE_STRIDE = (OHW + OUT_PADH_FRONT + OUT_PADHW_BACK) * OH_SINGLE_STRIDE; 
 
-    static const long_t OH_SINGLE_STRIDE = (2*OUT_PADHW) * OW_SINGLE_STRIDE + OHW * OW_TOTAL_STRIDE;
-    static const long_t OH_TOTAL_STRIDE  = OH_SINGLE_STRIDE*OUT_STRIDE_HW;
-
-    static const long_t OD_SINGLE_STRIDE = (2*OUT_PADHW) * OH_SINGLE_STRIDE + OHW * OH_TOTAL_STRIDE; 
-    static const long_t OD_TOTAL_STRIDE = OD_SINGLE_STRIDE*OUT_STRIDE_D;
-
+    static const long_t OW_TOTAL_STRIDE = OW_SINGLE_STRIDE*OUT_STRIDE_HW;
+    static const long_t OH_TOTAL_STRIDE = OH_SINGLE_STRIDE*OUT_STRIDE_HW*OUT_STRIDE_HW;
+    static const long_t OD_TOTAL_STRIDE = OD_SINGLE_STRIDE*OUT_STRIDE_HW*OUT_STRIDE_HW*OUT_STRIDE_D;
   
-    static const long_t OUT_OFFSET =  (OW_SINGLE_STRIDE * OUT_W_SKIP + 
-                                       OH_SINGLE_STRIDE * OUT_H_SKIP +
-                                       OD_SINGLE_STRIDE * OUT_D_SKIP);
-   
+    static const long_t OUT_OFFSET =  (OW_TOTAL_STRIDE * OUT_PADH_FRONT + 
+                                       OH_TOTAL_STRIDE * OUT_PADW_FRONT +
+                                       OD_TOTAL_STRIDE * OUT_PADD_FRONT) / OUT_STRIDE_HW;
+
     //strided computed for spacing out output
 
-    static const long_t OFM_STRIDE = (2 * OUT_PADD) * OD_SINGLE_STRIDE + OD * OD_TOTAL_STRIDE; 
+    static const long_t OFM_STRIDE = (OD + OUT_PADD_FRONT + OUT_PADD_BACK) * OD_TOTAL_STRIDE; 
     static const long_t IFM_STRIDE = ID * IHW * IHW * SIMD_WIDTH;
 
     
@@ -86,12 +84,6 @@ public:
                  float const* __restrict ker, float const* __restrict bi,
                  float const* __restrict scale)
     {
-#ifdef DEBUG
-        std::cout << "Out offset: " << OUT_OFFSET << std::endl;
-        std::cout << "OW: " << OW_TOTAL_STRIDE << std::endl;
-        std::cout << "OH: " << OH_TOTAL_STRIDE << std::endl;
-        std::cout << "OD: " << OD_TOTAL_STRIDE << std::endl;
-#endif
         plan->execute(in, out + OUT_OFFSET, ker, bi, scale);
     }
 };

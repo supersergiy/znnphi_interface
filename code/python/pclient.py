@@ -21,7 +21,8 @@ weights_path   = os.path.join(base, weights_file)
 input_path     = os.path.join(base, input_file)
 reference_path = os.path.join(base, reference_file)
 
-z = pznet.znet(net_path, weights_path)
+z = pznet.znet()
+z.create_net(net_path, weights_path)
 
 
 in_file  = h5py.File(input_path)

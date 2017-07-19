@@ -77,7 +77,7 @@ znn::phi::Znet::Znet(std::string weights_path)
 	tensors["conv1_d0"] = new znn::phi::hbw_array<float>(znn::phi::zero_init, 21678336);
 	tensors["conv1_d1"] = new znn::phi::hbw_array<float>(znn::phi::zero_init, 6914880);
 	tensors["convi"] = new znn::phi::hbw_array<float>(znn::phi::zero_init, 21678336);
-	tensors["conv7_d0"] = new znn::phi::hbw_array<float>(znn::phi::zero_init, 21233664);
+	tensors["conv7_d0"] = new znn::phi::hbw_array<float>(znn::phi::zero_init, 22127616);
 	tensors["Eltwise4_padded"] = new znn::phi::hbw_array<float>(znn::phi::zero_init, 6914880);
 	tensors["merge_d3"] = new znn::phi::hbw_array<float>(znn::phi::zero_init, 21233664);
 	tensors["user_input"] = new znn::phi::hbw_array<float>(znn::phi::zero_init, 5308416);
@@ -288,11 +288,11 @@ znn::phi::Znet::Znet(std::string weights_path)
 	layers["conv4_d0_padder"] = new znn::phi::PadLayer(1, 28, 18, 192, 0, 1);
 	layers["conv1_d0_padder"] = new znn::phi::PadLayer(1, 28, 18, 192, 0, 1);
 	layers["convf1_d5_padder"] = new znn::phi::PadLayer(1, 96, 18, 6, 0, 1);
+	layers["score"] = znn::phi::jitMakeLayer("conv", "BN=1 IFM=28 OFM=3 ID=18 IHW=196 KD=1 KHW=5 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=1");
 	tensors["score_kernel"] = new znn::phi::hbw_array<float>(6400);
 	tensors["score_bias"] = new znn::phi::hbw_array<float>(8);
 	readArrayFromFile(tensors["score_kernel"]->data(), weights_path + "score_kernel.data");
 	readArrayFromFile(tensors["score_bias"]->data(), weights_path + "score_bias.data");
-	layers["score"] = new znn::phi::DeconvLayer(1, 28, 3, 18, 192, 1, 5, 1, 1, tensors["score_kernel"]->data(), tensors["score_bias"]->data());
 	layers["scale0_d3"] = new znn::phi::ScaleLayer(1, 28, 18, 192);
 	tensors["scale_scale0_d3"] = new znn::phi::hbw_array<float>(32);
 	tensors["bias_scale0_d3"] = new znn::phi::hbw_array<float>(32);
@@ -415,7 +415,7 @@ znn::phi::Znet::Znet(std::string weights_path)
 	tensors["convi_bias"] = new znn::phi::hbw_array<float>(32);
 	readArrayFromFile(tensors["convi_kernel"]->data(), weights_path + "convi_kernel.data");
 	readArrayFromFile(tensors["convi_bias"]->data(), weights_path + "convi_bias.data");
-	layers["conv7_d0"] = znn::phi::jitMakeLayer("conv", "BN=1 IFM=28 OFM=28 ID=18 IHW=194 KD=1 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2");
+	layers["conv7_d0"] = znn::phi::jitMakeLayer("conv", "BN=1 IFM=28 OFM=28 ID=18 IHW=194 KD=1 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=2 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2");
 	tensors["conv7_d0_kernel"] = new znn::phi::hbw_array<float>(9216);
 	tensors["conv7_d0_bias"] = new znn::phi::hbw_array<float>(32);
 	readArrayFromFile(tensors["conv7_d0_kernel"]->data(), weights_path + "conv7_d0_kernel.data");
@@ -620,7 +620,7 @@ void znn::phi::Znet::forward(void)
 		layers["conv6_d0"]->forward(tensors["conv5_d0"]->data(), tensors["conv4_d0"]->data(), tensors["conv6_d0_kernel"]->data(), tensors["conv6_d0_bias"]->data(), tensors["conv6_d0_scale"]->data());
 		layers["conv7_d0_padder"]->forward(tensors["conv4_d0"]->data(), tensors["conv4_d0_padded"]->data(), NULL, NULL);
 		layers["conv7_d0"]->forward(tensors["conv4_d0_padded"]->data(), tensors["conv7_d0"]->data(), tensors["conv7_d0_kernel"]->data(), tensors["conv7_d0_bias"]->data(), NULL );
-		layers["score"]->forward(tensors["conv7_d0"]->data(), tensors["score"]->data(), tensors["score_kernel"]->data(), tensors["score_bias"]->data());
+		layers["score"]->forward(tensors["conv7_d0"]->data(), tensors["score"]->data(), tensors["score_kernel"]->data(), tensors["score_bias"]->data(), NULL );
 		layers["output"]->forward(tensors["score"]->data(), tensors["output"]->data(), NULL, NULL);
 		layers["unblock_output"]->forward(tensors["output"]->data(), tensors["user_output"]->data(), NULL, NULL);
 		

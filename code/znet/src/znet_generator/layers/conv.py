@@ -86,7 +86,7 @@ def block_kernel(kernel, lparam):
         return offset
 
     # h5 weight format: ofm-ifm-kz-kx-ky
-    # output format: ofm/S-ifm/S-kz-kx-ky-ifm%S-ofm%S
+    # output format: ofm/S-ifm/S-kz-kx-ky-ofm%S-ifm%S
     for ofm in range(kdim[0]):
         for ifm in range(kdim[1]):
             for kz in range(kdim[2]):
@@ -94,6 +94,7 @@ def block_kernel(kernel, lparam):
                     for ky in range(kdim[4]):
                         znnphi_index = h5ker_to_znnphiker(ofm, ifm, kz, kx, ky)
                         blocked_kernel[znnphi_index] = kernel[ofm][ifm][kz][kx][ky]
+
     return blocked_kernel
 
 

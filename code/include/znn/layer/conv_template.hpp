@@ -37,9 +37,9 @@ private:
     static const long_t OD_TOTAL_STRIDE = OD_SINGLE_STRIDE*OUT_STRIDE_D;
 
   
-    static const long_t OUT_OFFSET =  (OW_SINGLE_STRIDE * OUT_W_SKIP + 
-                                       OH_SINGLE_STRIDE * OUT_H_SKIP +
-                                       OD_SINGLE_STRIDE * OUT_D_SKIP);
+    static const long_t OUT_OFFSET =  (OW_SINGLE_STRIDE * (OUT_W_SKIP + OUT_PADHW) + 
+                                       OH_SINGLE_STRIDE * (OUT_H_SKIP + OUT_PADHW) +
+                                       OD_SINGLE_STRIDE * (OUT_D_SKIP + OUT_PADD));
    
     //strided computed for spacing out output
 

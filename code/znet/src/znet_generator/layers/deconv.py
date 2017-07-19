@@ -55,10 +55,9 @@ def block_kernel(kernel, lparam):
     kdim = lparam["kernel_dim"]
     kernel = kernel.reshape(kdim)
     blocked_kernel = np.array([0.0]*lparam['kernel_size'])
-
     def h5ker_to_znnphiker(ifm, ofm, kz, kx, ky):
-        total_ofms = round_to_simd(kdim[0])
-        total_ifms = round_to_simd(kdim[1])
+        total_ifms = round_to_simd(kdim[0])
+        total_ofms = round_to_simd(kdim[1])
 
         offset = ofm/S
         offset *= total_ifms/S
@@ -121,6 +120,7 @@ def allocate_deconv_lines(lparam):
 
     #allocate layer
     lines.append('layers["{}"] = new znn::phi::DeconvLayer({});'.format(l["name"],
+    #lines.append('layers["{}"] = new znn::phi::DeconvAsConvLayer({});'.format(l["name"],
                                                                         param_str))
     return lines
 

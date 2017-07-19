@@ -224,7 +224,7 @@ znn::phi::Znet::Znet(std::string weights_path)
 	tensors["Deconvolution2_bias"] = new znn::phi::hbw_array<float>(64);
 	readArrayFromFile(tensors["Deconvolution2_kernel"]->data(), weights_path + "Deconvolution2_kernel.data");
 	tensors["Deconvolution2_bias"]->set_to_const(0);
-	layers["Deconvolution2"] = new znn::phi::DeconvLayer(1, 80, 64, 18, 12, 1, 2, 1, 2, tensors["Deconvolution2_kernel"]->data(), tensors["Deconvolution2_bias"]->data());
+	layers["Deconvolution2"] = new znn::phi::DeconvAsConvLayer(1, 80, 64, 18, 12, 1, 2, 1, 2, 0, 0, 0, 0, tensors["Deconvolution2_kernel"]->data());
 	layers["bn2_d3"] = new znn::phi::ScaleLayer(1, 48, 18, 48);
 	tensors["scale_bn2_d3"] = new znn::phi::hbw_array<float>(48);
 	tensors["bias_bn2_d3"] = new znn::phi::hbw_array<float>(48);
@@ -242,12 +242,12 @@ znn::phi::Znet::Znet(std::string weights_path)
 	tensors["Deconvolution4_bias"] = new znn::phi::hbw_array<float>(40);
 	readArrayFromFile(tensors["Deconvolution4_kernel"]->data(), weights_path + "Deconvolution4_kernel.data");
 	tensors["Deconvolution4_bias"]->set_to_const(0);
-	layers["Deconvolution4"] = new znn::phi::DeconvLayer(1, 48, 36, 18, 48, 1, 2, 1, 2, tensors["Deconvolution4_kernel"]->data(), tensors["Deconvolution4_bias"]->data());
+	layers["Deconvolution4"] = new znn::phi::DeconvAsConvLayer(1, 48, 36, 18, 48, 1, 2, 1, 2, 0, 0, 0, 0, tensors["Deconvolution4_kernel"]->data());
 	tensors["Deconvolution1_kernel"] = new znn::phi::hbw_array<float>(30720);
 	tensors["Deconvolution1_bias"] = new znn::phi::hbw_array<float>(80);
 	readArrayFromFile(tensors["Deconvolution1_kernel"]->data(), weights_path + "Deconvolution1_kernel.data");
 	tensors["Deconvolution1_bias"]->set_to_const(0);
-	layers["Deconvolution1"] = new znn::phi::DeconvLayer(1, 96, 80, 18, 6, 1, 2, 1, 2, tensors["Deconvolution1_kernel"]->data(), tensors["Deconvolution1_bias"]->data());
+	layers["Deconvolution1"] = new znn::phi::DeconvAsConvLayer(1, 96, 80, 18, 6, 1, 2, 1, 2, 0, 0, 0, 0, tensors["Deconvolution1_kernel"]->data());
 	layers["conv2_d5"] = znn::phi::jitMakeLayer("conv", "BN=1 IFM=96 OFM=96 ID=20 IHW=6 KD=3 KHW=1 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=true CORES=2 HT=2");
 	tensors["conv2_d5_kernel"] = new znn::phi::hbw_array<float>(27648);
 	tensors["conv2_d5_bias"] = new znn::phi::hbw_array<float>(96);
@@ -259,7 +259,7 @@ znn::phi::Znet::Znet(std::string weights_path)
 	tensors["Deconvolution3_bias"] = new znn::phi::hbw_array<float>(48);
 	readArrayFromFile(tensors["Deconvolution3_kernel"]->data(), weights_path + "Deconvolution3_kernel.data");
 	tensors["Deconvolution3_bias"]->set_to_const(0);
-	layers["Deconvolution3"] = new znn::phi::DeconvLayer(1, 64, 48, 18, 24, 1, 2, 1, 2, tensors["Deconvolution3_kernel"]->data(), tensors["Deconvolution3_bias"]->data());
+	layers["Deconvolution3"] = new znn::phi::DeconvAsConvLayer(1, 64, 48, 18, 24, 1, 2, 1, 2, 0, 0, 0, 0, tensors["Deconvolution3_kernel"]->data());
 	layers["conv2_d3"] = znn::phi::jitMakeLayer("conv", "BN=1 IFM=64 OFM=64 ID=20 IHW=24 KD=3 KHW=1 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=true CORES=2 HT=2");
 	tensors["conv2_d3_kernel"] = new znn::phi::hbw_array<float>(12288);
 	tensors["conv2_d3_bias"] = new znn::phi::hbw_array<float>(64);
@@ -357,7 +357,7 @@ znn::phi::Znet::Znet(std::string weights_path)
 	tensors["deconv_d3_bias"] = new znn::phi::hbw_array<float>(32);
 	readArrayFromFile(tensors["deconv_d3_kernel"]->data(), weights_path + "deconv_d3_kernel.data");
 	tensors["deconv_d3_bias"]->set_to_const(0);
-	layers["deconv_d3"] = new znn::phi::DeconvLayer(1, 36, 28, 18, 96, 1, 2, 1, 2, tensors["deconv_d3_kernel"]->data(), tensors["deconv_d3_bias"]->data());
+	layers["deconv_d3"] = new znn::phi::DeconvAsConvLayer(1, 36, 28, 18, 96, 1, 2, 1, 2, 0, 0, 0, 0, tensors["deconv_d3_kernel"]->data());
 	layers["conv5_d2"] = znn::phi::jitMakeLayer("conv", "BN=1 IFM=48 OFM=48 ID=20 IHW=48 KD=3 KHW=1 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=1 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false CORES=2 HT=2");
 	tensors["conv5_d2_kernel"] = new znn::phi::hbw_array<float>(6912);
 	tensors["conv5_d2_bias"] = new znn::phi::hbw_array<float>(48);
@@ -517,112 +517,1075 @@ void znn::phi::Znet::forward(void)
 	auto begin = std::chrono::high_resolution_clock::now();
 	for (int i = 0; i < 1; i++) {
 		std::cout << "Starting Forward Pass\n";
-		layers["block_input"]->forward(tensors["user_input"]->data(), tensors["input"]->data(), NULL, NULL);
-		layers["convi_padder"]->forward(tensors["input"]->data(), tensors["input_padded"]->data(), NULL, NULL);
-		layers["convi"]->forward(tensors["input_padded"]->data(), tensors["convi"]->data(), tensors["convi_kernel"]->data(), tensors["convi_bias"]->data(), NULL );
-		layers["conv0_d0"]->forward(tensors["convi"]->data(), tensors["conv0_d0"]->data(), tensors["conv0_d0_kernel"]->data(), tensors["conv0_d0_bias"]->data(), NULL );
-		layers["conv1_d0_padder"]->forward(tensors["conv0_d0"]->data(), tensors["conv0_d0_padded"]->data(), NULL, NULL);
-		layers["conv1_d0"]->forward(tensors["conv0_d0_padded"]->data(), tensors["conv1_d0"]->data(), tensors["conv1_d0_kernel"]->data(), tensors["conv1_d0_bias"]->data(), NULL );
-		layers["conv2_d0"]->forward(tensors["conv1_d0"]->data(), tensors["conv0_d0"]->data(), tensors["conv2_d0_kernel"]->data(), tensors["conv2_d0_bias"]->data(), tensors["conv2_d0_scale"]->data());
-		layers["pool_d1"]->forward(tensors["conv0_d0"]->data(), tensors["pool_d1"]->data(), NULL, NULL);
-		layers["conv0_d1_padder"]->forward(tensors["pool_d1"]->data(), tensors["pool_d1_padded"]->data(), NULL, NULL);
-		layers["conv0_d1"]->forward(tensors["pool_d1_padded"]->data(), tensors["conv0_d1"]->data(), tensors["conv0_d1_kernel"]->data(), tensors["conv0_d1_bias"]->data(), NULL );
-		layers["conv1_d1_padder"]->forward(tensors["conv0_d1"]->data(), tensors["conv0_d1_padded"]->data(), NULL, NULL);
-		layers["conv1_d1"]->forward(tensors["conv0_d1_padded"]->data(), tensors["conv1_d1"]->data(), tensors["conv1_d1_kernel"]->data(), tensors["conv1_d1_bias"]->data(), NULL );
-		layers["conv2_d1"]->forward(tensors["conv1_d1"]->data(), tensors["conv0_d1"]->data(), tensors["conv2_d1_kernel"]->data(), tensors["conv2_d1_bias"]->data(), tensors["conv2_d1_scale"]->data());
-		layers["pool_d2"]->forward(tensors["conv0_d1"]->data(), tensors["pool_d2"]->data(), NULL, NULL);
-		layers["conv0_d2_padder"]->forward(tensors["pool_d2"]->data(), tensors["pool_d2_padded"]->data(), NULL, NULL);
-		layers["conv0_d2"]->forward(tensors["pool_d2_padded"]->data(), tensors["conv0_d2"]->data(), tensors["conv0_d2_kernel"]->data(), tensors["conv0_d2_bias"]->data(), NULL );
-		layers["convf1_d2_padder"]->forward(tensors["conv0_d2"]->data(), tensors["conv0_d2_padded"]->data(), NULL, NULL);
-		layers["convf1_d2"]->forward(tensors["conv0_d2_padded"]->data(), tensors["convf1_d2"]->data(), tensors["convf1_d2_kernel"]->data(), tensors["convf1_d2_bias"]->data(), NULL );
-		layers["conv1_d2"]->forward(tensors["convf1_d2"]->data(), tensors["conv1_d2"]->data(), tensors["conv1_d2_kernel"]->data(), tensors["conv1_d2_bias"]->data(), NULL );
-		layers["convf2_d2"]->forward(tensors["conv1_d2"]->data(), tensors["convf2_d2"]->data(), tensors["convf2_d2_kernel"]->data(), tensors["convf2_d2_bias"]->data(), NULL );
-		layers["conv2_d2"]->forward(tensors["convf2_d2"]->data(), tensors["conv0_d2"]->data(), tensors["conv2_d2_kernel"]->data(), tensors["conv2_d2_bias"]->data(), tensors["conv2_d2_scale"]->data());
-		layers["pool_d3"]->forward(tensors["conv0_d2"]->data(), tensors["pool_d3"]->data(), NULL, NULL);
-		layers["conv0_d3_padder"]->forward(tensors["pool_d3"]->data(), tensors["pool_d3_padded"]->data(), NULL, NULL);
-		layers["conv0_d3"]->forward(tensors["pool_d3_padded"]->data(), tensors["conv0_d3"]->data(), tensors["conv0_d3_kernel"]->data(), tensors["conv0_d3_bias"]->data(), NULL );
-		layers["convf1_d3_padder"]->forward(tensors["conv0_d3"]->data(), tensors["conv0_d3_padded"]->data(), NULL, NULL);
-		layers["convf1_d3"]->forward(tensors["conv0_d3_padded"]->data(), tensors["convf1_d3"]->data(), tensors["convf1_d3_kernel"]->data(), tensors["convf1_d3_bias"]->data(), NULL );
-		layers["conv1_d3"]->forward(tensors["convf1_d3"]->data(), tensors["conv1_d3"]->data(), tensors["conv1_d3_kernel"]->data(), tensors["conv1_d3_bias"]->data(), NULL );
-		layers["convf2_d3"]->forward(tensors["conv1_d3"]->data(), tensors["convf2_d3"]->data(), tensors["convf2_d3_kernel"]->data(), tensors["convf2_d3_bias"]->data(), NULL );
-		layers["conv2_d3"]->forward(tensors["convf2_d3"]->data(), tensors["conv0_d3"]->data(), tensors["conv2_d3_kernel"]->data(), tensors["conv2_d3_bias"]->data(), tensors["conv2_d3_scale"]->data());
-		layers["pool_d4"]->forward(tensors["conv0_d3"]->data(), tensors["pool_d4"]->data(), NULL, NULL);
-		layers["conv0_d4_padder"]->forward(tensors["pool_d4"]->data(), tensors["pool_d4_padded"]->data(), NULL, NULL);
-		layers["conv0_d4"]->forward(tensors["pool_d4_padded"]->data(), tensors["conv0_d4"]->data(), tensors["conv0_d4_kernel"]->data(), tensors["conv0_d4_bias"]->data(), NULL );
-		layers["convf1_d4_padder"]->forward(tensors["conv0_d4"]->data(), tensors["conv0_d4_padded"]->data(), NULL, NULL);
-		layers["convf1_d4"]->forward(tensors["conv0_d4_padded"]->data(), tensors["convf1_d4"]->data(), tensors["convf1_d4_kernel"]->data(), tensors["convf1_d4_bias"]->data(), NULL );
-		layers["conv1_d4"]->forward(tensors["convf1_d4"]->data(), tensors["conv1_d4"]->data(), tensors["conv1_d4_kernel"]->data(), tensors["conv1_d4_bias"]->data(), NULL );
-		layers["convf2_d4"]->forward(tensors["conv1_d4"]->data(), tensors["convf2_d4"]->data(), tensors["convf2_d4_kernel"]->data(), tensors["convf2_d4_bias"]->data(), NULL );
-		layers["conv2_d4"]->forward(tensors["convf2_d4"]->data(), tensors["conv0_d4"]->data(), tensors["conv2_d4_kernel"]->data(), tensors["conv2_d4_bias"]->data(), tensors["conv2_d4_scale"]->data());
-		layers["pool_d5"]->forward(tensors["conv0_d4"]->data(), tensors["pool_d5"]->data(), NULL, NULL);
-		layers["conv0_d5_padder"]->forward(tensors["pool_d5"]->data(), tensors["pool_d5_padded"]->data(), NULL, NULL);
-		layers["conv0_d5"]->forward(tensors["pool_d5_padded"]->data(), tensors["conv0_d5"]->data(), tensors["conv0_d5_kernel"]->data(), tensors["conv0_d5_bias"]->data(), NULL );
-		layers["convf1_d5_padder"]->forward(tensors["conv0_d5"]->data(), tensors["conv0_d5_padded"]->data(), NULL, NULL);
-		layers["convf1_d5"]->forward(tensors["conv0_d5_padded"]->data(), tensors["convf1_d5"]->data(), tensors["convf1_d5_kernel"]->data(), tensors["convf1_d5_bias"]->data(), NULL );
-		layers["conv1_d5"]->forward(tensors["convf1_d5"]->data(), tensors["conv1_d5"]->data(), tensors["conv1_d5_kernel"]->data(), tensors["conv1_d5_bias"]->data(), NULL );
-		layers["convf2_d5"]->forward(tensors["conv1_d5"]->data(), tensors["convf2_d5"]->data(), tensors["convf2_d5_kernel"]->data(), tensors["convf2_d5_bias"]->data(), NULL );
-		layers["conv2_d5"]->forward(tensors["convf2_d5"]->data(), tensors["conv0_d5"]->data(), tensors["conv2_d5_kernel"]->data(), tensors["conv2_d5_bias"]->data(), tensors["conv2_d5_scale"]->data());
-		layers["Deconvolution1"]->forward(tensors["conv0_d5"]->data(), tensors["Deconvolution1"]->data(), tensors["Deconvolution1_kernel"]->data(), tensors["Deconvolution1_bias"]->data());
-		layers["Eltwise1"]->forward(tensors["Deconvolution1"]->data(), tensors["Eltwise1"]->data(), tensors["conv0_d4"]->data(), NULL);
-		layers["BatchNorm4"]->forward(tensors["Eltwise1"]->data(), tensors["Eltwise1"]->data(), tensors["scale_BatchNorm4"]->data(), tensors["bias_BatchNorm4"]->data());
-		layers["Scale4"]->forward(tensors["Eltwise1"]->data(), tensors["Eltwise1"]->data(), tensors["scale_Scale4"]->data(), tensors["bias_Scale4"]->data());
-		layers["ELU4"]->forward(tensors["Eltwise1"]->data(), tensors["Eltwise1"]->data(), NULL, NULL);
-		layers["conv4_d4_padder"]->forward(tensors["Eltwise1"]->data(), tensors["Eltwise1_padded"]->data(), NULL, NULL);
-		layers["conv4_d4"]->forward(tensors["Eltwise1_padded"]->data(), tensors["conv4_d4"]->data(), tensors["conv4_d4_kernel"]->data(), tensors["conv4_d4_bias"]->data(), NULL );
-		layers["convf5_d4_padder"]->forward(tensors["conv4_d4"]->data(), tensors["conv4_d4_padded"]->data(), NULL, NULL);
-		layers["convf5_d4"]->forward(tensors["conv4_d4_padded"]->data(), tensors["convf5_d4"]->data(), tensors["convf5_d4_kernel"]->data(), tensors["convf5_d4_bias"]->data(), NULL );
-		layers["conv5_d4"]->forward(tensors["convf5_d4"]->data(), tensors["conv5_d4"]->data(), tensors["conv5_d4_kernel"]->data(), tensors["conv5_d4_bias"]->data(), NULL );
-		layers["convf6_d4"]->forward(tensors["conv5_d4"]->data(), tensors["convf6_d4"]->data(), tensors["convf6_d4_kernel"]->data(), tensors["convf6_d4_bias"]->data(), NULL );
-		layers["conv6_d4"]->forward(tensors["convf6_d4"]->data(), tensors["conv4_d4"]->data(), tensors["conv6_d4_kernel"]->data(), tensors["conv6_d4_bias"]->data(), tensors["conv6_d4_scale"]->data());
-		layers["Deconvolution2"]->forward(tensors["conv4_d4"]->data(), tensors["Deconvolution2"]->data(), tensors["Deconvolution2_kernel"]->data(), tensors["Deconvolution2_bias"]->data());
-		layers["Eltwise2"]->forward(tensors["Deconvolution2"]->data(), tensors["Eltwise2"]->data(), tensors["conv0_d3"]->data(), NULL);
-		layers["bn3_d3"]->forward(tensors["Eltwise2"]->data(), tensors["Eltwise2"]->data(), tensors["scale_bn3_d3"]->data(), tensors["bias_bn3_d3"]->data());
-		layers["scale3_d3"]->forward(tensors["Eltwise2"]->data(), tensors["Eltwise2"]->data(), tensors["scale_scale3_d3"]->data(), tensors["bias_scale3_d3"]->data());
-		layers["elu3_d3"]->forward(tensors["Eltwise2"]->data(), tensors["Eltwise2"]->data(), NULL, NULL);
-		layers["conv4_d3_padder"]->forward(tensors["Eltwise2"]->data(), tensors["Eltwise2_padded"]->data(), NULL, NULL);
-		layers["conv4_d3"]->forward(tensors["Eltwise2_padded"]->data(), tensors["conv4_d3"]->data(), tensors["conv4_d3_kernel"]->data(), tensors["conv4_d3_bias"]->data(), NULL );
-		layers["convf5_d3_padder"]->forward(tensors["conv4_d3"]->data(), tensors["conv4_d3_padded"]->data(), NULL, NULL);
-		layers["convf5_d3"]->forward(tensors["conv4_d3_padded"]->data(), tensors["convf5_d3"]->data(), tensors["convf5_d3_kernel"]->data(), tensors["convf5_d3_bias"]->data(), NULL );
-		layers["conv5_d3"]->forward(tensors["convf5_d3"]->data(), tensors["conv5_d3"]->data(), tensors["conv5_d3_kernel"]->data(), tensors["conv5_d3_bias"]->data(), NULL );
-		layers["convf6_d3"]->forward(tensors["conv5_d3"]->data(), tensors["convf6_d3"]->data(), tensors["convf6_d3_kernel"]->data(), tensors["convf6_d3_bias"]->data(), NULL );
-		layers["conv6_d3"]->forward(tensors["convf6_d3"]->data(), tensors["conv4_d3"]->data(), tensors["conv6_d3_kernel"]->data(), tensors["conv6_d3_bias"]->data(), tensors["conv6_d3_scale"]->data());
-		layers["Deconvolution3"]->forward(tensors["conv4_d3"]->data(), tensors["Deconvolution3"]->data(), tensors["Deconvolution3_kernel"]->data(), tensors["Deconvolution3_bias"]->data());
-		layers["Eltwise3"]->forward(tensors["Deconvolution3"]->data(), tensors["Eltwise3"]->data(), tensors["conv0_d2"]->data(), NULL);
-		layers["bn2_d3"]->forward(tensors["Eltwise3"]->data(), tensors["Eltwise3"]->data(), tensors["scale_bn2_d3"]->data(), tensors["bias_bn2_d3"]->data());
-		layers["scale2_d3"]->forward(tensors["Eltwise3"]->data(), tensors["Eltwise3"]->data(), tensors["scale_scale2_d3"]->data(), tensors["bias_scale2_d3"]->data());
-		layers["elu2_d3"]->forward(tensors["Eltwise3"]->data(), tensors["Eltwise3"]->data(), NULL, NULL);
-		layers["conv4_d2_padder"]->forward(tensors["Eltwise3"]->data(), tensors["Eltwise3_padded"]->data(), NULL, NULL);
-		layers["conv4_d2"]->forward(tensors["Eltwise3_padded"]->data(), tensors["conv4_d2"]->data(), tensors["conv4_d2_kernel"]->data(), tensors["conv4_d2_bias"]->data(), NULL );
-		layers["convf5_d2_padder"]->forward(tensors["conv4_d2"]->data(), tensors["conv4_d2_padded"]->data(), NULL, NULL);
-		layers["convf5_d2"]->forward(tensors["conv4_d2_padded"]->data(), tensors["convf5_d2"]->data(), tensors["convf5_d2_kernel"]->data(), tensors["convf5_d2_bias"]->data(), NULL );
-		layers["conv5_d2"]->forward(tensors["convf5_d2"]->data(), tensors["conv5_d2"]->data(), tensors["conv5_d2_kernel"]->data(), tensors["conv5_d2_bias"]->data(), NULL );
-		layers["convf6_d2"]->forward(tensors["conv5_d2"]->data(), tensors["convf6_d2"]->data(), tensors["convf6_d2_kernel"]->data(), tensors["convf6_d2_bias"]->data(), NULL );
-		layers["conv6_d2"]->forward(tensors["convf6_d2"]->data(), tensors["conv4_d2"]->data(), tensors["conv6_d2_kernel"]->data(), tensors["conv6_d2_bias"]->data(), tensors["conv6_d2_scale"]->data());
-		layers["Deconvolution4"]->forward(tensors["conv4_d2"]->data(), tensors["Deconvolution4"]->data(), tensors["Deconvolution4_kernel"]->data(), tensors["Deconvolution4_bias"]->data());
-		layers["Eltwise4"]->forward(tensors["Deconvolution4"]->data(), tensors["Eltwise4"]->data(), tensors["conv0_d1"]->data(), NULL);
-		layers["bn1_d3"]->forward(tensors["Eltwise4"]->data(), tensors["Eltwise4"]->data(), tensors["scale_bn1_d3"]->data(), tensors["bias_bn1_d3"]->data());
-		layers["scale1_d3"]->forward(tensors["Eltwise4"]->data(), tensors["Eltwise4"]->data(), tensors["scale_scale1_d3"]->data(), tensors["bias_scale1_d3"]->data());
-		layers["elu1_d3"]->forward(tensors["Eltwise4"]->data(), tensors["Eltwise4"]->data(), NULL, NULL);
-		layers["conv4_d1_padder"]->forward(tensors["Eltwise4"]->data(), tensors["Eltwise4_padded"]->data(), NULL, NULL);
-		layers["conv4_d1"]->forward(tensors["Eltwise4_padded"]->data(), tensors["conv4_d1"]->data(), tensors["conv4_d1_kernel"]->data(), tensors["conv4_d1_bias"]->data(), NULL );
-		layers["conv5_d1_padder"]->forward(tensors["conv4_d1"]->data(), tensors["conv4_d1_padded"]->data(), NULL, NULL);
-		layers["conv5_d1"]->forward(tensors["conv4_d1_padded"]->data(), tensors["conv5_d1"]->data(), tensors["conv5_d1_kernel"]->data(), tensors["conv5_d1_bias"]->data(), NULL );
-		layers["conv6_d1"]->forward(tensors["conv5_d1"]->data(), tensors["conv4_d1"]->data(), tensors["conv6_d1_kernel"]->data(), tensors["conv6_d1_bias"]->data(), tensors["conv6_d1_scale"]->data());
-		layers["deconv_d3"]->forward(tensors["conv4_d1"]->data(), tensors["deconv_d3"]->data(), tensors["deconv_d3_kernel"]->data(), tensors["deconv_d3_bias"]->data());
-		layers["merge_d3"]->forward(tensors["deconv_d3"]->data(), tensors["merge_d3"]->data(), tensors["conv0_d0"]->data(), NULL);
-		layers["bn0_d3"]->forward(tensors["merge_d3"]->data(), tensors["merge_d3"]->data(), tensors["scale_bn0_d3"]->data(), tensors["bias_bn0_d3"]->data());
-		layers["scale0_d3"]->forward(tensors["merge_d3"]->data(), tensors["merge_d3"]->data(), tensors["scale_scale0_d3"]->data(), tensors["bias_scale0_d3"]->data());
-		layers["elu0_d3"]->forward(tensors["merge_d3"]->data(), tensors["merge_d3"]->data(), NULL, NULL);
-		layers["conv4_d0_padder"]->forward(tensors["merge_d3"]->data(), tensors["merge_d3_padded"]->data(), NULL, NULL);
-		layers["conv4_d0"]->forward(tensors["merge_d3_padded"]->data(), tensors["conv4_d0"]->data(), tensors["conv4_d0_kernel"]->data(), tensors["conv4_d0_bias"]->data(), NULL );
-		layers["conv5_d0_padder"]->forward(tensors["conv4_d0"]->data(), tensors["conv4_d0_padded"]->data(), NULL, NULL);
-		layers["conv5_d0"]->forward(tensors["conv4_d0_padded"]->data(), tensors["conv5_d0"]->data(), tensors["conv5_d0_kernel"]->data(), tensors["conv5_d0_bias"]->data(), NULL );
-		layers["conv6_d0"]->forward(tensors["conv5_d0"]->data(), tensors["conv4_d0"]->data(), tensors["conv6_d0_kernel"]->data(), tensors["conv6_d0_bias"]->data(), tensors["conv6_d0_scale"]->data());
-		layers["conv7_d0_padder"]->forward(tensors["conv4_d0"]->data(), tensors["conv4_d0_padded"]->data(), NULL, NULL);
-		layers["conv7_d0"]->forward(tensors["conv4_d0_padded"]->data(), tensors["conv7_d0"]->data(), tensors["conv7_d0_kernel"]->data(), tensors["conv7_d0_bias"]->data(), NULL );
-		layers["score"]->forward(tensors["conv7_d0"]->data(), tensors["score"]->data(), tensors["score_kernel"]->data(), tensors["score_bias"]->data(), NULL );
-		layers["output"]->forward(tensors["score"]->data(), tensors["output"]->data(), NULL, NULL);
-		layers["unblock_output"]->forward(tensors["output"]->data(), tensors["user_output"]->data(), NULL, NULL);
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["block_input"]->forward(tensors["user_input"]->data(), tensors["input"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "block_input: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "input: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["convi_padder"]->forward(tensors["input"]->data(), tensors["input_padded"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "convi_padder: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["convi"]->forward(tensors["input_padded"]->data(), tensors["convi"]->data(), tensors["convi_kernel"]->data(), tensors["convi_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "convi: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv0_d0"]->forward(tensors["convi"]->data(), tensors["conv0_d0"]->data(), tensors["conv0_d0_kernel"]->data(), tensors["conv0_d0_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv0_d0: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv1_d0_padder"]->forward(tensors["conv0_d0"]->data(), tensors["conv0_d0_padded"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv1_d0_padder: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv1_d0"]->forward(tensors["conv0_d0_padded"]->data(), tensors["conv1_d0"]->data(), tensors["conv1_d0_kernel"]->data(), tensors["conv1_d0_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv1_d0: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv2_d0"]->forward(tensors["conv1_d0"]->data(), tensors["conv0_d0"]->data(), tensors["conv2_d0_kernel"]->data(), tensors["conv2_d0_bias"]->data(), tensors["conv2_d0_scale"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv2_d0: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["pool_d1"]->forward(tensors["conv0_d0"]->data(), tensors["pool_d1"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "pool_d1: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv0_d1_padder"]->forward(tensors["pool_d1"]->data(), tensors["pool_d1_padded"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv0_d1_padder: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv0_d1"]->forward(tensors["pool_d1_padded"]->data(), tensors["conv0_d1"]->data(), tensors["conv0_d1_kernel"]->data(), tensors["conv0_d1_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv0_d1: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv1_d1_padder"]->forward(tensors["conv0_d1"]->data(), tensors["conv0_d1_padded"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv1_d1_padder: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv1_d1"]->forward(tensors["conv0_d1_padded"]->data(), tensors["conv1_d1"]->data(), tensors["conv1_d1_kernel"]->data(), tensors["conv1_d1_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv1_d1: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv2_d1"]->forward(tensors["conv1_d1"]->data(), tensors["conv0_d1"]->data(), tensors["conv2_d1_kernel"]->data(), tensors["conv2_d1_bias"]->data(), tensors["conv2_d1_scale"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv2_d1: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["pool_d2"]->forward(tensors["conv0_d1"]->data(), tensors["pool_d2"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "pool_d2: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv0_d2_padder"]->forward(tensors["pool_d2"]->data(), tensors["pool_d2_padded"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv0_d2_padder: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv0_d2"]->forward(tensors["pool_d2_padded"]->data(), tensors["conv0_d2"]->data(), tensors["conv0_d2_kernel"]->data(), tensors["conv0_d2_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv0_d2: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["convf1_d2_padder"]->forward(tensors["conv0_d2"]->data(), tensors["conv0_d2_padded"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "convf1_d2_padder: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["convf1_d2"]->forward(tensors["conv0_d2_padded"]->data(), tensors["convf1_d2"]->data(), tensors["convf1_d2_kernel"]->data(), tensors["convf1_d2_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "convf1_d2: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv1_d2"]->forward(tensors["convf1_d2"]->data(), tensors["conv1_d2"]->data(), tensors["conv1_d2_kernel"]->data(), tensors["conv1_d2_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv1_d2: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["convf2_d2"]->forward(tensors["conv1_d2"]->data(), tensors["convf2_d2"]->data(), tensors["convf2_d2_kernel"]->data(), tensors["convf2_d2_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "convf2_d2: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv2_d2"]->forward(tensors["convf2_d2"]->data(), tensors["conv0_d2"]->data(), tensors["conv2_d2_kernel"]->data(), tensors["conv2_d2_bias"]->data(), tensors["conv2_d2_scale"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv2_d2: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["pool_d3"]->forward(tensors["conv0_d2"]->data(), tensors["pool_d3"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "pool_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv0_d3_padder"]->forward(tensors["pool_d3"]->data(), tensors["pool_d3_padded"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv0_d3_padder: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv0_d3"]->forward(tensors["pool_d3_padded"]->data(), tensors["conv0_d3"]->data(), tensors["conv0_d3_kernel"]->data(), tensors["conv0_d3_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv0_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["convf1_d3_padder"]->forward(tensors["conv0_d3"]->data(), tensors["conv0_d3_padded"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "convf1_d3_padder: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["convf1_d3"]->forward(tensors["conv0_d3_padded"]->data(), tensors["convf1_d3"]->data(), tensors["convf1_d3_kernel"]->data(), tensors["convf1_d3_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "convf1_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv1_d3"]->forward(tensors["convf1_d3"]->data(), tensors["conv1_d3"]->data(), tensors["conv1_d3_kernel"]->data(), tensors["conv1_d3_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv1_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["convf2_d3"]->forward(tensors["conv1_d3"]->data(), tensors["convf2_d3"]->data(), tensors["convf2_d3_kernel"]->data(), tensors["convf2_d3_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "convf2_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv2_d3"]->forward(tensors["convf2_d3"]->data(), tensors["conv0_d3"]->data(), tensors["conv2_d3_kernel"]->data(), tensors["conv2_d3_bias"]->data(), tensors["conv2_d3_scale"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv2_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["pool_d4"]->forward(tensors["conv0_d3"]->data(), tensors["pool_d4"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "pool_d4: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv0_d4_padder"]->forward(tensors["pool_d4"]->data(), tensors["pool_d4_padded"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv0_d4_padder: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv0_d4"]->forward(tensors["pool_d4_padded"]->data(), tensors["conv0_d4"]->data(), tensors["conv0_d4_kernel"]->data(), tensors["conv0_d4_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv0_d4: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["convf1_d4_padder"]->forward(tensors["conv0_d4"]->data(), tensors["conv0_d4_padded"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "convf1_d4_padder: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["convf1_d4"]->forward(tensors["conv0_d4_padded"]->data(), tensors["convf1_d4"]->data(), tensors["convf1_d4_kernel"]->data(), tensors["convf1_d4_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "convf1_d4: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv1_d4"]->forward(tensors["convf1_d4"]->data(), tensors["conv1_d4"]->data(), tensors["conv1_d4_kernel"]->data(), tensors["conv1_d4_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv1_d4: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["convf2_d4"]->forward(tensors["conv1_d4"]->data(), tensors["convf2_d4"]->data(), tensors["convf2_d4_kernel"]->data(), tensors["convf2_d4_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "convf2_d4: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv2_d4"]->forward(tensors["convf2_d4"]->data(), tensors["conv0_d4"]->data(), tensors["conv2_d4_kernel"]->data(), tensors["conv2_d4_bias"]->data(), tensors["conv2_d4_scale"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv2_d4: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["pool_d5"]->forward(tensors["conv0_d4"]->data(), tensors["pool_d5"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "pool_d5: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv0_d5_padder"]->forward(tensors["pool_d5"]->data(), tensors["pool_d5_padded"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv0_d5_padder: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv0_d5"]->forward(tensors["pool_d5_padded"]->data(), tensors["conv0_d5"]->data(), tensors["conv0_d5_kernel"]->data(), tensors["conv0_d5_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv0_d5: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["convf1_d5_padder"]->forward(tensors["conv0_d5"]->data(), tensors["conv0_d5_padded"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "convf1_d5_padder: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["convf1_d5"]->forward(tensors["conv0_d5_padded"]->data(), tensors["convf1_d5"]->data(), tensors["convf1_d5_kernel"]->data(), tensors["convf1_d5_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "convf1_d5: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv1_d5"]->forward(tensors["convf1_d5"]->data(), tensors["conv1_d5"]->data(), tensors["conv1_d5_kernel"]->data(), tensors["conv1_d5_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv1_d5: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["convf2_d5"]->forward(tensors["conv1_d5"]->data(), tensors["convf2_d5"]->data(), tensors["convf2_d5_kernel"]->data(), tensors["convf2_d5_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "convf2_d5: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv2_d5"]->forward(tensors["convf2_d5"]->data(), tensors["conv0_d5"]->data(), tensors["conv2_d5_kernel"]->data(), tensors["conv2_d5_bias"]->data(), tensors["conv2_d5_scale"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv2_d5: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["Deconvolution1"]->forward(tensors["conv0_d5"]->data(), tensors["Deconvolution1"]->data(), tensors["Deconvolution1_kernel"]->data(), tensors["Deconvolution1_bias"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "Deconvolution1: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["Eltwise1"]->forward(tensors["Deconvolution1"]->data(), tensors["Eltwise1"]->data(), tensors["conv0_d4"]->data(), NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "Eltwise1: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["BatchNorm4"]->forward(tensors["Eltwise1"]->data(), tensors["Eltwise1"]->data(), tensors["scale_BatchNorm4"]->data(), tensors["bias_BatchNorm4"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "BatchNorm4: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["Scale4"]->forward(tensors["Eltwise1"]->data(), tensors["Eltwise1"]->data(), tensors["scale_Scale4"]->data(), tensors["bias_Scale4"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "Scale4: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["ELU4"]->forward(tensors["Eltwise1"]->data(), tensors["Eltwise1"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "ELU4: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv4_d4_padder"]->forward(tensors["Eltwise1"]->data(), tensors["Eltwise1_padded"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv4_d4_padder: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv4_d4"]->forward(tensors["Eltwise1_padded"]->data(), tensors["conv4_d4"]->data(), tensors["conv4_d4_kernel"]->data(), tensors["conv4_d4_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv4_d4: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["convf5_d4_padder"]->forward(tensors["conv4_d4"]->data(), tensors["conv4_d4_padded"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "convf5_d4_padder: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["convf5_d4"]->forward(tensors["conv4_d4_padded"]->data(), tensors["convf5_d4"]->data(), tensors["convf5_d4_kernel"]->data(), tensors["convf5_d4_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "convf5_d4: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv5_d4"]->forward(tensors["convf5_d4"]->data(), tensors["conv5_d4"]->data(), tensors["conv5_d4_kernel"]->data(), tensors["conv5_d4_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv5_d4: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["convf6_d4"]->forward(tensors["conv5_d4"]->data(), tensors["convf6_d4"]->data(), tensors["convf6_d4_kernel"]->data(), tensors["convf6_d4_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "convf6_d4: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv6_d4"]->forward(tensors["convf6_d4"]->data(), tensors["conv4_d4"]->data(), tensors["conv6_d4_kernel"]->data(), tensors["conv6_d4_bias"]->data(), tensors["conv6_d4_scale"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv6_d4: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["Deconvolution2"]->forward(tensors["conv4_d4"]->data(), tensors["Deconvolution2"]->data(), tensors["Deconvolution2_kernel"]->data(), tensors["Deconvolution2_bias"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "Deconvolution2: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["Eltwise2"]->forward(tensors["Deconvolution2"]->data(), tensors["Eltwise2"]->data(), tensors["conv0_d3"]->data(), NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "Eltwise2: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["bn3_d3"]->forward(tensors["Eltwise2"]->data(), tensors["Eltwise2"]->data(), tensors["scale_bn3_d3"]->data(), tensors["bias_bn3_d3"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "bn3_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["scale3_d3"]->forward(tensors["Eltwise2"]->data(), tensors["Eltwise2"]->data(), tensors["scale_scale3_d3"]->data(), tensors["bias_scale3_d3"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "scale3_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["elu3_d3"]->forward(tensors["Eltwise2"]->data(), tensors["Eltwise2"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "elu3_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv4_d3_padder"]->forward(tensors["Eltwise2"]->data(), tensors["Eltwise2_padded"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv4_d3_padder: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv4_d3"]->forward(tensors["Eltwise2_padded"]->data(), tensors["conv4_d3"]->data(), tensors["conv4_d3_kernel"]->data(), tensors["conv4_d3_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv4_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["convf5_d3_padder"]->forward(tensors["conv4_d3"]->data(), tensors["conv4_d3_padded"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "convf5_d3_padder: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["convf5_d3"]->forward(tensors["conv4_d3_padded"]->data(), tensors["convf5_d3"]->data(), tensors["convf5_d3_kernel"]->data(), tensors["convf5_d3_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "convf5_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv5_d3"]->forward(tensors["convf5_d3"]->data(), tensors["conv5_d3"]->data(), tensors["conv5_d3_kernel"]->data(), tensors["conv5_d3_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv5_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["convf6_d3"]->forward(tensors["conv5_d3"]->data(), tensors["convf6_d3"]->data(), tensors["convf6_d3_kernel"]->data(), tensors["convf6_d3_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "convf6_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv6_d3"]->forward(tensors["convf6_d3"]->data(), tensors["conv4_d3"]->data(), tensors["conv6_d3_kernel"]->data(), tensors["conv6_d3_bias"]->data(), tensors["conv6_d3_scale"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv6_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["Deconvolution3"]->forward(tensors["conv4_d3"]->data(), tensors["Deconvolution3"]->data(), tensors["Deconvolution3_kernel"]->data(), tensors["Deconvolution3_bias"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "Deconvolution3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["Eltwise3"]->forward(tensors["Deconvolution3"]->data(), tensors["Eltwise3"]->data(), tensors["conv0_d2"]->data(), NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "Eltwise3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["bn2_d3"]->forward(tensors["Eltwise3"]->data(), tensors["Eltwise3"]->data(), tensors["scale_bn2_d3"]->data(), tensors["bias_bn2_d3"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "bn2_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["scale2_d3"]->forward(tensors["Eltwise3"]->data(), tensors["Eltwise3"]->data(), tensors["scale_scale2_d3"]->data(), tensors["bias_scale2_d3"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "scale2_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["elu2_d3"]->forward(tensors["Eltwise3"]->data(), tensors["Eltwise3"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "elu2_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv4_d2_padder"]->forward(tensors["Eltwise3"]->data(), tensors["Eltwise3_padded"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv4_d2_padder: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv4_d2"]->forward(tensors["Eltwise3_padded"]->data(), tensors["conv4_d2"]->data(), tensors["conv4_d2_kernel"]->data(), tensors["conv4_d2_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv4_d2: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["convf5_d2_padder"]->forward(tensors["conv4_d2"]->data(), tensors["conv4_d2_padded"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "convf5_d2_padder: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["convf5_d2"]->forward(tensors["conv4_d2_padded"]->data(), tensors["convf5_d2"]->data(), tensors["convf5_d2_kernel"]->data(), tensors["convf5_d2_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "convf5_d2: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv5_d2"]->forward(tensors["convf5_d2"]->data(), tensors["conv5_d2"]->data(), tensors["conv5_d2_kernel"]->data(), tensors["conv5_d2_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv5_d2: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["convf6_d2"]->forward(tensors["conv5_d2"]->data(), tensors["convf6_d2"]->data(), tensors["convf6_d2_kernel"]->data(), tensors["convf6_d2_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "convf6_d2: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv6_d2"]->forward(tensors["convf6_d2"]->data(), tensors["conv4_d2"]->data(), tensors["conv6_d2_kernel"]->data(), tensors["conv6_d2_bias"]->data(), tensors["conv6_d2_scale"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv6_d2: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["Deconvolution4"]->forward(tensors["conv4_d2"]->data(), tensors["Deconvolution4"]->data(), tensors["Deconvolution4_kernel"]->data(), tensors["Deconvolution4_bias"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "Deconvolution4: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["Eltwise4"]->forward(tensors["Deconvolution4"]->data(), tensors["Eltwise4"]->data(), tensors["conv0_d1"]->data(), NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "Eltwise4: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["bn1_d3"]->forward(tensors["Eltwise4"]->data(), tensors["Eltwise4"]->data(), tensors["scale_bn1_d3"]->data(), tensors["bias_bn1_d3"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "bn1_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["scale1_d3"]->forward(tensors["Eltwise4"]->data(), tensors["Eltwise4"]->data(), tensors["scale_scale1_d3"]->data(), tensors["bias_scale1_d3"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "scale1_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["elu1_d3"]->forward(tensors["Eltwise4"]->data(), tensors["Eltwise4"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "elu1_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv4_d1_padder"]->forward(tensors["Eltwise4"]->data(), tensors["Eltwise4_padded"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv4_d1_padder: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv4_d1"]->forward(tensors["Eltwise4_padded"]->data(), tensors["conv4_d1"]->data(), tensors["conv4_d1_kernel"]->data(), tensors["conv4_d1_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv4_d1: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv5_d1_padder"]->forward(tensors["conv4_d1"]->data(), tensors["conv4_d1_padded"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv5_d1_padder: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv5_d1"]->forward(tensors["conv4_d1_padded"]->data(), tensors["conv5_d1"]->data(), tensors["conv5_d1_kernel"]->data(), tensors["conv5_d1_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv5_d1: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv6_d1"]->forward(tensors["conv5_d1"]->data(), tensors["conv4_d1"]->data(), tensors["conv6_d1_kernel"]->data(), tensors["conv6_d1_bias"]->data(), tensors["conv6_d1_scale"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv6_d1: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["deconv_d3"]->forward(tensors["conv4_d1"]->data(), tensors["deconv_d3"]->data(), tensors["deconv_d3_kernel"]->data(), tensors["deconv_d3_bias"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "deconv_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["merge_d3"]->forward(tensors["deconv_d3"]->data(), tensors["merge_d3"]->data(), tensors["conv0_d0"]->data(), NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "merge_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["bn0_d3"]->forward(tensors["merge_d3"]->data(), tensors["merge_d3"]->data(), tensors["scale_bn0_d3"]->data(), tensors["bias_bn0_d3"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "bn0_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["scale0_d3"]->forward(tensors["merge_d3"]->data(), tensors["merge_d3"]->data(), tensors["scale_scale0_d3"]->data(), tensors["bias_scale0_d3"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "scale0_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["elu0_d3"]->forward(tensors["merge_d3"]->data(), tensors["merge_d3"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "elu0_d3: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv4_d0_padder"]->forward(tensors["merge_d3"]->data(), tensors["merge_d3_padded"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv4_d0_padder: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv4_d0"]->forward(tensors["merge_d3_padded"]->data(), tensors["conv4_d0"]->data(), tensors["conv4_d0_kernel"]->data(), tensors["conv4_d0_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv4_d0: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv5_d0_padder"]->forward(tensors["conv4_d0"]->data(), tensors["conv4_d0_padded"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv5_d0_padder: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv5_d0"]->forward(tensors["conv4_d0_padded"]->data(), tensors["conv5_d0"]->data(), tensors["conv5_d0_kernel"]->data(), tensors["conv5_d0_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv5_d0: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv6_d0"]->forward(tensors["conv5_d0"]->data(), tensors["conv4_d0"]->data(), tensors["conv6_d0_kernel"]->data(), tensors["conv6_d0_bias"]->data(), tensors["conv6_d0_scale"]->data());
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv6_d0: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv7_d0_padder"]->forward(tensors["conv4_d0"]->data(), tensors["conv4_d0_padded"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv7_d0_padder: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["conv7_d0"]->forward(tensors["conv4_d0_padded"]->data(), tensors["conv7_d0"]->data(), tensors["conv7_d0_kernel"]->data(), tensors["conv7_d0_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "conv7_d0: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["score"]->forward(tensors["conv7_d0"]->data(), tensors["score"]->data(), tensors["score_kernel"]->data(), tensors["score_bias"]->data(), NULL );
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "score: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["output"]->forward(tensors["score"]->data(), tensors["output"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "output: " << secs/1 << "\n";
+		}
+		{
+		auto begin = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < 1; i++) {
+			layers["unblock_output"]->forward(tensors["output"]->data(), tensors["user_output"]->data(), NULL, NULL);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+		double secs = static_cast<double>(duration) / 1000000;
+		std::cout << "unblock_output: " << secs/1 << "\n";
+		}
 		
 	}
 	auto end = std::chrono::high_resolution_clock::now();

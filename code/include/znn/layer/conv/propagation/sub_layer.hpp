@@ -35,9 +35,9 @@ private:
     static constexpr bool Activation     = P::activation;
     static constexpr bool AddOrOverwrite = P::add_or_overwrite;
 
-    template <bool First, bool ApplyActivation>
+    template <bool First, bool Last>
     using sub_task = full_image<
-        First, ApplyActivation, AddOrOverwrite, SIMD_WIDTH, image_traits<sub::d_len, full::image_d::in_stride,
+        First, Last, Activation, AddOrOverwrite, SIMD_WIDTH, image_traits<sub::d_len, full::image_d::in_stride,
                                         full::image_d::out_stride>,
         image_traits<sub::h_len, full::image_h::in_stride,
                      full::image_h::out_stride>,
@@ -73,7 +73,7 @@ private:
         {
             for (long_t ofm = 0; ofm < ofm_len; ++ofm)
             {
-                sub_task<true, Activation>::execute(i, o + ofm * ofm_stride,
+                sub_task<true, true>::execute(i, o + ofm * ofm_stride,
                                         k + ofm * ok_stride, b + ofm * SIMD_WIDTH, s + ofm * SIMD_WIDTH);
             }
         }
@@ -90,7 +90,7 @@ private:
                                              k + ifm * ik_stride + ofm * ok_stride,
                                              b + ofm * SIMD_WIDTH, s + ofm * SIMD_WIDTH);
                 }
-                sub_task<false, Activation>::execute(i + (ifm_len - 1) * ifm_stride,
+                sub_task<false, true>::execute(i + (ifm_len - 1) * ifm_stride,
                                                o + ofm * ofm_stride,
                                                k + (ifm_len - 1) * ik_stride 
                                                                  + ofm * ok_stride,

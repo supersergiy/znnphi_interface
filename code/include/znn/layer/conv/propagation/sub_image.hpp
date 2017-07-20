@@ -53,7 +53,8 @@ namespace propagation
 *
 *******************************************************************************/
 
-template <bool   Bias,                    // load or set to bias
+template <bool   First,                    // load or set to bias
+          bool   Last,
           bool   Activation,
           bool   AddOrOverwrite,
           long_t IFMs,                    // number of input images
@@ -72,7 +73,8 @@ struct sub_image_dummy
     }
 };
 
-template <bool   Bias,                  // load or set to bias
+template <bool   First,                  // load or set to bias
+          bool   Last,
           bool   Activation,
           bool   AddOrOverwrite,
           long_t IFMs,                  // number of input images
@@ -92,7 +94,7 @@ struct sub_image_1d
         ZNN_PRAGMA(unroll(RW))
         for (long_t rw = 0; rw < RW; ++rw)
         {
-            vout[rw] = load_or_set_initial_value<Bias, AddOrOverwrite>(o + rw * IW::out_stride, b, scale);
+            vout[rw] = conditional_load_or_bias<First>(o + rw * IW::out_stride, b);
         }
 
         for (long_t kd = 0; kd < CD::size; ++kd)
@@ -139,15 +141,18 @@ struct sub_image_1d
             }*/
             auto base = o + rw * IW::out_stride;
             SIMD_STORE(base, vout[rw]);
-            if (Activation) 
-            {
-               ELU(base);
+            if (Last) {
+               if (Activation) 
+               {
+                  ELU(base);
+               }
             }
         }
     }
 };
 
-template <bool   Bias,                  // load or set to bias
+template <bool   First,                  // load or set to bias
+          bool   Last,
           bool   Activation,
           bool   AddOrOverwrite,
           long_t IFMs,                  // number of input images
@@ -169,8 +174,7 @@ struct sub_image_2d
             ZNN_PRAGMA(unroll(RW))
             for (long_t rw = 0; rw < RW; ++rw)
             {
-                vout[rh][rw] = load_or_set_initial_value<Bias, AddOrOverwrite>(
-                                   o + rh * IH::out_stride + rw * IW::out_stride, b, scale);
+                vout[rh][rw] = conditional_load_or_bias<Last>(o + rh * IH::out_stride + rw * IW::out_stride, b);
             }
         }
 
@@ -224,16 +228,20 @@ struct sub_image_2d
                 }*/
                 auto base = o + rh * IH::out_stride + rw * IW::out_stride;
                 SIMD_STORE(base, vout[rh][rw]);
-                if (Activation) 
-                {
-                   ELU(base);
+                if (Last) {
+
+                   if (Activation) 
+                   {
+                      ELU(base);
+                   }
                 }
             }
         }
     }
 };
 
-template <bool   Bias,                    // load or set to bias
+template <bool   First,                    // load or set to bias
+          bool   Last,
           bool   Activation,
           bool   AddOrOverwrite,
           long_t IFMs,                    // number of input images
@@ -258,10 +266,10 @@ struct sub_image_3d
                 znn_pragma(unroll(rw))
                 for (long_t rw = 0; rw < rw; ++rw)
                 {
-                    vout[rd][rh][rw] = load_or_set_initial_value<Bias, AddOrOverwrite>(
+                    vout[rd][rh][rw] = conditional_load_or<First>(
                         o + rd * id::out_stride + rh * ih::out_stride +
                             rw * iw::out_stride,
-                        b, scale);
+                        b);
                 }
             }
         }
@@ -324,10 +332,11 @@ struct sub_image_3d
                     }*/
                     auto base = o + rd * ID::out_stride + rh * IH::out_stride + rw * IW::out_stride; 
                     SIMD_STORE(base, vout[rd][rh][rw]);
-
-                    if (Activation) 
-                    {
-                       ELU(base);
+                    if (Last) {
+                       if (Activation) 
+                       {
+                          ELU(base);
+                       }
                     }
                 }
             }
@@ -335,7 +344,8 @@ struct sub_image_3d
     }
 };
 
-template <bool   Bias,                    // load or set to bias
+template <bool   First,                    // load or set to bias
+          bool   Last,
           bool   Activation,
           bool   AddOrOverwrite,
           long_t IFMs,                    // number of input images
@@ -348,10 +358,10 @@ struct sub_image
           RD == 0 || RH == 0 || RW == 0, sub_image_dummy,
           std::conditional_t<
               RD == 1 && RH == 1,
-              sub_image_1d<Bias, Activation, AddOrOverwrite, IFMs, ID, IH, IW, CD, CH, CW, RW>,
-              std::conditional_t<RD == 1, sub_image_2d<Bias, Activation, AddOrOverwrite, IFMs, ID, IH, IW,
+              sub_image_1d<First, Last, Activation, AddOrOverwrite, IFMs, ID, IH, IW, CD, CH, CW, RW>,
+              std::conditional_t<RD == 1, sub_image_2d<First, Last, Activation, AddOrOverwrite, IFMs, ID, IH, IW,
                                                        CD, CH, CW, RH, RW>,
-                                 sub_image_3d<Bias, Activation, AddOrOverwrite, IFMs, ID, IH, IW, CD, CH,
+                                 sub_image_3d<First, Last, Activation, AddOrOverwrite, IFMs, ID, IH, IW, CD, CH,
                                               CW, RD, RH, RW>>>>
 {
 };

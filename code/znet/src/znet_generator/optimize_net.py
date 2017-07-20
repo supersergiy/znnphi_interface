@@ -64,11 +64,10 @@ def expand_convs(net):
             l  = layer_info[lname]
             lt = l["type"]
 
-            if lt == "conv":
+            if lt in ["conv"]:
                 next_name = l["next"]
                 if next_name == "many":
                     continue
-
                 next_l    = layer_info[next_name]
                 while next_l["type"] in ["scale", "bnorm", "elu"]:
                     if next_l["type"] in ["scale", "bnorm"]:

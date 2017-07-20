@@ -70,6 +70,8 @@ def forward_all_layers_lines(net):
        #lines.append('std::cout << "Running {}!\\n";'.format(l["name"]))
        lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
        #if l["type"] in ["conv", "deconv"]:
+       if l["name"] in ["Deconvolution1", "BatchNorm4", "Scale4"]:
+           import pdb; pdb.set_trace()
        #lines += forward_layer_lines(l)
 
        #lines += print_tensor_part_lines(l["top"])

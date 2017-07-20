@@ -47,11 +47,11 @@ for i in range(2):
 
     if np.isnan(error):
         print "Not congrats! Error == {}".format(error)
-        import pdb; pdb.set_trace()
     elif error > 0.010:
         print "Not congrats! Error == {}".format(error)
     else:
         print "Congrats! All pass. Error == {}".format(error)
+    import pdb; pdb.set_trace()
 #out_file = h5py.File(output_path)
 #out_file.create_dataset("data", data=out_a)
 

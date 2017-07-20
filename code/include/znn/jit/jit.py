@@ -65,7 +65,7 @@ def compile_dl(args):
     print out_path
     
     compile_command = 'make -s -C {} {} O={}'.format(my_path, target_name, out_path)
-    compile_comman  += '2> /dev/null'
+    compile_command  += ' 2> /dev/null'
     os.system(compile_command)
     check_call(['rm', "-f", wrapper_path], stderr=STDOUT)
 

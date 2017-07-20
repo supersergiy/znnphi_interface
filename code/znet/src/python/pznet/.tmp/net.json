@@ -66,13 +66,800 @@
       }, 
       {
          "top": [
-            "output"
+            "convi"
          ], 
          "type": "ELU", 
          "name": "elui", 
          "bottom": [
             "convi"
          ]
+      }, 
+      {
+         "name": "conv0_d0", 
+         "bottom": [
+            "convi"
+         ], 
+         "top": [
+            "conv0_d0"
+         ], 
+         "param": [
+            {
+               "lr_mult": 1.0
+            }
+         ], 
+         "convolution_param": {
+            "num_output": 28, 
+            "weight_filler": {
+               "std": 1.0, 
+               "type": "msra"
+            }, 
+            "stride": [
+               1, 
+               1, 
+               1
+            ], 
+            "pad": [
+               0, 
+               1, 
+               1
+            ], 
+            "bias_filler": {
+               "type": "constant"
+            }, 
+            "bias_term": false, 
+            "kernel_size": [
+               1, 
+               3, 
+               3
+            ]
+         }, 
+         "type": "Convolution"
+      }, 
+      {
+         "name": "bn0_d0", 
+         "bottom": [
+            "conv0_d0"
+         ], 
+         "top": [
+            "conv0_d0"
+         ], 
+         "param": [
+            {
+               "lr_mult": 0.0, 
+               "decay_mult": 0.0
+            }, 
+            {
+               "lr_mult": 0.0, 
+               "decay_mult": 0.0
+            }, 
+            {
+               "lr_mult": 0.0, 
+               "decay_mult": 0.0
+            }
+         ], 
+         "batch_norm_param": {
+            "use_global_stats": true
+         }, 
+         "type": "BatchNorm"
+      }, 
+      {
+         "top": [
+            "conv0_d0"
+         ], 
+         "scale_param": {
+            "bias_term": true
+         }, 
+         "type": "Scale", 
+         "name": "scale0_d0", 
+         "bottom": [
+            "conv0_d0"
+         ]
+      }, 
+      {
+         "top": [
+            "conv0_d0"
+         ], 
+         "type": "ELU", 
+         "name": "elu0_d0", 
+         "bottom": [
+            "conv0_d0"
+         ]
+      }, 
+      {
+         "name": "conv1_d0", 
+         "bottom": [
+            "conv0_d0"
+         ], 
+         "top": [
+            "conv1_d0"
+         ], 
+         "param": [
+            {
+               "lr_mult": 1.0
+            }
+         ], 
+         "convolution_param": {
+            "num_output": 28, 
+            "weight_filler": {
+               "std": 1.0, 
+               "type": "msra"
+            }, 
+            "stride": [
+               1, 
+               1, 
+               1
+            ], 
+            "pad": [
+               0, 
+               1, 
+               1
+            ], 
+            "bias_filler": {
+               "type": "constant"
+            }, 
+            "bias_term": false, 
+            "kernel_size": [
+               1, 
+               3, 
+               3
+            ]
+         }, 
+         "type": "Convolution"
+      }, 
+      {
+         "name": "bn1_d0", 
+         "bottom": [
+            "conv1_d0"
+         ], 
+         "top": [
+            "conv1_d0"
+         ], 
+         "param": [
+            {
+               "lr_mult": 0.0, 
+               "decay_mult": 0.0
+            }, 
+            {
+               "lr_mult": 0.0, 
+               "decay_mult": 0.0
+            }, 
+            {
+               "lr_mult": 0.0, 
+               "decay_mult": 0.0
+            }
+         ], 
+         "batch_norm_param": {
+            "use_global_stats": true
+         }, 
+         "type": "BatchNorm"
+      }, 
+      {
+         "top": [
+            "conv1_d0"
+         ], 
+         "scale_param": {
+            "bias_term": true
+         }, 
+         "type": "Scale", 
+         "name": "scale1_d0", 
+         "bottom": [
+            "conv1_d0"
+         ]
+      }, 
+      {
+         "top": [
+            "conv1_d0"
+         ], 
+         "type": "ELU", 
+         "name": "elu1_d0", 
+         "bottom": [
+            "conv1_d0"
+         ]
+      }, 
+      {
+         "name": "conv2_d0", 
+         "bottom": [
+            "conv1_d0"
+         ], 
+         "top": [
+            "conv2_d0"
+         ], 
+         "param": [
+            {
+               "lr_mult": 1.0
+            }
+         ], 
+         "convolution_param": {
+            "num_output": 28, 
+            "weight_filler": {
+               "std": 1.0, 
+               "type": "msra"
+            }, 
+            "stride": [
+               1, 
+               1, 
+               1
+            ], 
+            "pad": [
+               0, 
+               1, 
+               1
+            ], 
+            "bias_filler": {
+               "type": "constant"
+            }, 
+            "bias_term": false, 
+            "kernel_size": [
+               1, 
+               3, 
+               3
+            ]
+         }, 
+         "type": "Convolution"
+      }, 
+      {
+         "top": [
+            "sum0_d0"
+         ], 
+         "type": "Eltwise", 
+         "name": "sum0_d0", 
+         "bottom": [
+            "conv2_d0", 
+            "conv0_d0"
+         ]
+      }, 
+      {
+         "name": "bn2_d0", 
+         "bottom": [
+            "sum0_d0"
+         ], 
+         "top": [
+            "sum0_d0"
+         ], 
+         "param": [
+            {
+               "lr_mult": 0.0, 
+               "decay_mult": 0.0
+            }, 
+            {
+               "lr_mult": 0.0, 
+               "decay_mult": 0.0
+            }, 
+            {
+               "lr_mult": 0.0, 
+               "decay_mult": 0.0
+            }
+         ], 
+         "batch_norm_param": {
+            "use_global_stats": true
+         }, 
+         "type": "BatchNorm"
+      }, 
+      {
+         "top": [
+            "sum0_d0"
+         ], 
+         "scale_param": {
+            "bias_term": true
+         }, 
+         "type": "Scale", 
+         "name": "scale2_d0", 
+         "bottom": [
+            "sum0_d0"
+         ]
+      }, 
+      {
+         "top": [
+            "sum0_d0"
+         ], 
+         "type": "ELU", 
+         "name": "elu2_d0", 
+         "bottom": [
+            "sum0_d0"
+         ]
+      }, 
+      {
+         "pooling_param": {
+            "stride": [
+               1, 
+               2, 
+               2
+            ], 
+            "kernel_size": [
+               1, 
+               2, 
+               2
+            ], 
+            "pool": 0
+         }, 
+         "top": [
+            "pool_d1"
+         ], 
+         "type": "Pooling", 
+         "name": "pool_d1", 
+         "bottom": [
+            "sum0_d0"
+         ]
+      }, 
+      {
+         "name": "conv0_d1", 
+         "bottom": [
+            "pool_d1"
+         ], 
+         "top": [
+            "conv0_d1"
+         ], 
+         "param": [
+            {
+               "lr_mult": 1.0
+            }
+         ], 
+         "convolution_param": {
+            "num_output": 36, 
+            "weight_filler": {
+               "std": 1.0, 
+               "type": "msra"
+            }, 
+            "stride": [
+               1, 
+               1, 
+               1
+            ], 
+            "pad": [
+               0, 
+               1, 
+               1
+            ], 
+            "bias_filler": {
+               "type": "constant"
+            }, 
+            "bias_term": false, 
+            "kernel_size": [
+               1, 
+               3, 
+               3
+            ]
+         }, 
+         "type": "Convolution"
+      }, 
+      {
+         "name": "bn0_d1", 
+         "bottom": [
+            "conv0_d1"
+         ], 
+         "top": [
+            "conv0_d1"
+         ], 
+         "param": [
+            {
+               "lr_mult": 0.0, 
+               "decay_mult": 0.0
+            }, 
+            {
+               "lr_mult": 0.0, 
+               "decay_mult": 0.0
+            }, 
+            {
+               "lr_mult": 0.0, 
+               "decay_mult": 0.0
+            }
+         ], 
+         "batch_norm_param": {
+            "use_global_stats": true
+         }, 
+         "type": "BatchNorm"
+      }, 
+      {
+         "top": [
+            "conv0_d1"
+         ], 
+         "scale_param": {
+            "bias_term": true
+         }, 
+         "type": "Scale", 
+         "name": "scale0_d1", 
+         "bottom": [
+            "conv0_d1"
+         ]
+      }, 
+      {
+         "top": [
+            "conv0_d1"
+         ], 
+         "type": "ELU", 
+         "name": "elu0_d1", 
+         "bottom": [
+            "conv0_d1"
+         ]
+      }, 
+      {
+         "name": "conv1_d1", 
+         "bottom": [
+            "conv0_d1"
+         ], 
+         "top": [
+            "conv1_d1"
+         ], 
+         "param": [
+            {
+               "lr_mult": 1.0
+            }
+         ], 
+         "convolution_param": {
+            "num_output": 36, 
+            "weight_filler": {
+               "std": 1.0, 
+               "type": "msra"
+            }, 
+            "stride": [
+               1, 
+               1, 
+               1
+            ], 
+            "pad": [
+               0, 
+               1, 
+               1
+            ], 
+            "bias_filler": {
+               "type": "constant"
+            }, 
+            "bias_term": false, 
+            "kernel_size": [
+               1, 
+               3, 
+               3
+            ]
+         }, 
+         "type": "Convolution"
+      }, 
+      {
+         "name": "bn1_d1", 
+         "bottom": [
+            "conv1_d1"
+         ], 
+         "top": [
+            "conv1_d1"
+         ], 
+         "param": [
+            {
+               "lr_mult": 0.0, 
+               "decay_mult": 0.0
+            }, 
+            {
+               "lr_mult": 0.0, 
+               "decay_mult": 0.0
+            }, 
+            {
+               "lr_mult": 0.0, 
+               "decay_mult": 0.0
+            }
+         ], 
+         "batch_norm_param": {
+            "use_global_stats": true
+         }, 
+         "type": "BatchNorm"
+      }, 
+      {
+         "top": [
+            "conv1_d1"
+         ], 
+         "scale_param": {
+            "bias_term": true
+         }, 
+         "type": "Scale", 
+         "name": "scale1_d1", 
+         "bottom": [
+            "conv1_d1"
+         ]
+      }, 
+      {
+         "top": [
+            "conv1_d1"
+         ], 
+         "type": "ELU", 
+         "name": "elu1_d1", 
+         "bottom": [
+            "conv1_d1"
+         ]
+      }, 
+      {
+         "name": "conv2_d1", 
+         "bottom": [
+            "conv1_d1"
+         ], 
+         "top": [
+            "conv2_d1"
+         ], 
+         "param": [
+            {
+               "lr_mult": 1.0
+            }
+         ], 
+         "convolution_param": {
+            "num_output": 36, 
+            "weight_filler": {
+               "std": 1.0, 
+               "type": "msra"
+            }, 
+            "stride": [
+               1, 
+               1, 
+               1
+            ], 
+            "pad": [
+               0, 
+               1, 
+               1
+            ], 
+            "bias_filler": {
+               "type": "constant"
+            }, 
+            "bias_term": false, 
+            "kernel_size": [
+               1, 
+               3, 
+               3
+            ]
+         }, 
+         "type": "Convolution"
+      }, 
+      {
+         "top": [
+            "sum0_d1"
+         ], 
+         "type": "Eltwise", 
+         "name": "sum0_d1", 
+         "bottom": [
+            "conv2_d1", 
+            "conv0_d1"
+         ]
+      }, 
+      {
+         "name": "bn2_d1", 
+         "bottom": [
+            "sum0_d1"
+         ], 
+         "top": [
+            "sum0_d1"
+         ], 
+         "param": [
+            {
+               "lr_mult": 0.0, 
+               "decay_mult": 0.0
+            }, 
+            {
+               "lr_mult": 0.0, 
+               "decay_mult": 0.0
+            }, 
+            {
+               "lr_mult": 0.0, 
+               "decay_mult": 0.0
+            }
+         ], 
+         "batch_norm_param": {
+            "use_global_stats": true
+         }, 
+         "type": "BatchNorm"
+      }, 
+      {
+         "top": [
+            "sum0_d1"
+         ], 
+         "scale_param": {
+            "bias_term": true
+         }, 
+         "type": "Scale", 
+         "name": "scale2_d1", 
+         "bottom": [
+            "sum0_d1"
+         ]
+      }, 
+      {
+         "top": [
+            "sum0_d1"
+         ], 
+         "type": "ELU", 
+         "name": "elu2_d1", 
+         "bottom": [
+            "sum0_d1"
+         ]
+      }, 
+      {
+         "pooling_param": {
+            "stride": [
+               1, 
+               2, 
+               2
+            ], 
+            "kernel_size": [
+               1, 
+               2, 
+               2
+            ], 
+            "pool": 0
+         }, 
+         "top": [
+            "pool_d2"
+         ], 
+         "type": "Pooling", 
+         "name": "pool_d2", 
+         "bottom": [
+            "sum0_d1"
+         ]
+      }, 
+      {
+         "name": "conv0_d2", 
+         "bottom": [
+            "pool_d2"
+         ], 
+         "top": [
+            "conv0_d2"
+         ], 
+         "param": [
+            {
+               "lr_mult": 1.0
+            }
+         ], 
+         "convolution_param": {
+            "num_output": 48, 
+            "weight_filler": {
+               "std": 1.0, 
+               "type": "msra"
+            }, 
+            "stride": [
+               1, 
+               1, 
+               1
+            ], 
+            "pad": [
+               0, 
+               1, 
+               1
+            ], 
+            "bias_filler": {
+               "type": "constant"
+            }, 
+            "bias_term": false, 
+            "kernel_size": [
+               1, 
+               3, 
+               3
+            ]
+         }, 
+         "type": "Convolution"
+      }, 
+      {
+         "name": "bn0_d2", 
+         "bottom": [
+            "conv0_d2"
+         ], 
+         "top": [
+            "conv0_d2"
+         ], 
+         "param": [
+            {
+               "lr_mult": 0.0, 
+               "decay_mult": 0.0
+            }, 
+            {
+               "lr_mult": 0.0, 
+               "decay_mult": 0.0
+            }, 
+            {
+               "lr_mult": 0.0, 
+               "decay_mult": 0.0
+            }
+         ], 
+         "batch_norm_param": {
+            "use_global_stats": true
+         }, 
+         "type": "BatchNorm"
+      }, 
+      {
+         "top": [
+            "conv0_d2"
+         ], 
+         "scale_param": {
+            "bias_term": true
+         }, 
+         "type": "Scale", 
+         "name": "scale0_d2", 
+         "bottom": [
+            "conv0_d2"
+         ]
+      }, 
+      {
+         "top": [
+            "conv0_d2"
+         ], 
+         "type": "ELU", 
+         "name": "elu0_d2", 
+         "bottom": [
+            "conv0_d2"
+         ]
+      }, 
+      {
+         "name": "convf1_d2", 
+         "bottom": [
+            "conv0_d2"
+         ], 
+         "top": [
+            "convf1_d2"
+         ], 
+         "param": [
+            {
+               "lr_mult": 1.0
+            }
+         ], 
+         "convolution_param": {
+            "num_output": 48, 
+            "weight_filler": {
+               "std": 1.0, 
+               "type": "msra"
+            }, 
+            "stride": [
+               1, 
+               1, 
+               1
+            ], 
+            "pad": [
+               0, 
+               1, 
+               1
+            ], 
+            "bias_filler": {
+               "type": "constant"
+            }, 
+            "bias_term": false, 
+            "kernel_size": [
+               1, 
+               3, 
+               3
+            ]
+         }, 
+         "type": "Convolution"
+      }, 
+      {
+         "name": "conv1_d2", 
+         "bottom": [
+            "convf1_d2"
+         ], 
+         "top": [
+            "output"
+         ], 
+         "param": [
+            {
+               "lr_mult": 1.0
+            }
+         ], 
+         "convolution_param": {
+            "num_output": 48, 
+            "weight_filler": {
+               "std": 1.0, 
+               "type": "msra"
+            }, 
+            "stride": [
+               1, 
+               1, 
+               1
+            ], 
+            "pad": [
+               1, 
+               0, 
+               0
+            ], 
+            "bias_filler": {
+               "type": "constant"
+            }, 
+            "bias_term": false, 
+            "kernel_size": [
+               3, 
+               1, 
+               1
+            ]
+         }, 
+         "type": "Convolution"
       }
    ]
 }

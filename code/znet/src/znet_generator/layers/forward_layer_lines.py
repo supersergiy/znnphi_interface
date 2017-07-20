@@ -6,9 +6,9 @@ def forward_layer_lines(lparams):
 
    lines = []
    params = '' 
-   if lt in ["conv"]:
+   if lt in ["conv", "deconv"]:
        params = conv_forward_params(l)
-   if lt in ["deconv"]:
+   if lt in ["aadeconv"]:
        params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
        params += 'tensors["{}"]->data(), tensors["{}"]->data()'.format(l["kernel"], l["bias"])
    elif lt in ["pool", "block_input", "unblock_output", "elu", "pad", "sigmoid"]:

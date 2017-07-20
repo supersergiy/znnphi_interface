@@ -92,6 +92,12 @@ public:
         std::cout << "OH: " << OH_TOTAL_STRIDE << std::endl;
         std::cout << "OD: " << OD_TOTAL_STRIDE << std::endl;
 #endif
+        if (!AddOrOverwrite) {
+           std::cout << "NO ADDING\n";
+        }
+        else {
+           std::cout << "ADDING\n";
+        }
         plan->execute(in, out + OUT_OFFSET, ker, bi, scale);
     }
 };

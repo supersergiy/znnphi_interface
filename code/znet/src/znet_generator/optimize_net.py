@@ -237,10 +237,13 @@ def eliminate_adds(net):
 
     for lname in (layer_order):
         l = layer_info[lname]
-        if l["type"] == "conv":
+        if l["type"] in ["conv", "deconv"]:
             next_name = l["next"]
 
             if next_name in layer_info and layer_info[next_name]["type"] == "eltwise": #TODO: all eltwise are sums now, so this should be changed later
+                if l["type"] == "deconv":
+                    count += 1
+
                 next_l = layer_info[next_name] 
 
                 if l["additive_conv"] == True:
@@ -265,13 +268,12 @@ def eliminate_adds(net):
 
                 #remove eltwise
                 delete_layer(net, next_name)
-                count += 1
 
 def optimize_net(net):
     generate_layer_order_info(net)
+    stride1_deconv_to_conv(net)
     eliminate_adds(net)
     expand_convs(net)
-    stride1_deconv_to_conv(net)
     handle_padding(net)
 
 

@@ -4,6 +4,7 @@
 #include "znn/layer/conv/propagation/full_layer/problem.hpp"
 #include "znn/layer/conv/propagation/full_layer/schedule.hpp"
 #include "znn/util/kernel_launcher.hpp"
+#include "znn/tensor/tensor.hpp"
 #include <functional>
 #include <vector>
 
@@ -33,6 +34,7 @@ private:
     float const* kernels_;
     float const* biases_;
     float const* scale_;
+    hbw_array<float> *add_to_; 
 
 public:
     full_layer(kernel_launcher* l)
@@ -46,12 +48,21 @@ public:
             fns[i] = [i, this]() {
                 for (auto const& e : this->executables[i])
                 {
-                    e(this->in_, this->out_, this->kernels_, this->biases_, this->scale_);
+                    if (AddToOutput) {
+                       e(this->add_to_->data(), this->out_, this->kernels_, this->biases_, this->scale_, this->out_);
+                    }
+                    else {
+                       e(this->in_, this->out_, this->kernels_, this->biases_, this->scale_, NULL);
+                    }
                 }
             };
         }
     }
 
+    ~full_layer() {
+       delete add_to_;
+    }
+   
     void execute(float const* __restrict i, float* __restrict o,
                  float const* __restrict k, float const* __restrict b,
                  float const* __restrict s)
@@ -61,6 +72,12 @@ public:
         kernels_ = k;
         biases_  = b;
         scale_   = s;
+        if (AddToOutput) {
+           add_to_ = new hbw_array<float>(P::batch_size * P::out_batch_stride);
+        }
+        else {
+           add_to_ = NULL;
+        }
 
         launcher->launch(&(fns[0]));
     }

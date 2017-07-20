@@ -27,7 +27,7 @@ private:
     static void loop_over_w(float const* __restrict i, float* __restrict o,
                             float const* __restrict k,
                             float const* __restrict b,
-                            float const* __restrict s)// scale factor for values initially in o 
+                            float const* __restrict s, float * __restrict add_to)// scale factor for values initially in o 
     {
         static constexpr long_t Full    = IW::size / RB::width;
         static constexpr long_t Partial = IW::size % RB::width;
@@ -35,7 +35,7 @@ private:
         for (long_t w = 0; w < Full; ++w)
         {
             sub_image<First, Last, Activation, AddToOutput, IFMs, ID, IH, IW, CD, CH, CW, D, H,
-                      RB::width>::execute(i, o, k, b, s);
+                      RB::width>::execute(i, o, k, b, s, add_to);
             i += RB::width * CW::conv_stride * IW::in_stride;
             o += RB::width * IW::out_stride;
         }
@@ -43,7 +43,7 @@ private:
         if (Partial)
         {
             sub_image<First, Last, Activation, AddToOutput, IFMs, ID, IH, IW, CD, CH, CW, D, H,
-                      Partial>::execute(i, o, k, b, s);
+                      Partial>::execute(i, o, k, b, s, add_to);
         }
     }
 
@@ -51,21 +51,21 @@ private:
     static void loop_over_h(float const* __restrict i, float* __restrict o,
                             float const* __restrict k,
                             float const* __restrict b,
-                            float const* __restrict s)// scale factor for values initially in o 
+                            float const* __restrict s, float * __restrict add_to)// scale factor for values initially in o 
     {
         static constexpr long_t Full    = IH::size / RB::height;
         static constexpr long_t Partial = IH::size % RB::height;
 
         for (long_t h = 0; h < Full; ++h)
         {
-            full_image::template loop_over_w<D, RB::height>(i, o, k, b, s);
+            full_image::template loop_over_w<D, RB::height>(i, o, k, b, s, add_to);
             i += RB::height * CH::conv_stride * IH::in_stride;
             o += RB::height * IH::out_stride;
         }
 
         if (Partial)
         {
-            full_image::template loop_over_w<D, Partial>(i, o, k, b, s);
+            full_image::template loop_over_w<D, Partial>(i, o, k, b, s, add_to);
         }
     }
 
@@ -78,21 +78,21 @@ public:
 
     static void execute(float const* __restrict i, float* __restrict o,
                         float const* __restrict k, float const* __restrict b,
-                        float const* __restrict s)// scale factor for values initially in o 
+                        float const* __restrict s, float * __restrict add_to)// scale factor for values initially in o 
     {
         static constexpr long_t Full    = ID::size / RB::depth;
         static constexpr long_t Partial = ID::size % RB::depth;
 
         for (long_t d = 0; d < Full; ++d)
         {
-            full_image::template loop_over_h<RB::depth>(i, o, k, b, s);
+            full_image::template loop_over_h<RB::depth>(i, o, k, b, s, add_to);
             i += RB::depth * CD::conv_stride * ID::in_stride;
             o += RB::depth * ID::out_stride;
         }
 
         if (Partial)
         {
-            full_image::template loop_over_h<Partial>(i, o, k, b, s);
+            full_image::template loop_over_h<Partial>(i, o, k, b, s, add_to);
         }
     }
 };

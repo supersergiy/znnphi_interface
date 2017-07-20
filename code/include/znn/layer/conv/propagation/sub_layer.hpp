@@ -67,14 +67,15 @@ private:
     static void execute_single(float const* __restrict i, float* __restrict o,
                                float const* __restrict k,
                                float const* __restrict b,
-                               float const* __restrict s)
+                               float const* __restrict s, float * __restrict add_to)
     {
         if (ifm_len == 1) 
         {
             for (long_t ofm = 0; ofm < ofm_len; ++ofm)
             {
                 sub_task<true, true>::execute(i, o + ofm * ofm_stride,
-                                        k + ofm * ok_stride, b + ofm * SIMD_WIDTH, s + ofm * SIMD_WIDTH);
+                                              k + ofm * ok_stride, b + ofm * SIMD_WIDTH, s + ofm * SIMD_WIDTH,
+                                              add_to + ofm*ofm_stride);
             }
         }
         else 
@@ -82,19 +83,22 @@ private:
             for (long_t ofm = 0; ofm < ofm_len; ++ofm)
             {
                 sub_task<true, false>::execute(i, o + ofm * ofm_stride,
-                                        k + ofm * ok_stride, b + ofm * SIMD_WIDTH, s + ofm * SIMD_WIDTH);
+                                        k + ofm * ok_stride, b + ofm * SIMD_WIDTH, s + ofm * SIMD_WIDTH,
+                                        add_to + ofm *ofm_stride);
                 for (long_t ifm = 1; ifm < ifm_len - 1; ++ifm)
                 {
                     sub_task<false, false>::execute(i + ifm * ifm_stride,
                                              o + ofm * ofm_stride,
                                              k + ifm * ik_stride + ofm * ok_stride,
-                                             b + ofm * SIMD_WIDTH, s + ofm * SIMD_WIDTH);
+                                             b + ofm * SIMD_WIDTH, s + ofm * SIMD_WIDTH,
+                                             add_to + ofm*ofm_stride);
                 }
                 sub_task<false, true>::execute(i + (ifm_len - 1) * ifm_stride,
                                                o + ofm * ofm_stride,
                                                k + (ifm_len - 1) * ik_stride 
                                                                  + ofm * ok_stride,
-                                               b + ofm * SIMD_WIDTH, s + ofm * SIMD_WIDTH);
+                                               b + ofm * SIMD_WIDTH, s + ofm * SIMD_WIDTH,
+                                               add_to + ofm*ofm_stride);
             }
         }
     }
@@ -102,14 +106,14 @@ private:
 public:
     static void execute(float const* __restrict i, float* __restrict o,
                         float const* __restrict k, float const* __restrict b,
-                        float const* __restrict s)
+                        float const* __restrict s, float* __restrict add_to)
     {
         for (long_t bs = 0; bs < batch_size; ++bs)
         {
             execute_single(i + in_offset + bs * in_batch_stride,
                            o + out_offset + bs * out_batch_stride,
                            k + kernel_offset, b + bias_offset,
-                           s + scale_offset);
+                           s + scale_offset, add_to + out_offset + bs * out_batch_stride);
         }
     }
 
@@ -126,7 +130,7 @@ struct sub_layer<null_problem_t>
 {
     static void execute(float const* __restrict, float* __restrict,
                         float const* __restrict, float const* __restrict,
-                        float const* __restrict s)
+                        float const* __restrict s, float* __restrict add_to)
     {
     }
 

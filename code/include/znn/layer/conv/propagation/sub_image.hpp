@@ -56,7 +56,7 @@ namespace propagation
 template <bool   First,                    // load or set to bias
           bool   Last,
           bool   Activation,
-          bool   AddOrOverwrite,
+          bool   PerformAddition,
           long_t IFMs,                    // number of input images
           class ID, class IH, class IW,   // image traits
           class CD, class CH, class CW,   // convolution traits
@@ -68,7 +68,7 @@ struct sub_image_dummy
 {
     static void execute(float const* __restrict, float* __restrict,
                         float const* __restrict, float const* __restrict, 
-                        float const* __restrict)
+                        float const* __restrict, float const* __restrict)
     {
     }
 };
@@ -76,7 +76,7 @@ struct sub_image_dummy
 template <bool   First,                  // load or set to bias
           bool   Last,
           bool   Activation,
-          bool   AddOrOverwrite,
+          bool   PerformAddition,
           long_t IFMs,                  // number of input images
           class ID, class IH, class IW, // image traits
           class CD, class CH, class CW, // convolution traits
@@ -86,7 +86,7 @@ struct sub_image_1d
 {
     static void execute(float const* __restrict i, float* __restrict o,
                         float const* __restrict k, float const* __restrict b,
-                        float const* __restrict scale)// scale factor for values initially in o 
+                        float const* __restrict scale, float * __restrict add_to)// scale factor for values initially in o 
     {
         SIMD_FLOAT vout[RW], vwt; // Expected to be in the register file
 
@@ -139,14 +139,27 @@ struct sub_image_1d
             {
                 SIMD_ELU(vout[rw]); 
             }*/
-            auto base = o + rw * IW::out_stride;
-            SIMD_STORE(base, vout[rw]);
-            if (Last) {
+            auto offset = rw * IW::out_stride;
+            auto base = o + offset;
+
+            if (Last && PerformAddition) {
+               vout[rw] = SIMD_ADD(vout[rw], SIMD_LOAD(add_to + offset));                        
+               SIMD_STORE(add_to + offset, vout[rw]);
                if (Activation) 
                {
                   ELU(base);
                }
             }
+            else {
+              SIMD_STORE(base, vout[rw]);
+              if (Last) {
+                 if (Activation) 
+                 {
+                    ELU(base);
+                 }
+              }
+           }
+
         }
     }
 };
@@ -154,7 +167,7 @@ struct sub_image_1d
 template <bool   First,                  // load or set to bias
           bool   Last,
           bool   Activation,
-          bool   AddOrOverwrite,
+          bool   PerformAddition,
           long_t IFMs,                  // number of input images
           class ID, class IH, class IW, // image traits
           class CD, class CH, class CW, // convolution traits
@@ -164,7 +177,7 @@ struct sub_image_2d
 {
     static void execute(float const* __restrict i, float* __restrict o,
                         float const* __restrict k, float const* __restrict b,
-                        float const* __restrict scale)// scale factor for values initially in o 
+                        float const* __restrict scale, float * __restrict add_to)// scale factor for values initially in o 
     {
         SIMD_FLOAT vout[RH][RW], vwt; // Expected to be in the register file
 
@@ -222,28 +235,34 @@ struct sub_image_2d
             ZNN_PRAGMA(unroll(RW))
             for (long_t rw = 0; rw < RW; ++rw)
             {
-                /*if (Activation) 
-                {
-                    SIMD_ELU(vout[rh][rw]); 
-                }*/
-                auto base = o + rh * IH::out_stride + rw * IW::out_stride;
-                SIMD_STORE(base, vout[rh][rw]);
-                if (Last) {
-
+                auto offset = rh * IH::out_stride + rw * IW::out_stride;
+                auto base = o + offset;
+                if (Last && PerformAddition) {
+                   vout[rh][rw] = SIMD_ADD(vout[rh][rw], SIMD_LOAD(add_to + offset));                        
+                   SIMD_STORE(add_to + offset, vout[rh][rw]);
                    if (Activation) 
                    {
                       ELU(base);
                    }
                 }
-            }
-        }
+                else {
+                  SIMD_STORE(base, vout[rh][rw]);
+                  if (Last) {
+                     if (Activation) 
+                     {
+                        ELU(base);
+                     }
+                  }
+               }
+            } 
+        } 
     }
 };
 
 template <bool   First,                    // load or set to bias
           bool   Last,
           bool   Activation,
-          bool   AddOrOverwrite,
+          bool   PerformAddition,
           long_t IFMs,                    // number of input images
           class ID, class IH, class IW,   // image traits
           class CD, class CH, class CW,   // convolution traits
@@ -253,7 +272,7 @@ struct sub_image_3d
 {
     static void execute(float const* __restrict i, float* __restrict o,
                         float const* __restrict k, float const* __restrict b,
-                        float const* __restrict scale)// scale factor for values initially in o 
+                        float const* __restrict scale, float * __restrict add_to)// scale factor for values initially in o 
     {
         SIMD_FLOAT vout[RD][RH][RW], vwt; // Expected to be in the register file
          
@@ -330,12 +349,24 @@ struct sub_image_3d
                     {
                         SIMD_ELU(vout[rd][rh][rw]); 
                     }*/
-                    auto base = o + rd * ID::out_stride + rh * IH::out_stride + rw * IW::out_stride; 
-                    SIMD_STORE(base, vout[rd][rh][rw]);
-                    if (Last) {
+                    auto offset = rd * ID::out_stride + rh * IH::out_stride + rw * IW::out_stride; 
+                    auto base = o + offset; 
+
+                    if (Last && PerformAddition) {
+                       vout[rd][rh][rw] = SIMD_ADD(vout[rd][rh][rw], SIMD_LOAD(add_to + offset));                        
+                       SIMD_STORE(add_to + offset, vout[rd][rh][rw]);
                        if (Activation) 
                        {
                           ELU(base);
+                       }
+                    }
+                    else {
+                       SIMD_STORE(base, vout[rd][rh][rw]);
+                       if (Last) {
+                          if (Activation) 
+                          {
+                             ELU(base);
+                          }
                        }
                     }
                 }
@@ -347,7 +378,7 @@ struct sub_image_3d
 template <bool   First,                    // load or set to bias
           bool   Last,
           bool   Activation,
-          bool   AddOrOverwrite,
+          bool   PerformAddition,
           long_t IFMs,                    // number of input images
           class ID, class IH, class IW,   // image traits
           class CD, class CH, class CW,   // convolution traits
@@ -358,10 +389,10 @@ struct sub_image
           RD == 0 || RH == 0 || RW == 0, sub_image_dummy,
           std::conditional_t<
               RD == 1 && RH == 1,
-              sub_image_1d<First, Last, Activation, AddOrOverwrite, IFMs, ID, IH, IW, CD, CH, CW, RW>,
-              std::conditional_t<RD == 1, sub_image_2d<First, Last, Activation, AddOrOverwrite, IFMs, ID, IH, IW,
+              sub_image_1d<First, Last, Activation, PerformAddition, IFMs, ID, IH, IW, CD, CH, CW, RW>,
+              std::conditional_t<RD == 1, sub_image_2d<First, Last, Activation, PerformAddition, IFMs, ID, IH, IW,
                                                        CD, CH, CW, RH, RW>,
-                                 sub_image_3d<First, Last, Activation, AddOrOverwrite, IFMs, ID, IH, IW, CD, CH,
+                                 sub_image_3d<First, Last, Activation, PerformAddition, IFMs, ID, IH, IW, CD, CH,
                                               CW, RD, RH, RW>>>>
 {
 };

@@ -71,7 +71,8 @@ using enable_if_t = typename std::enable_if<B, T>::type;
 
 #define SIMD_WIDTH 8
 
-#define SIMD_MUL = _mm256_mul_ps
+#define SIMD_MUL _mm256_mul_ps
+#define SIMD_ADD _mm256_mul_ps
 #define SIMD_FMADD _mm256_fmadd_ps
 #define SIMD_FNMADD _mm256_fnmadd_ps
 #define SIMD_FMSUB _mm256_fmsub_ps

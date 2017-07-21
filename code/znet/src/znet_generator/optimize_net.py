@@ -64,7 +64,7 @@ def expand_convs(net):
             l  = layer_info[lname]
             lt = l["type"]
 
-            if lt in ["conv"]:
+            if lt in ["conv", "deconv"]:
                 next_name = l["next"]
                 if next_name == "many":
                     continue
@@ -272,7 +272,7 @@ def optimize_net(net):
     generate_layer_order_info(net)
     stride1_deconv_to_conv(net)
     eliminate_adds(net)
-    #expand_convs(net)
+    expand_convs(net)
     handle_padding(net)
 
 

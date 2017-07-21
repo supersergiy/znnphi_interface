@@ -237,7 +237,7 @@ struct sub_image_2d
                 auto offset = rh * IH::out_stride + rw * IW::out_stride;
                 auto base = o + offset;
                 if (Last && PerformAddition) {
-                   //vout[rh][rw] = SIMD_ADD(vout[rh][rw], SIMD_LOAD(add_to + offset));                        
+                   vout[rh][rw] = SIMD_ADD(vout[rh][rw], SIMD_LOAD(add_to + offset));                        
                    SIMD_STORE(add_to + offset, vout[rh][rw]);
                    if (Activation) 
                    {
@@ -352,7 +352,7 @@ struct sub_image_3d
                     auto base = o + offset; 
 
                     if (Last && PerformAddition) {
-                       //vout[rd][rh][rw] = SIMD_ADD(vout[rd][rh][rw], SIMD_LOAD(add_to + offset));                        
+                       vout[rd][rh][rw] = SIMD_ADD(vout[rd][rh][rw], SIMD_LOAD(add_to + offset));                        
                        SIMD_STORE(add_to + offset, vout[rd][rh][rw]);
                        if (Activation) 
                        {

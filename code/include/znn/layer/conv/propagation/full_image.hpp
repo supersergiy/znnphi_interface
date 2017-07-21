@@ -38,6 +38,7 @@ private:
                       RB::width>::execute(i, o, k, b, s, add_to);
             i += RB::width * CW::conv_stride * IW::in_stride;
             o += RB::width * IW::out_stride;
+            add_to += RB::width * IW::out_stride;
         }
 
         if (Partial)
@@ -61,6 +62,7 @@ private:
             full_image::template loop_over_w<D, RB::height>(i, o, k, b, s, add_to);
             i += RB::height * CH::conv_stride * IH::in_stride;
             o += RB::height * IH::out_stride;
+            add_to += RB::height * IH::out_stride;
         }
 
         if (Partial)
@@ -88,6 +90,7 @@ public:
             full_image::template loop_over_h<RB::depth>(i, o, k, b, s, add_to);
             i += RB::depth * CD::conv_stride * ID::in_stride;
             o += RB::depth * ID::out_stride;
+            add_to += RB::depth * ID::out_stride;
         }
 
         if (Partial)

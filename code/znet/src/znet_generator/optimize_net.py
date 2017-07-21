@@ -273,7 +273,7 @@ def eliminate_adds(net):
 def optimize_net(net):
     generate_layer_order_info(net)
     stride1_deconv_to_conv(net)
-    #eliminate_adds(net)
+    eliminate_adds(net)
     #expand_convs(net)
     handle_padding(net)
 

@@ -142,11 +142,12 @@ struct sub_image_1d
             auto base = o + offset;
 
             if (Last && PerformAddition) {
-               vout[rw] = SIMD_ADD(vout[rw], SIMD_LOAD(add_to + offset));                        
-               SIMD_STORE(add_to + offset, vout[rw]);
+               auto real_target = add_to + offset;
+               vout[rw] = SIMD_ADD(vout[rw], SIMD_LOAD(real_target));                        
+               SIMD_STORE(real_target, vout[rw]);
                if (Activation) 
                {
-                  ELU(base);
+                  ELU(real_target);
                }
             }
             else {
@@ -236,12 +237,14 @@ struct sub_image_2d
             {
                 auto offset = rh * IH::out_stride + rw * IW::out_stride;
                 auto base = o + offset;
+
                 if (Last && PerformAddition) {
-                   vout[rh][rw] = SIMD_ADD(vout[rh][rw], SIMD_LOAD(add_to + offset));                        
-                   SIMD_STORE(add_to + offset, vout[rh][rw]);
+                   auto real_target = add_to + offset;
+                   vout[rh][rw] = SIMD_ADD(vout[rh][rw], SIMD_LOAD(real_target));                        
+                   SIMD_STORE(real_target, vout[rh][rw]);
                    if (Activation) 
                    {
-                      ELU(base);
+                      ELU(real_target);
                    }
                 }
                 else {
@@ -352,11 +355,12 @@ struct sub_image_3d
                     auto base = o + offset; 
 
                     if (Last && PerformAddition) {
-                       vout[rd][rh][rw] = SIMD_ADD(vout[rd][rh][rw], SIMD_LOAD(add_to + offset));                        
-                       SIMD_STORE(add_to + offset, vout[rd][rh][rw]);
+                       auto real_target = add_to + offset;
+                       vout[rd][rh][rw] = SIMD_ADD(vout[rd][rh][rw], SIMD_LOAD(real_target));                        
+                       SIMD_STORE(real_target, vout[rd][rh][rw]);
                        if (Activation) 
                        {
-                          ELU(base);
+                          ELU(real_target);
                        }
                     }
                     else {

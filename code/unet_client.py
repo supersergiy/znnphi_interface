@@ -37,6 +37,8 @@ for i in range(2):
     diff_a = reference_a - out_a
     error = ssq = np.sum(diff_a**2)
     ref_a = reference_a
+    
+    rel_d = diff_a / (out_a + 0.000001)
 
     fd = diff_a.flatten()
     fo = out_a.flatten()

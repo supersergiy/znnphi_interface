@@ -64,7 +64,7 @@ def expand_convs(net):
             l  = layer_info[lname]
             lt = l["type"]
 
-            if lt in ["conv"]:
+            if lt in ["conv", "deconv"]:
                 next_name = l["next"]
                 if next_name == "many":
                     continue
@@ -231,18 +231,18 @@ def conv_to_deconv_kernel(conv_kernel):
     return deconv_kernel
 
 def eliminate_adds(net):
+    # This will only work for "skip" connections in Unet -- for the general case we have to make
+    # sure that the conv that consumes the add is the second one
     tensors, layer_info, layer_order  = net
     count = 0
 
     for lname in (layer_order):
         l = layer_info[lname]
-        if l["type"] in ["conv"]:
+        if l["type"] in ["conv", "deconv"]:
             next_name = l["next"]
 
             if next_name in layer_info and layer_info[next_name]["type"] == "eltwise": #TODO: all eltwise are sums now, so this should be changed later
-                if l["type"] == "deconv":
-                    count += 1
-
+                count += 1
                 next_l = layer_info[next_name] 
 
                 if l["additive_conv"] == True:
@@ -272,7 +272,7 @@ def optimize_net(net):
     generate_layer_order_info(net)
     stride1_deconv_to_conv(net)
     eliminate_adds(net)
-    #expand_convs(net)
+    expand_convs(net)
     handle_padding(net)
 
 

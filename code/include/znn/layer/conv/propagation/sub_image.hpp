@@ -89,7 +89,6 @@ struct sub_image_1d
                         float const* __restrict scale, float * __restrict add_to)// scale factor for values initially in o 
     {
         SIMD_FLOAT vout[RW], vwt; // Expected to be in the register file
-
         // load initial values to vout
         ZNN_PRAGMA(unroll(RW))
         for (long_t rw = 0; rw < RW; ++rw)
@@ -238,7 +237,7 @@ struct sub_image_2d
                 auto offset = rh * IH::out_stride + rw * IW::out_stride;
                 auto base = o + offset;
                 if (Last && PerformAddition) {
-                   vout[rh][rw] = SIMD_ADD(vout[rh][rw], SIMD_LOAD(add_to + offset));                        
+                   //vout[rh][rw] = SIMD_ADD(vout[rh][rw], SIMD_LOAD(add_to + offset));                        
                    SIMD_STORE(add_to + offset, vout[rh][rw]);
                    if (Activation) 
                    {
@@ -353,7 +352,7 @@ struct sub_image_3d
                     auto base = o + offset; 
 
                     if (Last && PerformAddition) {
-                       vout[rd][rh][rw] = SIMD_ADD(vout[rd][rh][rw], SIMD_LOAD(add_to + offset));                        
+                       //vout[rd][rh][rw] = SIMD_ADD(vout[rd][rh][rw], SIMD_LOAD(add_to + offset));                        
                        SIMD_STORE(add_to + offset, vout[rd][rh][rw]);
                        if (Activation) 
                        {

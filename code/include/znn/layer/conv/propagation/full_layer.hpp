@@ -49,7 +49,7 @@ public:
                 for (auto const& e : this->executables[i])
                 {
                     if (AddToOutput) {
-                       e(this->add_to_->data(), this->out_, this->kernels_, this->biases_, this->scale_, this->out_);
+                       e(this->in_, this->add_to_->data(), this->kernels_, this->biases_, this->scale_, this->out_);
                     }
                     else {
                        e(this->in_, this->out_, this->kernels_, this->biases_, this->scale_, NULL);
@@ -73,7 +73,8 @@ public:
         biases_  = b;
         scale_   = s;
         if (AddToOutput) {
-           add_to_ = new hbw_array<float>(P::batch_size * P::out_batch_stride);
+           add_to_ = new hbw_array<float>(zero_init, P::batch_size * P::out_batch_stride);
+           std::cout << P::batch_size * P::out_batch_stride << std::endl;
         }
         else {
            add_to_ = NULL;

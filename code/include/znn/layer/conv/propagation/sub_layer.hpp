@@ -113,7 +113,8 @@ public:
             execute_single(i + in_offset + bs * in_batch_stride,
                            o + out_offset + bs * out_batch_stride,
                            k + kernel_offset, b + bias_offset,
-                           s + scale_offset, add_to + out_offset + bs * out_batch_stride);
+                           s + scale_offset, 
+                           add_to + out_offset + bs * out_batch_stride);
         }
     }
 

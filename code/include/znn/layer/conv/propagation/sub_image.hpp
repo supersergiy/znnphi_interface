@@ -143,7 +143,7 @@ struct sub_image_1d
 
             if (Last && PerformAddition) {
                auto real_target = add_to + offset;
-               vout[rw] = SIMD_ADD(vout[rw], SIMD_LOAD(real_target));                        
+               vout[rw] = SIMD_FMADD(SIMD_LOAD(real_target), SIMD_LOAD(scale), vout[rw]);                        
                SIMD_STORE(real_target, vout[rw]);
                if (Activation) 
                {
@@ -240,7 +240,7 @@ struct sub_image_2d
 
                 if (Last && PerformAddition) {
                    auto real_target = add_to + offset;
-                   vout[rh][rw] = SIMD_ADD(vout[rh][rw], SIMD_LOAD(real_target));                        
+                   vout[rh][rw] = SIMD_FMADD(SIMD_LOAD(real_target), SIMD_LOAD(scale), vout[rh][rw]);                        
                    SIMD_STORE(real_target, vout[rh][rw]);
                    if (Activation) 
                    {
@@ -356,7 +356,7 @@ struct sub_image_3d
 
                     if (Last && PerformAddition) {
                        auto real_target = add_to + offset;
-                       vout[rd][rh][rw] = SIMD_ADD(vout[rd][rh][rw], SIMD_LOAD(real_target));                        
+                       vout[rd][rh][rw] = SIMD_FMADD(SIMD_LOAD(real_target), SIMD_LOAD(scale), vout[rd][rh][rw]);                        
                        SIMD_STORE(real_target, vout[rd][rh][rw]);
                        if (Activation) 
                        {

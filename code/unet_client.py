@@ -32,20 +32,21 @@ for i in range(2):
     out_a    = z.forward(in_a)
 
     reference_file = h5py.File(reference_path)
-    reference_a = reference_file["data"][:]
+    reference_a = reference_file["output"][:]
     np.set_printoptions(precision=2)
-    diff_a = reference_a - out_a
-    error = ssq = np.sum(diff_a**2)
     ref_a = reference_a
-    
-    rel_d = diff_a / (out_a + 0.000001)
+
+    diff_a = reference_a - out_a
+    rel_d = np.abs(diff_a) / (out_a + 0.0000000001)
+    mask1 = diff_a > 1e-5
+    mask2 = rel_d > 1e-5
+
+    errors = rel_d * mask1 * mask2 * reference_a 
+    error = np.sum(errors)
 
     fd = diff_a.flatten()
     fo = out_a.flatten()
     fr = reference_a.flatten()
-    boo = np.argmax(fd)
-
-    error = np.sum(diff_a**2)
 
     if np.isnan(error):
         print "Not congrats! Error == {}".format(error)

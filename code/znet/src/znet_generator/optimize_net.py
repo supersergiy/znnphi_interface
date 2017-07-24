@@ -64,12 +64,15 @@ def expand_convs(net):
             l  = layer_info[lname]
             lt = l["type"]
 
-            if lt in ["conv", "deconv"]:
+            if lt in ["conv"]:
                 next_name = l["next"]
                 if next_name == "many":
                     continue
                 next_l    = layer_info[next_name]
+
                 while next_l["type"] in ["scale", "bnorm", "elu"]:
+                    if lt == "deconv":
+                        print "DOING IT FOR DECONV"
                     if next_l["type"] in ["scale", "bnorm"]:
                         consume_scale(layer_info, lname, next_name)
                     else:#if next_l["type"] == "elu":
@@ -236,16 +239,18 @@ def eliminate_adds(net):
 
     for lname in (layer_order):
         l = layer_info[lname]
-        if l["type"] in ["conv"]:
+        if l["type"] in ["conv", "deconv"]:
             next_name = l["next"]
 
             if next_name in layer_info and layer_info[next_name]["type"] == "eltwise": #TODO: all eltwise are sums now, so this should be changed later
                 if l["type"] == "deconv":
                     count += 1
+                    if count != 1:
+                        continue
 
                 next_l = layer_info[next_name] 
 
-                if l["additive_conv"] == True:
+                if "additive_conv" in l and l["additive_conv"] == True:
                     raise Exception("Double additive layer")
 
                 l["additive_conv"]  = True
@@ -271,8 +276,8 @@ def eliminate_adds(net):
 def optimize_net(net):
     generate_layer_order_info(net)
     stride1_deconv_to_conv(net)
-    #eliminate_adds(net)
-    #expand_convs(net)
+    eliminate_adds(net)
+    expand_convs(net)
     handle_padding(net)
 
 

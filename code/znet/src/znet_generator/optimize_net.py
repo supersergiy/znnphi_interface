@@ -251,7 +251,11 @@ def eliminate_adds(net):
 
     for lname in (layer_order):
         l = layer_info[lname]
-        if l["type"] in ["conv"]:
+        if l["type"] in ["conv", "deconv"]:
+            if l["type"] == "deconv":
+                count += 1
+                if count > 100:
+                    continue 
             if len(l["next"]) == 1 and layer_info[l["next"][0]]["type"] == "eltwise": #TODO: all eltwise are sums now, so this should be changed later
                 next_name = l["next"][0]
                 next_l = layer_info[next_name] 
@@ -267,7 +271,7 @@ def eliminate_adds(net):
                 if not can_consume:
                     continue
                         
-                if l["additive_conv"] == True:
+                if "additive_conv" in l and l["additive_conv"] == True:
                     raise Exception("Double additive layer")
 
                 l["additive_conv"]  = True

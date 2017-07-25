@@ -10,138 +10,140 @@ Removing adder!
 Generating the network...
    Generating constructors...
    Generating foward pass...
-Done!
-icpc: command line warning #10006: ignoring unknown option '-Wdate-time'
-icpc: warning #10315: specifying -lm before files may supersede the Intel(R) math library and affect performance
-icpc: command line remark #10411: option '-openmp' is deprecated and will be removed in a future release. Please use the replacement option '-qopenmp'
+Traceback (most recent call last):
+  File "src/znet_generator/main.py", line 26, in <module>
+    generate_znet(net, out_path)
+  File "/home/ubuntu/znnphi_interface/code/znet/src/znet_generator/generate_znet.py", line 114, in generate_znet
+    forward_body      = forward_body_lines(net)
+  File "/home/ubuntu/znnphi_interface/code/znet/src/znet_generator/generate_znet.py", line 88, in forward_body_lines
+    lines += timeit(forward_all_layers_lines(net), 1, "average:")
+  File "/home/ubuntu/znnphi_interface/code/znet/src/znet_generator/generate_znet.py", line 73, in forward_all_layers_lines
+    lines += forward_layer_lines(l)
+  File "/home/ubuntu/znnphi_interface/code/znet/src/znet_generator/layers/forward_layer_lines.py", line 20, in forward_layer_lines
+    params = conv_forward_params(l)
+  File "/home/ubuntu/znnphi_interface/code/znet/src/znet_generator/layers/forward_layer_lines.py", line 8, in conv_forward_params
+    params += 'tensors["{}"]->data()'.format(l["scale"])
+KeyError: 'scale'
+Makefile:95: recipe for target 'src/generated/znet.cpp' failed
+make: *** [src/generated/znet.cpp] Error 1
 make: Leaving directory '/home/ubuntu/znnphi_interface/code/znet'
 Subkernel: 0 0 0
 copying: 0 0 0 0 0
 New subkernel: 
--0.513636 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
 /home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=0 CORES=2 HT=2 
 dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_0_1_2_2_1_1_6_1_1_1_0_0_0_0_1_3_0.so
 Subkernel: 0 0 1
 copying: 0 0 1 0 0
 New subkernel: 
-1.75459 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
 /home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=0 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=0 CORES=2 HT=2 
 dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_0_1_2_2_1_1_6_1_1_1_0_0_0_0_1_3_1.so
 Subkernel: 0 0 2
 copying: 0 0 2 0 0
 New subkernel: 
-1.67964 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
 /home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=0 OUT_W_SKIP=2 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=0 CORES=2 HT=2 
 dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_0_1_2_2_1_1_6_1_1_1_0_0_0_0_1_3_2.so
 Subkernel: 0 1 0
 copying: 0 1 0 0 0
 New subkernel: 
-0.873359 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
 /home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=1 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=0 CORES=2 HT=2 
 dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_0_1_2_2_1_1_6_1_1_1_0_1_0_0_1_3_0.so
 Subkernel: 0 1 1
 copying: 0 1 1 0 0
 New subkernel: 
--0.268201 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
 /home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=1 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=0 CORES=2 HT=2 
 dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_0_1_2_2_1_1_6_1_1_1_0_1_0_0_1_3_1.so
 Subkernel: 0 1 2
 copying: 0 1 2 0 0
 New subkernel: 
-0.0804907 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
 /home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=1 OUT_W_SKIP=2 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=0 CORES=2 HT=2 
 dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_0_1_2_2_1_1_6_1_1_1_0_1_0_0_1_3_2.so
 Subkernel: 0 2 0
 copying: 0 2 0 0 0
 New subkernel: 
--1.28056 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
 /home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=2 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=0 CORES=2 HT=2 
 dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_0_1_2_2_1_1_6_1_1_1_0_2_0_0_1_3_0.so
 Subkernel: 0 2 1
 copying: 0 2 1 0 0
 New subkernel: 
--0.962864 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
 /home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=2 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=0 CORES=2 HT=2 
 dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_0_1_2_2_1_1_6_1_1_1_0_2_0_0_1_3_1.so
 Subkernel: 0 2 2
 copying: 0 2 2 0 0
 New subkernel: 
--1.7011 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
 /home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=2 OUT_W_SKIP=2 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=0 CORES=2 HT=2 
 dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_0_1_2_2_1_1_6_1_1_1_0_2_0_0_1_3_2.so
 Subkernel: 0 0 0
 copying: 0 0 0 0 0
 New subkernel: 
--1.61596 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=0 CORES=2 HT=2 
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_0_1_2_2_1_1_6_1_1_1_0_0_0_0_1_3_0.so
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_1_1_2_2_1_1_6_1_1_1_0_0_0_0_1_3_0.so
 Subkernel: 0 0 1
 copying: 0 0 1 0 0
 New subkernel: 
--1.19777 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=0 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=0 CORES=2 HT=2 
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_0_1_2_2_1_1_6_1_1_1_0_0_0_0_1_3_1.so
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=0 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_1_1_2_2_1_1_6_1_1_1_0_0_0_0_1_3_1.so
 Subkernel: 0 0 2
 copying: 0 0 2 0 0
 New subkernel: 
--0.303296 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=0 OUT_W_SKIP=2 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=0 CORES=2 HT=2 
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_0_1_2_2_1_1_6_1_1_1_0_0_0_0_1_3_2.so
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=0 OUT_W_SKIP=2 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_1_1_2_2_1_1_6_1_1_1_0_0_0_0_1_3_2.so
 Subkernel: 0 1 0
 copying: 0 1 0 0 0
 New subkernel: 
-1.70002 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=1 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=0 CORES=2 HT=2 
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_0_1_2_2_1_1_6_1_1_1_0_1_0_0_1_3_0.so
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=1 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_1_1_2_2_1_1_6_1_1_1_0_1_0_0_1_3_0.so
 Subkernel: 0 1 1
 copying: 0 1 1 0 0
 New subkernel: 
--0.51031 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=1 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=0 CORES=2 HT=2 
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_0_1_2_2_1_1_6_1_1_1_0_1_0_0_1_3_1.so
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=1 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_1_1_2_2_1_1_6_1_1_1_0_1_0_0_1_3_1.so
 Subkernel: 0 1 2
 copying: 0 1 2 0 0
 New subkernel: 
--0.479507 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=1 OUT_W_SKIP=2 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=0 CORES=2 HT=2 
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_0_1_2_2_1_1_6_1_1_1_0_1_0_0_1_3_2.so
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=1 OUT_W_SKIP=2 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_1_1_2_2_1_1_6_1_1_1_0_1_0_0_1_3_2.so
 Subkernel: 0 2 0
 copying: 0 2 0 0 0
 New subkernel: 
-1.04513 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=2 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=0 CORES=2 HT=2 
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_0_1_2_2_1_1_6_1_1_1_0_2_0_0_1_3_0.so
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=2 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_1_1_2_2_1_1_6_1_1_1_0_2_0_0_1_3_0.so
 Subkernel: 0 2 1
 copying: 0 2 1 0 0
 New subkernel: 
--0.872291 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=2 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=0 CORES=2 HT=2 
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_0_1_2_2_1_1_6_1_1_1_0_2_0_0_1_3_1.so
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=2 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_1_1_2_2_1_1_6_1_1_1_0_2_0_0_1_3_1.so
 Subkernel: 0 2 2
 copying: 0 2 2 0 0
 New subkernel: 
-1.23097 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=2 OUT_W_SKIP=2 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=0 CORES=2 HT=2 
-dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_0_1_2_2_1_1_6_1_1_1_0_2_0_0_1_3_2.so
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+/home/ubuntu/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv BN=1 IFM=1 OFM=1 ID=1 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=2 OUT_W_SKIP=2 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=3 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 
+dl_filename: /home/ubuntu/znnphi_interface/lib/conv_0_1_1_2_2_1_1_6_1_1_1_0_2_0_0_1_3_2.so
 Copying 144 bytes into the user input. 
 Starting Forward Pass
-average:0.000582
-Forward Finished
-Not congrats! Error == 102.049964905
---Return--
-> /home/ubuntu/znnphi_interface/code/python/pclient.py(53)<module>()->None
--> import pdb; pdb.set_trace()
-(Pdb) Traceback (most recent call last):
-  File "./python/pclient.py", line 53, in <module>
-    import pdb; pdb.set_trace()
-  File "/usr/lib/python2.7/bdb.py", line 53, in trace_dispatch
-    return self.dispatch_return(frame, arg)
-  File "/usr/lib/python2.7/bdb.py", line 88, in dispatch_return
-    self.user_return(frame, arg)
-  File "/usr/lib/python2.7/pdb.py", line 190, in user_return
-    self.interaction(frame, None)
-  File "/usr/lib/python2.7/pdb.py", line 210, in interaction
-    self.cmdloop()
-  File "/usr/lib/python2.7/cmd.py", line 130, in cmdloop
-    line = raw_input(self.prompt)
-KeyboardInterrupt
+0
+1
+2
+3
+4
+5
+6
+7
+8
+0

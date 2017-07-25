@@ -90,11 +90,23 @@ def block_kernel(kernel, lparam):
 def allocate_deconv_lines(lparam):
     l = lparam
 
+    if "activation" in l and l["activation"] == "elu":
+        activate = "true"
+    else:
+        activate = "false"
+
+    if "additive_conv" in l and l["additive_conv"] == True:
+        add_or_overwrite = "true"
+    else:
+        add_or_overwrite = "false"
+
     allocation_params = (l["bn"], l["ifm"], l["ofm"], l["id"], l["ihw"],
                          l["kernel_dim"][2], l["kernel_dim"][3],
                          l["stride"][0],  l["stride"][1], 
-                         0, 0, 0, 0,
-                         'tensors["{}"]->data()'.format(l["kernel"]))
+                         #0, 0, 0, 0,
+                         0, 0, activate, add_or_overwrite,
+                         'tensors["{}"]->data()'.format(l["kernel"])
+                         )
                          #'tensors["{}"]->data()'.format(l["bias"]))
 
     param_str = generate_param_string(allocation_params)

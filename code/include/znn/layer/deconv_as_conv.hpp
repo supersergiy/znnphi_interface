@@ -155,10 +155,12 @@ public:
    }
 
    void forward(float const* __restrict i, float* __restrict o, 
-     float const* __restrict runtime_kernel, float const* __restrict runtime_bias)
+     float const* __restrict runtime_kernel, float const* __restrict runtime_bias, 
+     float const* __restrice runtime_scale)
    {
       for (int c = 0; c < convs.size(); c++) {
-         convs[c]->forward(i, o, kernels[c]->data(), runtime_bias, NULL); 
+         std::cout << c << std::endl;
+         convs[c]->forward(i, o, kernels[c]->data(), runtime_bias, runtime_scale); 
       }
    }
 };

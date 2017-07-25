@@ -83,23 +83,26 @@ def expand_convs(net):
 
 def delete_layer(net, layer_name, prev_layer):
     tensors, layer_info, layer_order  = net
+    l = layer_info[layer_name]
 
     print "Removing {}!".format(layer_name)
 
-    for prev_name in layer_info[layer_name]["prev"]:
+    for prev_name in l["prev"]:
         layer_info[prev_name]["next"].remove(layer_name)
 
         if prev_name == prev_layer:
-            layer_info[prev_name]["next"] += layer_info[layer_name]["next"]
+            layer_info[prev_name]["next"] += l["next"]
         else:
             layer_info[prev_name]["next"].append(prev_layer)
 
                 
-    for next_name in layer_info[layer_name]["next"]:
+    for next_name in l["next"]:
         layer_info[next_name]["prev"].remove(layer_name)
         #TODO: make sure it's not another add
         layer_info[next_name]["prev"].append(prev_layer)
-
+    
+    if l["type"] == "eltwise":
+        layer_info[prev_layer]["prev"] += [p for p in l["prev"] if p != prev_layer]
     del layer_info[layer_name]
 
     layer_order.remove(layer_name)

@@ -32,7 +32,7 @@ for i in range(2):
     out_a    = z.forward(in_a)
 
     reference_file = h5py.File(reference_path)
-    reference_a = reference_file["data"][:]
+    reference_a = reference_file["output"][:]
     np.set_printoptions(precision=2)
     diff_a = reference_a - out_a
     error = ssq = np.sum(diff_a**2)

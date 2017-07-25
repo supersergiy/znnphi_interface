@@ -10,29 +10,26 @@ def generate_layer_order_info(net):
 
     for lname in layer_order:
         l = layer_info[lname]
+    
+        if "next" not in l or "prev" not in l:
+            l["next"] = []
+            l["prev"] = []
         bot = l["bot"]
 
-        if isinstance(bot, list):
-            for b in bot:
-                prev_name = last_toucher[b]
-                prev_l    = layer_info[prev_name] 
+        if not l["bot"] in [None, "user_input"]:
+            if isinstance(bot, list):
+                for b in bot:
+                    prev_name = last_toucher[b]
+                    prev_l    = layer_info[prev_name] 
 
-                if "next" in prev_l:
-                    prev_l["next"] = "many"
-                else:
-                    prev_l["next"] = lname              
-                    l["prev"]      = prev_name
-
-            pass #TODO
-        else:
-            if bot in last_toucher: 
+                    prev_l["next"].append(lname)
+                    l["prev"].append(prev_name)
+            else:
                 prev_name = last_toucher[bot]
                 prev_l    = layer_info[prev_name] 
-                if "next" in prev_l:
-                    prev_l["next"] = "many"
-                else:
-                    prev_l["next"] = lname              
-                    l["prev"]      = prev_name
+
+                prev_l["next"].append(lname)
+                l["prev"].append(prev_name)
 
         last_toucher[l["top"]] = lname
 
@@ -59,43 +56,57 @@ def substitute_tensor(net, replace_from, replace_with, starting_layer=None):
          
 def expand_convs(net):
     tensors, layer_info, layer_order  = net
+    count = 0
     for lname in layer_order:
         if lname in layer_info:
             l  = layer_info[lname]
             lt = l["type"]
 
-            if lt in ["conv"]:
-                next_name = l["next"]
-                if next_name == "many":
-                    continue
+            if lt in ["conv"] and len(l["next"]) == 1:
+                next_name = l["next"][0] 
                 next_l    = layer_info[next_name]
 
-                while next_l["type"] in ["scale", "bnorm", "elu"]:
-                    if lt == "deconv":
-                        print "DOING IT FOR DECONV"
+                while next_l["type"] in ["bnorm", "scale", "elu"]:
+                    count += 1
+                    if count > 80:
+                        break
+                    if count == 80:
+                        import pdb;pdb.set_trace()
                     if next_l["type"] in ["scale", "bnorm"]:
                         consume_scale(layer_info, lname, next_name)
                     else:#if next_l["type"] == "elu":
                         consume_elu(layer_info, lname, next_name)
 
                     substitute_tensor(net, next_l["top"], l["top"], lname)
-                    l["next"] = next_l["next"]
-
                     #remove the consumed layer
-                    delete_layer(net, next_name)
-
-                    #update the local shortcuts
-                    next_name = l["next"]
-                    if next_name == "many" or next_name is None:
+                    delete_layer(net, next_name, lname)
+                    
+                    if len(l["next"]) != 1:
                         break
+
+                    next_name = l["next"][0]
                     next_l    = layer_info[next_name]
 
-def delete_layer(net, layer_name):
+def delete_layer(net, layer_name, prev_layer):
     tensors, layer_info, layer_order  = net
 
     print "Removing {}!".format(layer_name)
+    for prev_name in layer_info[layer_name]["prev"]:
+        layer_info[prev_name]["next"].remove(layer_name)
+
+        if prev_name == prev_layer:
+            layer_info[prev_name]["next"] += layer_info[layer_name]["next"]
+        else:
+            layer_info[prev_name]["next"].append(prev_layer)
+
+                
+    for next_name in layer_info[layer_name]["next"]:
+        layer_info[next_name]["prev"].remove(layer_name)
+        #TODO: make sure it's not another add
+        layer_info[next_name]["prev"].append(prev_layer)
+
     del layer_info[layer_name]
-    order_of_next = layer_order.index(layer_name)
+
     layer_order.remove(layer_name)
 
 def consume_scale(layer_info, lname, next_name):
@@ -151,9 +162,10 @@ def handle_implicit_paddings(net):
     for lname in list(layer_order):
         l = layer_info[lname]
 
-        if l["type"] == "conv" and ("additive_conv" not in l or l["additive_conv"] == False): 
-            next_name = l["next"]
-            if next_name in layer_info and layer_info[next_name]["type"] == "conv":
+        if l["type"] == "conv" and len(l["next"]) == 1: 
+            next_name = l["next"][0]
+
+            if layer_info[next_name]["type"] == "conv":
                 next_l = layer_info[next_name]
                 if next_l["pad"][0] != 0 or next_l["pad"][1] != 0:
                     count += 1
@@ -169,6 +181,7 @@ def handle_implicit_paddings(net):
 
 def insert_explicit_paddings(net):
     tensors, layer_info, layer_order  = net
+
     for lname in list(layer_order):
         l = layer_info[lname]
         if l["type"] == "conv" and (l["pad"][0] != 0 or l["pad"][1] != 0):
@@ -206,6 +219,7 @@ def insert_explicit_paddings(net):
             convs_order = layer_order.index(lname)
             layer_order.insert(convs_order, padder_name)
             layer_info[padder_name] = pad_param
+            
 
 def stride1_deconv_to_conv(net):
     tensors, layer_info, layer_order  = net
@@ -239,18 +253,23 @@ def eliminate_adds(net):
 
     for lname in (layer_order):
         l = layer_info[lname]
-        if l["type"] in ["conv", "deconv"]:
-            next_name = l["next"]
-
-            if next_name in layer_info and layer_info[next_name]["type"] == "eltwise": #TODO: all eltwise are sums now, so this should be changed later
-                if l["type"] == "deconv":
-                    count += 1
-                    if count != 1:
-                        continue
-
+        if l["type"] in ["conv"]:
+            if len(l["next"]) == 1 and layer_info[l["next"][0]]["type"] == "eltwise": #TODO: all eltwise are sums now, so this should be changed later
+                next_name = l["next"][0]
                 next_l = layer_info[next_name] 
+                
+                # make sure that this conv executes before the things that's added to it
+                # otherwise we can't consume this add with this conv
+                can_consume = True
+                my_order = layer_order.index(lname)
+                for added_layer in next_l["prev"]:
+                    if layer_order.index(added_layer) > my_order:
+                        can_consume = False
 
-                if "additive_conv" in l and l["additive_conv"] == True:
+                if not can_consume:
+                    continue
+                        
+                if l["additive_conv"] == True:
                     raise Exception("Double additive layer")
 
                 l["additive_conv"]  = True
@@ -262,16 +281,17 @@ def eliminate_adds(net):
                 else:
                     l["top"] = next_l["bot"][0]
                  
-                sum_receiver = next_l["next"]
-                if sum_receiver not in layer_info:
-                    raise Exception("Bad sum receiver")
-                l["next"] = next_l["next"]
-                layer_info[l["next"]]["prev"] = lname
 
-                layer_info[sum_receiver]["bot"] = l["top"]
+                for sum_receiver in next_l["next"]:
+                    #TODO: check if it's another sum, then handle differently
+                    layer_info[sum_receiver]["bot"] = l["top"]
 
                 #remove eltwise
-                delete_layer(net, next_name)
+                delete_layer(net, next_name, lname)
+                #add other added layers as our ancestor
+                for added_layer in next_l["prev"]:
+                    if added_layer != lname:
+                        layer_info[lname]["prev"].append(added_layer)
 
 def optimize_net(net):
     generate_layer_order_info(net)

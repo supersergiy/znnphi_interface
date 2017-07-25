@@ -239,7 +239,7 @@ def eliminate_adds(net):
 
     for lname in (layer_order):
         l = layer_info[lname]
-        if l["type"] in ["conv", "deconv"]:
+        if l["type"] in ["conv"]:
             next_name = l["next"]
 
             if next_name in layer_info and layer_info[next_name]["type"] == "eltwise": #TODO: all eltwise are sums now, so this should be changed later

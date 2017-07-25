@@ -10,22 +10,22 @@ Removing adder!
 Generating the network...
    Generating constructors...
    Generating foward pass...
-Traceback (most recent call last):
-  File "src/znet_generator/main.py", line 26, in <module>
-    generate_znet(net, out_path)
-  File "/home/ubuntu/znnphi_interface/code/znet/src/znet_generator/generate_znet.py", line 114, in generate_znet
-    forward_body      = forward_body_lines(net)
-  File "/home/ubuntu/znnphi_interface/code/znet/src/znet_generator/generate_znet.py", line 88, in forward_body_lines
-    lines += timeit(forward_all_layers_lines(net), 1, "average:")
-  File "/home/ubuntu/znnphi_interface/code/znet/src/znet_generator/generate_znet.py", line 73, in forward_all_layers_lines
-    lines += forward_layer_lines(l)
-  File "/home/ubuntu/znnphi_interface/code/znet/src/znet_generator/layers/forward_layer_lines.py", line 20, in forward_layer_lines
-    params = conv_forward_params(l)
-  File "/home/ubuntu/znnphi_interface/code/znet/src/znet_generator/layers/forward_layer_lines.py", line 8, in conv_forward_params
-    params += 'tensors["{}"]->data()'.format(l["scale"])
-KeyError: 'scale'
-Makefile:95: recipe for target 'src/generated/znet.cpp' failed
-make: *** [src/generated/znet.cpp] Error 1
+Done!
+In file included from /home/ubuntu/znnphi_interface/code/include/znn/layer/layers.hpp(10),
+                 from src/generated/znet.cpp(3):
+/home/ubuntu/znnphi_interface/code/include/znn/layer/deconv_as_conv.hpp(159): error: expected a ")"
+       float const* __restrice runtime_scale)
+                               ^
+
+In file included from /home/ubuntu/znnphi_interface/code/include/znn/layer/layers.hpp(10),
+                 from src/generated/znet.cpp(3):
+/home/ubuntu/znnphi_interface/code/include/znn/layer/deconv_as_conv.hpp(163): error: identifier "runtime_scale" is undefined
+           convs[c]->forward(i, o, kernels[c]->data(), runtime_bias, runtime_scale); 
+                                                                     ^
+
+compilation aborted for src/generated/znet.cpp (code 2)
+Makefile:90: recipe for target 'out/znet.o' failed
+make: *** [out/znet.o] Error 2
 make: Leaving directory '/home/ubuntu/znnphi_interface/code/znet'
 Subkernel: 0 0 0
 copying: 0 0 0 0 0

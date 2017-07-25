@@ -1,15 +1,5 @@
-def conv_forward_params(lparam):
-    l = lparam 
-    params = ''
-    params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
-    params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["kernel"], l["bias"])
+from conv import conv_forward_params
 
-    if "additive_conv" in l and l["additive_conv"]:
-        params += 'tensors["{}"]->data()'.format(l["scale"])
-    else:
-        params += 'NULL '.format()
-
-    return params 
 def forward_layer_lines(lparams):
    lt = lparams["type"]
    l  = lparams
@@ -18,6 +8,9 @@ def forward_layer_lines(lparams):
    params = '' 
    if lt in ["conv", "deconv"]:
        params = conv_forward_params(l)
+   if lt in ["aadeconv"]:
+       params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
+       params += 'tensors["{}"]->data(), tensors["{}"]->data()'.format(l["kernel"], l["bias"])
    elif lt in ["pool", "block_input", "unblock_output", "elu", "pad", "sigmoid"]:
        params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
        params += 'NULL, NULL'

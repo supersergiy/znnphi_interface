@@ -174,4 +174,15 @@ def allocate_conv_lines(lparam):
 
     return lines
 
+def conv_forward_params(lparam):
+    l = lparam 
+    params = ''
+    params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
+    params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["kernel"], l["bias"])
 
+    if "additive_conv" in l and l["additive_conv"]:
+        params += 'tensors["{}"]->data()'.format(l["scale"])
+    else:
+        params += 'NULL '.format()
+
+    return params 

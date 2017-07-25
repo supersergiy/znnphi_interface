@@ -14,7 +14,7 @@ def generate_param_string(allocation_params):
 def write_values_to_file(values, file_name):
     with open(file_name, 'w') as f:
         for v in values:
-            f.write("{0:.22g} ".format(float(v)))
+            f.write("{0:.10f} ".format(float(v)))
 
 def fill_tensor(tname, values):
     lines = []

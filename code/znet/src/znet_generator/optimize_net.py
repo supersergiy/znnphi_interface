@@ -47,11 +47,13 @@ def substitute_tensor(net, replace_from, replace_with, starting_layer=None):
         if isinstance(l["bot"], list):
             for i in range(len(l["bot"])):
                 if l["bot"][i] == replace_from:
-                    l["bot"][i] =replace_with 
+                    l["bot"][i] = replace_with 
 
         else:
             if l["bot"] == replace_from:
                 l["bot"] = replace_with 
+        if l["top"] == replace_from:
+            l["top"] = replace_with 
             
          
 def expand_convs(net):
@@ -61,11 +63,16 @@ def expand_convs(net):
             l  = layer_info[lname]
             lt = l["type"]
 
-            if lt in ["conv"] and len(l["next"]) == 1:
+            if lt in ["conv", "deconv"] and len(l["next"]) == 1:
                 next_name = l["next"][0] 
                 next_l    = layer_info[next_name]
 
                 while next_l["type"] in ["scale", "bnorm", "elu"]:
+                    if lt == "deconv":
+                        import pdb; pdb.set_trace()
+                        break
+                    if lt == "deconv" and next_l["type"] == "scale":
+                        break
                     if next_l["type"] in ["scale", "bnorm"]:
                         consume_scale(layer_info, lname, next_name)
                     else:#if next_l["type"] == "elu":
@@ -86,7 +93,6 @@ def delete_layer(net, layer_name, prev_layer):
     l = layer_info[layer_name]
 
     print "Removing {}!".format(layer_name)
-
     for prev_name in l["prev"]:
         layer_info[prev_name]["next"].remove(layer_name)
 
@@ -142,6 +148,7 @@ def handle_padding(net):
 
     handle_implicit_paddings(net)
     insert_explicit_paddings(net) 
+
 
 def remove_padding_from_conv(net, conv_name):
     tensors, layer_info, layer_order  = net
@@ -254,7 +261,7 @@ def eliminate_adds(net):
         if l["type"] in ["conv", "deconv"]:
             if l["type"] == "deconv":
                 count += 1
-                if count > 100:
+                if count > 1:
                     continue 
             if len(l["next"]) == 1 and layer_info[l["next"][0]]["type"] == "eltwise": #TODO: all eltwise are sums now, so this should be changed later
                 next_name = l["next"][0]
@@ -270,7 +277,6 @@ def eliminate_adds(net):
 
                 if not can_consume:
                     continue
-                        
                 if "additive_conv" in l and l["additive_conv"] == True:
                     raise Exception("Double additive layer")
 
@@ -282,7 +288,9 @@ def eliminate_adds(net):
                     l["top"] = next_l["bot"][1]
                 else:
                     l["top"] = next_l["bot"][0]
-                 
+                
+                #rename the input for the layers that use the sum output
+                substitute_tensor(net, next_l["top"], l["top"], lname)
 
                 for sum_receiver in next_l["next"]:
                     #TODO: check if it's another sum, then handle differently
@@ -297,5 +305,4 @@ def optimize_net(net):
     eliminate_adds(net)
     expand_convs(net)
     handle_padding(net)
-
 

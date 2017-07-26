@@ -14,7 +14,7 @@ weights_file = 'unet/unet.h5'
 
 input_file = 'unet/inputs/input.h5'
 
-reference_file = 'data/reference/reference.h5'
+reference_file = 'unet/reference/reference.h5'
 
 net_path       = os.path.join(base, net_file)
 weights_path   = os.path.join(base, weights_file)
@@ -59,7 +59,7 @@ for i in range(1):
         #import pdb; pdb.set_trace()
     elif error > 0.010:
         print "Not congrats! Error == {}".format(error)
-        #import pdb; pdb.set_trace()
+        import pdb; pdb.set_trace()
     else:
         print "Congrats! All pass. Error == {}".format(error)
 #out_file = h5py.File(output_path)

@@ -68,11 +68,6 @@ def expand_convs(net):
                 next_l    = layer_info[next_name]
 
                 while next_l["type"] in ["scale", "bnorm", "elu"]:
-                    if lt == "deconv":
-                        import pdb; pdb.set_trace()
-                        break
-                    if lt == "deconv" and next_l["type"] == "scale":
-                        break
                     if next_l["type"] in ["scale", "bnorm"]:
                         consume_scale(layer_info, lname, next_name)
                     else:#if next_l["type"] == "elu":
@@ -117,6 +112,7 @@ def consume_scale(layer_info, lname, next_name):
     next_l = layer_info[next_name]
     l      = layer_info[lname]
 
+
     if l["bias_data"] is None:
         l["bias_data"] = np.zeros(l["ofm"], dtype=np.float)
 
@@ -125,19 +121,21 @@ def consume_scale(layer_info, lname, next_name):
  
     scale_multipliers = next_l["scale_data"]
     scale_bias        = next_l["bias_data"]
-    
     for ofm in range(l["ofm"]):
-        kernel[:][ofm][:][:][:] *= scale_multipliers[ofm]
-        bias[ofm] *= scale_multipliers[ofm]
-        bias[ofm] += scale_bias[ofm]
+        if l["type"] == "conv":
+            kernel[ofm,:,:,:,:] *= scale_multipliers[ofm]
+            bias[ofm] *= scale_multipliers[ofm]
+            bias[ofm] += scale_bias[ofm]
+        elif l["type"] == "deconv":
+            kernel[:,ofm,:,:,:] *= scale_multipliers[ofm]
+            bias[ofm] *= scale_multipliers[ofm]
+            bias[ofm] += scale_bias[ofm]
 
     
-    if bias is None:
-        bias = scale_bias
-
     if "additive_conv" in l and l["additive_conv"]:
         for ofm in range(l["ofm"]):
-            l["scale_data"][ofm] *= scale_multipliers[ofm]
+            if l["type"] in ["conv", "deconv"]:
+                l["scale_data"][ofm] *= scale_multipliers[ofm]
 
 def consume_elu(layer_info, lname, next_name):
     l = layer_info[lname]
@@ -259,10 +257,6 @@ def eliminate_adds(net):
     for lname in (layer_order):
         l = layer_info[lname]
         if l["type"] in ["conv", "deconv"]:
-            if l["type"] == "deconv":
-                count += 1
-                if count > 1:
-                    continue 
             if len(l["next"]) == 1 and layer_info[l["next"][0]]["type"] == "eltwise": #TODO: all eltwise are sums now, so this should be changed later
                 next_name = l["next"][0]
                 next_l = layer_info[next_name] 

@@ -25,9 +25,11 @@ in_file  = h5py.File(input_path)
 in_a     = in_file["input"][:]
 
 #z.load_net("/home/ubuntu/znnphi_interface/code/znet/src/python/pznet/.tmp")
-
+znet_path = "/home/ubuntu/tmp/nettynet/"
 z = pznet.znet()
-z.create_net(net_path, weights_path)
+z.create_net(net_path, weights_path, znet_path)
+z.load_net(znet_path)
+#
 for i in range(1):
     out_a    = z.forward(in_a)
 

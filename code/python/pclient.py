@@ -21,8 +21,9 @@ weights_path   = os.path.join(base, weights_file)
 input_path     = os.path.join(base, input_file)
 reference_path = os.path.join(base, reference_file)
 
+znet_path = "/home/ubuntu/tmp/nettynet"
 z = pznet.znet()
-z.create_net(net_path, weights_path)
+z.create_net(net_path, weights_path, znet_path)
 
 
 in_file  = h5py.File(input_path)

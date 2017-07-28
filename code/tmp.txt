@@ -2,7 +2,7 @@ make: Entering directory '/home/ubuntu/znnphi_interface/code/znet'
 rm -rf out
 mkdir -p out
 mkdir -p out/weights
-python src/znet_generator/main.py /home/ubuntu/znnphi_interface/code/znet/src/python/pznet/.tmp/net.json /home/ubuntu/znnphi_interface/code/znet/reference/unet/unet.h5 src/generated/znet.cpp
+python src/znet_generator/main.py /home/ubuntu/tmp/nettynet/net.json /home/ubuntu/znnphi_interface/code/znet/reference/unet/unet.h5 src/generated/znet.cpp
 Parsing the network spec...
 Loading the weights...
 Optimizing the net...
@@ -1572,101 +1572,18 @@ dl_filename: /home/ubuntu/znnphi_interface/lib/conv_true_true_1_2_2_18_28_194_1_
 1 2
 Copying 2654208 bytes into the user input. 
 Starting Forward Pass
-block_input: 0.009854
-input: 0
-convi_padder: 0.003901
-convi: 0.100561
-conv0_d0: 0.121068
-conv1_d0_padder: 0.015282
-conv1_d0: 0.124613
-conv2_d0: 0.127564
-pool_d1: 0.048212
-conv0_d1_padder: 0.00418
-conv0_d1: 0.041879
-conv1_d1_padder: 0.005064
-conv1_d1: 0.045336
-conv2_d1: 0.043409
-pool_d2: 0.016253
-conv0_d2_padder: 0.001599
-conv0_d2: 0.013966
-convf1_d2_padder: 0.001699
-convf1_d2: 0.00991
-conv1_d2: 0.010445
-convf2_d2: 0.009922
-conv2_d2: 0.010366
-pool_d3: 0.005018
-conv0_d3_padder: 0.000625
-conv0_d3: 0.006327
-convf1_d3_padder: 0.000588
-convf1_d3: 0.005709
-conv1_d3: 0.003846
-convf2_d3: 0.005714
-conv2_d3: 0.004413
-pool_d4: 0.001636
-conv0_d4_padder: 0.000267
-conv0_d4: 0.002266
-convf1_d4_padder: 0.000334
-convf1_d4: 0.002273
-conv1_d4: 0.001261
-convf2_d4: 0.00227
-conv2_d4: 0.00135
-pool_d5: 0.00055
-conv0_d5_padder: 0.000113
-conv0_d5: 0.000817
-convf1_d5_padder: 0.000127
-convf1_d5: 0.000849
-conv1_d5: 0.000422
-convf2_d5: 0.000838
-conv2_d5: 0.00038
 -0.00818065
-Deconvolution1: 0.000833
-conv4_d4_padder: 0.000135
-conv4_d4: 0.002461
-convf5_d4_padder: 0.00035
-convf5_d4: 0.00227
-conv5_d4: 0.001162
-convf6_d4: 0.002264
-conv6_d4: 0.000992
 0.434337
-Deconvolution2: 0.002534
-conv4_d3_padder: 0.000437
-conv4_d3: 0.007024
-convf5_d3_padder: 0.000901
-convf5_d3: 0.005737
-conv5_d3: 0.003908
-convf6_d3: 0.00568
-conv6_d3: 0.002715
 0.113814
-Deconvolution3: 0.008055
-conv4_d2_padder: 0.001229
-conv4_d2: 0.014457
-convf5_d2_padder: 0.001681
-convf5_d2: 0.01006
-conv5_d2: 0.009388
-convf6_d2: 0.009789
-conv6_d2: 0.007707
 0.0640217
-Deconvolution4: 0.028163
-conv4_d1_padder: 0.004693
-conv4_d1: 0.042807
-conv5_d1_padder: 0.005186
-conv5_d1: 0.041125
-conv6_d1: 0.03826
 0.127658
-deconv_d3: 0.095696
-conv4_d0_padder: 0.014868
-conv4_d0: 0.104473
-conv5_d0_padder: 0.014951
-conv5_d0: 0.102831
-conv6_d0: 0.101616
-conv7_d0_padder: 0.014754
-conv7_d0: 0.120171
-score: 0.069417
-output: 0.024962
-unblock_output: 0.004015
-average:1.7436
+./unet_client.py:41: RuntimeWarning: invalid value encountered in greater
+  mask1 = diff_a > 1e-5
+./unet_client.py:42: RuntimeWarning: invalid value encountered in greater
+  mask2 = rel_d > 1e-5
+average:1.69066
 Forward Finished
-Max rel d: 0.00181439123116
-Max d: 0.000986933708191
-Average d: 4.57949136035e-06
-Congrats! All pass. Error == 0.00313139823265
+Max rel d: nan
+Max d: nan
+Average d: nan
+Not congrats! Error == nan

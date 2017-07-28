@@ -67,7 +67,7 @@ def expand_convs(net):
                 next_name = l["next"][0] 
                 next_l    = layer_info[next_name]
 
-                while next_l["type"] in ["scale", "bnorm", "elu"]:
+                while next_l["type"] in ["scale", "bnorm"]:#, "elu"]:
                     if next_l["type"] in ["scale", "bnorm"]:
                         consume_scale(layer_info, lname, next_name)
                     else:#if next_l["type"] == "elu":

@@ -33,7 +33,6 @@ def parse_deconv(json_param):
     params["type"] = "deconv"
 
     json_conv_param = json_param["convolution_param"]
-    params["additive_conv"] = False
 
     if "pad" in json_conv_param:
         params["pad"]     = json_conv_param["pad"]
@@ -49,9 +48,6 @@ def parse_deconv(json_param):
 
     params["bias_dim"] = [params["ofm"]]
     params["bias_size"] = round_to_simd(params["bias_dim"][0])
-    params["scale_size"] = round_to_simd(params["ofm"]) 
-
-    params["scale"] = "{}_scale".format(params["name"])
 
     return params
 
@@ -94,20 +90,10 @@ def block_kernel(kernel, lparam):
 def allocate_deconv_lines(lparam):
     l = lparam
 
-    if "activation" in l and l["activation"] == "elu":
-        activate = "true"
-    else:
-        activate = "false"
-
-    if "additive_conv" in l and l["additive_conv"] == True:
-        add_or_overwrite = "true"
-    else:
-        add_or_overwrite = "false"
-
     allocation_params = (l["bn"], l["ifm"], l["ofm"], l["id"], l["ihw"],
                          l["kernel_dim"][2], l["kernel_dim"][3],
                          l["stride"][0],  l["stride"][1], 
-                         0, 0, activate, add_or_overwrite,
+                         0, 0, 0, 0,
                          'tensors["{}"]->data()'.format(l["kernel"]))
                          #'tensors["{}"]->data()'.format(l["bias"]))
 
@@ -136,9 +122,5 @@ def allocate_deconv_lines(lparam):
     #lines.append('layers["{}"] = new znn::phi::DeconvLayer({});'.format(l["name"],
     lines.append('layers["{}"] = new znn::phi::DeconvAsConvLayer({});'.format(l["name"],
                                                                         param_str))
-    if "additive_conv" in l and l["additive_conv"]:
-        lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
-                                                  l["scale"], l["scale_size"]))
-        lines += fill_tensor('{}'.format(l["scale"]), l["scale_data"])
     return lines
 

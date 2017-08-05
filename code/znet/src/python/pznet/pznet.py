@@ -2,7 +2,6 @@ from common import convert_prototxt_to_json
 import os
 import sys
 import inspect
-import time
 
 class znet:
     #TODO: create temporary folder on module startup,
@@ -15,12 +14,17 @@ class znet:
         self.net = None
         
 
-    def create_net(self, prototxt_path, h5_weights_path, output_path):
-        self.working_folder = output_path
+    def create_net(self, prototxt_path, h5_weights_path, out_path):
+        my_folder      = os.path.dirname(os.path.abspath(
+                                            inspect.getfile(
+                                             inspect.currentframe()
+                                          )))
+
+        self.working_folder =  os.path.join(my_folder, '.tmp/')
+        self.working_folder = out_path
 
         if not os.path.exists(self.working_folder):
             os.makedirs(self.working_folder)
-
         sys.path.append(self.working_folder)
 
         json_net_path = os.path.join(self.working_folder, 'net.json')
@@ -34,6 +38,13 @@ class znet:
                                                          h5_weights_path,
                                                          self.working_folder)
         os.system(make_command) #compiles the znet.so and copies it to the working folder along with the weights
+        
+        return
+        import znet
+        znet_weights_path = os.path.join(self.working_folder, './weights/')
+        znet_weights_abspath = os.path.abspath(znet_weights_path)
+
+        self.net = znet.znet(znet_weights_abspath + '/') #TODO: fix this ugly thing with / having to be there
 
     def load_net(self, path_to_net):
         sys.path.append(path_to_net)

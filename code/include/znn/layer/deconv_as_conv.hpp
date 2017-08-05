@@ -9,6 +9,7 @@
 #include <sstream>
 #include <vector>
 
+//#define DEBUG 1
 namespace znn 
 {
 namespace phi
@@ -154,13 +155,10 @@ public:
    }
 
    void forward(float const* __restrict i, float* __restrict o, 
-     float const* __restrict runtime_kernel, float const* __restrict runtime_bias, float const* __restrict additive_scale)
+     float const* __restrict runtime_kernel, float const* __restrict runtime_bias)
    {
-      if (additive_scale != NULL) {
-         std::cout << additive_scale[0] << std::endl;
-      }
       for (int c = 0; c < convs.size(); c++) {
-         convs[c]->forward(i, o, kernels[c]->data(), runtime_bias, additive_scale); 
+         convs[c]->forward(i, o, kernels[c]->data(), runtime_bias, NULL); 
       }
    }
 };

@@ -25,7 +25,7 @@
                               base[i] = std::exp(static_cast<float>(base[i])) - 1.0;\
                            }\
                         }\
-                     }
+                       }
 #endif
 
 

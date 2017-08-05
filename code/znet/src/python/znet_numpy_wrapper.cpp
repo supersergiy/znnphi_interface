@@ -55,6 +55,6 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(znet, m) {
     py::class_<ZnetNumpyWrapper>(m, "znet")
-        .def(py::init<const std::string &>(), py::arg("weights_path")) 
+        .def(py::init<const std::string &>(), py::arg("weights_path") = "../out/weights/") 
         .def("forward", &ZnetNumpyWrapper::forward);
 }

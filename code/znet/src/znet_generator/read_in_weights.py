@@ -45,10 +45,10 @@ def read_in_weights(net, weights_path):
                     mean_data /= scale_factor 
                     var_data  /= scale_factor 
 
-            var_data += 0.00000001
+            var_data += 0.00001
             std_data  = np.sqrt(var_data)
 
-            l["bias_data"]  = -1.0*np.divide(mean_data, std_data)
+            l["bias_data"]  = -1*np.divide(mean_data, std_data)
             l["scale_data"] = 1.0  / std_data
 
 

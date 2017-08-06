@@ -13,17 +13,11 @@ class znet:
 
     def __init__(self):
         self.net = None
-        
+        self.real_secret_path = "/home/ubuntu/znnphi_interface/code/znet/src/python/pznet/.tmp/"        
+        sys.path.append(self.real_secret_path)
 
     def create_net(self, prototxt_path, h5_weights_path, output_path):
-        self.working_folder = output_path
-
-        if not os.path.exists(self.working_folder):
-            os.makedirs(self.working_folder)
-
-        sys.path.append(self.working_folder)
-
-        json_net_path = os.path.join(self.working_folder, 'net.json')
+        json_net_path = os.path.join(self.real_secret_path, 'net.json')
         convert_prototxt_to_json(prototxt_path, json_net_path)
         
         znnphi_path = os.environ["ZNNPHI_PATH"]
@@ -32,13 +26,18 @@ class znet:
         make_command  = 'make -C {} py N={} W={} O={}'.format(mothership_folder,
                                                          json_net_path,
                                                          h5_weights_path,
-                                                         self.working_folder)
+                                                         self.real_secret_path)
         os.system(make_command) #compiles the znet.so and copies it to the working folder along with the weights
 
+        #copy results to the output folder
+        if not os.path.exists(output_path):
+            os.makedirs(output_path)
+        os.system("cp -r {} {}".format(self.real_secret_path, output_path))
+
     def load_net(self, path_to_net):
-        sys.path.append(path_to_net)
+        os.system("cp -r {} {}".format(path_to_net, self.real_secret_path))
         import znet
-        self.net = znet.znet(os.path.join(path_to_net, "weights/"))
+        self.net = znet.znet(os.path.join(self.real_secret_path, "weights/"))
 
     def forward(self, input_tensor):
         return self.net.forward(input_tensor)

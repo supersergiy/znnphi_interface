@@ -20,7 +20,7 @@ def allocate_featuremaps_lines(net):
     tensors, layer_info, layer_order = net
 
     for (n,t) in iteritems(tensors):
-        lines.append('tensors["{}"] = new znn::phi::hbw_array<float>(znn::phi::zero_init, {});'.format(n, t.memory_size))
+        lines.append('tensors["{}"] = new znn::phi::hbw_array<float>(znn::phi::zero_init, {});'.format(n, t.memory_size*1.7))
 
     lines.append('')
     return lines

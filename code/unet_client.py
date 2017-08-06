@@ -24,10 +24,10 @@ reference_path = os.path.join(base, reference_file)
 in_file  = h5py.File(input_path)
 in_a     = in_file["input"][:]
 
-#z.load_net("/home/ubuntu/znnphi_interface/code/znet/src/python/pznet/.tmp")
+#znet_path = "/home/ubuntu/znnphi_interface/code/znet/src/python/pznet/.tmp"
 znet_path = "/home/ubuntu/tmp/nettynet/"
 z = pznet.znet()
-z.create_net(net_path, weights_path, znet_path)
+#z.create_net(net_path, weights_path, znet_path)
 z.load_net(znet_path)
 #
 for i in range(1):
@@ -58,10 +58,10 @@ for i in range(1):
 
     if np.isnan(error):
         print "Not congrats! Error == {}".format(error)
-        #import pdb; pdb.set_trace()
+        import pdb; pdb.set_trace()
     elif error > 0.010:
         print "Not congrats! Error == {}".format(error)
-        import pdb; pdb.set_trace()
+        #import pdb; pdb.set_trace()
     else:
         print "Congrats! All pass. Error == {}".format(error)
 #out_file = h5py.File(output_path)

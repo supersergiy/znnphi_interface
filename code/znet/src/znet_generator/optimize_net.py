@@ -58,15 +58,15 @@ def substitute_tensor(net, replace_from, replace_with, starting_layer=None):
          
 def expand_convs(net):
     tensors, layer_info, layer_order  = net
+    count = 0
     for lname in layer_order:
         if lname in layer_info:
             l  = layer_info[lname]
             lt = l["type"]
 
-            if lt in ["conv", "deconv"] and len(l["next"]) == 1:
+            if lt in ["conv","deconv"] and len(l["next"]) == 1:
                 next_name = l["next"][0] 
                 next_l    = layer_info[next_name]
-
                 while next_l["type"] in ["scale", "bnorm", "elu"]:
                     if next_l["type"] in ["scale", "bnorm"]:
                         consume_scale(layer_info, lname, next_name)
@@ -258,6 +258,7 @@ def eliminate_adds(net):
         l = layer_info[lname]
         if l["type"] in ["conv", "deconv"]:
             if len(l["next"]) == 1 and layer_info[l["next"][0]]["type"] == "eltwise": #TODO: all eltwise are sums now, so this should be changed later
+
                 next_name = l["next"][0]
                 next_l = layer_info[next_name] 
                 

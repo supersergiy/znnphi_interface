@@ -40,7 +40,7 @@ def parse_deconv(json_param):
     else:
         params["pad"]     = [0, 0, 0]
     params["stride"]  = json_conv_param["stride"]
-
+    
     params["ofm"] = json_conv_param["num_output"]
 
     params["json_kernel_size"] = json_conv_param["kernel_size"]
@@ -110,7 +110,8 @@ def allocate_deconv_lines(lparam):
                          0, 0, activate, add_or_overwrite,
                          'tensors["{}"]->data()'.format(l["kernel"]))
                          #'tensors["{}"]->data()'.format(l["bias"]))
-
+    
+    print (l["bn"], l["ifm"], l["ofm"], l["id"], l["ihw"], l["kernel_dim"][2], l["kernel_dim"][3])
     param_str = generate_param_string(allocation_params)
     lines = []
     #allocate weights 
@@ -125,7 +126,6 @@ def allocate_deconv_lines(lparam):
     lines += fill_tensor('{}_kernel'.format(l["name"]), blocked_kernel.flatten())
 
     bias = l["bias_data"]
-
     if bias is None: 
         lines += zero_out_tensor('{}_bias'.format(l["name"])) #TODO: don't actually have to allocate all tensors, but then have to allocate one biggest one
     else:

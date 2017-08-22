@@ -9,9 +9,7 @@ import sys
 base =     '/home/ubuntu/znnphi_interface/code/znet/reference/'
 
 net_file = 'nets/net.prototxt'
-
-weights_file = 'data/weights/weights_r.h5'
-
+weights_file = 'unet/unet.h5'
 input_file = 'data/inputs/input.h5'
 
 reference_file = 'data/reference/reference.h5'
@@ -21,14 +19,19 @@ weights_path   = os.path.join(base, weights_file)
 input_path     = os.path.join(base, input_file)
 reference_path = os.path.join(base, reference_file)
 
-z = pznet.znet(net_path, weights_path)
+znet_path = "/home/ubuntu/tmp/nettynet/"
+z = pznet.znet()
+z.create_net(net_path, weights_path, znet_path)
+z.load_net(znet_path)
 
 
 in_file  = h5py.File(input_path)
 in_a     = in_file["input"][:]
 out_a    = z.forward(in_a)
+
 reference_file = h5py.File(reference_path)
 reference_a = reference_file["data"][:]
+
 np.set_printoptions(precision=2)
 diff_a = reference_a - out_a
 error = ssq = np.sum(diff_a**2)
@@ -41,7 +44,7 @@ if error > 0.1:
     print "Not congrats! Error == {}".format(error)
 else:
     print "Congrats! All pass"
-import pdb; pdb.set_trace()
+#import pdb; pdb.set_trace()
 #out_file = h5py.File(output_path)
 #out_file.create_dataset("data", data=out_a)
 

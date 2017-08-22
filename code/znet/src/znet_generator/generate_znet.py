@@ -20,7 +20,7 @@ def allocate_featuremaps_lines(net):
     tensors, layer_info, layer_order = net
 
     for (n,t) in iteritems(tensors):
-        lines.append('tensors["{}"] = new znn::phi::hbw_array<float>(znn::phi::zero_init, {});'.format(n, t.memory_size*1.7))
+        lines.append('tensors["{}"] = new znn::phi::hbw_array<float>(znn::phi::zero_init, {});'.format(n, t.memory_size))
 
     lines.append('')
     return lines
@@ -69,7 +69,8 @@ def forward_all_layers_lines(net):
        l = layer_info[lname]
        #lines.append('std::cout << "Running {}!\\n";'.format(l["name"]))
        #lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
-       #if l["type"] in ["conv", "deconv"]:
+       #if l["type"] in ["pad"]:
+       #lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
        lines += forward_layer_lines(l)
 
        #lines += print_tensor_part_lines(l["top"])

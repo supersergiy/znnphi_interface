@@ -87,7 +87,7 @@ PY_INTERFACE_FLAGS = `python-config --cflags --ldflags` -Isrc/python/pybind11/in
 out/client.o: src/client.cpp 
 	$(CXX) $(CXXFLAGS) -fPIC -c $^ -o $@
 out/znet.o: src/generated/znet.cpp 
-	$(CXX) $(CXXFLAGS) $(AVX2_FLAGS)-fPIC -c $^ -o $@
+	$(CXX) $(CXXFLAGS) $(AVX2_FLAGS) -fPIC -c $^ -o $@
 out/znet_numpy_wrapper.o: src/python/znet_numpy_wrapper.cpp 
 	$(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) -fPIC -c $^ -o $@
 
@@ -98,7 +98,7 @@ src/generated/znet.cpp:  $(shell find src/znet_generator -type f -name "*.py") $
 	python src/znet_generator/main.py $(N) $(W) src/generated/znet.cpp
 
 py: out/znet.o out/znet_numpy_wrapper.o 
-	$(CXX) $^ $(LD_FLAGS) -shared -o out/znet.so 
+	$(CXX) $(LD_FLAGS) $^ -shared -o out/znet.so 
 ifneq ($(strip $(O)),)
 	${CP} -r out/znet.so $(O)
 	${CP} -r out/weights $(O)

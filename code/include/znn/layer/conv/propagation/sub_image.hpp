@@ -29,7 +29,6 @@
 #endif
 
 
-
 namespace znn
 {
 namespace phi

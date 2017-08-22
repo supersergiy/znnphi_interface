@@ -12,11 +12,12 @@ int main(void)
     zn.forward();
     size_t out_size = zn.out_shape[0] * zn.out_shape[1] * zn.out_shape[2] *
                          zn.out_shape[3] * zn.out_shape[4];
-    for (int i = 0; i < out_size; i++) {
+    out_size = 100;
+    /*for (int i = 0; i < out_size; i++) {
        std::cout << zn.tensors["user_output"]->data()[i] << " "; 
        if (i  % 192 == 0) {
          std::cout << std::endl;
        }
-    }
+    }*/
     return 0;
 }

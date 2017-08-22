@@ -29,7 +29,7 @@ znet_path = "/home/ubuntu/tmp/nettynet/"
 z = pznet.znet()
 #z.create_net(net_path, weights_path, znet_path)
 z.load_net(znet_path)
-#
+
 for i in range(1):
     out_a    = z.forward(in_a)
 
@@ -64,6 +64,7 @@ for i in range(1):
         #import pdb; pdb.set_trace()
     else:
         print "Congrats! All pass. Error == {}".format(error)
+import pdb; pdb.set_trace()
 #out_file = h5py.File(output_path)
 #out_file.create_dataset("data", data=out_a)
 

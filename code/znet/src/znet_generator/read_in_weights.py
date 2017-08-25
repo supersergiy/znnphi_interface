@@ -4,7 +4,7 @@ import numpy as np
 
 def read_in_weights(net, weights_path):
     lines = []
-    tensors, layer_info, layer_order = net
+    tensors, layer_info, layer_order, misc = net
 
     #initialize weights
     weights = h5py.File(weights_path) ['data']

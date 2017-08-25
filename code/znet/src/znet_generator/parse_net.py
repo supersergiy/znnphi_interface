@@ -19,7 +19,8 @@ def parse_net(net_path):
    tensors      = {}
    layer_order  = [] 
    layer_info   = {}
-   net = (tensors, layer_info, layer_order)
+   misc         = {}
+   net = (tensors, layer_info, layer_order, misc)
 
    for l in json_layers:
       name = l["name"]
@@ -40,14 +41,14 @@ def parse_net(net_path):
       top_name = lparams["top"]
       upd_tensor(tensors, top_name, lparams["top_dim"])
 
+   misc["output_tensor_name"] = layer_info[layer_order[-1]]["top"]
+
    add_block_input(net)
    add_unblock_output(net)
-
    return net
 
 def add_block_input(net):
-    tensors, layer_info, layer_order = net
-
+    tensors, layer_info, layer_order, misc = net
     block_params = {
                         "type": "block_input",
                         "name": "block_input",
@@ -60,21 +61,17 @@ def add_block_input(net):
     tensors["user_input"] = Tensor(block_params["bot_dim"])
 
 def add_unblock_output(net):
-    tensors, layer_info, layer_order = net
-    if "output" in tensors:
-        unblock_params = {}
-        unblock_params = {
-                            "type": "unblock_output",
-                            "name": "unblock_output",
-                            "bot": "output",
-                            "top": "user_output",
-                            "bot_dim": tensors["output"].dim
-                       }
-        layer_order.append("unblock_output")
-        layer_info["unblock_output"] = unblock_params
-        tensors["user_output"] = Tensor(unblock_params["bot_dim"])
-    else:
-        print "WARNING: there's no output tensor in your network"
-        exit()
+    tensors, layer_info, layer_order, misc = net
+    unblock_params = {}
+    unblock_params = {
+                        "type": "unblock_output",
+                        "name": "unblock_output",
+                        "bot": misc["output_tensor_name"],
+                        "top": "user_output",
+                        "bot_dim": tensors[misc["output_tensor_name"]].dim
+                   }
+    layer_order.append("unblock_output")
+    layer_info["unblock_output"] = unblock_params
+    tensors["user_output"] = Tensor(unblock_params["bot_dim"])
 
 

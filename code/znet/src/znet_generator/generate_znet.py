@@ -7,7 +7,7 @@ from layers import generate_param_string
 
 def allocate_all_layers_lines(net):
     lines = []
-    tensors, layer_info, layer_order = net
+    tensors, layer_info, layer_order, misc = net
 
     for (n,l) in iteritems(layer_info):
         lines += allocate_layer_lines(l)
@@ -17,7 +17,7 @@ def allocate_all_layers_lines(net):
 
 def allocate_featuremaps_lines(net):
     lines = []
-    tensors, layer_info, layer_order = net
+    tensors, layer_info, layer_order, misc = net
 
     for (n,t) in iteritems(tensors):
         lines.append('tensors["{}"] = new znn::phi::hbw_array<float>(znn::phi::zero_init, {});'.format(n, t.memory_size))
@@ -26,7 +26,7 @@ def allocate_featuremaps_lines(net):
     return lines
 
 def generate_python_interface_misc(net):
-    tensors, layer_info, layer_order = net
+    tensors, layer_info, layer_order, misc = net
     lines = []
     #input
     lines.append('input_size = {};'.format(tensors['user_input'].size))
@@ -52,7 +52,7 @@ def generate_python_interface_misc(net):
 
 def constructor_body_lines(net):
     lines = []
-    tensors, layer_info, layer_order = net
+    tensors, layer_info, layer_order, misc = net
 
     lines += allocate_featuremaps_lines(net)
     lines += allocate_all_layers_lines(net)
@@ -61,7 +61,7 @@ def constructor_body_lines(net):
     return lines
 
 def forward_all_layers_lines(net):
-    tensors, layer_info, layer_order = net
+    tensors, layer_info, layer_order, misc = net
     lines = []
     lines.append('std::cout << "Starting Forward Pass\\n";')
     count = 1
@@ -84,7 +84,7 @@ def forward_all_layers_lines(net):
 
 
 def forward_body_lines(net):
-    tensors, layer_info, layer_order = net
+    tensors, layer_info, layer_order, misc = net
     lines = []
     lines += timeit(forward_all_layers_lines(net), 1, "average:")
 
@@ -127,7 +127,7 @@ def generate_template_znet(net, out_path):
     lines.append('')
     lines.append('using namespace znn::phi;')
     lines.append('')
-    tensors, layer_info, layer_order = net
+    tensors, layer_info, layer_order, misc = net
     #main
     main_signature = 'int main(void)' 
     main_body      = [] 
@@ -140,7 +140,7 @@ def generate_template_znet(net, out_path):
             param_str = generate_param_string(params)
             main_body.append('benchmark_forward<{}>("{}");'.format(param_str, l["name"]))
 
-    main           = generate_function(main_signature, main_body)
+    main = generate_function(main_signature, main_body)
     lines += main
 
     f = open(out_path, 'w')

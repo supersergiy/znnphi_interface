@@ -5,7 +5,6 @@ import numpy as np
 import h5py
 import sys
 
-
 base =     '/home/ubuntu/znnphi_interface/code/znet/reference/'
 
 net_file = 'unet/unet.prototxt'
@@ -16,10 +15,10 @@ input_file = 'unet/inputs/input.h5'
 
 reference_file = 'unet/reference/reference.h5'
 
-#net_path       = os.path.join(base, net_file)
-#weights_path   = os.path.join(base, weights_file)
-net_path = "/home/ubuntu/new_unet/unet.prototxt"
-weights_path = "/home/ubuntu/new_unet/unet.h5"
+net_path       = os.path.join(base, net_file)
+weights_path   = os.path.join(base, weights_file)
+#net_path = "/home/ubuntu/new_unet/unet.prototxt"
+#weights_path = "/home/ubuntu/new_unet/unet.h5"
 input_path     = os.path.join(base, input_file)
 reference_path = os.path.join(base, reference_file)
 

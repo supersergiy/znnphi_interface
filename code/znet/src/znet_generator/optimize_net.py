@@ -5,7 +5,7 @@ from   layers import set_layer_dim
 
 #TODO: fix this shitty code
 def generate_layer_order_info(net):
-    tensors, layer_info, layer_order  = net
+    tensors, layer_info, layer_order, misc = net
     last_toucher = {}
 
     for lname in layer_order:
@@ -34,7 +34,7 @@ def generate_layer_order_info(net):
         last_toucher[l["top"]] = lname
 
 def substitute_tensor(net, replace_from, replace_with, starting_layer=None):
-    tensors, layer_info, layer_order  = net
+    tensors, layer_info, layer_order, misc = net
     
     from_index = 0
     if not starting_layer is None:
@@ -57,7 +57,7 @@ def substitute_tensor(net, replace_from, replace_with, starting_layer=None):
             
          
 def expand_convs(net):
-    tensors, layer_info, layer_order  = net
+    tensors, layer_info, layer_order, misc = net
     count = 0
     for lname in layer_order:
         if lname in layer_info:
@@ -84,7 +84,7 @@ def expand_convs(net):
                     next_l    = layer_info[next_name]
 
 def delete_layer(net, layer_name, prev_layer):
-    tensors, layer_info, layer_order  = net
+    tensors, layer_info, layer_order, misc = net
     l = layer_info[layer_name]
 
     print "Removing {}!".format(layer_name)
@@ -142,14 +142,14 @@ def consume_elu(layer_info, lname, next_name):
     l["activation"] = "elu"
 
 def handle_padding(net):
-    tensors, layer_info, layer_order  = net
+    tensors, layer_info, layer_order, misc = net
 
     handle_implicit_paddings(net)
     insert_explicit_paddings(net) 
 
 
 def remove_padding_from_conv(net, conv_name):
-    tensors, layer_info, layer_order  = net
+    tensors, layer_info, layer_order, misc = net
     l = layer_info[conv_name]
 
     l["id"]  += 2 * l["pad"][0] 
@@ -159,7 +159,7 @@ def remove_padding_from_conv(net, conv_name):
 
 
 def handle_implicit_paddings(net):
-    tensors, layer_info, layer_order  = net
+    tensors, layer_info, layer_order, misc = net
     count = 0 
 
     for lname in list(layer_order):
@@ -183,7 +183,7 @@ def handle_implicit_paddings(net):
                     set_layer_dim(next_l, tensors[l["top"]]) 
 
 def insert_explicit_paddings(net):
-    tensors, layer_info, layer_order  = net
+    tensors, layer_info, layer_order, misc = net
 
     for lname in list(layer_order):
         l = layer_info[lname]
@@ -225,7 +225,7 @@ def insert_explicit_paddings(net):
             
 
 def stride1_deconv_to_conv(net):
-    tensors, layer_info, layer_order  = net
+    tensors, layer_info, layer_order, misc = net
     for lname in list(layer_order):
         l = layer_info[lname]
         if l["type"] == "deconv" and l["stride"] == [1,1,1]:
@@ -251,7 +251,7 @@ def conv_to_deconv_kernel(conv_kernel):
     return deconv_kernel
 
 def eliminate_adds(net):
-    tensors, layer_info, layer_order  = net
+    tensors, layer_info, layer_order, misc = net
     count = 0
 
     for lname in (layer_order):

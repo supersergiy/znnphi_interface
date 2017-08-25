@@ -16,8 +16,10 @@ input_file = 'unet/inputs/input.h5'
 
 reference_file = 'unet/reference/reference.h5'
 
-net_path       = os.path.join(base, net_file)
-weights_path   = os.path.join(base, weights_file)
+#net_path       = os.path.join(base, net_file)
+#weights_path   = os.path.join(base, weights_file)
+net_path = "/home/ubuntu/new_unet/unet.prototxt"
+weights_path = "/home/ubuntu/new_unet/unet.h5"
 input_path     = os.path.join(base, input_file)
 reference_path = os.path.join(base, reference_file)
 
@@ -27,7 +29,7 @@ in_a     = in_file["input"][:]
 #znet_path = "/home/ubuntu/znnphi_interface/code/znet/src/python/pznet/.tmp"
 znet_path = "/home/ubuntu/tmp/nettynet/"
 z = pznet.znet()
-#z.create_net(net_path, weights_path, znet_path)
+z.create_net(net_path, weights_path, znet_path)
 z.load_net(znet_path)
 
 for i in range(1):

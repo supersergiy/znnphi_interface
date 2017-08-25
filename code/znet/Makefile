@@ -43,7 +43,8 @@ CS_FLAGS		=
 CS_LD_FLAGS		=       -lpthread
 
 FPIC	=	-fPIC
-MKL_INCLUDE_PATH =/opt/intel/mkl/include
+
+#MKL_INCLUDE_PATH =/opt/intel/mkl/include
 CXXINCLUDES	=	-I$(ZNNPHI_PATH)/code/include -I$(ZNNPHI_PATH)/code/include/znn -I$(ZNNPHI_PATH)/ -I./src/ -I${MKL_INCLUDE_PATH}
 
 #CXXWARN		=	-Wall -Wextra -Wno-format -Wno-unknown-pragmas -Wno-unused-variable -Wno-return-type -Wno-unused-parameter
@@ -72,7 +73,8 @@ OPT_LDFLAGS		=	$(COMMON_LDFLAGS) $(CS_LD_FLAGS) $(LD_OPTIMIZATION_FLAGS)
 CXXFLAGS	=	$(OPT_FLAGS)
 CXXLDFLAGS	=	$(OPT_LDFLAGS)
 
-LD_FLAGS    =   -L/opt/intel/mkl/lib/intel64 -lpthread -openmp -Wl,--start-group -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5 -Wl,--end-group -lmkl_avx2 -lznnphiconv 
+LD_FLAGS    =  -lpthread -openmp  
+#-L/opt/intel/mkl/lib/intel64 -Wl,--start-group -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5 -Wl,--end-group -lmkl_avx2 -lznnphiconv 
 
 
 PY_INTERFACE_FLAGS = `python-config --cflags --ldflags` -Isrc/python/pybind11/include -fPIC 

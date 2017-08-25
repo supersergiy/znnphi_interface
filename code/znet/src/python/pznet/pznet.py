@@ -32,10 +32,10 @@ class znet:
         #copy results to the output folder
         if not os.path.exists(output_path):
             os.makedirs(output_path)
-        os.system("cp -r {} {}".format(self.real_secret_path, output_path))
+        os.system("cp -r {}/* {}".format(self.real_secret_path, output_path))
 
     def load_net(self, path_to_net):
-        os.system("cp -r {} {}".format(path_to_net, self.real_secret_path))
+        os.system("cp -r {}/* {}".format(path_to_net, self.real_secret_path))
         import znet
         self.net = znet.znet(os.path.join(self.real_secret_path, "weights/"))
 

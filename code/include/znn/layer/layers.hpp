@@ -6,6 +6,6 @@
 #include <znn/layer/elu.hpp>
 #include <znn/layer/sigmoid.hpp>
 #include <znn/layer/eltwise.hpp>
-#include <znn/layer/deconv.hpp>
+//#include <znn/layer/deconv.hpp>
 #include <znn/layer/deconv_as_conv.hpp>
 #include <znn/jit/jit.hpp>

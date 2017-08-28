@@ -6,6 +6,7 @@ from elu     import allocate_elu_lines
 from sigmoid import allocate_sigmoid_lines
 from pad     import allocate_pad_lines
 from scale   import allocate_scale_lines 
+from slc     import allocate_slc_lines 
 from eltwise import allocate_eltwise_lines 
 from block_input    import allocate_block_input_lines
 from unblock_output import allocate_unblock_output_lines
@@ -28,6 +29,8 @@ def allocate_layer_lines(lparams):
       return allocate_elu_lines(lparams) 
    elif lt == "scale":
       return allocate_scale_lines(lparams) 
+   elif lt == "slc":
+      return allocate_slc_lines(lparams) 
    elif lt == "eltwise":
       return allocate_eltwise_lines(lparams) 
    elif lt == "pad":

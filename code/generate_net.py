@@ -6,9 +6,9 @@ import h5py
 import sys
 
 
-base =     '/home/ubuntu/znnphi_interface/code/znet/reference/'
-net_file = 'unet/unet.prototxt'
-weights_file = 'unet/unet.h5'
+base =     '/home/ubuntu/'
+net_file = 'new_unet/unet.prototxt'
+weights_file = 'new_unet/unet.h5'
 
 net_path       = os.path.join(base, net_file)
 weights_path   = os.path.join(base, weights_file)

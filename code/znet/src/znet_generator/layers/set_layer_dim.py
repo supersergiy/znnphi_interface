@@ -5,6 +5,7 @@ from bnorm   import set_bnorm_dim
 from elu     import set_elu_dim 
 from sigmoid import set_sigmoid_dim 
 from scale   import set_scale_dim 
+from slc     import set_slc_dim 
 from eltwise import set_eltwise_dim 
 
 def set_layer_dim(lparams, bot_tensor):
@@ -25,6 +26,8 @@ def set_layer_dim(lparams, bot_tensor):
       set_sigmoid_dim(lparams, bot_tensor)
    elif lt == "scale":
       set_scale_dim(lparams, bot_tensor)
+   elif lt == "slc":
+      set_slc_dim(lparams, bot_tensor)
    elif lt == "eltwise":
       set_scale_dim(lparams, bot_tensor)
    else:

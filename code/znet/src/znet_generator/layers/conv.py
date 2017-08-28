@@ -2,6 +2,9 @@ import copy
 from common import round_to_simd, generate_param_string, S, fill_tensor, zero_out_tensor
 import numpy as np
 
+HT=2
+CORES=7
+
 def set_conv_dim(params, bot_tensor):
     params["bn"]  = bot_tensor.dim[0]
     params["ifm"] = bot_tensor.dim[1]
@@ -57,8 +60,8 @@ def parse_conv(json_param):
     params["scale"] = "{}_scale".format(params["name"])
     params["scale_size"] = round_to_simd(params["ofm"]) 
     params["scale_data"] = None
-    params["cores"] = 2
-    params["ht"]    = 2 
+    params["cores"] = CORES 
+    params["ht"]    = HT 
     return params
 
 def block_kernel(kernel, lparam):

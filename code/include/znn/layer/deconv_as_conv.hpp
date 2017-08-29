@@ -43,17 +43,11 @@ public:
       int sub_d = 0;
       int sub_w = 0;
       int sub_h = 0;
-#ifdef DEBUG
-      std::cout << "Subkernel: " << start_d << " " << start_h << " " << start_w << std::endl;
-#endif
       for (int d = start_d; d < kd; d += stride_d, ++sub_d) {
          for (int h = start_h; h < khw; h += stride_hw, ++sub_h) {
             for (int w = start_w; w < khw; w += stride_hw, ++sub_w) {
                for (int i = 0; i < rounded_ifm/S; ++i) {
                   for (int o = 0; o < rounded_ofm/S; ++o) {
-#ifdef DEBUG
-                     std::cout << "copying: " << d << " " << h << " " << w << " " << i << " " << o << std::endl;
-#endif
                      std::memcpy(subk_array[o][i][sub_d][sub_h][sub_w], k_array[o][i][d][h][w], sizeof(float)*S*S);
                   } 
                }
@@ -132,13 +126,6 @@ public:
             for (int start_w = 0; start_w < stride_hw; ++start_w) {
                hbw_array<float> *new_subkernel = new hbw_array<float>(subk_size);
                getSubKernel(kernel, start_d, start_h, start_w, new_subkernel->data());
-#ifdef DEBUG
-               std::cout << "New subkernel: \n";
-               for (int x = 0; x < subk_size; x++) {
-                  std::cout << new_subkernel->data()[x] << " ";
-               }
-               std::cout << std::endl;
-#endif
                kernels.push_back(new_subkernel);
                convs.push_back(jitMakeLayer("conv", getParamString(start_d, start_h, start_w)));
             }

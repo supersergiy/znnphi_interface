@@ -111,7 +111,6 @@ def allocate_deconv_lines(lparam):
                          'tensors["{}"]->data()'.format(l["kernel"]))
                          #'tensors["{}"]->data()'.format(l["bias"]))
     
-    print (l["bn"], l["ifm"], l["ofm"], l["id"], l["ihw"], l["kernel_dim"][2], l["kernel_dim"][3])
     param_str = generate_param_string(allocation_params)
     lines = []
     #allocate weights 

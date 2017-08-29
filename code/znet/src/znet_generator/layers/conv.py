@@ -3,7 +3,7 @@ from common import round_to_simd, generate_param_string, S, fill_tensor, zero_ou
 import numpy as np
 
 HT=2
-CORES=7
+CORES=2
 
 def set_conv_dim(params, bot_tensor):
     params["bn"]  = bot_tensor.dim[0]

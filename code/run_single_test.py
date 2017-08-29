@@ -5,37 +5,27 @@ import numpy as np
 import h5py
 import sys
 
-base =     '/home/ubuntu/znnphi_interface/code/znet/reference/'
-
-net_file = 'unet/unet.prototxt'
-
-weights_file = 'unet/unet.h5'
-
-input_file = 'unet/inputs/input.h5'
-
-reference_file = 'unet/reference/reference.h5'
-
-net_path       = os.path.join(base, net_file)
-weights_path   = os.path.join(base, weights_file)
-#net_path = "/home/ubuntu/new_unet/unet.prototxt"
-#weights_path = "/home/ubuntu/new_unet/unet.h5"
-input_path     = os.path.join(base, input_file)
-reference_path = os.path.join(base, reference_file)
+test_name = sys.argv[1]
+base = os.path.join('/home/ubuntu/znnphi_interface/code/znet/reference/tests', test_name)
+net_path = os.path.join(base, "net.prototxt")
+weights_path = os.path.join(base, "weights.h5")
+input_path =  os.path.join(base, "in.h5")
+reference_path =  os.path.join(base, "out.h5")
 
 in_file  = h5py.File(input_path)
-in_a     = in_file["input"][:]
+in_a     = in_file["main"][:]
 
 #znet_path = "/home/ubuntu/znnphi_interface/code/znet/src/python/pznet/.tmp"
 znet_path = "/home/ubuntu/tmp/nettynet/"
 z = pznet.znet()
-#z.create_net(net_path, weights_path, znet_path)
+z.create_net(net_path, weights_path, znet_path)
+import pdb; pdb.set_trace()
 z.load_net(znet_path)
-
 for i in range(1):
     out_a    = z.forward(in_a)
 
     reference_file = h5py.File(reference_path)
-    reference_a = reference_file["output"][:]
+    reference_a = reference_file["main"][:]
     np.set_printoptions(precision=2)
 
     diff_a = reference_a - out_a                                                                                                                           
@@ -65,7 +55,6 @@ for i in range(1):
         #import pdb; pdb.set_trace()
     else:
         print "Congrats! All pass. Error == {}".format(error)
-import pdb; pdb.set_trace()
 #out_file = h5py.File(output_path)
 #out_file.create_dataset("data", data=out_a)
 

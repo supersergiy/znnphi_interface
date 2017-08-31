@@ -6,6 +6,8 @@ import h5py
 import sys
 
 test_name = sys.argv[1]
+cores = 2 
+
 base = os.path.join('/home/ubuntu/znnphi_interface/code/znet/reference/tests', test_name)
 net_path = os.path.join(base, "net.prototxt")
 weights_path = os.path.join(base, "weights.h5")
@@ -15,15 +17,13 @@ reference_path =  os.path.join(base, "out.h5")
 in_file  = h5py.File(input_path)
 in_a     = in_file["main"][:]
 
-#znet_path = "/home/ubuntu/znnphi_interface/code/znet/src/python/pznet/.tmp"
-znet_path = "/home/ubuntu/tmp/nettynet/"
+znet_path = "/home/ubuntu/znets/{}_{}cores".format(test_name, cores)
 z = pznet.znet()
-z.create_net(net_path, weights_path, znet_path)
-import pdb; pdb.set_trace()
+z.create_net(net_path, weights_path, znet_path, cores)
 z.load_net(znet_path)
+
 for i in range(1):
     out_a    = z.forward(in_a)
-
     reference_file = h5py.File(reference_path)
     reference_a = reference_file["main"][:]
     np.set_printoptions(precision=2)

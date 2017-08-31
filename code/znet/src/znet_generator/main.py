@@ -1,4 +1,4 @@
-from generate_znet   import generate_znet, generate_template_znet
+from generate_znet   import generate_znet
 from parse_net       import parse_net
 from read_in_weights import read_in_weights
 from optimize_net    import optimize_net
@@ -7,7 +7,7 @@ import sys
 net_path     = sys.argv[1]
 weights_path = sys.argv[2]
 out_path     = sys.argv[3]
-
+cores        = sys.argv[4]
 
 SIMD_WIDTH = 8
 S = SIMD_WIDTH
@@ -23,5 +23,5 @@ if __name__ == "__main__":
         print "Optimizing the net..."
         optimize_net(net)
         print "Generating the network..."
-        generate_znet(net, out_path)
+        generate_znet(net, out_path, cores)
         print "Done!"

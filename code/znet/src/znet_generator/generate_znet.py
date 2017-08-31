@@ -4,13 +4,14 @@ import numpy as np
 from codegen import generate_function, timeit, print_tensor_lines, print_tensor_part_lines
 from layers import allocate_layer_lines, forward_layer_lines
 from layers import generate_param_string
+from layers import conv
 
-def allocate_all_layers_lines(net):
+def allocate_all_layers_lines(net, cores):
     lines = []
     tensors, layer_info, layer_order, misc = net
 
     for (n,l) in iteritems(layer_info):
-        lines += allocate_layer_lines(l)
+        lines += allocate_layer_lines(l, cores)
 
     lines.append('')
     return lines
@@ -50,12 +51,12 @@ def generate_python_interface_misc(net):
     lines.append('')
     return lines
 
-def constructor_body_lines(net):
+def constructor_body_lines(net, cores):
     lines = []
     tensors, layer_info, layer_order, misc = net
 
+    lines += allocate_all_layers_lines(net, cores)
     lines += allocate_featuremaps_lines(net)
-    lines += allocate_all_layers_lines(net)
     lines += generate_python_interface_misc(net)
     lines.append('')
     return lines
@@ -91,7 +92,7 @@ def forward_body_lines(net):
     lines.append('')
     return lines
 
-def generate_znet(net, out_path):
+def generate_znet(net, out_path, cores):
     lines = []
     #includes
     lines.append('#include <iostream>')
@@ -105,7 +106,7 @@ def generate_znet(net, out_path):
     #constructor
     print "   Generating constructors..."
     constructor_signature = 'znn::phi::Znet::Znet(std::string weights_path)'
-    constructor_body      = constructor_body_lines(net)
+    constructor_body      = constructor_body_lines(net, cores)
     constructor           = generate_function(constructor_signature, constructor_body)
     lines += constructor
 
@@ -119,32 +120,3 @@ def generate_znet(net, out_path):
     f = open(out_path, 'w')
     for l in lines:
         f.write("{}\n".format(l))
-
-def generate_template_znet(net, out_path):
-    lines = []
-    #includes
-    lines.append('#include "znn/bench/forward2.hpp"')
-    lines.append('')
-    lines.append('using namespace znn::phi;')
-    lines.append('')
-    tensors, layer_info, layer_order, misc = net
-    #main
-    main_signature = 'int main(void)' 
-    main_body      = [] 
-    for lname in layer_order: 
-        l = layer_info[lname]
-        if l["type"] == "conv":
-            params = [l["bn"], l["ifm"], l["ofm"], l["id"], l["ihw"], 
-                      l["json_kernel_size"][0], l["json_kernel_size"][1], 
-                      l["pad"][0], l["pad"][1]]
-            param_str = generate_param_string(params)
-            main_body.append('benchmark_forward<{}>("{}");'.format(param_str, l["name"]))
-
-    main = generate_function(main_signature, main_body)
-    lines += main
-
-    f = open(out_path, 'w')
-    for l in lines:
-        f.write("{}\n".format(l))
-
-

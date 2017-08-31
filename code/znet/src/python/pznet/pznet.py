@@ -16,17 +16,18 @@ class znet:
         self.real_secret_path = "/home/ubuntu/znnphi_interface/code/znet/src/python/pznet/.tmp/"        
         sys.path.append(self.real_secret_path)
 
-    def create_net(self, prototxt_path, h5_weights_path, output_path):
+    def create_net(self, prototxt_path, h5_weights_path, output_path, cores):
         json_net_path = os.path.join(self.real_secret_path, 'net.json')
         convert_prototxt_to_json(prototxt_path, json_net_path)
         
         znnphi_path = os.environ["ZNNPHI_PATH"]
         mothership_folder = '{}/code/znet'.format(znnphi_path)
 
-        make_command  = 'make -C {} py N={} W={} O={}'.format(mothership_folder,
+        make_command  = 'make -C {} py N={} W={} O={} CORES={}'.format(mothership_folder,
                                                          json_net_path,
                                                          h5_weights_path,
-                                                         self.real_secret_path)
+                                                         self.real_secret_path,
+                                                         cores)
         os.system(make_command) #compiles the znet.so and copies it to the working folder along with the weights
 
         #copy results to the output folder

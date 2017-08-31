@@ -8,7 +8,7 @@ import sys
 test_name = sys.argv[1]
 cores = 2 
 
-base = os.path.join('/home/ubuntu/znnphi_interface/code/znet/reference/tests', test_name)
+base = os.path.join('/home/ubuntu/znnphi_interface/code/test/tests', test_name)
 net_path = os.path.join(base, "net.prototxt")
 weights_path = os.path.join(base, "weights.h5")
 input_path =  os.path.join(base, "in.h5")

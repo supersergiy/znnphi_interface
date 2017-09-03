@@ -52,8 +52,8 @@ def generate_layer_weights(lname, ltype, f, in_d, ofm):
         dset0 = f.create_dataset(prefix + name0, dim0, dtype='f')
         dset1 = f.create_dataset(prefix + name1, dim1, dtype='f')
 
-        dset0[...] = np.ones(dim0)#generate(dim0)
-        dset1[...] = np.zeros(dim1)#generate(dim1)
+        dset0[...] = generate(dim0)
+        dset1[...] = generate(dim1)
 
     if ltype == "bnorm":
         dim0 = (ifm,)
@@ -70,11 +70,11 @@ def generate_layer_weights(lname, ltype, f, in_d, ofm):
 
         dset0[...] = generate(dim0)
         dset1[...] = generate(dim1) + 2.0
-        dset2[...] = generate(dim2) 
+        dset2[...] = np.ones(dim2)#generate(dim2) 
 
 
 def generate_all_weights():
-      out_file_path = "data/weights/weights_{}.h5".format(FILLER)
+      out_file_path = "data/weights/weights.h5".format(FILLER)
       f = h5py.File(out_file_path, "w")
 
       for i in range(len(layers)):

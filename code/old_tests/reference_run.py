@@ -5,8 +5,8 @@ import h5py
 import numpy as np
 import caffe
 import json
-caffe.set_mode_cpu()
-
+caffe.set_mode_gpu()
+caffe.set_device(1)
 PARAM_PATH = "params.json"
 with open(PARAM_PATH, 'rb') as f:
    params = json.load(f)
@@ -19,7 +19,7 @@ layers  = params["layers"]
 MODE = 'r'
 count = 0
 
-weights_path = "./data/weights/weights_{}.h5".format(MODE)
+weights_path = "./data/weights/weights.h5"
 proto_path   = "./nets/net.prototxt"
 input_path   = "./data/inputs/input.h5"
 output_path  = "./data/reference/reference.h5"
@@ -46,11 +46,8 @@ for in_d in inputs:
             in_file  = h5py.File(input_path,   'r')
             weights  = h5py.File(weights_path, 'r')
             out_file = h5py.File(output_path,  'w')
-            net      = caffe.Net(proto_path, caffe.TEST)
+            net      = caffe.Net(proto_path, caffe.TEST, weights=weights_path)
 
-            for layer_p in weights['data']:
-                for dataset in weights['data'][layer_p]:
-                    net.params[layer_p][int(dataset)].data[...] = weights['data'][layer_p][dataset]
 	    print in_file['input'][:]
             net.blobs['input'].data[...] = in_file['input'][:]
             net.forward()

@@ -1,0 +1,72 @@
+layer {
+  name: "input"
+  type: "Input"
+  top: "input"
+  input_param {
+    shape {
+	dim: 1 
+	dim: 1 
+	dim: 1
+	dim: 10
+	dim: 10
+    }
+  }
+}
+layer {
+  name: "conv_0"
+  type: "Convolution"
+  bottom: "input"
+  top: "tensor_0"
+  convolution_param {
+    num_output: 1 
+    bias_term: true
+    kernel_size: 1 
+    kernel_size: 3 
+    kernel_size: 3 
+    stride: 1
+    stride: 1 
+    stride: 1
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "scale_1"
+  type: "Scale"
+  bottom: "tensor_0"
+  top: "tensor_1"
+  scale_param {
+    bias_term: true
+  }
+} 
+layer {
+  name: "bnorm_2"
+  type: "BatchNorm"
+  bottom: "tensor_1"
+  top: "tensor_2"
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+} 
+ layer {
+   name: "elu_3"
+   type: "ELU"
+   bottom: "tensor_2"
+   top: "output"
+ }

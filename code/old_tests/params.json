@@ -1,5 +1,5 @@
 {
-   "layers": ["scale", "pool"],
+   "layers": ["conv", "scale", "bnorm", "elu"],
 	"inputs": 
 		[
 		[1,1,1,10,10]

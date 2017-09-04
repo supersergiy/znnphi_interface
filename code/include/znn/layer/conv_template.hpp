@@ -51,7 +51,7 @@ private:
     using orig_prob = original_problem_t<
             B,                                        // batch size
             IFM2 * ID * IHW * IHW,                    // in batch stride
-            OFM2 * OD * OHW * OHW,                    // out batch stride
+            OFM2 * OFM_STRIDE / SIMD_WIDTH,        // out batch stride
             IFM2 / SIMD_WIDTH, OFM2 / SIMD_WIDTH,     // ifm / ofm
             IFM_STRIDE,
             OFM_STRIDE,
@@ -86,6 +86,7 @@ public:
                  float const* __restrict ker, float const* __restrict bi,
                  float const* __restrict scale)
     {
+        
 #ifdef DEBUG
         std::cout << "Out offset: " << OUT_OFFSET << std::endl;
         std::cout << "OW: " << OW_TOTAL_STRIDE << std::endl;

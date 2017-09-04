@@ -5,18 +5,17 @@ from conv import block_kernel, block_bias
 
 def set_slc_dim(params, bot_tensor):
     top_dim = copy.copy(bot_tensor.dim) 
-    top_dim[1] = params["slice_point"]
+    top_dim[1] = params["slice_point"] 
 
     params["top_dim"] = top_dim
+    params["bot_dim"] = bot_tensor.dim 
 
     params["bn"]  = bot_tensor.dim[0]
     params["ifm"] = bot_tensor.dim[1]
-    params["ofm"] = bot_tensor.dim[1]
+    params["ofm"] = params["slice_point"]
     params["id"]  = bot_tensor.dim[2]
     params["ihw"] = bot_tensor.dim[3]
 
-    params["scale_size"]  = round_to_simd(params["ifm"]) 
-    params["bias_size"] = round_to_simd(params["ifm"])
 
 def parse_slc(json_param):
     params = {}
@@ -29,8 +28,7 @@ def parse_slc(json_param):
 
 def allocate_slc_lines(lparam):
     l = lparam
-    allocation_params = lparam["top_dim"][0:4] + [lparam["slice_point"]] 
-
+    allocation_params = lparam["bot_dim"][:4] + [lparam["slice_point"]] 
     param_str = generate_param_string(allocation_params)
     lines = []
     #allocate layer

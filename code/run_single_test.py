@@ -6,7 +6,7 @@ import h5py
 import sys
 
 test_name = sys.argv[1]
-cores = 2 
+cores = 4 
 
 base = os.path.join('/home/ubuntu/znnphi_interface/code/test/tests', test_name)
 net_path = os.path.join(base, "net.prototxt")
@@ -36,7 +36,8 @@ for i in range(1):
     fd = diff_a.flatten()
     fo = out_a.flatten()
     fr = reference_a.flatten()
-
+    #diffs0 = [np.sum(np.abs(diff_a[0][0][i])) for i in range(18)]
+    #diffs1 = [np.sum(np.abs(diff_a[1][0][i])) for i in range(18)]
     errors = rel_d * mask1 * mask2 * reference_a
     error = np.sum((errors*10)**2)
 
@@ -52,9 +53,10 @@ for i in range(1):
         import pdb; pdb.set_trace()
     elif error > 0.010:
         print "Not congrats! Error == {}".format(error)
-        #import pdb; pdb.set_trace()
+        import pdb; pdb.set_trace()
     else:
         print "Congrats! All pass. Error == {}".format(error)
+        import pdb; pdb.set_trace()
 #out_file = h5py.File(output_path)
 #out_file.create_dataset("data", data=out_a)
 

@@ -27,6 +27,7 @@
                         }\
                      }
 #endif
+                              //std::cout << 'x';\
 
 
 namespace znn

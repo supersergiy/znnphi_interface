@@ -13,7 +13,7 @@ from unblock_output import allocate_unblock_output_lines
 
 def allocate_layer_lines(lparams, cores):
    lparams["cores"] = cores
-   lparams["ht"]    = 2
+   lparams["ht"]    = 2 
    lt = lparams["type"]
 
    if lt == "conv":

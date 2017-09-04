@@ -1,0 +1,9 @@
+#!/bin/bash
+rm /home/ubuntu/znnphi_interface/lib/conv_false_false_2_2_2_18_28_194_1_3_28_0_0_0_0_1_1_0.so
+rm /home/ubuntu/znnphi_interface/lib/conv_true_false_2_2_2_18_1_196_1_5_28_0_0_0_1_1_1_0.so
+
+rm /home/ubuntu/znnphi_interface/lib/conv_false_false_2_2_2_18_28_194_1_3_28_0_0_0_0_1_1_0.so
+rm /home/ubuntu/znnphi_interface/lib/conv_false_false_2_2_2_18_1_196_1_5_28_0_0_0_0_1_1_0.so
+rm /home/ubuntu/znnphi_interface/lib/conv_false_false_2_1_1_18_28_194_1_3_28_0_0_0_0_1_1_0.so
+rm /home/ubuntu/znnphi_interface/lib/conv_true_false_2_1_1_18_1_196_1_5_28_0_0_0_1_1_1_0.so
+

@@ -6,7 +6,7 @@ import h5py
 import sys
 
 test_name = sys.argv[1]
-cores = 4 
+cores = 2 
 
 base = os.path.join('/home/ubuntu/znnphi_interface/code/test/tests', test_name)
 net_path = os.path.join(base, "net.prototxt")

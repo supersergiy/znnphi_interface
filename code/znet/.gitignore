@@ -4,6 +4,5 @@
 *.swp
 znet
 bin/
-out/
 tmp*
 reference/

@@ -13,7 +13,7 @@ class znet:
 
     def __init__(self):
         self.net = None
-        self.real_secret_path = "/home/ubuntu/znnphi_interface/code/znet/src/python/pznet/.tmp/"        
+        self.real_secret_path = "/opt/.tmp"
         sys.path.append(self.real_secret_path)
 
     def create_net(self, prototxt_path, h5_weights_path, output_path, cores):

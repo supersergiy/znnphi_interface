@@ -4,7 +4,7 @@ import sys
 import inspect
 import time
 
-TMP_DIR = "/home/ubuntu/.tmp"
+TMP_DIR = "/opt/.tmp"
 
 class znet:
     #TODO: create temporary folder on module startup,

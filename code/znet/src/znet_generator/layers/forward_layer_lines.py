@@ -14,13 +14,16 @@ def forward_layer_lines(lparams):
    elif lt in ["pool", "block_input", "unblock_output", "elu", "pad", "sigmoid", "slc"]:
        params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
        params += 'NULL, NULL'
+   elif lt in ["crop"]:
+       params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"][0], l["top"])
+       params += 'NULL, NULL'
    elif lt in ["bnorm", "scale"]:
        params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
        params += 'tensors["{}"]->data(), tensors["{}"]->data()'.format(l["scale"], l["bias"])
    elif lt in ["eltwise"]:
        params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"][0], l["top"])
        params += 'tensors["{}"]->data(), NULL'.format(l["bot"][1]) 
-   elif lt in ["input"]:
+   elif lt in ["input", "dummy_data"]:
        return lines
 
    lines.append('layers["{}"]->forward({});'.format(l["name"], params))

@@ -7,6 +7,7 @@ from elu     import parse_elu
 from scale   import parse_scale
 from eltwise import parse_eltwise
 from slc     import parse_slc
+from crop    import parse_crop
 
 def check_params(lparams):
    necessary_fields = ["top", "bot", "name", "type"]
@@ -27,6 +28,16 @@ def parse_layer(l):
       lparams["top"] = "input"
       lparams["bot"] = None # is actually fetched from user_input
                             # by a blocker layer
+   elif lt == "DummyData":
+      dim = l["dummy_data_param"]["shape"][0]["dim"]
+      lparams["type"] = "dummy_data"
+      lparams["name"] = l["name"]
+      lparams["top_dim"] = dim
+      lparams["top"] = l["top"][0]
+      lparams["bot"] = None # is actually fetched from user_input
+                            # by a blocker layer
+   elif lt == "Crop":
+      lparams = parse_crop(l)
    elif lt == "Convolution":
       lparams = parse_conv(l)
    elif lt == "Deconvolution":

@@ -9,4 +9,5 @@
 #include <znn/layer/eltwise.hpp>
 //#include <znn/layer/deconv.hpp>
 #include <znn/layer/deconv_as_conv.hpp>
+#include <znn/layer/crop.hpp>
 #include <znn/jit/jit.hpp>

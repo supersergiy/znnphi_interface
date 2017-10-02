@@ -13,5 +13,6 @@ def convert_prototxt_to_json(path_to_prototxt, path_to_json):
     with open(path_to_json, 'wb') as f:
         json.dump(protobuf_to_dict(net), f, indent=3)
 
-
-
+if __name__ == "__main__":
+    import sys
+    convert_prototxt_to_json(sys.argv[1], sys.argv[2])

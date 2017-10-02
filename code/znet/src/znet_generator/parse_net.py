@@ -29,14 +29,14 @@ def parse_net(net_path):
 
    for name in layer_order:
       lparams = layer_info[name]
-      bot_tensor = None
+      bot_tensors = None
       if lparams["bot"]:
          if isinstance(lparams["bot"], list):
-             bot_tensor = tensors[lparams["bot"][0]] #TODO: possible source of unlimited future bugs
+             bot_tensors = [tensors[k] for k in lparams["bot"]] 
          else:
-             bot_tensor = tensors[lparams["bot"]]
+             bot_tensors = tensors[lparams["bot"]]
 
-      set_layer_dim(lparams, bot_tensor)
+      set_layer_dim(lparams, bot_tensors)
 
       top_name = lparams["top"]
       upd_tensor(tensors, top_name, lparams["top_dim"])

@@ -8,6 +8,8 @@ from pad     import allocate_pad_lines
 from scale   import allocate_scale_lines 
 from slc     import allocate_slc_lines 
 from eltwise import allocate_eltwise_lines 
+from crop    import allocate_crop_lines 
+
 from block_input    import allocate_block_input_lines
 from unblock_output import allocate_unblock_output_lines
 
@@ -38,10 +40,14 @@ def allocate_layer_lines(lparams, cores):
       return allocate_eltwise_lines(lparams) 
    elif lt == "pad":
       return allocate_pad_lines(lparams) 
+   elif lt == "crop":
+      return allocate_crop_lines(lparams) 
    elif lt == "sigmoid":
       return allocate_sigmoid_lines(lparams) 
    elif lt == "input":
       return []
+   elif lt == "dummy_data":
+       return []
    else:
       raise Exception("Unsupported Layer: {}".format(lt))
    '''

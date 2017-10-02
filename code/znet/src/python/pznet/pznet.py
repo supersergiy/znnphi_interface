@@ -4,6 +4,8 @@ import sys
 import inspect
 import time
 
+TMP_DIR = "/home/ubuntu/.tmp"
+
 class znet:
     #TODO: create temporary folder on module startup,
     #      put all the .so's and stuff in it, delete on exit
@@ -13,21 +15,25 @@ class znet:
 
     def __init__(self):
         self.net = None
-        self.real_secret_path = "/opt/.tmp"
+        self.real_secret_path = TMP_DIR
+
+        if not os.path.exists(self.real_secret_path):
+            os.makedirs(self.real_secret_path)
+
         sys.path.append(self.real_secret_path)
 
     def create_net(self, prototxt_path, h5_weights_path, output_path, cores):
         json_net_path = os.path.join(self.real_secret_path, 'net.json')
         convert_prototxt_to_json(prototxt_path, json_net_path)
-        
+
         znnphi_path = os.environ["ZNNPHI_PATH"]
         mothership_folder = '{}/code/znet'.format(znnphi_path)
 
         make_command  = 'make -C {} py N={} W={} O={} CORES={}'.format(mothership_folder,
-                                                         json_net_path,
-                                                         h5_weights_path,
-                                                         self.real_secret_path,
-                                                         cores)
+                                                             json_net_path,
+                                                             h5_weights_path,
+                                                             self.real_secret_path,
+                                                             cores)
         os.system(make_command) #compiles the znet.so and copies it to the working folder along with the weights
 
         #copy results to the output folder

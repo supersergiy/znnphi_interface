@@ -15,7 +15,8 @@ class znet:
 
     def __init__(self):
         self.net = None
-        self.real_secret_path = TMP_DIR
+        my_path = os.path.dirname(os.path.abspath(__file__))
+        self.real_secret_path = os.path.join(my_path, ".tmp/") 
 
         if not os.path.exists(self.real_secret_path):
             os.makedirs(self.real_secret_path)

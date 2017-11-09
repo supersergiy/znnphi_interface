@@ -146,7 +146,6 @@ def allocate_deconv_lines(lparam):
         lines += fill_tensor('{}_bias'.format(l["name"]), bias.flatten() )
 
     #allocate layer
-    #lines.append('layers["{}"] = new znn::phi::DeconvLayer({});'.format(l["name"],
     lines.append('layers["{}"] = new znn::phi::DeconvAsConvLayer({});'.format(l["name"],
                                                                         param_str))
     if "additive_conv" in l and l["additive_conv"]:

@@ -39,9 +39,14 @@ def parse_deconv(json_param):
         params["pad"]     = json_conv_param["pad"]
     else:
         params["pad"]     = [0, 0, 0]
+
     params["stride"]  = json_conv_param["stride"]
     
     params["ofm"] = json_conv_param["num_output"]
+
+    if "group" in json_conv_param:
+        params["group"] = json_conv_param["group"]
+        assert (params["group"] == 1 or params["group"] == params["ofm"])
 
     params["json_kernel_size"] = json_conv_param["kernel_size"]
     params["kernel"] = "{}_kernel".format(params["name"])
@@ -57,7 +62,16 @@ def parse_deconv(json_param):
 
 def block_kernel(kernel, lparam):
     kdim = lparam["kernel_dim"]
-    kernel = kernel.reshape(kdim)
+    if "group" in lparam and lparam["group"] != 1:
+        assert (lparam["group"] == lparam["ofm"])
+        assert (lparam["group"] == lparam["ifm"])
+        kernel_in = copy.deepcopy(kernel)
+        kernel = np.zeros(kdim)
+        for fm in range(lparam["ifm"]):
+            kernel[fm][fm] = kernel_in[fm][0] 
+    else:
+        kernel = kernel.reshape(kdim)
+
     blocked_kernel = np.array([0.0]*lparam['kernel_size'])
     def h5ker_to_znnphiker(ifm, ofm, kz, kx, ky):
         total_ifms = round_to_simd(kdim[0])
@@ -109,10 +123,10 @@ def allocate_deconv_lines(lparam):
                          l["stride"][0],  l["stride"][1], 
                          0, 0, activate, add_or_overwrite,
                          'tensors["{}"]->data()'.format(l["kernel"]))
-                         #'tensors["{}"]->data()'.format(l["bias"]))
     
     param_str = generate_param_string(allocation_params)
     lines = []
+    return lines
     #allocate weights 
     lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                               l["kernel"], l["kernel_size"]))

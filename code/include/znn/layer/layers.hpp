@@ -7,8 +7,8 @@
 #include <znn/layer/elu.hpp>
 #include <znn/layer/sigmoid.hpp>
 #include <znn/layer/eltwise.hpp>
-//#include <znn/layer/deconv_ref.hpp>
-#include <znn/layer/interpolation.hpp>
+#include <znn/layer/dummy.hpp>
 #include <znn/layer/deconv_as_conv.hpp>
+#include <znn/layer/interpolation.hpp>
 #include <znn/layer/crop.hpp>
 #include <znn/jit/jit.hpp>

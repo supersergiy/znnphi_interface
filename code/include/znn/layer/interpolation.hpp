@@ -3,8 +3,6 @@
 #include <znn/layer/common.hpp>
 #include <iostream>
 #include <assert.h>
-#include <znn/layer/block_data.hpp>
-#include <znn/layer/unblock_data.hpp>
 
 namespace znn 
 {
@@ -25,10 +23,10 @@ private:
 
 public:
    InterpolationLayer(int _bn, int _ifm, int _ofm, int _id, int _ihw, int _kd, int _khw, 
-               int _stride_d, int _stride_hw, bool _activation, bool _add_or_overwrite, 
+               int _stride_d, int _stride_hw, int _padd, int _padhw, bool _activation, bool _add_or_overwrite, 
                float* kernel=NULL): bn(_bn), ifm(_ifm), ofm(_ofm), id(_id), ihw(_ihw),
                                     kd(_kd), khw(_khw), stride_d(_stride_d), stride_hw(_stride_hw)
-   {   
+   {  
       assert( bn > 0);
       assert(ofm > 0);
       assert(ofm == ifm);
@@ -40,6 +38,8 @@ public:
 
       assert(_activation == false);
       assert(_add_or_overwrite == false);
+      assert(_padd  == 0);
+      assert(_padhw == 0);
 
       rounded_fm = ((ifm + SIMD_WIDTH - 1) / SIMD_WIDTH) * SIMD_WIDTH;
 
@@ -48,20 +48,22 @@ public:
    }
 
    void forward(float const* __restrict i, float* __restrict o, 
-     float const* __restrict kernel, float const* __restrict bias)
+                float const* __restrict kernel, float const* __restrict bias,
+                float const* __restrict _additive_scale)
    {
       typedef float const (*ker_tp)[khw][khw];
       typedef float const (*in_tp)[rounded_fm/SIMD_WIDTH][id][ihw][ihw][SIMD_WIDTH];
       typedef float      (*out_tp)[rounded_fm/SIMD_WIDTH][od][ohw][ohw][SIMD_WIDTH];
 
+      assert (_additive_scale == NULL);
       ker_tp ker_array = reinterpret_cast<ker_tp>(kernel);
       in_tp  i_array = reinterpret_cast<in_tp>(i);
       out_tp o_array = reinterpret_cast<out_tp>(o);
-
       //assume that biases are all 0!
+      return; 
       std::memset(o_array, 0, sizeof(float)*bn*rounded_fm*od*ohw*ohw);
       int d_o, h_o, w_o;
-      
+
       for (int b = 0; b < bn; ++b) {
          for (int fm = 0;  fm < ofm / SIMD_WIDTH; fm++) {
             for (int s = 0; s < SIMD_WIDTH; s++) { 

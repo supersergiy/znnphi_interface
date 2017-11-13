@@ -11,7 +11,6 @@ def allocate_all_layers_lines(net, cores):
     tensors, layer_info, layer_order, misc = net
 
     for (n,l) in iteritems(layer_info):
-        print n
         lines += allocate_layer_lines(l, cores)
 
     lines.append('')
@@ -69,11 +68,11 @@ def forward_all_layers_lines(net):
     count = 1
     for lname in layer_order:
        l = layer_info[lname]
-       lines.append('std::cout << "Running {}!\\n";'.format(l["name"]))
-       #lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
+       #lines.append('std::cout << "Running {}!\\n";'.format(l["name"]))
+       lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
        #if l["type"] in ["pad"]:
        #lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
-       lines += forward_layer_lines(l)
+       #lines += forward_layer_lines(l)
 
        #lines += print_tensor_part_lines(l["top"])
        #lines += print_tensor_lines(l["bot"])

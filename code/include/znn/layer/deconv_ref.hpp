@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <znn/layer/block_data.hpp>
 #include <znn/layer/unblock_data.hpp>
+#include <mkl.h>
 
 namespace znn 
 {
@@ -25,7 +26,7 @@ private:
    UnblockDataLayer unblocker;
 public:
    DeconvLayer(int _bn, int _ifm, int _ofm, int _id, int _ihw, int _kd, int _khw, 
-     int _stride_d, int _stride_hw, bool _activation, bool _add_or_overwrite, float* kernel=NULL): bn(_bn), 
+     int _stride_d, int _stride_hw, float* kernel=NULL, float* bias=NULL): bn(_bn), 
    ifm(_ifm), ofm(_ofm), id(_id), ihw(_ihw),
    kd(_kd), khw(_khw),
    stride_d(_stride_d),
@@ -63,6 +64,7 @@ public:
       out_tp o_array = reinterpret_cast<out_tp>(o);
       in_tp  i_array = reinterpret_cast<in_tp>(i);
       ker_tp ker_array = reinterpret_cast<ker_tp>(kernel);
+      
       
       
       for (int b = 0; b < bn; ++b) {

@@ -24,39 +24,38 @@ z.load_net(znet_path)
 
 for i in range(1):
     out_a    = z.forward(in_a)
-    if os.path.isfile(reference_path):
-        reference_file = h5py.File(reference_path)
-        reference_a = reference_file["main"][:]
-        np.set_printoptions(precision=2)
+    reference_file = h5py.File(reference_path)
+    reference_a = reference_file["main"][:]
+    np.set_printoptions(precision=2)
 
-        diff_a = reference_a - out_a                                                                                                                           
-        rel_d = np.abs(diff_a) / (out_a + 0.0000000001)
-        mask1 = diff_a > 1e-5
-        mask2 = rel_d > 1e-5
-     
-        fd = diff_a.flatten()
-        fo = out_a.flatten()
-        fr = reference_a.flatten()
-        #diffs0 = [np.sum(np.abs(diff_a[0][0][i])) for i in range(18)]
-        #diffs1 = [np.sum(np.abs(diff_a[1][0][i])) for i in range(18)]
-        errors = rel_d * mask1 * mask2 * reference_a
-        error = np.sum((errors*10)**2)
+    diff_a = reference_a - out_a                                                                                                                           
+    rel_d = np.abs(diff_a) / (out_a + 0.0000000001)
+    mask1 = diff_a > 1e-5
+    mask2 = rel_d > 1e-5
+ 
+    fd = diff_a.flatten()
+    fo = out_a.flatten()
+    fr = reference_a.flatten()
+    #diffs0 = [np.sum(np.abs(diff_a[0][0][i])) for i in range(18)]
+    #diffs1 = [np.sum(np.abs(diff_a[1][0][i])) for i in range(18)]
+    errors = rel_d * mask1 * mask2 * reference_a
+    error = np.sum((errors*10)**2)
 
-        max_d = np.max(np.abs(diff_a))
-        i = np.argmax(np.abs(diff_a.flatten()))
-        max_rel_d = max_d / fr[i]
-        print "Max rel d: {}".format(max_rel_d)
-        print "Max d: {}".format(max_d)
-        print "Average d: {}".format(np.average(rel_d))
+    max_d = np.max(np.abs(diff_a))
+    i = np.argmax(np.abs(diff_a.flatten()))
+    max_rel_d = max_d / fr[i]
+    print "Max rel d: {}".format(max_rel_d)
+    print "Max d: {}".format(max_d)
+    print "Average d: {}".format(np.average(rel_d))
 
-        if np.isnan(error):
-            print "Not congrats! Error == {}".format(error)
-            import pdb; pdb.set_trace()
-        elif error > 0.010:
-            print "Not congrats! Error == {}".format(error)
-            import pdb; pdb.set_trace()
-        else:
-            print "Congrats! All pass. Error == {}".format(error)
+    if np.isnan(error):
+        print "Not congrats! Error == {}".format(error)
+        import pdb; pdb.set_trace()
+    elif error > 0.010:
+        print "Not congrats! Error == {}".format(error)
+        import pdb; pdb.set_trace()
+    else:
+        print "Congrats! All pass. Error == {}".format(error)
 #out_file = h5py.File(output_path)
 #out_file.create_dataset("data", data=out_a)
 

@@ -11,19 +11,15 @@ cores = 2
 base = os.path.join('/home/ubuntu/znnphi_interface/code/test/tests', test_name)
 net_path = os.path.join(base, "net.prototxt")
 weights_path = os.path.join(base, "weights.h5")
-#input_path =  os.path.join(base, "in.h5")
-reference_path =  os.path.join(base, "out.h5")
-
-#in_file  = h5py.File(input_path)
-#in_a     = in_file["main"][:]
 
 znet_path = "/home/ubuntu/znets/{}_{}cores".format(test_name, cores)
 z = pznet.znet()
 z.create_net(net_path, weights_path, znet_path, cores)
 z.load_net(znet_path)
 
-in_data1 = np.array([[j for i in range(8)] for j in range(8)])
+in1 = np.array([[j for i in range(100)] for j in range(32)])
 import pdb; pdb.set_trace()
+out1 = z.forward(in1)
 
 for i in range(1):
     out_a    = z.forward(in_a)

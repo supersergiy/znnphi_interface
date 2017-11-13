@@ -14,6 +14,7 @@ def set_deconv_dim(params, bot_tensor):
     params["kernel_size"]  = params["kernel_dim"][2] * params["kernel_dim"][3] * params["kernel_dim"][4]
     params["kernel_size"] *= round_to_simd(params["kernel_dim"][0])
     params["kernel_size"] *= round_to_simd(params["kernel_dim"][1])
+    params["kernel_size"] /= params["group"]
 
     top_dim = [-1, -1, -1, -1, -1]
     top_dim[0] = bot_tensor.dim[0]
@@ -36,17 +37,18 @@ def parse_deconv(json_param):
     params["additive_conv"] = False
 
     if "pad" in json_conv_param:
-        params["pad"]     = json_conv_param["pad"]
+        params["pad"] = json_conv_param["pad"]
     else:
-        params["pad"]     = [0, 0, 0]
+        params["pad"] = [0, 0, 0]
+
+    if "group" in json_conv_param:
+        params["group"] = json_conv_param["group"] 
+    else:
+        params["group"] = 1
 
     params["stride"]  = json_conv_param["stride"]
     
     params["ofm"] = json_conv_param["num_output"]
-
-    if "group" in json_conv_param:
-        params["group"] = json_conv_param["group"]
-        assert (params["group"] == 1 or params["group"] == params["ofm"])
 
     params["json_kernel_size"] = json_conv_param["kernel_size"]
     params["kernel"] = "{}_kernel".format(params["name"])
@@ -62,16 +64,7 @@ def parse_deconv(json_param):
 
 def block_kernel(kernel, lparam):
     kdim = lparam["kernel_dim"]
-    if "group" in lparam and lparam["group"] != 1:
-        assert (lparam["group"] == lparam["ofm"])
-        assert (lparam["group"] == lparam["ifm"])
-        kernel_in = copy.deepcopy(kernel)
-        kernel = np.zeros(kdim)
-        for fm in range(lparam["ifm"]):
-            kernel[fm][fm] = kernel_in[fm][0] 
-    else:
-        kernel = kernel.reshape(kdim)
-
+    kernel = kernel.reshape(kdim)
     blocked_kernel = np.array([0.0]*lparam['kernel_size'])
     def h5ker_to_znnphiker(ifm, ofm, kz, kx, ky):
         total_ifms = round_to_simd(kdim[0])
@@ -107,7 +100,6 @@ def block_kernel(kernel, lparam):
 
 def allocate_deconv_lines(lparam):
     l = lparam
-
     if "activation" in l and l["activation"] == "elu":
         activate = "true"
     else:
@@ -123,10 +115,46 @@ def allocate_deconv_lines(lparam):
                          l["stride"][0],  l["stride"][1], 
                          0, 0, activate, add_or_overwrite,
                          'tensors["{}"]->data()'.format(l["kernel"]))
+                         #'tensors["{}"]->data()'.format(l["bias"]))
     
     param_str = generate_param_string(allocation_params)
+
+    if lparam["group"] == 1:
+        return allocate_deconv_as_conv(lparam, param_str)
+    elif lparam["group"] == lparam["ofm"] and lparam["ifm"] == lparam["ofm"]:
+        return allocate_deconv_as_interpolation(lparam, param_str)
+    else:
+        raise Exception("No suitable implementation for {}".format(lparam["name"]))
+
+def allocate_deconv_as_interpolation(lparam, param_str):
+    l = lparam
     lines = []
-    return lines
+
+    #allocate weights 
+    lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
+                                              l["kernel"], l["kernel_size"]))
+
+
+    #initialize weights
+    kernel = l["kernel_data"]
+    lines += fill_tensor(l["kernel"], kernel.flatten())
+
+    lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
+                                              l["bias"], l["bias_size"]))
+    bias = l["bias_data"]
+    assert( bias is None or np.sum(np.abs(bias)) == 0 )
+    lines += zero_out_tensor(l["bias"]) 
+
+
+    lines.append('layers["{}"] = new znn::phi::InterpolationLayer({});'.format(l["name"],
+                                                                               param_str))
+    #lines.append('layers["{}"] = new znn::phi::DummyLayer();')
+    return lines 
+
+def allocate_deconv_as_conv(lparam, param_str):
+    l = lparam
+    
+    lines = []
     #allocate weights 
     lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                               l["kernel"], l["kernel_size"]))
@@ -152,5 +180,6 @@ def allocate_deconv_lines(lparam):
         lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                                   l["scale"], l["scale_size"]))
         lines += fill_tensor('{}'.format(l["scale"]), l["scale_data"])
+
     return lines
 

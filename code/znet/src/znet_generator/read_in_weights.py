@@ -8,6 +8,7 @@ def read_in_weights(net, weights_path):
 
     #initialize weights
     weights = h5py.File(weights_path) ['data']
+
     for (lname, l) in iteritems(layer_info):
         if l["type"] in ["conv", "deconv"]:
             lweights = weights[lname].values()
@@ -26,7 +27,7 @@ def read_in_weights(net, weights_path):
             if len(lweights) > 2: 
                 scale_factor = lweights[2][:]
                 if scale_factor.size != 1:
-                    raise Exception("Scale factor is not a scalar")
+                    raise Exception("wtf")
                 l["scale_data"] *= scale_factor 
                 l["bias_data"]  *= scale_factor 
         elif l["type"] in ["bnorm"]:
@@ -39,13 +40,13 @@ def read_in_weights(net, weights_path):
                 scale_factor = lweights[2][:]
                 if scale_factor.size != 1:
                     import pdb; pdb.set_trace()
-                    raise Exception("Scale factor is not a scalar")
+                    raise Exception("wtf")
                 if (scale_factor != 0):
                     mean_data /= scale_factor 
                     var_data  /= scale_factor 
-
+            
             var_data += 0.00000001
-            std_data  = np.sqrt(var_data) 
+            std_data  = np.sqrt(var_data)
 
             l["bias_data"]  = -1.0*np.divide(mean_data, std_data)
             l["scale_data"] = 1.0  / std_data

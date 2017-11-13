@@ -181,6 +181,6 @@ def conv_forward_params(lparam):
     if "additive_conv" in l and l["additive_conv"]:
         params += 'tensors["{}"]->data()'.format(l["scale"])
     else:
-        params += 'NULL '.format()
+        params += 'NULL '
 
     return params 

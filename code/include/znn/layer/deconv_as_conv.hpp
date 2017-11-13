@@ -69,9 +69,7 @@ public:
       ss << "KD="  << kd/stride_d  << " ";
       ss << "KHW=" << khw/stride_hw << " ";
 
-      ss << "OUT_D_SKIP="  << kd_start << " ";
-      ss << "OUT_H_SKIP="  << kh_start << " ";
-      ss << "OUT_W_SKIP="  << kw_start << " ";
+      ss << "OUT_D_SKIP="  << kd_start << " "; ss << "OUT_H_SKIP="  << kh_start << " "; ss << "OUT_W_SKIP="  << kw_start << " ";
 
       ss << "OUT_PADHW="  << out_padhw << " ";
       ss << "OUT_PADD="   << out_padd << " ";

@@ -42,12 +42,12 @@ def parse_deconv(json_param):
         params["pad"] = [0, 0, 0]
 
     if "group" in json_conv_param:
-        params["group"] = json_conv_param["group"] 
+        params["group"] = json_conv_param["group"]
     else:
         params["group"] = 1
 
     params["stride"]  = json_conv_param["stride"]
-    
+
     params["ofm"] = json_conv_param["num_output"]
 
     params["json_kernel_size"] = json_conv_param["kernel_size"]
@@ -56,7 +56,7 @@ def parse_deconv(json_param):
 
     params["bias_dim"] = [params["ofm"]]
     params["bias_size"] = round_to_simd(params["bias_dim"][0])
-    params["scale_size"] = round_to_simd(params["ofm"]) 
+    params["scale_size"] = round_to_simd(params["ofm"])
 
     params["scale"] = "{}_scale".format(params["name"])
 
@@ -112,11 +112,11 @@ def allocate_deconv_lines(lparam):
 
     allocation_params = (l["bn"], l["ifm"], l["ofm"], l["id"], l["ihw"],
                          l["kernel_dim"][2], l["kernel_dim"][3],
-                         l["stride"][0],  l["stride"][1], 
+                         l["stride"][0],  l["stride"][1],
                          0, 0, activate, add_or_overwrite,
                          'tensors["{}"]->data()'.format(l["kernel"]))
                          #'tensors["{}"]->data()'.format(l["bias"]))
-    
+
     param_str = generate_param_string(allocation_params)
 
     if lparam["group"] == 1:
@@ -130,7 +130,7 @@ def allocate_deconv_as_interpolation(lparam, param_str):
     l = lparam
     lines = []
 
-    #allocate weights 
+    #allocate weights
     lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                               l["kernel"], l["kernel_size"]))
 
@@ -143,19 +143,19 @@ def allocate_deconv_as_interpolation(lparam, param_str):
                                               l["bias"], l["bias_size"]))
     bias = l["bias_data"]
     assert( bias is None or np.sum(np.abs(bias)) == 0 )
-    lines += zero_out_tensor(l["bias"]) 
+    lines += zero_out_tensor(l["bias"])
 
 
     lines.append('layers["{}"] = new znn::phi::InterpolationLayer({});'.format(l["name"],
                                                                                param_str))
     #lines.append('layers["{}"] = new znn::phi::DummyLayer();')
-    return lines 
+    return lines
 
 def allocate_deconv_as_conv(lparam, param_str):
     l = lparam
-    
+
     lines = []
-    #allocate weights 
+    #allocate weights
     lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                               l["kernel"], l["kernel_size"]))
 
@@ -167,10 +167,9 @@ def allocate_deconv_as_conv(lparam, param_str):
     lines += fill_tensor('{}_kernel'.format(l["name"]), blocked_kernel.flatten())
 
     bias = l["bias_data"]
-    if bias is None: 
+    if bias is None:
         lines += zero_out_tensor('{}_bias'.format(l["name"])) #TODO: don't actually have to allocate all tensors, but then have to allocate one biggest one
     else:
-        #blocked_bias = block_bias(bias, l)
         lines += fill_tensor('{}_bias'.format(l["name"]), bias.flatten() )
 
     #allocate layer

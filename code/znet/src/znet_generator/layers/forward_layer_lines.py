@@ -5,7 +5,7 @@ def forward_layer_lines(lparams):
    l  = lparams
 
    lines = []
-   params = '' 
+   params = ''
    if lt in ["conv", "deconv"]:
        params = conv_forward_params(l)
    if lt in ["aadeconv"]:
@@ -22,13 +22,13 @@ def forward_layer_lines(lparams):
        params += 'tensors["{}"]->data(), tensors["{}"]->data()'.format(l["scale"], l["bias"])
    elif lt in ["eltwise"]:
        params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"][0], l["top"])
-       params += 'tensors["{}"]->data(), NULL'.format(l["bot"][1]) 
+       params += 'tensors["{}"]->data(), NULL'.format(l["bot"][1])
    elif lt in ["input", "dummy_data"]:
        return lines
 
    lines.append('layers["{}"]->forward({});'.format(l["name"], params))
-   return lines 
-  
+   return lines
+
    '''elif lt == "deconv":
    elif lt == "Sigmoid":
    elif lt == "Eltwise":

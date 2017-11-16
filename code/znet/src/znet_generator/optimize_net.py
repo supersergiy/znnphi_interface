@@ -10,7 +10,7 @@ def generate_layer_order_info(net):
 
     for lname in layer_order:
         l = layer_info[lname]
-    
+
         if "next" not in l or "prev" not in l:
             l["next"] = []
             l["prev"] = []
@@ -20,13 +20,13 @@ def generate_layer_order_info(net):
             if isinstance(bot, list):
                 for b in bot:
                     prev_name = last_toucher[b]
-                    prev_l    = layer_info[prev_name] 
+                    prev_l    = layer_info[prev_name]
 
                     prev_l["next"].append(lname)
                     l["prev"].append(prev_name)
             else:
                 prev_name = last_toucher[bot]
-                prev_l    = layer_info[prev_name] 
+                prev_l    = layer_info[prev_name]
 
                 prev_l["next"].append(lname)
                 l["prev"].append(prev_name)
@@ -35,7 +35,7 @@ def generate_layer_order_info(net):
 
 def substitute_tensor(net, replace_from, replace_with, starting_layer=None):
     tensors, layer_info, layer_order, misc = net
-    
+
     from_index = 0
     if not starting_layer is None:
         from_index = layer_order.index(starting_layer) + 1
@@ -47,15 +47,41 @@ def substitute_tensor(net, replace_from, replace_with, starting_layer=None):
         if isinstance(l["bot"], list):
             for i in range(len(l["bot"])):
                 if l["bot"][i] == replace_from:
-                    l["bot"][i] = replace_with 
+                    l["bot"][i] = replace_with
 
         else:
             if l["bot"] == replace_from:
-                l["bot"] = replace_with 
+                l["bot"] = replace_with
         if l["top"] == replace_from:
-            l["top"] = replace_with 
-            
-         
+            l["top"] = replace_with
+
+def generate_dummy_scale_params(prev_lparam):
+    l = prev_lparam
+    name = "{}_dummy_scale".format(prev_lparam["name"])
+
+    param   = {}
+    param["name"]  = name
+    param["type"]  = "scale"
+    param["bn"]    = l["bn"]
+    param["ifm"]   = l["ifm"]
+    param["id"]    = l["id"]
+    param["ihw"]   = l["ihw"]
+
+    param["top_dim"] = l["top_dim"]
+    param["bot_dim"] = l["top_dim"]
+
+    param["bot"] = l["bot"]
+    param["top"] = "{}_dummy".format(l["bot"])
+
+    param["scale"] = "scale_{}".format(name)
+    param["bias"]  = "bias_{}".format(name)
+
+    param["scale_data"] = [1.0] * param["ifm"]
+    param["bias_data"]  = [0.0] * param["ifm"]
+    param["scale_size"] = param["ifm"] * 8 #why not
+    param["bias_size"] = param["ifm"] * 8
+    return param
+
 def expand_convs(net):
     tensors, layer_info, layer_order, misc = net
     count = 0
@@ -65,7 +91,7 @@ def expand_convs(net):
             lt = l["type"]
 
             if lt in ["conv","deconv"] and len(l["next"]) == 1:
-                next_name = l["next"][0] 
+                next_name = l["next"][0]
                 next_l    = layer_info[next_name]
                 while next_l["type"] in ["scale", "bnorm", "elu"]:
                     if next_l["type"] in ["scale", "bnorm"]:
@@ -76,12 +102,22 @@ def expand_convs(net):
                     substitute_tensor(net, next_l["top"], l["top"], lname)
                     #remove the consumed layer
                     delete_layer(net, next_name, lname)
-                    
+
                     if len(l["next"]) != 1:
                         break
 
                     next_name = l["next"][0]
                     next_l    = layer_info[next_name]
+
+
+def insert_layer(net, lparam, prev_lname):
+    lname = lparam["name"]
+    tensors, layer_info, layer_order, misc = net
+
+    prev_order = layer_order.index(prev_lname)
+    layer_order.insert(prev_order, lname)
+    layer_info[lname] = lparam
+
 
 def delete_layer(net, layer_name, prev_layer):
     tensors, layer_info, layer_order, misc = net
@@ -96,12 +132,12 @@ def delete_layer(net, layer_name, prev_layer):
         else:
             layer_info[prev_name]["next"].append(prev_layer)
 
-                
+
     for next_name in l["next"]:
         layer_info[next_name]["prev"].remove(layer_name)
         #TODO: make sure it's not another add
         layer_info[next_name]["prev"].append(prev_layer)
-    
+
     if l["type"] == "eltwise":
         layer_info[prev_layer]["prev"] += [p for p in l["prev"] if p != prev_layer]
     del layer_info[layer_name]
@@ -118,7 +154,7 @@ def consume_scale(layer_info, lname, next_name):
 
     kernel = l["kernel_data"]
     bias   = l["bias_data"]
- 
+
     scale_multipliers = next_l["scale_data"]
     scale_bias        = next_l["bias_data"]
     for ofm in range(l["ofm"]):
@@ -131,7 +167,7 @@ def consume_scale(layer_info, lname, next_name):
             bias[ofm] *= scale_multipliers[ofm]
             bias[ofm] += scale_bias[ofm]
 
-    
+
     if "additive_conv" in l and l["additive_conv"]:
         for ofm in range(l["ofm"]):
             if l["type"] in ["conv", "deconv"]:
@@ -145,14 +181,14 @@ def handle_padding(net):
     tensors, layer_info, layer_order, misc = net
 
     handle_implicit_paddings(net)
-    insert_explicit_paddings(net) 
+    insert_explicit_paddings(net)
 
 
 def remove_padding_from_conv(net, conv_name):
     tensors, layer_info, layer_order, misc = net
     l = layer_info[conv_name]
 
-    l["id"]  += 2 * l["pad"][0] 
+    l["id"]  += 2 * l["pad"][0]
     l["ihw"] += 2 * l["pad"][1]
 
     l["pad"] = [0, 0, 0]
@@ -160,12 +196,12 @@ def remove_padding_from_conv(net, conv_name):
 
 def handle_implicit_paddings(net):
     tensors, layer_info, layer_order, misc = net
-    count = 0 
+    count = 0
 
     for lname in list(layer_order):
         l = layer_info[lname]
 
-        if l["type"] == "conv" and len(l["next"]) == 1 and len(l["prev"]) == 1: 
+        if l["type"] == "conv" and len(l["next"]) == 1 and len(l["prev"]) == 1:
             next_name = l["next"][0]
 
             if layer_info[next_name]["type"] == "conv":
@@ -177,10 +213,35 @@ def handle_implicit_paddings(net):
                     l["top_dim"][2] += 2 * l["output_pad"][0]
                     l["top_dim"][3] += 2 * l["output_pad"][1]
                     l["top_dim"][4] += 2 * l["output_pad"][1]
-                    tensors[l["top"]] = Tensor(l["top_dim"]) 
-                    
+                    tensors[l["top"]] = Tensor(l["top_dim"])
+
                     remove_padding_from_conv(net, next_name)
-                    set_layer_dim(next_l, tensors[l["top"]]) 
+                    set_layer_dim(next_l, tensors[l["top"]])
+
+def generate_pad_param(conv_lparam):
+    l = conv_lparam
+    padder_name = "{}_padder".format(conv_lparam["name"])
+
+    pad_param   = {}
+    pad_param["name"]  = padder_name
+    pad_param["type"]  = "pad"
+    pad_param["bn"]    = l["bn"]
+    pad_param["ifm"]   = l["ifm"]
+    pad_param["id"]    = l["id"]
+    pad_param["ihw"]   = l["ihw"]
+    pad_param["padd"]  = l["pad"][0]
+    pad_param["padhw"] = l["pad"][1]
+
+    padded_dim = [ l["bn"], l["ifm"],
+                   l["id"]+2*l["pad"][0],
+                   l["ihw"]+2*l["pad"][1],
+                   l["ihw"]+2*l["pad"][1] ]
+
+    pad_param["top_dim"] = padded_dim
+
+    pad_param["bot"] = l["bot"]
+    pad_param["top"] = "{}_padded".format(l["bot"])
+    return pad_param
 
 def insert_explicit_paddings(net):
     tensors, layer_info, layer_order, misc = net
@@ -188,41 +249,20 @@ def insert_explicit_paddings(net):
     for lname in list(layer_order):
         l = layer_info[lname]
         if l["type"] == "conv" and (l["pad"][0] != 0 or l["pad"][1] != 0):
-            #set up pad params
-            padder_name = "{}_padder".format(lname)
-            pad_param   = {}
-            pad_param["name"]  = padder_name
-            pad_param["type"]  = "pad"
-            pad_param["bn"]    = l["bn"] 
-            pad_param["ifm"]   = l["ifm"] 
-            pad_param["id"]    = l["id"] 
-            pad_param["ihw"]   = l["ihw"] 
-            pad_param["padd"]  = l["pad"][0]
-            pad_param["padhw"] = l["pad"][1]
+            pad_param = generate_pad_param(l)
 
-            padded_dim = [ l["bn"], l["ifm"], 
-                           l["id"]+2*l["pad"][0], 
-                           l["ihw"]+2*l["pad"][1],
-                           l["ihw"]+2*l["pad"][1] ] 
+            #alocate the padder out tensor
+            tensors[pad_param["top"]] = Tensor(pad_param["top_dim"])
 
-            pad_param["top_dim"] = padded_dim
-
-            #rewire tensors
-            pad_param["bot"] = l["bot"]
-            pad_param["top"] = "{}_padded".format(l["bot"])
-            tensors[pad_param["top"]] = Tensor(pad_param["top_dim"]) 
-
+            #rewire conv to take input from padder
             l["bot"] = pad_param["top"]
             pad_param["top_dim"] = l["bot_dim"]
-           
+
             #modify the conv layer params to remove padding
             remove_padding_from_conv(net, lname)
 
-            #add pad layer 
-            convs_order = layer_order.index(lname)
-            layer_order.insert(convs_order, padder_name)
-            layer_info[padder_name] = pad_param
-            
+            #add pad layer
+            insert_layer(net, pad_param, prev_lname=lname)
 
 def stride1_deconv_to_conv(net):
     tensors, layer_info, layer_order, misc = net
@@ -236,7 +276,7 @@ def stride1_deconv_to_conv(net):
                 l["pad"][i] = (l["json_kernel_size"][i] - 1) - l["pad"][i]
                 if l["pad"][i] < 0:
                     raise Exception("Deconv negative padding is not supported yet")
-            
+
             #conv kernel is OFMxIFMxZXY, deconv kernel is IFMxOFMxZXY
             l["kernel_dim"][0] = l["ofm"]
             l["kernel_dim"][1] = l["ifm"]
@@ -245,9 +285,9 @@ def stride1_deconv_to_conv(net):
 
 def conv_to_deconv_kernel(conv_kernel):
     deconv_kernel = np.swapaxes(conv_kernel, 0, 1)
-    deconv_kernel = np.flip(deconv_kernel, 2) 
-    deconv_kernel = np.flip(deconv_kernel, 3) 
-    deconv_kernel = np.flip(deconv_kernel, 4) 
+    deconv_kernel = np.flip(deconv_kernel, 2)
+    deconv_kernel = np.flip(deconv_kernel, 3)
+    deconv_kernel = np.flip(deconv_kernel, 4)
     return deconv_kernel
 
 def eliminate_adds(net):
@@ -257,12 +297,12 @@ def eliminate_adds(net):
     for lname in (layer_order):
         l = layer_info[lname]
         if l["type"] in ["conv", "deconv"]:
-            if len(l["next"]) == 1 and layer_info[l["next"][0]]["type"] == "eltwise": #TODO: all eltwise are sums now, so this should be changed later
-
+            if len(l["next"]) == 1 and layer_info[l["next"][0]]["type"] == "eltwise": #TODO: this works only for summing eltwise
                 next_name = l["next"][0]
-                next_l = layer_info[next_name] 
-                
-                # make sure that this conv executes before the things that's added to it
+                next_l = layer_info[next_name]
+                if next_name == "Sum11":
+                    continue
+                # make sure that this conv executes before the thing that's added to it
                 # otherwise we can't consume this add with this conv
                 can_consume = True
                 my_order = layer_order.index(lname)
@@ -283,13 +323,15 @@ def eliminate_adds(net):
                     l["top"] = next_l["bot"][1]
                 else:
                     l["top"] = next_l["bot"][0]
-                
+
                 #rename the input for the layers that use the sum output
                 substitute_tensor(net, next_l["top"], l["top"], lname)
 
-                for sum_receiver in next_l["next"]:
+                #for sum_receiver in next_l["next"]:
                     #TODO: check if it's another sum, then handle differently
-                    layer_info[sum_receiver]["bot"] = l["top"]
+
+                #    layer_info[sum_receiver]["bot"] = l["top"]
+
 
                 #remove eltwise
                 delete_layer(net, next_name, lname)
@@ -297,6 +339,8 @@ def eliminate_adds(net):
 def optimize_net(net):
     generate_layer_order_info(net)
     stride1_deconv_to_conv(net)
+    #tensors, layer_info, layer_order, misc = net
+    #import pdb; pdb.set_trace()
     eliminate_adds(net)
     expand_convs(net)
     handle_padding(net)

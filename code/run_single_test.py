@@ -6,7 +6,7 @@ import h5py
 import sys
 
 test_name = sys.argv[1]
-cores = 2 
+cores = 2
 
 base = os.path.join('/home/ubuntu/znnphi_interface/code/test/tests', test_name)
 net_path = os.path.join(base, "net.prototxt")
@@ -28,13 +28,13 @@ for i in range(1):
     reference_a = reference_file["main"][:]
     np.set_printoptions(precision=2)
 
-    diff_a = reference_a - out_a                                                                                                                           
+    diff_a = reference_a - out_a
     rel_d = np.abs(diff_a) / (out_a + 0.0000000001)
     mask1 = diff_a > 1e-5
     mask2 = rel_d > 1e-5
- 
-    fd = diff_a.flatten()
-    fo = out_a.flatten()
+
+    #fd = diff_a.flatten()
+    #fo = out_a.flatten()
     fr = reference_a.flatten()
     #diffs0 = [np.sum(np.abs(diff_a[0][0][i])) for i in range(18)]
     #diffs1 = [np.sum(np.abs(diff_a[1][0][i])) for i in range(18)]
@@ -42,7 +42,7 @@ for i in range(1):
     error = np.sum((errors*10)**2)
 
     max_d = np.max(np.abs(diff_a))
-    i = np.argmax(np.abs(diff_a.flatten()))
+    #i = np.argmax(np.abs(diff_a.flatten()))
     max_rel_d = max_d / fr[i]
     print "Max rel d: {}".format(max_rel_d)
     print "Max d: {}".format(max_d)

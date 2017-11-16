@@ -16,7 +16,7 @@ class znet:
     def __init__(self):
         self.net = None
         my_path = os.path.dirname(os.path.abspath(__file__))
-        self.real_secret_path = os.path.join(my_path, ".tmp/") 
+        self.real_secret_path = os.path.join(my_path, ".tmp/")
 
         if not os.path.exists(self.real_secret_path):
             os.makedirs(self.real_secret_path)
@@ -41,6 +41,8 @@ class znet:
         if not os.path.exists(output_path):
             os.makedirs(output_path)
         os.system("cp -r {}/* {}".format(self.real_secret_path, output_path))
+        os.system("cp {} {}/net.prototxt".format(prototxt_path, output_path))
+        os.system("cp {} {}/weights.h5".format(h5_weights_path, output_path))
 
     def load_net(self, path_to_net):
         os.system("cp -r {}/* {}".format(path_to_net, self.real_secret_path))

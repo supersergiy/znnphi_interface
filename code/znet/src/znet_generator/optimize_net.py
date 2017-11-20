@@ -339,8 +339,6 @@ def eliminate_adds(net):
 def optimize_net(net):
     generate_layer_order_info(net)
     stride1_deconv_to_conv(net)
-    #tensors, layer_info, layer_order, misc = net
-    #import pdb; pdb.set_trace()
     eliminate_adds(net)
     expand_convs(net)
     handle_padding(net)

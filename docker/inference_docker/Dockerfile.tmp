@@ -1,0 +1,27 @@
+FROM ubuntu 
+
+ADD . /opt
+WORKDIR /opt
+
+RUN apt-get update && \
+      apt-get -y install sudo
+
+RUN sudo apt-get install \
+       --no-install-recommends -y python python-pip git vim python-tk \
+                              libprotobuf-dev libleveldb-dev libsnappy-dev \
+                                  libopencv-dev libhdf5-serial-dev protobuf-compiler \
+                       libgflags-dev libgoogle-glog-dev liblmdb-dev \ 
+                      libatlas-base-dev libboost-all-dev cmake
+RUN sudo apt-get install gcc
+RUN pip install --upgrade pip
+RUN pip install setuptool numpy scikit-image protobuf
+
+#install pycaffe
+#RUN git clone https://github.com/torms3/caffe.git
+
+RUN git clone https://github.com/BVLC/caffe.git
+RUN mkdir caffe/build && cd caffe/build  
+RUN cd caffe/build && cmake .. -DCPU_ONLY; 
+RUN cd caffe/build && make all && make install 
+
+RUN python -c 'import caffe'

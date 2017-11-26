@@ -25,5 +25,5 @@ RUN pip install -r requirements.txt
 RUN tar -xzf lib.tar.gz
 RUN tar -xzf znets.tar.gz
 RUN mv /opt/.screenrc /root/
-RUN git config --global user.email "popovych@princeton.edu"
+RUN git config --global user.email "popovych@princeton.edu" && git config credential.helper store
 RUN wget -qO- https://get.docker.com/ | sh && sudo groupadd docker; sudo usermod -aG docker root && newgrp docker 

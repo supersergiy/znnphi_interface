@@ -7,7 +7,7 @@ RUN apt-get install -y python python-pip git vim python-tk \
 		       screen wget vim cpio
 
 #get znet and kaffe repos
-RUN pwd
+RUN ls 
 RUN git clone https://github.com/supersergiy/znnphi_interface.git
 RUN git clone https://github.com/torms3/kaffe.git
 RUN mkdir /opt/.tmp
@@ -24,4 +24,4 @@ RUN mv intel.tar.gz / && cd / && tar -xzf intel.tar.gz
 RUN pip install -r requirements.txt
 RUN tar -xzf lib.tar.gz
 RUN tar -xzf znets.tar.gz
-
+RUN mv /opt/.screenrc /root/

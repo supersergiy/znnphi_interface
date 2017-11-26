@@ -1,8 +1,8 @@
 {
-   "layers": ["conv", "scale", "bnorm", "elu"],
+        "layers": ["deconv", "conv"], 
 	"inputs": 
 		[
-		[1,1,1,10,10]
+		[2,1,1,5,5]
 		],
 	"kernels":
 		[

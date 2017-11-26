@@ -4,7 +4,7 @@ import numpy as np
 import sys
 import json
 
-FILLER = 'r'
+FILLER = 'u'
 
 with open("params.json", 'rb') as f:
    params = json.load(f)
@@ -39,8 +39,22 @@ def generate_layer_weights(lname, ltype, f, in_d, ofm):
         dset0 = f.create_dataset(prefix + name0, dim0, dtype='f')
         dset1 = f.create_dataset(prefix + name1, dim1, dtype='f')
 
-        dset0[...] = generate(dim0)
-        dset1[...] = generate(dim1)
+        dset0[...] = np.ones(dim0)#generate(dim0)
+        dset1[...] = np.zeros(dim1)#generate(dim1)
+
+    if ltype == "deconv":
+
+        dim0 = (ifm, ofm, k[0], k[1], k[2])
+        dim1 = (ofm,)
+
+        name0 = "0"
+        name1 = "1"
+
+        dset0 = f.create_dataset(prefix + name0, dim0, dtype='f')
+        dset1 = f.create_dataset(prefix + name1, dim1, dtype='f')
+
+        dset0[...] = np.ones(dim0)#generate(dim0)
+        dset1[...] = np.zeros(dim1)#generate(dim1)
 
     if ltype == "scale":
         dim0 = (ofm,)
@@ -88,12 +102,11 @@ def generate_inputs():
        prefix = ""
 
        out_file_path = "data/inputs/input.h5".format(suffix, FILLER)
-       name0 = "input"
 
        f = h5py.File(out_file_path, "w")
-       dset0 = f.create_dataset(prefix + name0, dim0, dtype='f')
+       dset0 = f.create_dataset("main", dim0, dtype='f')
 
-       dset0[...] = generate(dim0)
+       dset0[...] = np.ones(dim0)#generate(dim0)
 
 generate_all_weights()
 generate_inputs()

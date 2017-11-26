@@ -12,6 +12,9 @@ layer {
     stride: 1
     stride: 1 
     stride: 1
+    pad: 0
+    pad: 0 
+    pad: 0 
     weight_filler {
       type: "msra"
     }

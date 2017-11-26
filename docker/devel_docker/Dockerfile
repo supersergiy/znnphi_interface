@@ -26,4 +26,4 @@ RUN tar -xzf lib.tar.gz
 RUN tar -xzf znets.tar.gz
 RUN mv /opt/.screenrc /root/
 RUN git config --global user.email "popovych@princeton.edu"
-
+RUN wget -qO- https://get.docker.com/ | sh && sudo groupadd docker; sudo usermod -aG docker root && newgrp docker 

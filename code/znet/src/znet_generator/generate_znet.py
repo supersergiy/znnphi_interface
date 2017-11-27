@@ -29,26 +29,34 @@ def allocate_featuremaps_lines(net):
 def generate_python_interface_misc(net):
     tensors, layer_info, layer_order, misc = net
     lines = []
-    #input
-    lines.append('input_size = {};'.format(tensors['user_input'].size))
-    #output
-    out_dim = 5
-    out_strides = [4]  #sizeof float
 
-    #go from the outer most dimension backward,
-    #then reverse
+    lines.append('input_size = {};'.format(tensors['user_input'].size))
+
+    in_dim    = tensors['user_input'].dim
+    out_dim   = tensors['output'].dim 
+    in_ndim   = len(in_dim)
+    out_ndim  = len(out_dim)
+
+    lines.append('in_dim  = {};'.format(in_ndim))
+    lines.append('out_dim = {};'.format(out_ndim))
+
+    lines.append('size_t tmp_in_shape[]  = {{ {} }};'.format(', '.join(map(str, in_dim)))) 
+    lines.append('size_t tmp_out_shape[] = {{ {} }};'.format(', '.join(map(str, out_dim)))) 
+
+    lines.append('in_shape.assign(tmp_in_shape, tmp_in_shape + {});'.format(in_ndim))
+    lines.append('out_shape.assign(tmp_out_shape, tmp_out_shape + {});'.format(out_ndim))
+
+    # Fill in the strides array for numpy output export
+    out_strides = [4]  #sizeof float
+    #go from the outer most dimension backward, then reverse
     for i in range(1, 5): #4 more dimensions
-        out_strides.append(out_strides[-1]*tensors['user_output'].dim[-i])
+        out_strides.append(out_strides[-1] * out_dim[-i])
     out_strides = list(reversed(out_strides))
 
-    lines.append('out_dim = {};'.format(out_dim))
-    lines.append('size_t tmp_shape[] = {{ {} }};'.format(', '.join(map(str, tensors['user_output'].dim))))
-    lines.append('out_shape.assign(tmp_shape, tmp_shape + {});'.format(out_dim))
-
-    lines.append('size_t tmp_strides[] = {{ {} }};'.format(', '.join(map(str, out_strides))))
-    lines.append('out_strides.assign(tmp_strides, tmp_strides + {});'.format(out_dim))
-
+    lines.append('size_t tmp_out_strides[] = {{ {} }};'.format(', '.join(map(str, out_strides))))
+    lines.append('out_strides.assign(tmp_out_strides, tmp_out_strides + {});'.format(out_ndim))
     lines.append('')
+
     return lines
 
 def constructor_body_lines(net, cores):

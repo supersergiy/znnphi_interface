@@ -14,12 +14,12 @@ class ZnetNumpyWrapper {
          zn = new znn::phi::Znet(weights_path);
       }
 
-      vector<size_t> get_in_shape() 
+      std::vector<size_t> get_in_shape() 
       {
          return zn->in_shape;
       }
 
-      vector<size_t> get_out_shape() 
+      std::vector<size_t> get_out_shape() 
       {
          return zn->out_shape;
       }

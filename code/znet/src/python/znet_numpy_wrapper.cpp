@@ -1,6 +1,7 @@
 #include <znet.hpp>
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
+#include <pybind11/stl.h>
 #include <cstring>
 
 namespace py = pybind11;
@@ -15,11 +16,13 @@ class ZnetNumpyWrapper {
       }
 
       std::vector<size_t> get_in_shape() 
+      //py::tuple get_in_shape()
       {
          return zn->in_shape;
       }
 
       std::vector<size_t> get_out_shape() 
+      //py::tuple get_out_shape()
       {
          return zn->out_shape;
       }

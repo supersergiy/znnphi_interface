@@ -4,7 +4,7 @@ import sys
 import inspect
 import time
 
-TMP_DIR = "/home/ubuntu/.tmp"
+TMP_DIR = "/opt/.tmp"
 
 class znet:
     #TODO: create temporary folder on module startup,
@@ -48,6 +48,14 @@ class znet:
         os.system("cp -r {}/* {}".format(path_to_net, self.real_secret_path))
         import znet
         self.net = znet.znet(os.path.join(self.real_secret_path, "weights/"))
+
+    def get_in_shape(self):
+        ret = self.net.get_in_shape()
+        return ret
+
+    def get_out_shape(self):
+        ret = self.net.get_out_shape()
+        return ret 
 
     def forward(self, input_tensor):
         return self.net.forward(input_tensor)

@@ -26,7 +26,8 @@ public:
                int _stride_d, int _stride_hw, int _padd, int _padhw, bool _activation, bool _add_or_overwrite, 
                float* kernel=NULL): bn(_bn), ifm(_ifm), ofm(_ofm), id(_id), ihw(_ihw),
                                     kd(_kd), khw(_khw), stride_d(_stride_d), stride_hw(_stride_hw)
-   {  
+   {
+      std::cout << "i'm here\n"; 
       assert( bn > 0);
       assert(ofm > 0);
       assert(ofm == ifm);
@@ -60,7 +61,6 @@ public:
       in_tp  i_array = reinterpret_cast<in_tp>(i);
       out_tp o_array = reinterpret_cast<out_tp>(o);
       //assume that biases are all 0!
-      return; 
       std::memset(o_array, 0, sizeof(float)*bn*rounded_fm*od*ohw*ohw);
       int d_o, h_o, w_o;
 

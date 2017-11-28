@@ -1,16 +1,11 @@
-make: Entering directory '/home/ubuntu/znnphi_interface/code/znet'
+make: Entering directory '/opt/znnphi_interface/code/znet'
 rm -rf out
 mkdir -p out
 mkdir -p out/weights
-python src/znet_generator/main.py /home/ubuntu/znnphi_interface/code/znet/src/python/pznet/.tmp/net.json /home/ubuntu/znnphi_interface/code/test/tests/psd_net_1500l/weights.h5 src/generated/znet.cpp 2
+python src/znet_generator/main.py /opt/znnphi_interface/code/znet/src/python/pznet/.tmp/net.json /tests/bl_deconv/weights.h5 src/generated/znet.cpp 2
 Parsing the network spec...
 Loading the weights...
 Optimizing the net...
-Removing sum0_d0!
-Removing sum0_d1!
-Removing sum0_d3!
-Removing sum0_d4!
-Removing sum4_d3!
 Generating the network...
    Generating constructors...
    Generating foward pass...
@@ -18,4 +13,4 @@ Done!
 icpc: command line warning #10006: ignoring unknown option '-Wdate-time'
 icpc: warning #10315: specifying -lm before files may supersede the Intel(R) math library and affect performance
 icpc: command line remark #10411: option '-openmp' is deprecated and will be removed in a future release. Please use the replacement option '-qopenmp'
-make: Leaving directory '/home/ubuntu/znnphi_interface/code/znet'
+make: Leaving directory '/opt/znnphi_interface/code/znet'

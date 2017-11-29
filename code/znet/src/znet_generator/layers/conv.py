@@ -41,21 +41,21 @@ def parse_conv(json_param):
     params["out_pad"]     = [0, 0, 0]
 
     params["stride"]  = json_conv_param["stride"]
-    
+
     params["ofm"] = json_conv_param["num_output"]
-    
+
     params["json_kernel_size"] = json_conv_param["kernel_size"]
     params["kernel"] = "{}_kernel".format(params["name"])
     params["bias"]   = "{}_bias".format(params["name"])
 
     params["bias_dim"] = [params["ofm"]]
     params["bias_size"] = round_to_simd(params["bias_dim"][0])
-    
+
     params["activation"]    = None
 
     params["additive_conv"] = False
     params["scale"] = "{}_scale".format(params["name"])
-    params["scale_size"] = round_to_simd(params["ofm"]) 
+    params["scale_size"] = round_to_simd(params["ofm"])
     params["scale_data"] = None
     return params
 
@@ -123,7 +123,7 @@ def allocate_conv_lines(lparam):
     if "output_pad" in l:
         out_padd  = l["output_pad"][0]
         out_padhw = l["output_pad"][1]
-        
+
     cores = l.get("cores", 2)
     ht    = l.get("ht",    2)
 
@@ -142,29 +142,29 @@ def allocate_conv_lines(lparam):
     params_template += 'OUT_STRIDE_D=1 OUT_STRIDE_HW=1 '
     params_template += 'ACTIVATION={} ADDOROVERWRITE={} CORES={} HT={}'
     params_template += '"'
-    
+
     params_str = params_template.format(*params)
 
     lines.append('layers["{}"] = znn::phi::jitMakeLayer("{}", {});'.format(l["name"], l["type"], params_str))
-    #allocate weights 
+    #allocate weights
     lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                               l["kernel"], l["kernel_size"]))
 
     lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                                   l["bias"], l["bias_size"]))
     #initialize weights
-    kernel = l["kernel_data"] 
+    kernel = l["kernel_data"]
     blocked_kernel = block_kernel(kernel, l)
     lines += fill_tensor('{}_kernel'.format(l["name"]), blocked_kernel)
 
-    bias = l["bias_data"] 
+    bias = l["bias_data"]
 
-    if bias is None: 
+    if bias is None:
         lines += zero_out_tensor('{}_bias'.format(l["name"])) #TODO: don't actually have to allocate all tensors, but then have to allocate one biggest one
     else:
         blocked_bias = block_bias(bias, l)
         lines += fill_tensor('{}_bias'.format(l["name"]), blocked_bias)
-    
+
     if "additive_conv" in l and l["additive_conv"]:
         lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                                   l["scale"], l["scale_size"]))
@@ -173,7 +173,7 @@ def allocate_conv_lines(lparam):
     return lines
 
 def conv_forward_params(lparam):
-    l = lparam 
+    l = lparam
     params = ''
     params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
     params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["kernel"], l["bias"])
@@ -183,4 +183,4 @@ def conv_forward_params(lparam):
     else:
         params += 'NULL '
 
-    return params 
+    return params

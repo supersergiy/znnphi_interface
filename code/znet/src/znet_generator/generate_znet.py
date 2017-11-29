@@ -33,15 +33,15 @@ def generate_python_interface_misc(net):
     lines.append('input_size = {};'.format(tensors['user_input'].size))
 
     in_dim    = tensors['user_input'].dim
-    out_dim   = tensors['output'].dim 
+    out_dim   = tensors['output'].dim
     in_ndim   = len(in_dim)
     out_ndim  = len(out_dim)
 
     lines.append('in_dim  = {};'.format(in_ndim))
     lines.append('out_dim = {};'.format(out_ndim))
 
-    lines.append('size_t tmp_in_shape[]  = {{ {} }};'.format(', '.join(map(str, in_dim)))) 
-    lines.append('size_t tmp_out_shape[] = {{ {} }};'.format(', '.join(map(str, out_dim)))) 
+    lines.append('size_t tmp_in_shape[]  = {{ {} }};'.format(', '.join(map(str, in_dim))))
+    lines.append('size_t tmp_out_shape[] = {{ {} }};'.format(', '.join(map(str, out_dim))))
 
     lines.append('in_shape.assign(tmp_in_shape, tmp_in_shape + {});'.format(in_ndim))
     lines.append('out_shape.assign(tmp_out_shape, tmp_out_shape + {});'.format(out_ndim))
@@ -77,9 +77,12 @@ def forward_all_layers_lines(net):
     for lname in layer_order:
        l = layer_info[lname]
        #lines.append('std::cout << "Running {}!\\n";'.format(l["name"]))
+       #lines += forward_layer_lines(l)
+       #lines += forward_layer_lines(l)
        #lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
        #if l["type"] in ["pad"]:
        #lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
+       #lines.append("std::cout << \"{}\" << std::endl;".format(lname))
        lines += forward_layer_lines(l)
 
        #lines += print_tensor_part_lines(l["top"])

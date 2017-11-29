@@ -17,7 +17,7 @@ def parse_net(net_path):
 
    json_layers  = net["layer"]
    tensors      = {}
-   layer_order  = [] 
+   layer_order  = []
    layer_info   = {}
    misc         = {}
    net = (tensors, layer_info, layer_order, misc)
@@ -32,7 +32,7 @@ def parse_net(net_path):
       bot_tensors = None
       if lparams["bot"]:
          if isinstance(lparams["bot"], list):
-             bot_tensors = [tensors[k] for k in lparams["bot"]] 
+             bot_tensors = [tensors[k] for k in lparams["bot"]]
          else:
              bot_tensors = tensors[lparams["bot"]]
 
@@ -53,7 +53,7 @@ def add_block_input(net):
                         "type": "block_input",
                         "name": "block_input",
                         "bot": "user_input",
-                        "top": "input", 
+                        "top": "input",
                         "bot_dim": tensors["input"].dim
                    }
     layer_order.insert(0, "block_input")

@@ -15,7 +15,7 @@ S = SIMD_WIDTH
 if __name__ == "__main__":
     print "Parsing the network spec..."
     net = parse_net(net_path)
-    if weights_path == 't': 
+    if weights_path == 't':
         generate_template_znet(net, out_path)
     else:
         print "Loading the weights..."

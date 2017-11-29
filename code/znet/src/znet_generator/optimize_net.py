@@ -240,7 +240,7 @@ def insert_implicit_conv_pads(net):
                 next_l = layer_info[next_name]
                 if next_l["pad"][0] != 0 or next_l["pad"][1] != 0:
                     count += 1
-                    print "Output paddiing for {}!".format(l["name"])
+                    print "Output paddinig for {}!".format(l["name"])
                     l["output_pad"] = copy.copy(next_l["pad"])
                     l["top_dim"][2] += 2 * l["output_pad"][0]
                     l["top_dim"][3] += 2 * l["output_pad"][1]
@@ -302,17 +302,15 @@ def generate_pad_param(conv_lparam):
     pad_param["top_dim"] = padded_dim
 
     pad_param["bot"] = l["bot"]
-    pad_param["top"] = "{}_padded".format(l["bot"])
+    pad_param["top"] = "{}_padded".format(l["name"])
     return pad_param
 
 def insert_explicit_conv_pads(net):
     tensors, layer_info, layer_order, misc = net
-
     for lname in list(layer_order):
         l = layer_info[lname]
         if l["type"] == "conv" and (l["pad"][0] != 0 or l["pad"][1] != 0):
             pad_param = generate_pad_param(l)
-
             #alocate the padder out tensor
             tensors[pad_param["top"]] = Tensor(pad_param["top_dim"])
 
@@ -362,8 +360,6 @@ def eliminate_adds(net):
             if len(l["next"]) == 1 and layer_info[l["next"][0]]["type"] == "eltwise": #TODO: this works only for summing eltwise
                 next_name = l["next"][0]
                 next_l = layer_info[next_name]
-                if next_name == "Sum11":
-                    continue
                 # make sure that this conv executes before the thing that's added to it
                 # otherwise we can't consume this add with this conv
                 can_consume = True

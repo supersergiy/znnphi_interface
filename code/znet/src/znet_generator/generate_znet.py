@@ -81,7 +81,8 @@ def forward_all_layers_lines(net):
        #lines += forward_layer_lines(l)
        #lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
        #if l["type"] in ["pad"]:
-       lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
+       if l["name"] != "Conv351":
+           lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
        #lines.append("std::cout << \"{}\" << std::endl;".format(lname))
        #lines += forward_layer_lines(l)
 

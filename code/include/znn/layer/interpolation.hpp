@@ -1,6 +1,7 @@
 #pragma once
 #include <znn/layer/layer.hpp>
 #include <znn/layer/common.hpp>
+#include <znn/intrin.hpp>
 #include <iostream>
 #include <assert.h>
 
@@ -80,10 +81,11 @@ public:
 
                                  vwt = SIMD_SET1(ker_array[pd][ph][pw]);
 
-                                 float* o_point = o_array[b][fm][d_o][h_o][w_o];
-                                 float* i_point = i_array[b][fm][d_i][h_i][w_i];
+                                 const float* i_point = i_array[b][fm][d_i][h_i][w_i];
+                                 float*       o_point = o_array[b][fm][d_o][h_o][w_o];
+
                                  SIMD_STORE(o_point, 
-                                            SIMD_FMADD(vwt, SIMD_LOAD(i_point), o_point)); 
+                                            SIMD_FMADD(vwt, SIMD_LOAD(i_point), SIMD_LOAD(o_point))); 
                                  //std::cout << d_o << " " << h_o << " " << w_o << std::endl;
                                  
                                  //o_array[b][fm][d_o][h_o][w_o][s] += i_array[b][fm][d_i][h_i][w_i][s] * ker_array[pd][ph][pw];

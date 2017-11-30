@@ -44,7 +44,7 @@ class znet:
         os.system("cp {} {}/net.prototxt".format(prototxt_path, output_path))
         os.system("cp {} {}/weights.h5".format(h5_weights_path, output_path))
 
-    def load_net(self, net_path, lib_path="{}/lib/".format(os.environ["ZNNPHI_PATH"])):
+    def load_net(self, net_path, lib_path=os.path.join(net_path, "lib")):
         if not os.path.exists(lib_path):
             os.makedirs(lib_path)
         os.system("cp -r {}/* {}".format(net_path, self.real_secret_path))

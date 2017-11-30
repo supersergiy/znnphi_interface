@@ -33,9 +33,9 @@ if not options.weights_path:
 
 weights_path = options.weights_path
 net_path  = options.prototxt_path
-znet_path = options.output_path
+znet_path = os.path.abspath(options.output_path)
 n_cores   = options.n_cores
-n_h5      = options.n_ht
+n_ht      = options.n_ht
 
 z = pznet.znet()
 print "Creating the network..."

@@ -12,13 +12,15 @@ class Znet {
     using layer_map = std::map<std::string, znn::phi::Layer *>;
 
     public:
-        hbw_map tensors;
-        layer_map layers;
+        std::string lib_path; //sets the place where pznet is gonna be looking for the layer .so files
+
+        hbw_map tensors; // maps tensor names to tensor objects
+        layer_map layers; //maps layer names to layer objects
 
         std::vector<std::string> layer_order;
         
         std::vector<size_t> out_strides; //strides for each output dim
-	// don't need input strides because the input layout is standard
+        // don't need input strides because the input layout is standard
         std::vector<size_t> out_shape;   //output shape
         std::vector<size_t> in_shape;    //input shape
         size_t out_dim = 5; //output is usually 5-dimensional
@@ -27,7 +29,7 @@ class Znet {
         size_t input_size; //input size in number of elements(!) 
     public:
         Znet() {};
-        Znet(std::string);
+        Znet(std::string weights_path, std::string lib_path);
 
         ~Znet(void) {
            for (hbw_map::iterator it = tensors.begin(); it != tensors.end(); it++) {

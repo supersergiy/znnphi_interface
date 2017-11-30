@@ -58,11 +58,15 @@ def generate_python_interface_misc(net):
     lines.append('')
 
     return lines
+def set_constants_lines():
+    lines = []
+    lines.append('this->lib_path = lib_path;')
+    return lines
 
 def constructor_body_lines(net, cores):
     lines = []
     tensors, layer_info, layer_order, misc = net
-
+    lines += set_constants_lines()
     lines += allocate_all_layers_lines(net, cores)
     lines += allocate_featuremaps_lines(net)
     lines += generate_python_interface_misc(net)
@@ -116,7 +120,7 @@ def generate_znet(net, out_path, cores):
 
     #constructor
     print "   Generating constructors..."
-    constructor_signature = 'znn::phi::Znet::Znet(std::string weights_path)'
+    constructor_signature = 'znn::phi::Znet::Znet(std::string weights_path, std::string lib_path)'
     constructor_body      = constructor_body_lines(net, cores)
     constructor           = generate_function(constructor_signature, constructor_body)
     lines += constructor

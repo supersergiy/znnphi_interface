@@ -16,12 +16,12 @@ def parse_args():
 
     return args
 
-def get_out_name(args):
+def get_out_path(args):
     name = ''
-    name += args["layer"]
+    name += os.path.join(args["lib_folder"], args["layer"])
 
     for k in sorted(args.keys()):
-        if k != "layer":
+        if k not in ["layer", "lib_folder"]:
             name += '_' + args[k]
 
     name += ".so"
@@ -53,10 +53,7 @@ def create_conv_wrapper(args):
     return wrapper_name
 
 def compile_dl(args):
-    out_name = get_out_name(args)
-    znnphi_path = os.environ["ZNNPHI_PATH"]
-
-    out_path = "{}/lib/{}".format(znnphi_path, out_name)
+    out_path = get_out_path(args)
 
     wrapper_name = create_wrapper(args)
     wrapper_path = "{}/{}".format(my_path, wrapper_name)

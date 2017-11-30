@@ -24,7 +24,7 @@ void handleDLError(void)
     }
 }
 
-void *jitGetHandle(std::string params)
+void *jitGetHandle(std::string params, std::string lib_folder)
 {
    char dl_filename[1024];
    char *znnphi_path = getenv("ZNNPHI_PATH");
@@ -42,7 +42,7 @@ void *jitGetHandle(std::string params)
    FILE* python_out = popen(compile_command.str().c_str(), "r");
 
    if (python_out == NULL) {
-      std::cerr << "Calling jit.py fails\n";
+      std::cerr << "Calling jit.py failed\n";
       std::exit(EXIT_FAILURE);
    }
 
@@ -57,12 +57,12 @@ void *jitGetHandle(std::string params)
    return handle;
 }
 
-Layer* jitMakeLayer(std::string layer_type, std::string layer_params)
+Layer* jitMakeLayer(std::string layer_type, std::string layer_params, std::string lib_folder)
 {
    std::stringstream params;
-   params << "LAYER=" << layer_type << " " << layer_params;
+   params << "LAYER=" << layer_type << " " << "LIB_FOLDER=" << lib_folder << " " << layer_params;
 
-   void  *layer_handle = jitGetHandle(params.str()); 
+   void  *layer_handle = jitGetHandle(params.str(), lib_folder); 
 
    void* creator = dlsym(layer_handle, "createLayer");
    handleDLError();

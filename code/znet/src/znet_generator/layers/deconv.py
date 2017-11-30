@@ -171,8 +171,8 @@ def allocate_deconv_as_conv(lparam, param_str):
         lines += fill_tensor('{}_bias'.format(l["name"]), bias.flatten() )
 
     #allocate layer
-    lines.append('layers["{}"] = new znn::phi::DeconvAsConvLayer({});'.format(l["name"],
-                                                                        param_str))
+    #ouch, this is a little ugly with the lib path, but sacrafices have to made to keep it dynamic
+    lines.append('layers["{}"] = new znn::phi::DeconvAsConvLayer({}, lib_path=this->lib_path);'.format(l["name"], param_str))
     if "additive_conv" in l and l["additive_conv"]:
         lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                                   l["scale"], l["scale_size"]))

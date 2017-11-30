@@ -145,7 +145,7 @@ def allocate_conv_lines(lparam):
 
     params_str = params_template.format(*params)
 
-    lines.append('layers["{}"] = znn::phi::jitMakeLayer("{}", {});'.format(l["name"], l["type"], params_str))
+    lines.append('layers["{}"] = znn::phi::jitMakeLayer("{}", {}, this->lib_path);'.format(l["name"], l["type"], params_str))
     #allocate weights
     lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                               l["kernel"], l["kernel_size"]))

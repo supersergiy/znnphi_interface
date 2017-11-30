@@ -44,10 +44,12 @@ class znet:
         os.system("cp {} {}/net.prototxt".format(prototxt_path, output_path))
         os.system("cp {} {}/weights.h5".format(h5_weights_path, output_path))
 
-    def load_net(self, path_to_net):
-        os.system("cp -r {}/* {}".format(path_to_net, self.real_secret_path))
+    def load_net(self, net_path, lib_path="{}/lib/".format(os.environ["ZNNPHI_PATH"])):
+        if not os.path.exists(lib_path):
+            os.makedirs(lib_path)
+        os.system("cp -r {}/* {}".format(net_path, self.real_secret_path))
         import znet
-        self.net = znet.znet(os.path.join(self.real_secret_path, "weights/"))
+        self.net = znet.znet(os.path.join(self.real_secret_path, "weights/"), lib_path)
 
     def get_in_shape(self):
         ret = self.net.get_in_shape()
@@ -55,7 +57,7 @@ class znet:
 
     def get_out_shape(self):
         ret = self.net.get_out_shape()
-        return ret 
+        return ret
 
     def forward(self, input_tensor):
         return self.net.forward(input_tensor)

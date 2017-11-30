@@ -17,11 +17,13 @@ reference_path =  os.path.join(base, "out.h5")
 
 in_file  = h5py.File(input_path)
 in_a     = in_file["main"][:]
-
 znet_path = "/opt/znets/{}_{}cores".format(test_name, cores)
+lib_path  = os.path.join(znet_path, "lib")
 z = pznet.znet()
+print "Creating net..."
 z.create_net(net_path, weights_path, znet_path, cores)
-z.load_net(znet_path)
+print "Running net..."
+z.load_net(znet_path, lib_path)
 
 for i in range(1):
     out_a    = z.forward(in_a)

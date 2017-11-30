@@ -10,9 +10,9 @@ class ZnetNumpyWrapper {
    private:
       znn::phi::Znet *zn;
    public:
-      ZnetNumpyWrapper(const std::string &weights_path) 
+      ZnetNumpyWrapper(const std::string &weights_path, const std::string &lib_path) 
       {
-         zn = new znn::phi::Znet(weights_path);
+         zn = new znn::phi::Znet(weights_path, lib_path);
       }
 
       std::vector<size_t> get_in_shape() 
@@ -55,7 +55,7 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(znet, m) {
     py::class_<ZnetNumpyWrapper>(m, "znet")
-        .def(py::init<const std::string &>(), py::arg("weights_path")) 
+        .def(py::init<const std::string &, const std::string &>(), py::arg("weights_path"), py::arg("lib_path")) 
         .def("forward", &ZnetNumpyWrapper::forward)
         .def("get_in_shape", &ZnetNumpyWrapper::get_in_shape)
         .def("get_out_shape", &ZnetNumpyWrapper::get_out_shape);

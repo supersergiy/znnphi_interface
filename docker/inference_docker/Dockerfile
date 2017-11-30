@@ -17,6 +17,7 @@ RUN pip install protobuf_to_dict
 RUN pip install tifffile h5py
 
 #get pznet and kaffe repos
+RUN ls
 RUN git clone https://github.com/supersergiy/znnphi_interface.git
 RUN git clone https://github.com/torms3/kaffe.git
 RUN mkdir /opt/.tmp
@@ -27,7 +28,9 @@ ENV LD_LIBRARY_PATH /opt/intel/lib/intel64
 ENV ZNNPHI_PATH /opt/znnphi_interface 
 ENV PYTHONPATH $PYTHONPATH:/opt/znnphi_interface/code/znet/src/python:/opt/kaffe
 
-ADD . /opt
+ADD *.tar.gz /opt
+ADD requirements.txt /opt
+
 RUN mv intel.tar.gz / && cd / && tar -xzf intel.tar.gz
 RUN tar -xzf lib.tar.gz
 RUN tar -xzf znets.tar.gz

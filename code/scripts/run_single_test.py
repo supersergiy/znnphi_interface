@@ -6,9 +6,9 @@ import h5py
 import sys
 
 cores = 2
-
+ht    = 1
 base = sys.argv[1]
-test_name = base.split('/')[-1]
+test_name = filter(None, base.split('/'))[-1]
 
 net_path = os.path.join(base, "net.prototxt")
 weights_path = os.path.join(base, "weights.h5")
@@ -20,8 +20,9 @@ in_a     = in_file["main"][:]
 znet_path = "/opt/znets/{}_{}cores".format(test_name, cores)
 lib_path  = os.path.join(znet_path, "lib")
 z = pznet.znet()
+
 print "Creating net..."
-z.create_net(net_path, weights_path, znet_path, cores)
+z.create_net(net_path, weights_path, znet_path, cores, ht)
 print "Running net..."
 z.load_net(znet_path, lib_path)
 

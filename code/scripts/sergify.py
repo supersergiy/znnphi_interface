@@ -35,7 +35,11 @@ weights_path = options.weights_path
 net_path  = options.prototxt_path
 znet_path = options.output_path
 n_cores   = options.n_cores
+n_h5      = options.n_ht
 
 z = pznet.znet()
-
-z.create_net(net_path, weights_path, znet_path, n_cores)
+print "Creating the network..."
+z.create_net(net_path, weights_path, znet_path, n_cores, n_ht)
+print "Compiling layers..."
+z.load_net(znet_path, os.path.join(znet_path, "lib"))
+print "Your network has been sergified! You can find it at {}".format(znet_path)

@@ -6,12 +6,12 @@ from layers import allocate_layer_lines, forward_layer_lines
 from layers import generate_param_string
 from layers import conv
 
-def allocate_all_layers_lines(net, cores):
+def allocate_all_layers_lines(net, cores, ht):
     lines = []
     tensors, layer_info, layer_order, misc = net
 
     for (n,l) in iteritems(layer_info):
-        lines += allocate_layer_lines(l, cores)
+        lines += allocate_layer_lines(l, cores, ht)
 
     lines.append('')
     return lines
@@ -63,11 +63,11 @@ def set_constants_lines():
     lines.append('this->lib_path = lib_path;')
     return lines
 
-def constructor_body_lines(net, cores):
+def constructor_body_lines(net, cores, ht):
     lines = []
     tensors, layer_info, layer_order, misc = net
     lines += set_constants_lines()
-    lines += allocate_all_layers_lines(net, cores)
+    lines += allocate_all_layers_lines(net, cores, ht)
     lines += allocate_featuremaps_lines(net)
     lines += generate_python_interface_misc(net)
     lines.append('')
@@ -107,7 +107,7 @@ def forward_body_lines(net):
     lines.append('')
     return lines
 
-def generate_znet(net, out_path, cores):
+def generate_znet(net, out_path, cores, ht):
     lines = []
     #includes
     lines.append('#include <iostream>')
@@ -121,7 +121,7 @@ def generate_znet(net, out_path, cores):
     #constructor
     print "   Generating constructors..."
     constructor_signature = 'znn::phi::Znet::Znet(std::string weights_path, std::string lib_path)'
-    constructor_body      = constructor_body_lines(net, cores)
+    constructor_body      = constructor_body_lines(net, cores, ht)
     constructor           = generate_function(constructor_signature, constructor_body)
     lines += constructor
 

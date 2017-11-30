@@ -8,6 +8,7 @@ net_path     = sys.argv[1]
 weights_path = sys.argv[2]
 out_path     = sys.argv[3]
 cores        = sys.argv[4]
+ht           = sys.argv[5]
 
 SIMD_WIDTH = 8
 S = SIMD_WIDTH
@@ -23,5 +24,5 @@ if __name__ == "__main__":
         print "Optimizing the net..."
         optimize_net(net)
         print "Generating the network..."
-        generate_znet(net, out_path, cores)
+        generate_znet(net, out_path, cores, ht)
         print "Done!"

@@ -49,7 +49,7 @@ class znet:
             lib_path = os.path.join(net_path, "lib")
         if not os.path.exists(lib_path):
             os.makedirs(lib_path)
-        target_files = os.path.joinpath(net_path, '*')
+        target_files = os.path.join(net_path, '*')
         os.system("cp -r {} {}".format(target_files, self.real_secret_path))
         import znet
         self.net = znet.znet(os.path.join(self.real_secret_path, "weights/"), lib_path)

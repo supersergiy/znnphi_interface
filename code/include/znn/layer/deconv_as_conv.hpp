@@ -88,7 +88,7 @@ public:
 
    DeconvAsConvLayer(int _bn, int _ifm, int _ofm, int _id, int _ihw, int _kd, int _khw, 
      int _stride_d, int _stride_hw, int _out_padd, int _out_padhw, bool _activation, bool _add_or_overwrite, 
-     const float *kernel)
+     const float *kernel, const std::string &lib_path)
    {   
       bn = _bn; 
       ifm = _ifm;
@@ -125,7 +125,7 @@ public:
                hbw_array<float> *new_subkernel = new hbw_array<float>(subk_size);
                getSubKernel(kernel, start_d, start_h, start_w, new_subkernel->data());
                kernels.push_back(new_subkernel);
-               convs.push_back(jitMakeLayer("conv", getParamString(start_d, start_h, start_w)));
+               convs.push_back(jitMakeLayer("conv", getParamString(start_d, start_h, start_w), lib_path));
             }
          }
       }

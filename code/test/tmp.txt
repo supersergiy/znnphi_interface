@@ -1,0 +1,3347 @@
+libdc1394 error: Failed to initialize libdc1394
+/opt/caffe/python/caffe/pycaffe.py:13: RuntimeWarning: to-Python converter for std::vector<int, std::allocator<int> > already registered; second conversion method ignored.
+  from ._caffe import \
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I1115 20:27:43.908093  1977 net.cpp:61] Initializing net from parameters: 
+state {
+  phase: TEST
+  level: 0
+}
+layer {
+  name: "input"
+  type: "Input"
+  top: "input"
+  input_param {
+    shape {
+      dim: 1
+      dim: 1
+      dim: 18
+      dim: 160
+      dim: 160
+    }
+  }
+}
+layer {
+  name: "inputconv"
+  type: "Convolution"
+  bottom: "input"
+  top: "inputconv"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 28
+    bias_term: true
+    pad: 0
+    pad: 2
+    pad: 2
+    kernel_size: 1
+    kernel_size: 5
+    kernel_size: 5
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "elui"
+  type: "ELU"
+  bottom: "inputconv"
+  top: "inputconv"
+}
+layer {
+  name: "conv0_d0"
+  type: "Convolution"
+  bottom: "inputconv"
+  top: "conv0_d0"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 28
+    bias_term: false
+    pad: 0
+    pad: 1
+    pad: 1
+    kernel_size: 1
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "bn0_d0"
+  type: "BatchNorm"
+  bottom: "conv0_d0"
+  top: "conv0_d0"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale0_d0"
+  type: "Scale"
+  bottom: "conv0_d0"
+  top: "conv0_d0"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu0_d0"
+  type: "ELU"
+  bottom: "conv0_d0"
+  top: "conv0_d0"
+}
+layer {
+  name: "conv1_d0"
+  type: "Convolution"
+  bottom: "conv0_d0"
+  top: "conv1_d0"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 28
+    bias_term: false
+    pad: 0
+    pad: 1
+    pad: 1
+    kernel_size: 1
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "bn1_d0"
+  type: "BatchNorm"
+  bottom: "conv1_d0"
+  top: "conv1_d0"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale1_d0"
+  type: "Scale"
+  bottom: "conv1_d0"
+  top: "conv1_d0"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu1_d0"
+  type: "ELU"
+  bottom: "conv1_d0"
+  top: "conv1_d0"
+}
+layer {
+  name: "conv2_d0"
+  type: "Convolution"
+  bottom: "conv1_d0"
+  top: "conv2_d0"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 28
+    bias_term: false
+    pad: 0
+    pad: 1
+    pad: 1
+    kernel_size: 1
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sum0_d0"
+  type: "Eltwise"
+  bottom: "conv2_d0"
+  bottom: "conv0_d0"
+  top: "sum0_d0"
+}
+layer {
+  name: "bn2_d0"
+  type: "BatchNorm"
+  bottom: "sum0_d0"
+  top: "sum0_d0"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale2_d0"
+  type: "Scale"
+  bottom: "sum0_d0"
+  top: "sum0_d0"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu2_d0"
+  type: "ELU"
+  bottom: "sum0_d0"
+  top: "sum0_d0"
+}
+layer {
+  name: "pool_d1"
+  type: "Pooling"
+  bottom: "sum0_d0"
+  top: "pool_d1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 1
+    kernel_size: 2
+    kernel_size: 2
+    stride: 1
+    stride: 2
+    stride: 2
+  }
+}
+layer {
+  name: "conv0_d1"
+  type: "Convolution"
+  bottom: "pool_d1"
+  top: "conv0_d1"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 36
+    bias_term: false
+    pad: 0
+    pad: 1
+    pad: 1
+    kernel_size: 1
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "bn0_d1"
+  type: "BatchNorm"
+  bottom: "conv0_d1"
+  top: "conv0_d1"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale0_d1"
+  type: "Scale"
+  bottom: "conv0_d1"
+  top: "conv0_d1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu0_d1"
+  type: "ELU"
+  bottom: "conv0_d1"
+  top: "conv0_d1"
+}
+layer {
+  name: "conv1_d1"
+  type: "Convolution"
+  bottom: "conv0_d1"
+  top: "conv1_d1"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 36
+    bias_term: false
+    pad: 1
+    pad: 1
+    pad: 1
+    kernel_size: 3
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "bn1_d1"
+  type: "BatchNorm"
+  bottom: "conv1_d1"
+  top: "conv1_d1"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale1_d1"
+  type: "Scale"
+  bottom: "conv1_d1"
+  top: "conv1_d1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu1_d1"
+  type: "ELU"
+  bottom: "conv1_d1"
+  top: "conv1_d1"
+}
+layer {
+  name: "conv2_d1"
+  type: "Convolution"
+  bottom: "conv1_d1"
+  top: "conv2_d1"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 36
+    bias_term: false
+    pad: 1
+    pad: 1
+    pad: 1
+    kernel_size: 3
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sum0_d1"
+  type: "Eltwise"
+  bottom: "conv2_d1"
+  bottom: "conv0_d1"
+  top: "sum0_d1"
+}
+layer {
+  name: "bn2_d1"
+  type: "BatchNorm"
+  bottom: "sum0_d1"
+  top: "sum0_d1"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale2_d1"
+  type: "Scale"
+  bottom: "sum0_d1"
+  top: "sum0_d1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu2_d1"
+  type: "ELU"
+  bottom: "sum0_d1"
+  top: "sum0_d1"
+}
+layer {
+  name: "pool_d2"
+  type: "Pooling"
+  bottom: "sum0_d1"
+  top: "pool_d2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 1
+    kernel_size: 2
+    kernel_size: 2
+    stride: 1
+    stride: 2
+    stride: 2
+  }
+}
+layer {
+  name: "conv0_d2"
+  type: "Convolution"
+  bottom: "pool_d2"
+  top: "conv0_d2"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 48
+    bias_term: false
+    pad: 0
+    pad: 1
+    pad: 1
+    kernel_size: 1
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "bn0_d2"
+  type: "BatchNorm"
+  bottom: "conv0_d2"
+  top: "conv0_d2"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale0_d2"
+  type: "Scale"
+  bottom: "conv0_d2"
+  top: "conv0_d2"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu0_d2"
+  type: "ELU"
+  bottom: "conv0_d2"
+  top: "conv0_d2"
+}
+layer {
+  name: "conv1_d2"
+  type: "Convolution"
+  bottom: "conv0_d2"
+  top: "conv1_d2"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 48
+    bias_term: false
+    pad: 1
+    pad: 1
+    pad: 1
+    kernel_size: 3
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "bn1_d2"
+  type: "BatchNorm"
+  bottom: "conv1_d2"
+  top: "conv1_d2"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale1_d2"
+  type: "Scale"
+  bottom: "conv1_d2"
+  top: "conv1_d2"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu1_d2"
+  type: "ELU"
+  bottom: "conv1_d2"
+  top: "conv1_d2"
+}
+layer {
+  name: "conv2_d2"
+  type: "Convolution"
+  bottom: "conv1_d2"
+  top: "conv2_d2"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 48
+    bias_term: false
+    pad: 1
+    pad: 1
+    pad: 1
+    kernel_size: 3
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sum0_d2"
+  type: "Eltwise"
+  bottom: "conv2_d2"
+  bottom: "conv0_d2"
+  top: "sum0_d2"
+}
+layer {
+  name: "bn2_d2"
+  type: "BatchNorm"
+  bottom: "sum0_d2"
+  top: "sum0_d2"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale2_d2"
+  type: "Scale"
+  bottom: "sum0_d2"
+  top: "sum0_d2"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu2_d2"
+  type: "ELU"
+  bottom: "sum0_d2"
+  top: "sum0_d2"
+}
+layer {
+  name: "pool_d3"
+  type: "Pooling"
+  bottom: "sum0_d2"
+  top: "pool_d3"
+  pooling_param {
+    pool: MAX
+    kernel_size: 1
+    kernel_size: 2
+    kernel_size: 2
+    stride: 1
+    stride: 2
+    stride: 2
+  }
+}
+layer {
+  name: "conv0_d3"
+  type: "Convolution"
+  bottom: "pool_d3"
+  top: "conv0_d3"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 64
+    bias_term: false
+    pad: 0
+    pad: 1
+    pad: 1
+    kernel_size: 1
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "bn0_d3"
+  type: "BatchNorm"
+  bottom: "conv0_d3"
+  top: "conv0_d3"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale0_d3"
+  type: "Scale"
+  bottom: "conv0_d3"
+  top: "conv0_d3"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu0_d3"
+  type: "ELU"
+  bottom: "conv0_d3"
+  top: "conv0_d3"
+}
+layer {
+  name: "conv1_d3"
+  type: "Convolution"
+  bottom: "conv0_d3"
+  top: "conv1_d3"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 64
+    bias_term: false
+    pad: 1
+    pad: 1
+    pad: 1
+    kernel_size: 3
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "bn1_d3"
+  type: "BatchNorm"
+  bottom: "conv1_d3"
+  top: "conv1_d3"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale1_d3"
+  type: "Scale"
+  bottom: "conv1_d3"
+  top: "conv1_d3"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu1_d3"
+  type: "ELU"
+  bottom: "conv1_d3"
+  top: "conv1_d3"
+}
+layer {
+  name: "conv2_d3"
+  type: "Convolution"
+  bottom: "conv1_d3"
+  top: "conv2_d3"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 64
+    bias_term: false
+    pad: 1
+    pad: 1
+    pad: 1
+    kernel_size: 3
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sum0_d3"
+  type: "Eltwise"
+  bottom: "conv2_d3"
+  bottom: "conv0_d3"
+  top: "sum0_d3"
+}
+layer {
+  name: "bn2_d3"
+  type: "BatchNorm"
+  bottom: "sum0_d3"
+  top: "sum0_d3"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale2_d3"
+  type: "Scale"
+  bottom: "sum0_d3"
+  top: "sum0_d3"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu2_d3"
+  type: "ELU"
+  bottom: "sum0_d3"
+  top: "sum0_d3"
+}
+layer {
+  name: "pool_d4"
+  type: "Pooling"
+  bottom: "sum0_d3"
+  top: "pool_d4"
+  pooling_param {
+    pool: MAX
+    kernel_size: 1
+    kernel_size: 2
+    kernel_size: 2
+    stride: 1
+    stride: 2
+    stride: 2
+  }
+}
+layer {
+  name: "conv0_d4"
+  type: "Convolution"
+  bottom: "pool_d4"
+  top: "conv0_d4"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 80
+    bias_term: false
+    pad: 0
+    pad: 1
+    pad: 1
+    kernel_size: 1
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "bn0_d4"
+  type: "BatchNorm"
+  bottom: "conv0_d4"
+  top: "conv0_d4"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale0_d4"
+  type: "Scale"
+  bottom: "conv0_d4"
+  top: "conv0_d4"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu0_d4"
+  type: "ELU"
+  bottom: "conv0_d4"
+  top: "conv0_d4"
+}
+layer {
+  name: "conv1_d4"
+  type: "Convolution"
+  bottom: "conv0_d4"
+  top: "conv1_d4"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 80
+    bias_term: false
+    pad: 1
+    pad: 1
+    pad: 1
+    kernel_size: 3
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "bn1_d4"
+  type: "BatchNorm"
+  bottom: "conv1_d4"
+  top: "conv1_d4"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale1_d4"
+  type: "Scale"
+  bottom: "conv1_d4"
+  top: "conv1_d4"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu1_d4"
+  type: "ELU"
+  bottom: "conv1_d4"
+  top: "conv1_d4"
+}
+layer {
+  name: "conv2_d4"
+  type: "Convolution"
+  bottom: "conv1_d4"
+  top: "conv2_d4"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 80
+    bias_term: false
+    pad: 1
+    pad: 1
+    pad: 1
+    kernel_size: 3
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sum0_d4"
+  type: "Eltwise"
+  bottom: "conv2_d4"
+  bottom: "conv0_d4"
+  top: "sum0_d4"
+}
+layer {
+  name: "bn2_d4"
+  type: "BatchNorm"
+  bottom: "sum0_d4"
+  top: "sum0_d4"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale2_d4"
+  type: "Scale"
+  bottom: "sum0_d4"
+  top: "sum0_d4"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu2_d4"
+  type: "ELU"
+  bottom: "sum0_d4"
+  top: "sum0_d4"
+}
+layer {
+  name: "deconv_d3"
+  type: "Deconvolution"
+  bottom: "sum0_d4"
+  top: "deconv_d3"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 64
+    bias_term: false
+    pad: 0
+    pad: 0
+    pad: 0
+    kernel_size: 1
+    kernel_size: 2
+    kernel_size: 2
+    stride: 1
+    stride: 2
+    stride: 2
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "merge_d3"
+  type: "Eltwise"
+  bottom: "deconv_d3"
+  bottom: "sum0_d3"
+  top: "merge_d3"
+}
+layer {
+  name: "bn3_d3"
+  type: "BatchNorm"
+  bottom: "merge_d3"
+  top: "merge_d3"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale3_d3"
+  type: "Scale"
+  bottom: "merge_d3"
+  top: "merge_d3"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu3_d3"
+  type: "ELU"
+  bottom: "merge_d3"
+  top: "merge_d3"
+}
+layer {
+  name: "conv4_d3"
+  type: "Convolution"
+  bottom: "merge_d3"
+  top: "conv4_d3"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 64
+    bias_term: false
+    pad: 0
+    pad: 1
+    pad: 1
+    kernel_size: 1
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "bn4_d3"
+  type: "BatchNorm"
+  bottom: "conv4_d3"
+  top: "conv4_d3"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale4_d3"
+  type: "Scale"
+  bottom: "conv4_d3"
+  top: "conv4_d3"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu4_d3"
+  type: "ELU"
+  bottom: "conv4_d3"
+  top: "conv4_d3"
+}
+layer {
+  name: "conv5_d3"
+  type: "Convolution"
+  bottom: "conv4_d3"
+  top: "conv5_d3"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 64
+    bias_term: false
+    pad: 1
+    pad: 1
+    pad: 1
+    kernel_size: 3
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "bn5_d3"
+  type: "BatchNorm"
+  bottom: "conv5_d3"
+  top: "conv5_d3"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale5_d3"
+  type: "Scale"
+  bottom: "conv5_d3"
+  top: "conv5_d3"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu5_d3"
+  type: "ELU"
+  bottom: "conv5_d3"
+  top: "conv5_d3"
+}
+layer {
+  name: "conv6_d3"
+  type: "Convolution"
+  bottom: "conv5_d3"
+  top: "conv6_d3"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 64
+    bias_term: false
+    pad: 1
+    pad: 1
+    pad: 1
+    kernel_size: 3
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sum4_d3"
+  type: "Eltwise"
+  bottom: "conv6_d3"
+  bottom: "conv4_d3"
+  top: "sum4_d3"
+}
+layer {
+  name: "bn6_d3"
+  type: "BatchNorm"
+  bottom: "sum4_d3"
+  top: "sum4_d3"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale6_d3"
+  type: "Scale"
+  bottom: "sum4_d3"
+  top: "sum4_d3"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu6_d3"
+  type: "ELU"
+  bottom: "sum4_d3"
+  top: "sum4_d3"
+}
+layer {
+  name: "deconv_d2"
+  type: "Deconvolution"
+  bottom: "sum4_d3"
+  top: "deconv_d2"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 48
+    bias_term: false
+    pad: 0
+    pad: 0
+    pad: 0
+    kernel_size: 1
+    kernel_size: 2
+    kernel_size: 2
+    stride: 1
+    stride: 2
+    stride: 2
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "merge_d2"
+  type: "Eltwise"
+  bottom: "deconv_d2"
+  bottom: "sum0_d2"
+  top: "merge_d2"
+}
+layer {
+  name: "bn3_d2"
+  type: "BatchNorm"
+  bottom: "merge_d2"
+  top: "merge_d2"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale3_d2"
+  type: "Scale"
+  bottom: "merge_d2"
+  top: "merge_d2"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu3_d2"
+  type: "ELU"
+  bottom: "merge_d2"
+  top: "merge_d2"
+}
+layer {
+  name: "conv4_d2"
+  type: "Convolution"
+  bottom: "merge_d2"
+  top: "conv4_d2"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 48
+    bias_term: false
+    pad: 0
+    pad: 1
+    pad: 1
+    kernel_size: 1
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "bn4_d2"
+  type: "BatchNorm"
+  bottom: "conv4_d2"
+  top: "conv4_d2"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale4_d2"
+  type: "Scale"
+  bottom: "conv4_d2"
+  top: "conv4_d2"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu4_d2"
+  type: "ELU"
+  bottom: "conv4_d2"
+  top: "conv4_d2"
+}
+layer {
+  name: "conv5_d2"
+  type: "Convolution"
+  bottom: "conv4_d2"
+  top: "conv5_d2"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 48
+    bias_term: false
+    pad: 1
+    pad: 1
+    pad: 1
+    kernel_size: 3
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "bn5_d2"
+  type: "BatchNorm"
+  bottom: "conv5_d2"
+  top: "conv5_d2"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale5_d2"
+  type: "Scale"
+  bottom: "conv5_d2"
+  top: "conv5_d2"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu5_d2"
+  type: "ELU"
+  bottom: "conv5_d2"
+  top: "conv5_d2"
+}
+layer {
+  name: "conv6_d2"
+  type: "Convolution"
+  bottom: "conv5_d2"
+  top: "conv6_d2"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 48
+    bias_term: false
+    pad: 1
+    pad: 1
+    pad: 1
+    kernel_size: 3
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sum4_d2"
+  type: "Eltwise"
+  bottom: "conv6_d2"
+  bottom: "conv4_d2"
+  top: "sum4_d2"
+}
+layer {
+  name: "bn6_d2"
+  type: "BatchNorm"
+  bottom: "sum4_d2"
+  top: "sum4_d2"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale6_d2"
+  type: "Scale"
+  bottom: "sum4_d2"
+  top: "sum4_d2"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu6_d2"
+  type: "ELU"
+  bottom: "sum4_d2"
+  top: "sum4_d2"
+}
+layer {
+  name: "deconv_d1"
+  type: "Deconvolution"
+  bottom: "sum4_d2"
+  top: "deconv_d1"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 36
+    bias_term: false
+    pad: 0
+    pad: 0
+    pad: 0
+    kernel_size: 1
+    kernel_size: 2
+    kernel_size: 2
+    stride: 1
+    stride: 2
+    stride: 2
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "merge_d1"
+  type: "Eltwise"
+  bottom: "deconv_d1"
+  bottom: "sum0_d1"
+  top: "merge_d1"
+}
+layer {
+  name: "bn3_d1"
+  type: "BatchNorm"
+  bottom: "merge_d1"
+  top: "merge_d1"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale3_d1"
+  type: "Scale"
+  bottom: "merge_d1"
+  top: "merge_d1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu3_d1"
+  type: "ELU"
+  bottom: "merge_d1"
+  top: "merge_d1"
+}
+layer {
+  name: "conv4_d1"
+  type: "Convolution"
+  bottom: "merge_d1"
+  top: "conv4_d1"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 36
+    bias_term: false
+    pad: 0
+    pad: 1
+    pad: 1
+    kernel_size: 1
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "bn4_d1"
+  type: "BatchNorm"
+  bottom: "conv4_d1"
+  top: "conv4_d1"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale4_d1"
+  type: "Scale"
+  bottom: "conv4_d1"
+  top: "conv4_d1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu4_d1"
+  type: "ELU"
+  bottom: "conv4_d1"
+  top: "conv4_d1"
+}
+layer {
+  name: "conv5_d1"
+  type: "Convolution"
+  bottom: "conv4_d1"
+  top: "conv5_d1"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 36
+    bias_term: false
+    pad: 1
+    pad: 1
+    pad: 1
+    kernel_size: 3
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "bn5_d1"
+  type: "BatchNorm"
+  bottom: "conv5_d1"
+  top: "conv5_d1"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale5_d1"
+  type: "Scale"
+  bottom: "conv5_d1"
+  top: "conv5_d1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu5_d1"
+  type: "ELU"
+  bottom: "conv5_d1"
+  top: "conv5_d1"
+}
+layer {
+  name: "conv6_d1"
+  type: "Convolution"
+  bottom: "conv5_d1"
+  top: "conv6_d1"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 36
+    bias_term: false
+    pad: 1
+    pad: 1
+    pad: 1
+    kernel_size: 3
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sum4_d1"
+  type: "Eltwise"
+  bottom: "conv6_d1"
+  bottom: "conv4_d1"
+  top: "sum4_d1"
+}
+layer {
+  name: "bn6_d1"
+  type: "BatchNorm"
+  bottom: "sum4_d1"
+  top: "sum4_d1"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale6_d1"
+  type: "Scale"
+  bottom: "sum4_d1"
+  top: "sum4_d1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu6_d1"
+  type: "ELU"
+  bottom: "sum4_d1"
+  top: "sum4_d1"
+}
+layer {
+  name: "deconv_d0"
+  type: "Deconvolution"
+  bottom: "sum4_d1"
+  top: "deconv_d0"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 28
+    bias_term: false
+    pad: 0
+    pad: 0
+    pad: 0
+    kernel_size: 1
+    kernel_size: 2
+    kernel_size: 2
+    stride: 1
+    stride: 2
+    stride: 2
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "merge_d0"
+  type: "Eltwise"
+  bottom: "deconv_d0"
+  bottom: "sum0_d0"
+  top: "merge_d0"
+}
+layer {
+  name: "bn3_d0"
+  type: "BatchNorm"
+  bottom: "merge_d0"
+  top: "merge_d0"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale3_d0"
+  type: "Scale"
+  bottom: "merge_d0"
+  top: "merge_d0"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu3_d0"
+  type: "ELU"
+  bottom: "merge_d0"
+  top: "merge_d0"
+}
+layer {
+  name: "conv4_d0"
+  type: "Convolution"
+  bottom: "merge_d0"
+  top: "conv4_d0"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 28
+    bias_term: false
+    pad: 0
+    pad: 1
+    pad: 1
+    kernel_size: 1
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "bn4_d0"
+  type: "BatchNorm"
+  bottom: "conv4_d0"
+  top: "conv4_d0"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale4_d0"
+  type: "Scale"
+  bottom: "conv4_d0"
+  top: "conv4_d0"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "elu4_d0"
+  type: "ELU"
+  bottom: "conv4_d0"
+  top: "conv4_d0"
+}
+layer {
+  name: "conv5_d0"
+  type: "Convolution"
+  bottom: "conv4_d0"
+  top: "conv5_d0"
+  param {
+    lr_mult: 1
+  }
+  convolution_param {
+    num_output: 28
+    bias_term: false
+    pad: 0
+    pad: 1
+    pad: 1
+    kernel_size: 1
+    kernel_size: 3
+    kernel_size: 3
+    stride: 1
+    stride: 1
+    stride: 1
+    weight_filler {
+      type: "msra"
+      std: 1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "bn5_d0"
+  type: "BatchNorm"
+  bottom: "conv5_d0"
+  top: "conv5_d0"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    use_global_stats: true
+  }
+}
+layer {
+  name: "scale5_d0"
+  type: "Scale"
+  bottom: "conv5_d0"
+  top: "conv5_d0"
+  scal
+I1115 20:27:43.908663  1977 layer_factory.hpp:78] Creating layer input
+I1115 20:27:43.908684  1977 net.cpp:109] Creating Layer input
+I1115 20:27:43.908689  1977 net.cpp:439] input -> input
+I1115 20:27:43.931537  1977 net.cpp:160] Setting up input
+I1115 20:27:43.931576  1977 net.cpp:168] Top shape: 1 1 18 160 160 (460800)
+I1115 20:27:43.931597  1977 layer_factory.hpp:78] Creating layer inputconv
+I1115 20:27:43.931624  1977 net.cpp:109] Creating Layer inputconv
+I1115 20:27:43.931629  1977 net.cpp:470] inputconv <- input
+I1115 20:27:43.931639  1977 net.cpp:439] inputconv -> inputconv
+I1115 20:27:44.202847  1977 net.cpp:160] Setting up inputconv
+I1115 20:27:44.202886  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.202915  1977 layer_factory.hpp:78] Creating layer elui
+I1115 20:27:44.202934  1977 net.cpp:109] Creating Layer elui
+I1115 20:27:44.202939  1977 net.cpp:470] elui <- inputconv
+I1115 20:27:44.202945  1977 net.cpp:426] elui -> inputconv (in-place)
+I1115 20:27:44.202961  1977 net.cpp:160] Setting up elui
+I1115 20:27:44.202967  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.202976  1977 layer_factory.hpp:78] Creating layer conv0_d0
+I1115 20:27:44.202987  1977 net.cpp:109] Creating Layer conv0_d0
+I1115 20:27:44.202992  1977 net.cpp:470] conv0_d0 <- inputconv
+I1115 20:27:44.202998  1977 net.cpp:439] conv0_d0 -> conv0_d0
+I1115 20:27:44.207527  1977 net.cpp:160] Setting up conv0_d0
+I1115 20:27:44.207547  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.207562  1977 layer_factory.hpp:78] Creating layer bn0_d0
+I1115 20:27:44.207572  1977 net.cpp:109] Creating Layer bn0_d0
+I1115 20:27:44.207577  1977 net.cpp:470] bn0_d0 <- conv0_d0
+I1115 20:27:44.207582  1977 net.cpp:426] bn0_d0 -> conv0_d0 (in-place)
+I1115 20:27:44.209416  1977 net.cpp:160] Setting up bn0_d0
+I1115 20:27:44.209434  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.209450  1977 layer_factory.hpp:78] Creating layer scale0_d0
+I1115 20:27:44.209458  1977 net.cpp:109] Creating Layer scale0_d0
+I1115 20:27:44.209462  1977 net.cpp:470] scale0_d0 <- conv0_d0
+I1115 20:27:44.209468  1977 net.cpp:426] scale0_d0 -> conv0_d0 (in-place)
+I1115 20:27:44.209514  1977 layer_factory.hpp:78] Creating layer scale0_d0
+I1115 20:27:44.217550  1977 net.cpp:160] Setting up scale0_d0
+I1115 20:27:44.217569  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.217583  1977 layer_factory.hpp:78] Creating layer elu0_d0
+I1115 20:27:44.217603  1977 net.cpp:109] Creating Layer elu0_d0
+I1115 20:27:44.217608  1977 net.cpp:470] elu0_d0 <- conv0_d0
+I1115 20:27:44.217614  1977 net.cpp:426] elu0_d0 -> conv0_d0 (in-place)
+I1115 20:27:44.217622  1977 net.cpp:160] Setting up elu0_d0
+I1115 20:27:44.217627  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.217633  1977 layer_factory.hpp:78] Creating layer conv0_d0_elu0_d0_0_split
+I1115 20:27:44.217638  1977 net.cpp:109] Creating Layer conv0_d0_elu0_d0_0_split
+I1115 20:27:44.217643  1977 net.cpp:470] conv0_d0_elu0_d0_0_split <- conv0_d0
+I1115 20:27:44.217648  1977 net.cpp:439] conv0_d0_elu0_d0_0_split -> conv0_d0_elu0_d0_0_split_0
+I1115 20:27:44.217653  1977 net.cpp:439] conv0_d0_elu0_d0_0_split -> conv0_d0_elu0_d0_0_split_1
+I1115 20:27:44.217702  1977 net.cpp:160] Setting up conv0_d0_elu0_d0_0_split
+I1115 20:27:44.217710  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.217715  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.217723  1977 layer_factory.hpp:78] Creating layer conv1_d0
+I1115 20:27:44.217733  1977 net.cpp:109] Creating Layer conv1_d0
+I1115 20:27:44.217737  1977 net.cpp:470] conv1_d0 <- conv0_d0_elu0_d0_0_split_0
+I1115 20:27:44.217744  1977 net.cpp:439] conv1_d0 -> conv1_d0
+I1115 20:27:44.219493  1977 net.cpp:160] Setting up conv1_d0
+I1115 20:27:44.219519  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.219534  1977 layer_factory.hpp:78] Creating layer bn1_d0
+I1115 20:27:44.219542  1977 net.cpp:109] Creating Layer bn1_d0
+I1115 20:27:44.219547  1977 net.cpp:470] bn1_d0 <- conv1_d0
+I1115 20:27:44.219552  1977 net.cpp:426] bn1_d0 -> conv1_d0 (in-place)
+I1115 20:27:44.221367  1977 net.cpp:160] Setting up bn1_d0
+I1115 20:27:44.221384  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.221397  1977 layer_factory.hpp:78] Creating layer scale1_d0
+I1115 20:27:44.221405  1977 net.cpp:109] Creating Layer scale1_d0
+I1115 20:27:44.221410  1977 net.cpp:470] scale1_d0 <- conv1_d0
+I1115 20:27:44.221415  1977 net.cpp:426] scale1_d0 -> conv1_d0 (in-place)
+I1115 20:27:44.221457  1977 layer_factory.hpp:78] Creating layer scale1_d0
+I1115 20:27:44.224810  1977 net.cpp:160] Setting up scale1_d0
+I1115 20:27:44.224828  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.224839  1977 layer_factory.hpp:78] Creating layer elu1_d0
+I1115 20:27:44.224846  1977 net.cpp:109] Creating Layer elu1_d0
+I1115 20:27:44.224851  1977 net.cpp:470] elu1_d0 <- conv1_d0
+I1115 20:27:44.224856  1977 net.cpp:426] elu1_d0 -> conv1_d0 (in-place)
+I1115 20:27:44.224864  1977 net.cpp:160] Setting up elu1_d0
+I1115 20:27:44.224869  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.224875  1977 layer_factory.hpp:78] Creating layer conv2_d0
+I1115 20:27:44.224885  1977 net.cpp:109] Creating Layer conv2_d0
+I1115 20:27:44.224890  1977 net.cpp:470] conv2_d0 <- conv1_d0
+I1115 20:27:44.224898  1977 net.cpp:439] conv2_d0 -> conv2_d0
+I1115 20:27:44.226631  1977 net.cpp:160] Setting up conv2_d0
+I1115 20:27:44.226647  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.226660  1977 layer_factory.hpp:78] Creating layer sum0_d0
+I1115 20:27:44.226675  1977 net.cpp:109] Creating Layer sum0_d0
+I1115 20:27:44.226680  1977 net.cpp:470] sum0_d0 <- conv2_d0
+I1115 20:27:44.226685  1977 net.cpp:470] sum0_d0 <- conv0_d0_elu0_d0_0_split_1
+I1115 20:27:44.226691  1977 net.cpp:439] sum0_d0 -> sum0_d0
+I1115 20:27:44.226727  1977 net.cpp:160] Setting up sum0_d0
+I1115 20:27:44.226734  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.226740  1977 layer_factory.hpp:78] Creating layer bn2_d0
+I1115 20:27:44.226749  1977 net.cpp:109] Creating Layer bn2_d0
+I1115 20:27:44.226753  1977 net.cpp:470] bn2_d0 <- sum0_d0
+I1115 20:27:44.226759  1977 net.cpp:426] bn2_d0 -> sum0_d0 (in-place)
+I1115 20:27:44.230130  1977 net.cpp:160] Setting up bn2_d0
+I1115 20:27:44.230150  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.230167  1977 layer_factory.hpp:78] Creating layer scale2_d0
+I1115 20:27:44.230183  1977 net.cpp:109] Creating Layer scale2_d0
+I1115 20:27:44.230188  1977 net.cpp:470] scale2_d0 <- sum0_d0
+I1115 20:27:44.230195  1977 net.cpp:426] scale2_d0 -> sum0_d0 (in-place)
+I1115 20:27:44.230239  1977 layer_factory.hpp:78] Creating layer scale2_d0
+I1115 20:27:44.233640  1977 net.cpp:160] Setting up scale2_d0
+I1115 20:27:44.233659  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.233671  1977 layer_factory.hpp:78] Creating layer elu2_d0
+I1115 20:27:44.233678  1977 net.cpp:109] Creating Layer elu2_d0
+I1115 20:27:44.233683  1977 net.cpp:470] elu2_d0 <- sum0_d0
+I1115 20:27:44.233688  1977 net.cpp:426] elu2_d0 -> sum0_d0 (in-place)
+I1115 20:27:44.233695  1977 net.cpp:160] Setting up elu2_d0
+I1115 20:27:44.233701  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.233706  1977 layer_factory.hpp:78] Creating layer sum0_d0_elu2_d0_0_split
+I1115 20:27:44.233712  1977 net.cpp:109] Creating Layer sum0_d0_elu2_d0_0_split
+I1115 20:27:44.233716  1977 net.cpp:470] sum0_d0_elu2_d0_0_split <- sum0_d0
+I1115 20:27:44.233721  1977 net.cpp:439] sum0_d0_elu2_d0_0_split -> sum0_d0_elu2_d0_0_split_0
+I1115 20:27:44.233727  1977 net.cpp:439] sum0_d0_elu2_d0_0_split -> sum0_d0_elu2_d0_0_split_1
+I1115 20:27:44.233772  1977 net.cpp:160] Setting up sum0_d0_elu2_d0_0_split
+I1115 20:27:44.233779  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.233784  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.233791  1977 layer_factory.hpp:78] Creating layer pool_d1
+I1115 20:27:44.233803  1977 net.cpp:109] Creating Layer pool_d1
+I1115 20:27:44.233808  1977 net.cpp:470] pool_d1 <- sum0_d0_elu2_d0_0_split_0
+I1115 20:27:44.233813  1977 net.cpp:439] pool_d1 -> pool_d1
+I1115 20:27:44.234040  1977 net.cpp:160] Setting up pool_d1
+I1115 20:27:44.234047  1977 net.cpp:168] Top shape: 1 28 18 80 80 (3225600)
+I1115 20:27:44.234055  1977 layer_factory.hpp:78] Creating layer conv0_d1
+I1115 20:27:44.234066  1977 net.cpp:109] Creating Layer conv0_d1
+I1115 20:27:44.234069  1977 net.cpp:470] conv0_d1 <- pool_d1
+I1115 20:27:44.234078  1977 net.cpp:439] conv0_d1 -> conv0_d1
+I1115 20:27:44.235941  1977 net.cpp:160] Setting up conv0_d1
+I1115 20:27:44.235960  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.235972  1977 layer_factory.hpp:78] Creating layer bn0_d1
+I1115 20:27:44.235980  1977 net.cpp:109] Creating Layer bn0_d1
+I1115 20:27:44.235985  1977 net.cpp:470] bn0_d1 <- conv0_d1
+I1115 20:27:44.235991  1977 net.cpp:426] bn0_d1 -> conv0_d1 (in-place)
+I1115 20:27:44.237540  1977 net.cpp:160] Setting up bn0_d1
+I1115 20:27:44.237556  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.237570  1977 layer_factory.hpp:78] Creating layer scale0_d1
+I1115 20:27:44.237577  1977 net.cpp:109] Creating Layer scale0_d1
+I1115 20:27:44.237582  1977 net.cpp:470] scale0_d1 <- conv0_d1
+I1115 20:27:44.237587  1977 net.cpp:426] scale0_d1 -> conv0_d1 (in-place)
+I1115 20:27:44.237632  1977 layer_factory.hpp:78] Creating layer scale0_d1
+I1115 20:27:44.237939  1977 net.cpp:160] Setting up scale0_d1
+I1115 20:27:44.237947  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.237957  1977 layer_factory.hpp:78] Creating layer elu0_d1
+I1115 20:27:44.237962  1977 net.cpp:109] Creating Layer elu0_d1
+I1115 20:27:44.237967  1977 net.cpp:470] elu0_d1 <- conv0_d1
+I1115 20:27:44.237972  1977 net.cpp:426] elu0_d1 -> conv0_d1 (in-place)
+I1115 20:27:44.237978  1977 net.cpp:160] Setting up elu0_d1
+I1115 20:27:44.237983  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.237988  1977 layer_factory.hpp:78] Creating layer conv0_d1_elu0_d1_0_split
+I1115 20:27:44.237996  1977 net.cpp:109] Creating Layer conv0_d1_elu0_d1_0_split
+I1115 20:27:44.238000  1977 net.cpp:470] conv0_d1_elu0_d1_0_split <- conv0_d1
+I1115 20:27:44.238006  1977 net.cpp:439] conv0_d1_elu0_d1_0_split -> conv0_d1_elu0_d1_0_split_0
+I1115 20:27:44.238013  1977 net.cpp:439] conv0_d1_elu0_d1_0_split -> conv0_d1_elu0_d1_0_split_1
+I1115 20:27:44.238054  1977 net.cpp:160] Setting up conv0_d1_elu0_d1_0_split
+I1115 20:27:44.238066  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.238072  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.238080  1977 layer_factory.hpp:78] Creating layer conv1_d1
+I1115 20:27:44.238090  1977 net.cpp:109] Creating Layer conv1_d1
+I1115 20:27:44.238095  1977 net.cpp:470] conv1_d1 <- conv0_d1_elu0_d1_0_split_0
+I1115 20:27:44.238101  1977 net.cpp:439] conv1_d1 -> conv1_d1
+I1115 20:27:44.242168  1977 net.cpp:160] Setting up conv1_d1
+I1115 20:27:44.242187  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.242198  1977 layer_factory.hpp:78] Creating layer bn1_d1
+I1115 20:27:44.242207  1977 net.cpp:109] Creating Layer bn1_d1
+I1115 20:27:44.242211  1977 net.cpp:470] bn1_d1 <- conv1_d1
+I1115 20:27:44.242218  1977 net.cpp:426] bn1_d1 -> conv1_d1 (in-place)
+I1115 20:27:44.242527  1977 net.cpp:160] Setting up bn1_d1
+I1115 20:27:44.242537  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.242549  1977 layer_factory.hpp:78] Creating layer scale1_d1
+I1115 20:27:44.242557  1977 net.cpp:109] Creating Layer scale1_d1
+I1115 20:27:44.242560  1977 net.cpp:470] scale1_d1 <- conv1_d1
+I1115 20:27:44.242565  1977 net.cpp:426] scale1_d1 -> conv1_d1 (in-place)
+I1115 20:27:44.242605  1977 layer_factory.hpp:78] Creating layer scale1_d1
+I1115 20:27:44.244179  1977 net.cpp:160] Setting up scale1_d1
+I1115 20:27:44.244196  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.244207  1977 layer_factory.hpp:78] Creating layer elu1_d1
+I1115 20:27:44.244215  1977 net.cpp:109] Creating Layer elu1_d1
+I1115 20:27:44.244220  1977 net.cpp:470] elu1_d1 <- conv1_d1
+I1115 20:27:44.244225  1977 net.cpp:426] elu1_d1 -> conv1_d1 (in-place)
+I1115 20:27:44.244232  1977 net.cpp:160] Setting up elu1_d1
+I1115 20:27:44.244237  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.244244  1977 layer_factory.hpp:78] Creating layer conv2_d1
+I1115 20:27:44.244253  1977 net.cpp:109] Creating Layer conv2_d1
+I1115 20:27:44.244258  1977 net.cpp:470] conv2_d1 <- conv1_d1
+I1115 20:27:44.244264  1977 net.cpp:439] conv2_d1 -> conv2_d1
+I1115 20:27:44.246750  1977 net.cpp:160] Setting up conv2_d1
+I1115 20:27:44.246767  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.246780  1977 layer_factory.hpp:78] Creating layer sum0_d1
+I1115 20:27:44.246788  1977 net.cpp:109] Creating Layer sum0_d1
+I1115 20:27:44.246793  1977 net.cpp:470] sum0_d1 <- conv2_d1
+I1115 20:27:44.246798  1977 net.cpp:470] sum0_d1 <- conv0_d1_elu0_d1_0_split_1
+I1115 20:27:44.246804  1977 net.cpp:439] sum0_d1 -> sum0_d1
+I1115 20:27:44.246836  1977 net.cpp:160] Setting up sum0_d1
+I1115 20:27:44.246843  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.246850  1977 layer_factory.hpp:78] Creating layer bn2_d1
+I1115 20:27:44.246857  1977 net.cpp:109] Creating Layer bn2_d1
+I1115 20:27:44.246861  1977 net.cpp:470] bn2_d1 <- sum0_d1
+I1115 20:27:44.246870  1977 net.cpp:426] bn2_d1 -> sum0_d1 (in-place)
+I1115 20:27:44.247175  1977 net.cpp:160] Setting up bn2_d1
+I1115 20:27:44.247184  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.247195  1977 layer_factory.hpp:78] Creating layer scale2_d1
+I1115 20:27:44.247200  1977 net.cpp:109] Creating Layer scale2_d1
+I1115 20:27:44.247205  1977 net.cpp:470] scale2_d1 <- sum0_d1
+I1115 20:27:44.247210  1977 net.cpp:426] scale2_d1 -> sum0_d1 (in-place)
+I1115 20:27:44.247253  1977 layer_factory.hpp:78] Creating layer scale2_d1
+I1115 20:27:44.248807  1977 net.cpp:160] Setting up scale2_d1
+I1115 20:27:44.248824  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.248836  1977 layer_factory.hpp:78] Creating layer elu2_d1
+I1115 20:27:44.248844  1977 net.cpp:109] Creating Layer elu2_d1
+I1115 20:27:44.248848  1977 net.cpp:470] elu2_d1 <- sum0_d1
+I1115 20:27:44.248854  1977 net.cpp:426] elu2_d1 -> sum0_d1 (in-place)
+I1115 20:27:44.248862  1977 net.cpp:160] Setting up elu2_d1
+I1115 20:27:44.248867  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.248872  1977 layer_factory.hpp:78] Creating layer sum0_d1_elu2_d1_0_split
+I1115 20:27:44.248883  1977 net.cpp:109] Creating Layer sum0_d1_elu2_d1_0_split
+I1115 20:27:44.248888  1977 net.cpp:470] sum0_d1_elu2_d1_0_split <- sum0_d1
+I1115 20:27:44.248893  1977 net.cpp:439] sum0_d1_elu2_d1_0_split -> sum0_d1_elu2_d1_0_split_0
+I1115 20:27:44.248899  1977 net.cpp:439] sum0_d1_elu2_d1_0_split -> sum0_d1_elu2_d1_0_split_1
+I1115 20:27:44.248946  1977 net.cpp:160] Setting up sum0_d1_elu2_d1_0_split
+I1115 20:27:44.248953  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.248958  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.248965  1977 layer_factory.hpp:78] Creating layer pool_d2
+I1115 20:27:44.248972  1977 net.cpp:109] Creating Layer pool_d2
+I1115 20:27:44.248977  1977 net.cpp:470] pool_d2 <- sum0_d1_elu2_d1_0_split_0
+I1115 20:27:44.248983  1977 net.cpp:439] pool_d2 -> pool_d2
+I1115 20:27:44.249207  1977 net.cpp:160] Setting up pool_d2
+I1115 20:27:44.249214  1977 net.cpp:168] Top shape: 1 36 18 40 40 (1036800)
+I1115 20:27:44.249222  1977 layer_factory.hpp:78] Creating layer conv0_d2
+I1115 20:27:44.249230  1977 net.cpp:109] Creating Layer conv0_d2
+I1115 20:27:44.249234  1977 net.cpp:470] conv0_d2 <- pool_d2
+I1115 20:27:44.249241  1977 net.cpp:439] conv0_d2 -> conv0_d2
+I1115 20:27:44.255434  1977 net.cpp:160] Setting up conv0_d2
+I1115 20:27:44.255455  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.255491  1977 layer_factory.hpp:78] Creating layer bn0_d2
+I1115 20:27:44.255502  1977 net.cpp:109] Creating Layer bn0_d2
+I1115 20:27:44.255519  1977 net.cpp:470] bn0_d2 <- conv0_d2
+I1115 20:27:44.255525  1977 net.cpp:426] bn0_d2 -> conv0_d2 (in-place)
+I1115 20:27:44.255806  1977 net.cpp:160] Setting up bn0_d2
+I1115 20:27:44.255815  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.255826  1977 layer_factory.hpp:78] Creating layer scale0_d2
+I1115 20:27:44.255833  1977 net.cpp:109] Creating Layer scale0_d2
+I1115 20:27:44.255847  1977 net.cpp:470] scale0_d2 <- conv0_d2
+I1115 20:27:44.255852  1977 net.cpp:426] scale0_d2 -> conv0_d2 (in-place)
+I1115 20:27:44.255893  1977 layer_factory.hpp:78] Creating layer scale0_d2
+I1115 20:27:44.256060  1977 net.cpp:160] Setting up scale0_d2
+I1115 20:27:44.256068  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.256078  1977 layer_factory.hpp:78] Creating layer elu0_d2
+I1115 20:27:44.256083  1977 net.cpp:109] Creating Layer elu0_d2
+I1115 20:27:44.256088  1977 net.cpp:470] elu0_d2 <- conv0_d2
+I1115 20:27:44.256093  1977 net.cpp:426] elu0_d2 -> conv0_d2 (in-place)
+I1115 20:27:44.256098  1977 net.cpp:160] Setting up elu0_d2
+I1115 20:27:44.256103  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.256108  1977 layer_factory.hpp:78] Creating layer conv0_d2_elu0_d2_0_split
+I1115 20:27:44.256114  1977 net.cpp:109] Creating Layer conv0_d2_elu0_d2_0_split
+I1115 20:27:44.256117  1977 net.cpp:470] conv0_d2_elu0_d2_0_split <- conv0_d2
+I1115 20:27:44.256124  1977 net.cpp:439] conv0_d2_elu0_d2_0_split -> conv0_d2_elu0_d2_0_split_0
+I1115 20:27:44.256129  1977 net.cpp:439] conv0_d2_elu0_d2_0_split -> conv0_d2_elu0_d2_0_split_1
+I1115 20:27:44.256171  1977 net.cpp:160] Setting up conv0_d2_elu0_d2_0_split
+I1115 20:27:44.256178  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.256183  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.256191  1977 layer_factory.hpp:78] Creating layer conv1_d2
+I1115 20:27:44.256201  1977 net.cpp:109] Creating Layer conv1_d2
+I1115 20:27:44.256206  1977 net.cpp:470] conv1_d2 <- conv0_d2_elu0_d2_0_split_0
+I1115 20:27:44.256212  1977 net.cpp:439] conv1_d2 -> conv1_d2
+I1115 20:27:44.259796  1977 net.cpp:160] Setting up conv1_d2
+I1115 20:27:44.259814  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.259826  1977 layer_factory.hpp:78] Creating layer bn1_d2
+I1115 20:27:44.259840  1977 net.cpp:109] Creating Layer bn1_d2
+I1115 20:27:44.259845  1977 net.cpp:470] bn1_d2 <- conv1_d2
+I1115 20:27:44.259851  1977 net.cpp:426] bn1_d2 -> conv1_d2 (in-place)
+I1115 20:27:44.260100  1977 net.cpp:160] Setting up bn1_d2
+I1115 20:27:44.260109  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.260119  1977 layer_factory.hpp:78] Creating layer scale1_d2
+I1115 20:27:44.260125  1977 net.cpp:109] Creating Layer scale1_d2
+I1115 20:27:44.260130  1977 net.cpp:470] scale1_d2 <- conv1_d2
+I1115 20:27:44.260135  1977 net.cpp:426] scale1_d2 -> conv1_d2 (in-place)
+I1115 20:27:44.260176  1977 layer_factory.hpp:78] Creating layer scale1_d2
+I1115 20:27:44.260339  1977 net.cpp:160] Setting up scale1_d2
+I1115 20:27:44.260347  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.260356  1977 layer_factory.hpp:78] Creating layer elu1_d2
+I1115 20:27:44.260362  1977 net.cpp:109] Creating Layer elu1_d2
+I1115 20:27:44.260366  1977 net.cpp:470] elu1_d2 <- conv1_d2
+I1115 20:27:44.260371  1977 net.cpp:426] elu1_d2 -> conv1_d2 (in-place)
+I1115 20:27:44.260377  1977 net.cpp:160] Setting up elu1_d2
+I1115 20:27:44.260382  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.260390  1977 layer_factory.hpp:78] Creating layer conv2_d2
+I1115 20:27:44.260397  1977 net.cpp:109] Creating Layer conv2_d2
+I1115 20:27:44.260402  1977 net.cpp:470] conv2_d2 <- conv1_d2
+I1115 20:27:44.260411  1977 net.cpp:439] conv2_d2 -> conv2_d2
+I1115 20:27:44.264281  1977 net.cpp:160] Setting up conv2_d2
+I1115 20:27:44.264298  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.264309  1977 layer_factory.hpp:78] Creating layer sum0_d2
+I1115 20:27:44.264317  1977 net.cpp:109] Creating Layer sum0_d2
+I1115 20:27:44.264322  1977 net.cpp:470] sum0_d2 <- conv2_d2
+I1115 20:27:44.264328  1977 net.cpp:470] sum0_d2 <- conv0_d2_elu0_d2_0_split_1
+I1115 20:27:44.264333  1977 net.cpp:439] sum0_d2 -> sum0_d2
+I1115 20:27:44.264367  1977 net.cpp:160] Setting up sum0_d2
+I1115 20:27:44.264376  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.264382  1977 layer_factory.hpp:78] Creating layer bn2_d2
+I1115 20:27:44.264390  1977 net.cpp:109] Creating Layer bn2_d2
+I1115 20:27:44.264394  1977 net.cpp:470] bn2_d2 <- sum0_d2
+I1115 20:27:44.264400  1977 net.cpp:426] bn2_d2 -> sum0_d2 (in-place)
+I1115 20:27:44.264637  1977 net.cpp:160] Setting up bn2_d2
+I1115 20:27:44.264644  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.264655  1977 layer_factory.hpp:78] Creating layer scale2_d2
+I1115 20:27:44.264662  1977 net.cpp:109] Creating Layer scale2_d2
+I1115 20:27:44.264667  1977 net.cpp:470] scale2_d2 <- sum0_d2
+I1115 20:27:44.264672  1977 net.cpp:426] scale2_d2 -> sum0_d2 (in-place)
+I1115 20:27:44.264714  1977 layer_factory.hpp:78] Creating layer scale2_d2
+I1115 20:27:44.264879  1977 net.cpp:160] Setting up scale2_d2
+I1115 20:27:44.264889  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.264896  1977 layer_factory.hpp:78] Creating layer elu2_d2
+I1115 20:27:44.264902  1977 net.cpp:109] Creating Layer elu2_d2
+I1115 20:27:44.264907  1977 net.cpp:470] elu2_d2 <- sum0_d2
+I1115 20:27:44.264912  1977 net.cpp:426] elu2_d2 -> sum0_d2 (in-place)
+I1115 20:27:44.264919  1977 net.cpp:160] Setting up elu2_d2
+I1115 20:27:44.264924  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.264928  1977 layer_factory.hpp:78] Creating layer sum0_d2_elu2_d2_0_split
+I1115 20:27:44.264935  1977 net.cpp:109] Creating Layer sum0_d2_elu2_d2_0_split
+I1115 20:27:44.264940  1977 net.cpp:470] sum0_d2_elu2_d2_0_split <- sum0_d2
+I1115 20:27:44.264945  1977 net.cpp:439] sum0_d2_elu2_d2_0_split -> sum0_d2_elu2_d2_0_split_0
+I1115 20:27:44.264951  1977 net.cpp:439] sum0_d2_elu2_d2_0_split -> sum0_d2_elu2_d2_0_split_1
+I1115 20:27:44.264992  1977 net.cpp:160] Setting up sum0_d2_elu2_d2_0_split
+I1115 20:27:44.264998  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.265003  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.265009  1977 layer_factory.hpp:78] Creating layer pool_d3
+I1115 20:27:44.265017  1977 net.cpp:109] Creating Layer pool_d3
+I1115 20:27:44.265022  1977 net.cpp:470] pool_d3 <- sum0_d2_elu2_d2_0_split_0
+I1115 20:27:44.265033  1977 net.cpp:439] pool_d3 -> pool_d3
+I1115 20:27:44.265256  1977 net.cpp:160] Setting up pool_d3
+I1115 20:27:44.265264  1977 net.cpp:168] Top shape: 1 48 18 20 20 (345600)
+I1115 20:27:44.265272  1977 layer_factory.hpp:78] Creating layer conv0_d3
+I1115 20:27:44.265280  1977 net.cpp:109] Creating Layer conv0_d3
+I1115 20:27:44.265285  1977 net.cpp:470] conv0_d3 <- pool_d3
+I1115 20:27:44.265291  1977 net.cpp:439] conv0_d3 -> conv0_d3
+I1115 20:27:44.268885  1977 net.cpp:160] Setting up conv0_d3
+I1115 20:27:44.268904  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.268918  1977 layer_factory.hpp:78] Creating layer bn0_d3
+I1115 20:27:44.268925  1977 net.cpp:109] Creating Layer bn0_d3
+I1115 20:27:44.268930  1977 net.cpp:470] bn0_d3 <- conv0_d3
+I1115 20:27:44.268937  1977 net.cpp:426] bn0_d3 -> conv0_d3 (in-place)
+I1115 20:27:44.269171  1977 net.cpp:160] Setting up bn0_d3
+I1115 20:27:44.269181  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.269191  1977 layer_factory.hpp:78] Creating layer scale0_d3
+I1115 20:27:44.269197  1977 net.cpp:109] Creating Layer scale0_d3
+I1115 20:27:44.269202  1977 net.cpp:470] scale0_d3 <- conv0_d3
+I1115 20:27:44.269207  1977 net.cpp:426] scale0_d3 -> conv0_d3 (in-place)
+I1115 20:27:44.269251  1977 layer_factory.hpp:78] Creating layer scale0_d3
+I1115 20:27:44.269397  1977 net.cpp:160] Setting up scale0_d3
+I1115 20:27:44.269405  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.269414  1977 layer_factory.hpp:78] Creating layer elu0_d3
+I1115 20:27:44.269419  1977 net.cpp:109] Creating Layer elu0_d3
+I1115 20:27:44.269424  1977 net.cpp:470] elu0_d3 <- conv0_d3
+I1115 20:27:44.269433  1977 net.cpp:426] elu0_d3 -> conv0_d3 (in-place)
+I1115 20:27:44.269439  1977 net.cpp:160] Setting up elu0_d3
+I1115 20:27:44.269444  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.269450  1977 layer_factory.hpp:78] Creating layer conv0_d3_elu0_d3_0_split
+I1115 20:27:44.269456  1977 net.cpp:109] Creating Layer conv0_d3_elu0_d3_0_split
+I1115 20:27:44.269460  1977 net.cpp:470] conv0_d3_elu0_d3_0_split <- conv0_d3
+I1115 20:27:44.269466  1977 net.cpp:439] conv0_d3_elu0_d3_0_split -> conv0_d3_elu0_d3_0_split_0
+I1115 20:27:44.269472  1977 net.cpp:439] conv0_d3_elu0_d3_0_split -> conv0_d3_elu0_d3_0_split_1
+I1115 20:27:44.269513  1977 net.cpp:160] Setting up conv0_d3_elu0_d3_0_split
+I1115 20:27:44.269520  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.269526  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.269533  1977 layer_factory.hpp:78] Creating layer conv1_d3
+I1115 20:27:44.269542  1977 net.cpp:109] Creating Layer conv1_d3
+I1115 20:27:44.269547  1977 net.cpp:470] conv1_d3 <- conv0_d3_elu0_d3_0_split_0
+I1115 20:27:44.269553  1977 net.cpp:439] conv1_d3 -> conv1_d3
+I1115 20:27:44.274982  1977 net.cpp:160] Setting up conv1_d3
+I1115 20:27:44.275001  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.275013  1977 layer_factory.hpp:78] Creating layer bn1_d3
+I1115 20:27:44.275022  1977 net.cpp:109] Creating Layer bn1_d3
+I1115 20:27:44.275027  1977 net.cpp:470] bn1_d3 <- conv1_d3
+I1115 20:27:44.275032  1977 net.cpp:426] bn1_d3 -> conv1_d3 (in-place)
+I1115 20:27:44.275269  1977 net.cpp:160] Setting up bn1_d3
+I1115 20:27:44.275277  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.275293  1977 layer_factory.hpp:78] Creating layer scale1_d3
+I1115 20:27:44.275300  1977 net.cpp:109] Creating Layer scale1_d3
+I1115 20:27:44.275305  1977 net.cpp:470] scale1_d3 <- conv1_d3
+I1115 20:27:44.275310  1977 net.cpp:426] scale1_d3 -> conv1_d3 (in-place)
+I1115 20:27:44.275352  1977 layer_factory.hpp:78] Creating layer scale1_d3
+I1115 20:27:44.275527  1977 net.cpp:160] Setting up scale1_d3
+I1115 20:27:44.275537  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.275547  1977 layer_factory.hpp:78] Creating layer elu1_d3
+I1115 20:27:44.275552  1977 net.cpp:109] Creating Layer elu1_d3
+I1115 20:27:44.275557  1977 net.cpp:470] elu1_d3 <- conv1_d3
+I1115 20:27:44.275562  1977 net.cpp:426] elu1_d3 -> conv1_d3 (in-place)
+I1115 20:27:44.275574  1977 net.cpp:160] Setting up elu1_d3
+I1115 20:27:44.275583  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.275589  1977 layer_factory.hpp:78] Creating layer conv2_d3
+I1115 20:27:44.275599  1977 net.cpp:109] Creating Layer conv2_d3
+I1115 20:27:44.275602  1977 net.cpp:470] conv2_d3 <- conv1_d3
+I1115 20:27:44.275609  1977 net.cpp:439] conv2_d3 -> conv2_d3
+I1115 20:27:44.281332  1977 net.cpp:160] Setting up conv2_d3
+I1115 20:27:44.281349  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.281361  1977 layer_factory.hpp:78] Creating layer sum0_d3
+I1115 20:27:44.281368  1977 net.cpp:109] Creating Layer sum0_d3
+I1115 20:27:44.281373  1977 net.cpp:470] sum0_d3 <- conv2_d3
+I1115 20:27:44.281378  1977 net.cpp:470] sum0_d3 <- conv0_d3_elu0_d3_0_split_1
+I1115 20:27:44.281384  1977 net.cpp:439] sum0_d3 -> sum0_d3
+I1115 20:27:44.281417  1977 net.cpp:160] Setting up sum0_d3
+I1115 20:27:44.281424  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.281431  1977 layer_factory.hpp:78] Creating layer bn2_d3
+I1115 20:27:44.281438  1977 net.cpp:109] Creating Layer bn2_d3
+I1115 20:27:44.281442  1977 net.cpp:470] bn2_d3 <- sum0_d3
+I1115 20:27:44.281450  1977 net.cpp:426] bn2_d3 -> sum0_d3 (in-place)
+I1115 20:27:44.281697  1977 net.cpp:160] Setting up bn2_d3
+I1115 20:27:44.281704  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.281714  1977 layer_factory.hpp:78] Creating layer scale2_d3
+I1115 20:27:44.281723  1977 net.cpp:109] Creating Layer scale2_d3
+I1115 20:27:44.281728  1977 net.cpp:470] scale2_d3 <- sum0_d3
+I1115 20:27:44.281733  1977 net.cpp:426] scale2_d3 -> sum0_d3 (in-place)
+I1115 20:27:44.281774  1977 layer_factory.hpp:78] Creating layer scale2_d3
+I1115 20:27:44.281919  1977 net.cpp:160] Setting up scale2_d3
+I1115 20:27:44.281927  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.281935  1977 layer_factory.hpp:78] Creating layer elu2_d3
+I1115 20:27:44.281944  1977 net.cpp:109] Creating Layer elu2_d3
+I1115 20:27:44.281949  1977 net.cpp:470] elu2_d3 <- sum0_d3
+I1115 20:27:44.281955  1977 net.cpp:426] elu2_d3 -> sum0_d3 (in-place)
+I1115 20:27:44.281960  1977 net.cpp:160] Setting up elu2_d3
+I1115 20:27:44.281965  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.281970  1977 layer_factory.hpp:78] Creating layer sum0_d3_elu2_d3_0_split
+I1115 20:27:44.281976  1977 net.cpp:109] Creating Layer sum0_d3_elu2_d3_0_split
+I1115 20:27:44.281980  1977 net.cpp:470] sum0_d3_elu2_d3_0_split <- sum0_d3
+I1115 20:27:44.281985  1977 net.cpp:439] sum0_d3_elu2_d3_0_split -> sum0_d3_elu2_d3_0_split_0
+I1115 20:27:44.281992  1977 net.cpp:439] sum0_d3_elu2_d3_0_split -> sum0_d3_elu2_d3_0_split_1
+I1115 20:27:44.282034  1977 net.cpp:160] Setting up sum0_d3_elu2_d3_0_split
+I1115 20:27:44.282040  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.282045  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.282052  1977 layer_factory.hpp:78] Creating layer pool_d4
+I1115 20:27:44.282060  1977 net.cpp:109] Creating Layer pool_d4
+I1115 20:27:44.282065  1977 net.cpp:470] pool_d4 <- sum0_d3_elu2_d3_0_split_0
+I1115 20:27:44.282073  1977 net.cpp:439] pool_d4 -> pool_d4
+I1115 20:27:44.282299  1977 net.cpp:160] Setting up pool_d4
+I1115 20:27:44.282306  1977 net.cpp:168] Top shape: 1 64 18 10 10 (115200)
+I1115 20:27:44.282313  1977 layer_factory.hpp:78] Creating layer conv0_d4
+I1115 20:27:44.282323  1977 net.cpp:109] Creating Layer conv0_d4
+I1115 20:27:44.282328  1977 net.cpp:470] conv0_d4 <- pool_d4
+I1115 20:27:44.282335  1977 net.cpp:439] conv0_d4 -> conv0_d4
+I1115 20:27:44.286947  1977 net.cpp:160] Setting up conv0_d4
+I1115 20:27:44.286965  1977 net.cpp:168] Top shape: 1 80 18 10 10 (144000)
+I1115 20:27:44.286978  1977 layer_factory.hpp:78] Creating layer bn0_d4
+I1115 20:27:44.286986  1977 net.cpp:109] Creating Layer bn0_d4
+I1115 20:27:44.286990  1977 net.cpp:470] bn0_d4 <- conv0_d4
+I1115 20:27:44.286996  1977 net.cpp:426] bn0_d4 -> conv0_d4 (in-place)
+I1115 20:27:44.288527  1977 net.cpp:160] Setting up bn0_d4
+I1115 20:27:44.288548  1977 net.cpp:168] Top shape: 1 80 18 10 10 (144000)
+I1115 20:27:44.288563  1977 layer_factory.hpp:78] Creating layer scale0_d4
+I1115 20:27:44.288569  1977 net.cpp:109] Creating Layer scale0_d4
+I1115 20:27:44.288574  1977 net.cpp:470] scale0_d4 <- conv0_d4
+I1115 20:27:44.288580  1977 net.cpp:426] scale0_d4 -> conv0_d4 (in-place)
+I1115 20:27:44.288626  1977 layer_factory.hpp:78] Creating layer scale0_d4
+I1115 20:27:44.288763  1977 net.cpp:160] Setting up scale0_d4
+I1115 20:27:44.288770  1977 net.cpp:168] Top shape: 1 80 18 10 10 (144000)
+I1115 20:27:44.288779  1977 layer_factory.hpp:78] Creating layer elu0_d4
+I1115 20:27:44.288784  1977 net.cpp:109] Creating Layer elu0_d4
+I1115 20:27:44.288789  1977 net.cpp:470] elu0_d4 <- conv0_d4
+I1115 20:27:44.288794  1977 net.cpp:426] elu0_d4 -> conv0_d4 (in-place)
+I1115 20:27:44.288800  1977 net.cpp:160] Setting up elu0_d4
+I1115 20:27:44.288805  1977 net.cpp:168] Top shape: 1 80 18 10 10 (144000)
+I1115 20:27:44.288810  1977 layer_factory.hpp:78] Creating layer conv0_d4_elu0_d4_0_split
+I1115 20:27:44.288816  1977 net.cpp:109] Creating Layer conv0_d4_elu0_d4_0_split
+I1115 20:27:44.288820  1977 net.cpp:470] conv0_d4_elu0_d4_0_split <- conv0_d4
+I1115 20:27:44.288825  1977 net.cpp:439] conv0_d4_elu0_d4_0_split -> conv0_d4_elu0_d4_0_split_0
+I1115 20:27:44.288832  1977 net.cpp:439] conv0_d4_elu0_d4_0_split -> conv0_d4_elu0_d4_0_split_1
+I1115 20:27:44.288874  1977 net.cpp:160] Setting up conv0_d4_elu0_d4_0_split
+I1115 20:27:44.288880  1977 net.cpp:168] Top shape: 1 80 18 10 10 (144000)
+I1115 20:27:44.288887  1977 net.cpp:168] Top shape: 1 80 18 10 10 (144000)
+I1115 20:27:44.288893  1977 layer_factory.hpp:78] Creating layer conv1_d4
+I1115 20:27:44.288902  1977 net.cpp:109] Creating Layer conv1_d4
+I1115 20:27:44.288906  1977 net.cpp:470] conv1_d4 <- conv0_d4_elu0_d4_0_split_0
+I1115 20:27:44.288913  1977 net.cpp:439] conv1_d4 -> conv1_d4
+I1115 20:27:44.297188  1977 net.cpp:160] Setting up conv1_d4
+I1115 20:27:44.297204  1977 net.cpp:168] Top shape: 1 80 18 10 10 (144000)
+I1115 20:27:44.297216  1977 layer_factory.hpp:78] Creating layer bn1_d4
+I1115 20:27:44.297224  1977 net.cpp:109] Creating Layer bn1_d4
+I1115 20:27:44.297228  1977 net.cpp:470] bn1_d4 <- conv1_d4
+I1115 20:27:44.297235  1977 net.cpp:426] bn1_d4 -> conv1_d4 (in-place)
+I1115 20:27:44.297461  1977 net.cpp:160] Setting up bn1_d4
+I1115 20:27:44.297468  1977 net.cpp:168] Top shape: 1 80 18 10 10 (144000)
+I1115 20:27:44.297478  1977 layer_factory.hpp:78] Creating layer scale1_d4
+I1115 20:27:44.297485  1977 net.cpp:109] Creating Layer scale1_d4
+I1115 20:27:44.297490  1977 net.cpp:470] scale1_d4 <- conv1_d4
+I1115 20:27:44.297495  1977 net.cpp:426] scale1_d4 -> conv1_d4 (in-place)
+I1115 20:27:44.297535  1977 layer_factory.hpp:78] Creating layer scale1_d4
+I1115 20:27:44.297667  1977 net.cpp:160] Setting up scale1_d4
+I1115 20:27:44.297675  1977 net.cpp:168] Top shape: 1 80 18 10 10 (144000)
+I1115 20:27:44.297684  1977 layer_factory.hpp:78] Creating layer elu1_d4
+I1115 20:27:44.297689  1977 net.cpp:109] Creating Layer elu1_d4
+I1115 20:27:44.297694  1977 net.cpp:470] elu1_d4 <- conv1_d4
+I1115 20:27:44.297699  1977 net.cpp:426] elu1_d4 -> conv1_d4 (in-place)
+I1115 20:27:44.297705  1977 net.cpp:160] Setting up elu1_d4
+I1115 20:27:44.297710  1977 net.cpp:168] Top shape: 1 80 18 10 10 (144000)
+I1115 20:27:44.297718  1977 layer_factory.hpp:78] Creating layer conv2_d4
+I1115 20:27:44.297727  1977 net.cpp:109] Creating Layer conv2_d4
+I1115 20:27:44.297731  1977 net.cpp:470] conv2_d4 <- conv1_d4
+I1115 20:27:44.297737  1977 net.cpp:439] conv2_d4 -> conv2_d4
+I1115 20:27:44.306947  1977 net.cpp:160] Setting up conv2_d4
+I1115 20:27:44.306965  1977 net.cpp:168] Top shape: 1 80 18 10 10 (144000)
+I1115 20:27:44.306977  1977 layer_factory.hpp:78] Creating layer sum0_d4
+I1115 20:27:44.306984  1977 net.cpp:109] Creating Layer sum0_d4
+I1115 20:27:44.306989  1977 net.cpp:470] sum0_d4 <- conv2_d4
+I1115 20:27:44.306995  1977 net.cpp:470] sum0_d4 <- conv0_d4_elu0_d4_0_split_1
+I1115 20:27:44.307001  1977 net.cpp:439] sum0_d4 -> sum0_d4
+I1115 20:27:44.307037  1977 net.cpp:160] Setting up sum0_d4
+I1115 20:27:44.307045  1977 net.cpp:168] Top shape: 1 80 18 10 10 (144000)
+I1115 20:27:44.307051  1977 layer_factory.hpp:78] Creating layer bn2_d4
+I1115 20:27:44.307059  1977 net.cpp:109] Creating Layer bn2_d4
+I1115 20:27:44.307063  1977 net.cpp:470] bn2_d4 <- sum0_d4
+I1115 20:27:44.307070  1977 net.cpp:426] bn2_d4 -> sum0_d4 (in-place)
+I1115 20:27:44.307289  1977 net.cpp:160] Setting up bn2_d4
+I1115 20:27:44.307296  1977 net.cpp:168] Top shape: 1 80 18 10 10 (144000)
+I1115 20:27:44.307308  1977 layer_factory.hpp:78] Creating layer scale2_d4
+I1115 20:27:44.307314  1977 net.cpp:109] Creating Layer scale2_d4
+I1115 20:27:44.307319  1977 net.cpp:470] scale2_d4 <- sum0_d4
+I1115 20:27:44.307324  1977 net.cpp:426] scale2_d4 -> sum0_d4 (in-place)
+I1115 20:27:44.307365  1977 layer_factory.hpp:78] Creating layer scale2_d4
+I1115 20:27:44.307528  1977 net.cpp:160] Setting up scale2_d4
+I1115 20:27:44.307538  1977 net.cpp:168] Top shape: 1 80 18 10 10 (144000)
+I1115 20:27:44.307548  1977 layer_factory.hpp:78] Creating layer elu2_d4
+I1115 20:27:44.307552  1977 net.cpp:109] Creating Layer elu2_d4
+I1115 20:27:44.307557  1977 net.cpp:470] elu2_d4 <- sum0_d4
+I1115 20:27:44.307562  1977 net.cpp:426] elu2_d4 -> sum0_d4 (in-place)
+I1115 20:27:44.307569  1977 net.cpp:160] Setting up elu2_d4
+I1115 20:27:44.307574  1977 net.cpp:168] Top shape: 1 80 18 10 10 (144000)
+I1115 20:27:44.307579  1977 layer_factory.hpp:78] Creating layer deconv_d3
+I1115 20:27:44.307587  1977 net.cpp:109] Creating Layer deconv_d3
+I1115 20:27:44.307591  1977 net.cpp:470] deconv_d3 <- sum0_d4
+I1115 20:27:44.307598  1977 net.cpp:439] deconv_d3 -> deconv_d3
+I1115 20:27:44.308609  1977 net.cpp:160] Setting up deconv_d3
+I1115 20:27:44.308619  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.308626  1977 layer_factory.hpp:78] Creating layer merge_d3
+I1115 20:27:44.308632  1977 net.cpp:109] Creating Layer merge_d3
+I1115 20:27:44.308636  1977 net.cpp:470] merge_d3 <- deconv_d3
+I1115 20:27:44.308641  1977 net.cpp:470] merge_d3 <- sum0_d3_elu2_d3_0_split_1
+I1115 20:27:44.308647  1977 net.cpp:439] merge_d3 -> merge_d3
+I1115 20:27:44.308670  1977 net.cpp:160] Setting up merge_d3
+I1115 20:27:44.308677  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.308683  1977 layer_factory.hpp:78] Creating layer bn3_d3
+I1115 20:27:44.308689  1977 net.cpp:109] Creating Layer bn3_d3
+I1115 20:27:44.308694  1977 net.cpp:470] bn3_d3 <- merge_d3
+I1115 20:27:44.308699  1977 net.cpp:426] bn3_d3 -> merge_d3 (in-place)
+I1115 20:27:44.308925  1977 net.cpp:160] Setting up bn3_d3
+I1115 20:27:44.308933  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.308943  1977 layer_factory.hpp:78] Creating layer scale3_d3
+I1115 20:27:44.308948  1977 net.cpp:109] Creating Layer scale3_d3
+I1115 20:27:44.308953  1977 net.cpp:470] scale3_d3 <- merge_d3
+I1115 20:27:44.308957  1977 net.cpp:426] scale3_d3 -> merge_d3 (in-place)
+I1115 20:27:44.308997  1977 layer_factory.hpp:78] Creating layer scale3_d3
+I1115 20:27:44.309139  1977 net.cpp:160] Setting up scale3_d3
+I1115 20:27:44.309146  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.309154  1977 layer_factory.hpp:78] Creating layer elu3_d3
+I1115 20:27:44.309160  1977 net.cpp:109] Creating Layer elu3_d3
+I1115 20:27:44.309165  1977 net.cpp:470] elu3_d3 <- merge_d3
+I1115 20:27:44.309170  1977 net.cpp:426] elu3_d3 -> merge_d3 (in-place)
+I1115 20:27:44.309175  1977 net.cpp:160] Setting up elu3_d3
+I1115 20:27:44.309180  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.309186  1977 layer_factory.hpp:78] Creating layer conv4_d3
+I1115 20:27:44.309195  1977 net.cpp:109] Creating Layer conv4_d3
+I1115 20:27:44.309198  1977 net.cpp:470] conv4_d3 <- merge_d3
+I1115 20:27:44.309203  1977 net.cpp:439] conv4_d3 -> conv4_d3
+I1115 20:27:44.311399  1977 net.cpp:160] Setting up conv4_d3
+I1115 20:27:44.311411  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.311421  1977 layer_factory.hpp:78] Creating layer bn4_d3
+I1115 20:27:44.311429  1977 net.cpp:109] Creating Layer bn4_d3
+I1115 20:27:44.311439  1977 net.cpp:470] bn4_d3 <- conv4_d3
+I1115 20:27:44.311446  1977 net.cpp:426] bn4_d3 -> conv4_d3 (in-place)
+I1115 20:27:44.311700  1977 net.cpp:160] Setting up bn4_d3
+I1115 20:27:44.311709  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.311720  1977 layer_factory.hpp:78] Creating layer scale4_d3
+I1115 20:27:44.311728  1977 net.cpp:109] Creating Layer scale4_d3
+I1115 20:27:44.311731  1977 net.cpp:470] scale4_d3 <- conv4_d3
+I1115 20:27:44.311736  1977 net.cpp:426] scale4_d3 -> conv4_d3 (in-place)
+I1115 20:27:44.311779  1977 layer_factory.hpp:78] Creating layer scale4_d3
+I1115 20:27:44.311938  1977 net.cpp:160] Setting up scale4_d3
+I1115 20:27:44.311945  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.311954  1977 layer_factory.hpp:78] Creating layer elu4_d3
+I1115 20:27:44.311960  1977 net.cpp:109] Creating Layer elu4_d3
+I1115 20:27:44.311964  1977 net.cpp:470] elu4_d3 <- conv4_d3
+I1115 20:27:44.311969  1977 net.cpp:426] elu4_d3 -> conv4_d3 (in-place)
+I1115 20:27:44.311975  1977 net.cpp:160] Setting up elu4_d3
+I1115 20:27:44.311980  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.311985  1977 layer_factory.hpp:78] Creating layer conv4_d3_elu4_d3_0_split
+I1115 20:27:44.311990  1977 net.cpp:109] Creating Layer conv4_d3_elu4_d3_0_split
+I1115 20:27:44.311995  1977 net.cpp:470] conv4_d3_elu4_d3_0_split <- conv4_d3
+I1115 20:27:44.312000  1977 net.cpp:439] conv4_d3_elu4_d3_0_split -> conv4_d3_elu4_d3_0_split_0
+I1115 20:27:44.312006  1977 net.cpp:439] conv4_d3_elu4_d3_0_split -> conv4_d3_elu4_d3_0_split_1
+I1115 20:27:44.312047  1977 net.cpp:160] Setting up conv4_d3_elu4_d3_0_split
+I1115 20:27:44.312053  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.312058  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.312065  1977 layer_factory.hpp:78] Creating layer conv5_d3
+I1115 20:27:44.312075  1977 net.cpp:109] Creating Layer conv5_d3
+I1115 20:27:44.312080  1977 net.cpp:470] conv5_d3 <- conv4_d3_elu4_d3_0_split_0
+I1115 20:27:44.312086  1977 net.cpp:439] conv5_d3 -> conv5_d3
+I1115 20:27:44.317464  1977 net.cpp:160] Setting up conv5_d3
+I1115 20:27:44.317481  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.317493  1977 layer_factory.hpp:78] Creating layer bn5_d3
+I1115 20:27:44.317502  1977 net.cpp:109] Creating Layer bn5_d3
+I1115 20:27:44.317507  1977 net.cpp:470] bn5_d3 <- conv5_d3
+I1115 20:27:44.317512  1977 net.cpp:426] bn5_d3 -> conv5_d3 (in-place)
+I1115 20:27:44.317739  1977 net.cpp:160] Setting up bn5_d3
+I1115 20:27:44.317745  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.317754  1977 layer_factory.hpp:78] Creating layer scale5_d3
+I1115 20:27:44.317757  1977 net.cpp:109] Creating Layer scale5_d3
+I1115 20:27:44.317760  1977 net.cpp:470] scale5_d3 <- conv5_d3
+I1115 20:27:44.317764  1977 net.cpp:426] scale5_d3 -> conv5_d3 (in-place)
+I1115 20:27:44.317796  1977 layer_factory.hpp:78] Creating layer scale5_d3
+I1115 20:27:44.317901  1977 net.cpp:160] Setting up scale5_d3
+I1115 20:27:44.317908  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.317914  1977 layer_factory.hpp:78] Creating layer elu5_d3
+I1115 20:27:44.317919  1977 net.cpp:109] Creating Layer elu5_d3
+I1115 20:27:44.317921  1977 net.cpp:470] elu5_d3 <- conv5_d3
+I1115 20:27:44.317924  1977 net.cpp:426] elu5_d3 -> conv5_d3 (in-place)
+I1115 20:27:44.317929  1977 net.cpp:160] Setting up elu5_d3
+I1115 20:27:44.317932  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.317937  1977 layer_factory.hpp:78] Creating layer conv6_d3
+I1115 20:27:44.317945  1977 net.cpp:109] Creating Layer conv6_d3
+I1115 20:27:44.317947  1977 net.cpp:470] conv6_d3 <- conv5_d3
+I1115 20:27:44.317950  1977 net.cpp:439] conv6_d3 -> conv6_d3
+I1115 20:27:44.321919  1977 net.cpp:160] Setting up conv6_d3
+I1115 20:27:44.321933  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.321940  1977 layer_factory.hpp:78] Creating layer sum4_d3
+I1115 20:27:44.321946  1977 net.cpp:109] Creating Layer sum4_d3
+I1115 20:27:44.321954  1977 net.cpp:470] sum4_d3 <- conv6_d3
+I1115 20:27:44.321959  1977 net.cpp:470] sum4_d3 <- conv4_d3_elu4_d3_0_split_1
+I1115 20:27:44.321964  1977 net.cpp:439] sum4_d3 -> sum4_d3
+I1115 20:27:44.321985  1977 net.cpp:160] Setting up sum4_d3
+I1115 20:27:44.321990  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.321995  1977 layer_factory.hpp:78] Creating layer bn6_d3
+I1115 20:27:44.322000  1977 net.cpp:109] Creating Layer bn6_d3
+I1115 20:27:44.322003  1977 net.cpp:470] bn6_d3 <- sum4_d3
+I1115 20:27:44.322006  1977 net.cpp:426] bn6_d3 -> sum4_d3 (in-place)
+I1115 20:27:44.322172  1977 net.cpp:160] Setting up bn6_d3
+I1115 20:27:44.322177  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.322185  1977 layer_factory.hpp:78] Creating layer scale6_d3
+I1115 20:27:44.322190  1977 net.cpp:109] Creating Layer scale6_d3
+I1115 20:27:44.322193  1977 net.cpp:470] scale6_d3 <- sum4_d3
+I1115 20:27:44.322196  1977 net.cpp:426] scale6_d3 -> sum4_d3 (in-place)
+I1115 20:27:44.322227  1977 layer_factory.hpp:78] Creating layer scale6_d3
+I1115 20:27:44.322332  1977 net.cpp:160] Setting up scale6_d3
+I1115 20:27:44.322337  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.322345  1977 layer_factory.hpp:78] Creating layer elu6_d3
+I1115 20:27:44.322348  1977 net.cpp:109] Creating Layer elu6_d3
+I1115 20:27:44.322351  1977 net.cpp:470] elu6_d3 <- sum4_d3
+I1115 20:27:44.322355  1977 net.cpp:426] elu6_d3 -> sum4_d3 (in-place)
+I1115 20:27:44.322360  1977 net.cpp:160] Setting up elu6_d3
+I1115 20:27:44.322362  1977 net.cpp:168] Top shape: 1 64 18 20 20 (460800)
+I1115 20:27:44.322367  1977 layer_factory.hpp:78] Creating layer deconv_d2
+I1115 20:27:44.322374  1977 net.cpp:109] Creating Layer deconv_d2
+I1115 20:27:44.322377  1977 net.cpp:470] deconv_d2 <- sum4_d3
+I1115 20:27:44.322381  1977 net.cpp:439] deconv_d2 -> deconv_d2
+I1115 20:27:44.322867  1977 net.cpp:160] Setting up deconv_d2
+I1115 20:27:44.322873  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.322880  1977 layer_factory.hpp:78] Creating layer merge_d2
+I1115 20:27:44.322885  1977 net.cpp:109] Creating Layer merge_d2
+I1115 20:27:44.322887  1977 net.cpp:470] merge_d2 <- deconv_d2
+I1115 20:27:44.322891  1977 net.cpp:470] merge_d2 <- sum0_d2_elu2_d2_0_split_1
+I1115 20:27:44.322895  1977 net.cpp:439] merge_d2 -> merge_d2
+I1115 20:27:44.322914  1977 net.cpp:160] Setting up merge_d2
+I1115 20:27:44.322919  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.322924  1977 layer_factory.hpp:78] Creating layer bn3_d2
+I1115 20:27:44.322929  1977 net.cpp:109] Creating Layer bn3_d2
+I1115 20:27:44.322932  1977 net.cpp:470] bn3_d2 <- merge_d2
+I1115 20:27:44.322937  1977 net.cpp:426] bn3_d2 -> merge_d2 (in-place)
+I1115 20:27:44.323106  1977 net.cpp:160] Setting up bn3_d2
+I1115 20:27:44.323110  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.323117  1977 layer_factory.hpp:78] Creating layer scale3_d2
+I1115 20:27:44.323122  1977 net.cpp:109] Creating Layer scale3_d2
+I1115 20:27:44.323125  1977 net.cpp:470] scale3_d2 <- merge_d2
+I1115 20:27:44.323129  1977 net.cpp:426] scale3_d2 -> merge_d2 (in-place)
+I1115 20:27:44.323159  1977 layer_factory.hpp:78] Creating layer scale3_d2
+I1115 20:27:44.323279  1977 net.cpp:160] Setting up scale3_d2
+I1115 20:27:44.323285  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.323292  1977 layer_factory.hpp:78] Creating layer elu3_d2
+I1115 20:27:44.323297  1977 net.cpp:109] Creating Layer elu3_d2
+I1115 20:27:44.323299  1977 net.cpp:470] elu3_d2 <- merge_d2
+I1115 20:27:44.323302  1977 net.cpp:426] elu3_d2 -> merge_d2 (in-place)
+I1115 20:27:44.323307  1977 net.cpp:160] Setting up elu3_d2
+I1115 20:27:44.323310  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.323314  1977 layer_factory.hpp:78] Creating layer conv4_d2
+I1115 20:27:44.323320  1977 net.cpp:109] Creating Layer conv4_d2
+I1115 20:27:44.323323  1977 net.cpp:470] conv4_d2 <- merge_d2
+I1115 20:27:44.323329  1977 net.cpp:439] conv4_d2 -> conv4_d2
+I1115 20:27:44.324867  1977 net.cpp:160] Setting up conv4_d2
+I1115 20:27:44.324879  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.324889  1977 layer_factory.hpp:78] Creating layer bn4_d2
+I1115 20:27:44.324894  1977 net.cpp:109] Creating Layer bn4_d2
+I1115 20:27:44.324898  1977 net.cpp:470] bn4_d2 <- conv4_d2
+I1115 20:27:44.324903  1977 net.cpp:426] bn4_d2 -> conv4_d2 (in-place)
+I1115 20:27:44.325086  1977 net.cpp:160] Setting up bn4_d2
+I1115 20:27:44.325093  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.325100  1977 layer_factory.hpp:78] Creating layer scale4_d2
+I1115 20:27:44.325106  1977 net.cpp:109] Creating Layer scale4_d2
+I1115 20:27:44.325109  1977 net.cpp:470] scale4_d2 <- conv4_d2
+I1115 20:27:44.325114  1977 net.cpp:426] scale4_d2 -> conv4_d2 (in-place)
+I1115 20:27:44.325145  1977 layer_factory.hpp:78] Creating layer scale4_d2
+I1115 20:27:44.325275  1977 net.cpp:160] Setting up scale4_d2
+I1115 20:27:44.325283  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.325289  1977 layer_factory.hpp:78] Creating layer elu4_d2
+I1115 20:27:44.325294  1977 net.cpp:109] Creating Layer elu4_d2
+I1115 20:27:44.325296  1977 net.cpp:470] elu4_d2 <- conv4_d2
+I1115 20:27:44.325300  1977 net.cpp:426] elu4_d2 -> conv4_d2 (in-place)
+I1115 20:27:44.325305  1977 net.cpp:160] Setting up elu4_d2
+I1115 20:27:44.325309  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.325314  1977 layer_factory.hpp:78] Creating layer conv4_d2_elu4_d2_0_split
+I1115 20:27:44.325317  1977 net.cpp:109] Creating Layer conv4_d2_elu4_d2_0_split
+I1115 20:27:44.325320  1977 net.cpp:470] conv4_d2_elu4_d2_0_split <- conv4_d2
+I1115 20:27:44.325325  1977 net.cpp:439] conv4_d2_elu4_d2_0_split -> conv4_d2_elu4_d2_0_split_0
+I1115 20:27:44.325330  1977 net.cpp:439] conv4_d2_elu4_d2_0_split -> conv4_d2_elu4_d2_0_split_1
+I1115 20:27:44.325363  1977 net.cpp:160] Setting up conv4_d2_elu4_d2_0_split
+I1115 20:27:44.325369  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.325372  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.325378  1977 layer_factory.hpp:78] Creating layer conv5_d2
+I1115 20:27:44.325384  1977 net.cpp:109] Creating Layer conv5_d2
+I1115 20:27:44.325388  1977 net.cpp:470] conv5_d2 <- conv4_d2_elu4_d2_0_split_0
+I1115 20:27:44.325393  1977 net.cpp:439] conv5_d2 -> conv5_d2
+I1115 20:27:44.328613  1977 net.cpp:160] Setting up conv5_d2
+I1115 20:27:44.328625  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.328639  1977 layer_factory.hpp:78] Creating layer bn5_d2
+I1115 20:27:44.328645  1977 net.cpp:109] Creating Layer bn5_d2
+I1115 20:27:44.328649  1977 net.cpp:470] bn5_d2 <- conv5_d2
+I1115 20:27:44.328652  1977 net.cpp:426] bn5_d2 -> conv5_d2 (in-place)
+I1115 20:27:44.328836  1977 net.cpp:160] Setting up bn5_d2
+I1115 20:27:44.328842  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.328850  1977 layer_factory.hpp:78] Creating layer scale5_d2
+I1115 20:27:44.328855  1977 net.cpp:109] Creating Layer scale5_d2
+I1115 20:27:44.328858  1977 net.cpp:470] scale5_d2 <- conv5_d2
+I1115 20:27:44.328862  1977 net.cpp:426] scale5_d2 -> conv5_d2 (in-place)
+I1115 20:27:44.328894  1977 layer_factory.hpp:78] Creating layer scale5_d2
+I1115 20:27:44.329016  1977 net.cpp:160] Setting up scale5_d2
+I1115 20:27:44.329023  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.329030  1977 layer_factory.hpp:78] Creating layer elu5_d2
+I1115 20:27:44.329033  1977 net.cpp:109] Creating Layer elu5_d2
+I1115 20:27:44.329036  1977 net.cpp:470] elu5_d2 <- conv5_d2
+I1115 20:27:44.329041  1977 net.cpp:426] elu5_d2 -> conv5_d2 (in-place)
+I1115 20:27:44.329044  1977 net.cpp:160] Setting up elu5_d2
+I1115 20:27:44.329048  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.329052  1977 layer_factory.hpp:78] Creating layer conv6_d2
+I1115 20:27:44.329059  1977 net.cpp:109] Creating Layer conv6_d2
+I1115 20:27:44.329062  1977 net.cpp:470] conv6_d2 <- conv5_d2
+I1115 20:27:44.329067  1977 net.cpp:439] conv6_d2 -> conv6_d2
+I1115 20:27:44.333245  1977 net.cpp:160] Setting up conv6_d2
+I1115 20:27:44.333259  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.333268  1977 layer_factory.hpp:78] Creating layer sum4_d2
+I1115 20:27:44.333274  1977 net.cpp:109] Creating Layer sum4_d2
+I1115 20:27:44.333277  1977 net.cpp:470] sum4_d2 <- conv6_d2
+I1115 20:27:44.333282  1977 net.cpp:470] sum4_d2 <- conv4_d2_elu4_d2_0_split_1
+I1115 20:27:44.333287  1977 net.cpp:439] sum4_d2 -> sum4_d2
+I1115 20:27:44.333312  1977 net.cpp:160] Setting up sum4_d2
+I1115 20:27:44.333317  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.333323  1977 layer_factory.hpp:78] Creating layer bn6_d2
+I1115 20:27:44.333328  1977 net.cpp:109] Creating Layer bn6_d2
+I1115 20:27:44.333330  1977 net.cpp:470] bn6_d2 <- sum4_d2
+I1115 20:27:44.333334  1977 net.cpp:426] bn6_d2 -> sum4_d2 (in-place)
+I1115 20:27:44.333519  1977 net.cpp:160] Setting up bn6_d2
+I1115 20:27:44.333525  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.333534  1977 layer_factory.hpp:78] Creating layer scale6_d2
+I1115 20:27:44.333539  1977 net.cpp:109] Creating Layer scale6_d2
+I1115 20:27:44.333542  1977 net.cpp:470] scale6_d2 <- sum4_d2
+I1115 20:27:44.333546  1977 net.cpp:426] scale6_d2 -> sum4_d2 (in-place)
+I1115 20:27:44.333577  1977 layer_factory.hpp:78] Creating layer scale6_d2
+I1115 20:27:44.334731  1977 net.cpp:160] Setting up scale6_d2
+I1115 20:27:44.334743  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.334751  1977 layer_factory.hpp:78] Creating layer elu6_d2
+I1115 20:27:44.334756  1977 net.cpp:109] Creating Layer elu6_d2
+I1115 20:27:44.334759  1977 net.cpp:470] elu6_d2 <- sum4_d2
+I1115 20:27:44.334765  1977 net.cpp:426] elu6_d2 -> sum4_d2 (in-place)
+I1115 20:27:44.334769  1977 net.cpp:160] Setting up elu6_d2
+I1115 20:27:44.334774  1977 net.cpp:168] Top shape: 1 48 18 40 40 (1382400)
+I1115 20:27:44.334779  1977 layer_factory.hpp:78] Creating layer deconv_d1
+I1115 20:27:44.334784  1977 net.cpp:109] Creating Layer deconv_d1
+I1115 20:27:44.334786  1977 net.cpp:470] deconv_d1 <- sum4_d2
+I1115 20:27:44.334792  1977 net.cpp:439] deconv_d1 -> deconv_d1
+I1115 20:27:44.335144  1977 net.cpp:160] Setting up deconv_d1
+I1115 20:27:44.335151  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.335157  1977 layer_factory.hpp:78] Creating layer merge_d1
+I1115 20:27:44.335162  1977 net.cpp:109] Creating Layer merge_d1
+I1115 20:27:44.335165  1977 net.cpp:470] merge_d1 <- deconv_d1
+I1115 20:27:44.335170  1977 net.cpp:470] merge_d1 <- sum0_d1_elu2_d1_0_split_1
+I1115 20:27:44.335173  1977 net.cpp:439] merge_d1 -> merge_d1
+I1115 20:27:44.335192  1977 net.cpp:160] Setting up merge_d1
+I1115 20:27:44.335197  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.335201  1977 layer_factory.hpp:78] Creating layer bn3_d1
+I1115 20:27:44.335206  1977 net.cpp:109] Creating Layer bn3_d1
+I1115 20:27:44.335209  1977 net.cpp:470] bn3_d1 <- merge_d1
+I1115 20:27:44.335213  1977 net.cpp:426] bn3_d1 -> merge_d1 (in-place)
+I1115 20:27:44.335440  1977 net.cpp:160] Setting up bn3_d1
+I1115 20:27:44.335446  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.335454  1977 layer_factory.hpp:78] Creating layer scale3_d1
+I1115 20:27:44.335459  1977 net.cpp:109] Creating Layer scale3_d1
+I1115 20:27:44.335463  1977 net.cpp:470] scale3_d1 <- merge_d1
+I1115 20:27:44.335466  1977 net.cpp:426] scale3_d1 -> merge_d1 (in-place)
+I1115 20:27:44.335546  1977 layer_factory.hpp:78] Creating layer scale3_d1
+I1115 20:27:44.336858  1977 net.cpp:160] Setting up scale3_d1
+I1115 20:27:44.336869  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.336879  1977 layer_factory.hpp:78] Creating layer elu3_d1
+I1115 20:27:44.336882  1977 net.cpp:109] Creating Layer elu3_d1
+I1115 20:27:44.336886  1977 net.cpp:470] elu3_d1 <- merge_d1
+I1115 20:27:44.336890  1977 net.cpp:426] elu3_d1 -> merge_d1 (in-place)
+I1115 20:27:44.336894  1977 net.cpp:160] Setting up elu3_d1
+I1115 20:27:44.336899  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.336904  1977 layer_factory.hpp:78] Creating layer conv4_d1
+I1115 20:27:44.336915  1977 net.cpp:109] Creating Layer conv4_d1
+I1115 20:27:44.336918  1977 net.cpp:470] conv4_d1 <- merge_d1
+I1115 20:27:44.336922  1977 net.cpp:439] conv4_d1 -> conv4_d1
+I1115 20:27:44.338388  1977 net.cpp:160] Setting up conv4_d1
+I1115 20:27:44.338400  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.338410  1977 layer_factory.hpp:78] Creating layer bn4_d1
+I1115 20:27:44.338416  1977 net.cpp:109] Creating Layer bn4_d1
+I1115 20:27:44.338419  1977 net.cpp:470] bn4_d1 <- conv4_d1
+I1115 20:27:44.338423  1977 net.cpp:426] bn4_d1 -> conv4_d1 (in-place)
+I1115 20:27:44.338665  1977 net.cpp:160] Setting up bn4_d1
+I1115 20:27:44.338670  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.338680  1977 layer_factory.hpp:78] Creating layer scale4_d1
+I1115 20:27:44.338685  1977 net.cpp:109] Creating Layer scale4_d1
+I1115 20:27:44.338687  1977 net.cpp:470] scale4_d1 <- conv4_d1
+I1115 20:27:44.338691  1977 net.cpp:426] scale4_d1 -> conv4_d1 (in-place)
+I1115 20:27:44.338722  1977 layer_factory.hpp:78] Creating layer scale4_d1
+I1115 20:27:44.340057  1977 net.cpp:160] Setting up scale4_d1
+I1115 20:27:44.340070  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.340080  1977 layer_factory.hpp:78] Creating layer elu4_d1
+I1115 20:27:44.340085  1977 net.cpp:109] Creating Layer elu4_d1
+I1115 20:27:44.340087  1977 net.cpp:470] elu4_d1 <- conv4_d1
+I1115 20:27:44.340091  1977 net.cpp:426] elu4_d1 -> conv4_d1 (in-place)
+I1115 20:27:44.340096  1977 net.cpp:160] Setting up elu4_d1
+I1115 20:27:44.340101  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.340104  1977 layer_factory.hpp:78] Creating layer conv4_d1_elu4_d1_0_split
+I1115 20:27:44.340111  1977 net.cpp:109] Creating Layer conv4_d1_elu4_d1_0_split
+I1115 20:27:44.340114  1977 net.cpp:470] conv4_d1_elu4_d1_0_split <- conv4_d1
+I1115 20:27:44.340118  1977 net.cpp:439] conv4_d1_elu4_d1_0_split -> conv4_d1_elu4_d1_0_split_0
+I1115 20:27:44.340124  1977 net.cpp:439] conv4_d1_elu4_d1_0_split -> conv4_d1_elu4_d1_0_split_1
+I1115 20:27:44.340163  1977 net.cpp:160] Setting up conv4_d1_elu4_d1_0_split
+I1115 20:27:44.340169  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.340173  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.340178  1977 layer_factory.hpp:78] Creating layer conv5_d1
+I1115 20:27:44.340185  1977 net.cpp:109] Creating Layer conv5_d1
+I1115 20:27:44.340189  1977 net.cpp:470] conv5_d1 <- conv4_d1_elu4_d1_0_split_0
+I1115 20:27:44.340193  1977 net.cpp:439] conv5_d1 -> conv5_d1
+I1115 20:27:44.342703  1977 net.cpp:160] Setting up conv5_d1
+I1115 20:27:44.342715  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.342725  1977 layer_factory.hpp:78] Creating layer bn5_d1
+I1115 20:27:44.342731  1977 net.cpp:109] Creating Layer bn5_d1
+I1115 20:27:44.342734  1977 net.cpp:470] bn5_d1 <- conv5_d1
+I1115 20:27:44.342739  1977 net.cpp:426] bn5_d1 -> conv5_d1 (in-place)
+I1115 20:27:44.342978  1977 net.cpp:160] Setting up bn5_d1
+I1115 20:27:44.342984  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.342993  1977 layer_factory.hpp:78] Creating layer scale5_d1
+I1115 20:27:44.342998  1977 net.cpp:109] Creating Layer scale5_d1
+I1115 20:27:44.343001  1977 net.cpp:470] scale5_d1 <- conv5_d1
+I1115 20:27:44.343004  1977 net.cpp:426] scale5_d1 -> conv5_d1 (in-place)
+I1115 20:27:44.343037  1977 layer_factory.hpp:78] Creating layer scale5_d1
+I1115 20:27:44.343264  1977 net.cpp:160] Setting up scale5_d1
+I1115 20:27:44.343271  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.343277  1977 layer_factory.hpp:78] Creating layer elu5_d1
+I1115 20:27:44.343282  1977 net.cpp:109] Creating Layer elu5_d1
+I1115 20:27:44.343286  1977 net.cpp:470] elu5_d1 <- conv5_d1
+I1115 20:27:44.343288  1977 net.cpp:426] elu5_d1 -> conv5_d1 (in-place)
+I1115 20:27:44.343293  1977 net.cpp:160] Setting up elu5_d1
+I1115 20:27:44.343297  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.343302  1977 layer_factory.hpp:78] Creating layer conv6_d1
+I1115 20:27:44.343314  1977 net.cpp:109] Creating Layer conv6_d1
+I1115 20:27:44.343318  1977 net.cpp:470] conv6_d1 <- conv5_d1
+I1115 20:27:44.343322  1977 net.cpp:439] conv6_d1 -> conv6_d1
+I1115 20:27:44.347261  1977 net.cpp:160] Setting up conv6_d1
+I1115 20:27:44.347277  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.347288  1977 layer_factory.hpp:78] Creating layer sum4_d1
+I1115 20:27:44.347293  1977 net.cpp:109] Creating Layer sum4_d1
+I1115 20:27:44.347297  1977 net.cpp:470] sum4_d1 <- conv6_d1
+I1115 20:27:44.347301  1977 net.cpp:470] sum4_d1 <- conv4_d1_elu4_d1_0_split_1
+I1115 20:27:44.347306  1977 net.cpp:439] sum4_d1 -> sum4_d1
+I1115 20:27:44.347337  1977 net.cpp:160] Setting up sum4_d1
+I1115 20:27:44.347342  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.347347  1977 layer_factory.hpp:78] Creating layer bn6_d1
+I1115 20:27:44.347352  1977 net.cpp:109] Creating Layer bn6_d1
+I1115 20:27:44.347357  1977 net.cpp:470] bn6_d1 <- sum4_d1
+I1115 20:27:44.347360  1977 net.cpp:426] bn6_d1 -> sum4_d1 (in-place)
+I1115 20:27:44.348747  1977 net.cpp:160] Setting up bn6_d1
+I1115 20:27:44.348759  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.348770  1977 layer_factory.hpp:78] Creating layer scale6_d1
+I1115 20:27:44.348775  1977 net.cpp:109] Creating Layer scale6_d1
+I1115 20:27:44.348778  1977 net.cpp:470] scale6_d1 <- sum4_d1
+I1115 20:27:44.348783  1977 net.cpp:426] scale6_d1 -> sum4_d1 (in-place)
+I1115 20:27:44.348819  1977 layer_factory.hpp:78] Creating layer scale6_d1
+I1115 20:27:44.349051  1977 net.cpp:160] Setting up scale6_d1
+I1115 20:27:44.349058  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.349066  1977 layer_factory.hpp:78] Creating layer elu6_d1
+I1115 20:27:44.349069  1977 net.cpp:109] Creating Layer elu6_d1
+I1115 20:27:44.349072  1977 net.cpp:470] elu6_d1 <- sum4_d1
+I1115 20:27:44.349076  1977 net.cpp:426] elu6_d1 -> sum4_d1 (in-place)
+I1115 20:27:44.349081  1977 net.cpp:160] Setting up elu6_d1
+I1115 20:27:44.349084  1977 net.cpp:168] Top shape: 1 36 18 80 80 (4147200)
+I1115 20:27:44.349089  1977 layer_factory.hpp:78] Creating layer deconv_d0
+I1115 20:27:44.349094  1977 net.cpp:109] Creating Layer deconv_d0
+I1115 20:27:44.349097  1977 net.cpp:470] deconv_d0 <- sum4_d1
+I1115 20:27:44.349102  1977 net.cpp:439] deconv_d0 -> deconv_d0
+I1115 20:27:44.349380  1977 net.cpp:160] Setting up deconv_d0
+I1115 20:27:44.349386  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.349393  1977 layer_factory.hpp:78] Creating layer merge_d0
+I1115 20:27:44.349397  1977 net.cpp:109] Creating Layer merge_d0
+I1115 20:27:44.349400  1977 net.cpp:470] merge_d0 <- deconv_d0
+I1115 20:27:44.349405  1977 net.cpp:470] merge_d0 <- sum0_d0_elu2_d0_0_split_1
+I1115 20:27:44.349408  1977 net.cpp:439] merge_d0 -> merge_d0
+I1115 20:27:44.349427  1977 net.cpp:160] Setting up merge_d0
+I1115 20:27:44.349432  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.349437  1977 layer_factory.hpp:78] Creating layer bn3_d0
+I1115 20:27:44.349442  1977 net.cpp:109] Creating Layer bn3_d0
+I1115 20:27:44.349445  1977 net.cpp:470] bn3_d0 <- merge_d0
+I1115 20:27:44.349449  1977 net.cpp:426] bn3_d0 -> merge_d0 (in-place)
+I1115 20:27:44.350903  1977 net.cpp:160] Setting up bn3_d0
+I1115 20:27:44.350915  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.350925  1977 layer_factory.hpp:78] Creating layer scale3_d0
+I1115 20:27:44.350930  1977 net.cpp:109] Creating Layer scale3_d0
+I1115 20:27:44.350934  1977 net.cpp:470] scale3_d0 <- merge_d0
+I1115 20:27:44.350937  1977 net.cpp:426] scale3_d0 -> merge_d0 (in-place)
+I1115 20:27:44.350975  1977 layer_factory.hpp:78] Creating layer scale3_d0
+I1115 20:27:44.355106  1977 net.cpp:160] Setting up scale3_d0
+I1115 20:27:44.355121  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.355131  1977 layer_factory.hpp:78] Creating layer elu3_d0
+I1115 20:27:44.355137  1977 net.cpp:109] Creating Layer elu3_d0
+I1115 20:27:44.355140  1977 net.cpp:470] elu3_d0 <- merge_d0
+I1115 20:27:44.355149  1977 net.cpp:426] elu3_d0 -> merge_d0 (in-place)
+I1115 20:27:44.355155  1977 net.cpp:160] Setting up elu3_d0
+I1115 20:27:44.355159  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.355165  1977 layer_factory.hpp:78] Creating layer conv4_d0
+I1115 20:27:44.355172  1977 net.cpp:109] Creating Layer conv4_d0
+I1115 20:27:44.355175  1977 net.cpp:470] conv4_d0 <- merge_d0
+I1115 20:27:44.355180  1977 net.cpp:439] conv4_d0 -> conv4_d0
+I1115 20:27:44.356684  1977 net.cpp:160] Setting up conv4_d0
+I1115 20:27:44.356698  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.356709  1977 layer_factory.hpp:78] Creating layer bn4_d0
+I1115 20:27:44.356715  1977 net.cpp:109] Creating Layer bn4_d0
+I1115 20:27:44.356719  1977 net.cpp:470] bn4_d0 <- conv4_d0
+I1115 20:27:44.356722  1977 net.cpp:426] bn4_d0 -> conv4_d0 (in-place)
+I1115 20:27:44.358204  1977 net.cpp:160] Setting up bn4_d0
+I1115 20:27:44.358217  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.358227  1977 layer_factory.hpp:78] Creating layer scale4_d0
+I1115 20:27:44.358232  1977 net.cpp:109] Creating Layer scale4_d0
+I1115 20:27:44.358237  1977 net.cpp:470] scale4_d0 <- conv4_d0
+I1115 20:27:44.358240  1977 net.cpp:426] scale4_d0 -> conv4_d0 (in-place)
+I1115 20:27:44.358276  1977 layer_factory.hpp:78] Creating layer scale4_d0
+I1115 20:27:44.361022  1977 net.cpp:160] Setting up scale4_d0
+I1115 20:27:44.361035  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.361044  1977 layer_factory.hpp:78] Creating layer elu4_d0
+I1115 20:27:44.361049  1977 net.cpp:109] Creating Layer elu4_d0
+I1115 20:27:44.361052  1977 net.cpp:470] elu4_d0 <- conv4_d0
+I1115 20:27:44.361057  1977 net.cpp:426] elu4_d0 -> conv4_d0 (in-place)
+I1115 20:27:44.361062  1977 net.cpp:160] Setting up elu4_d0
+I1115 20:27:44.361065  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.361069  1977 layer_factory.hpp:78] Creating layer conv4_d0_elu4_d0_0_split
+I1115 20:27:44.361073  1977 net.cpp:109] Creating Layer conv4_d0_elu4_d0_0_split
+I1115 20:27:44.361076  1977 net.cpp:470] conv4_d0_elu4_d0_0_split <- conv4_d0
+I1115 20:27:44.361083  1977 net.cpp:439] conv4_d0_elu4_d0_0_split -> conv4_d0_elu4_d0_0_split_0
+I1115 20:27:44.361088  1977 net.cpp:439] conv4_d0_elu4_d0_0_split -> conv4_d0_elu4_d0_0_split_1
+I1115 20:27:44.361127  1977 net.cpp:160] Setting up conv4_d0_elu4_d0_0_split
+I1115 20:27:44.361133  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.361136  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.361142  1977 layer_factory.hpp:78] Creating layer conv5_d0
+I1115 20:27:44.361150  1977 net.cpp:109] Creating Layer conv5_d0
+I1115 20:27:44.361152  1977 net.cpp:470] conv5_d0 <- conv4_d0_elu4_d0_0_split_0
+I1115 20:27:44.361157  1977 net.cpp:439] conv5_d0 -> conv5_d0
+I1115 20:27:44.362279  1977 net.cpp:160] Setting up conv5_d0
+I1115 20:27:44.362291  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.362300  1977 layer_factory.hpp:78] Creating layer bn5_d0
+I1115 20:27:44.362306  1977 net.cpp:109] Creating Layer bn5_d0
+I1115 20:27:44.362310  1977 net.cpp:470] bn5_d0 <- conv5_d0
+I1115 20:27:44.362314  1977 net.cpp:426] bn5_d0 -> conv5_d0 (in-place)
+I1115 20:27:44.369551  1977 net.cpp:160] Setting up bn5_d0
+I1115 20:27:44.369567  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.369578  1977 layer_factory.hpp:78] Creating layer scale5_d0
+I1115 20:27:44.369585  1977 net.cpp:109] Creating Layer scale5_d0
+I1115 20:27:44.369587  1977 net.cpp:470] scale5_d0 <- conv5_d0
+I1115 20:27:44.369592  1977 net.cpp:426] scale5_d0 -> conv5_d0 (in-place)
+I1115 20:27:44.369632  1977 layer_factory.hpp:78] Creating layer scale5_d0
+I1115 20:27:44.372555  1977 net.cpp:160] Setting up scale5_d0
+I1115 20:27:44.372570  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.372582  1977 layer_factory.hpp:78] Creating layer elu5_d0
+I1115 20:27:44.372588  1977 net.cpp:109] Creating Layer elu5_d0
+I1115 20:27:44.372592  1977 net.cpp:470] elu5_d0 <- conv5_d0
+I1115 20:27:44.372602  1977 net.cpp:426] elu5_d0 -> conv5_d0 (in-place)
+I1115 20:27:44.372608  1977 net.cpp:160] Setting up elu5_d0
+I1115 20:27:44.372612  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.372618  1977 layer_factory.hpp:78] Creating layer conv6_d0
+I1115 20:27:44.372625  1977 net.cpp:109] Creating Layer conv6_d0
+I1115 20:27:44.372628  1977 net.cpp:470] conv6_d0 <- conv5_d0
+I1115 20:27:44.372632  1977 net.cpp:439] conv6_d0 -> conv6_d0
+I1115 20:27:44.374076  1977 net.cpp:160] Setting up conv6_d0
+I1115 20:27:44.374089  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.374097  1977 layer_factory.hpp:78] Creating layer sum4_d0
+I1115 20:27:44.374104  1977 net.cpp:109] Creating Layer sum4_d0
+I1115 20:27:44.374106  1977 net.cpp:470] sum4_d0 <- conv6_d0
+I1115 20:27:44.374111  1977 net.cpp:470] sum4_d0 <- conv4_d0_elu4_d0_0_split_1
+I1115 20:27:44.374115  1977 net.cpp:439] sum4_d0 -> sum4_d0
+I1115 20:27:44.374143  1977 net.cpp:160] Setting up sum4_d0
+I1115 20:27:44.374148  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.374153  1977 layer_factory.hpp:78] Creating layer bn6_d0
+I1115 20:27:44.374161  1977 net.cpp:109] Creating Layer bn6_d0
+I1115 20:27:44.374164  1977 net.cpp:470] bn6_d0 <- sum4_d0
+I1115 20:27:44.374168  1977 net.cpp:426] bn6_d0 -> sum4_d0 (in-place)
+I1115 20:27:44.379690  1977 net.cpp:160] Setting up bn6_d0
+I1115 20:27:44.379706  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.379720  1977 layer_factory.hpp:78] Creating layer scale6_d0
+I1115 20:27:44.379726  1977 net.cpp:109] Creating Layer scale6_d0
+I1115 20:27:44.379730  1977 net.cpp:470] scale6_d0 <- sum4_d0
+I1115 20:27:44.379735  1977 net.cpp:426] scale6_d0 -> sum4_d0 (in-place)
+I1115 20:27:44.379783  1977 layer_factory.hpp:78] Creating layer scale6_d0
+I1115 20:27:44.391943  1977 net.cpp:160] Setting up scale6_d0
+I1115 20:27:44.391959  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.391970  1977 layer_factory.hpp:78] Creating layer elu6_d0
+I1115 20:27:44.391975  1977 net.cpp:109] Creating Layer elu6_d0
+I1115 20:27:44.391979  1977 net.cpp:470] elu6_d0 <- sum4_d0
+I1115 20:27:44.391999  1977 net.cpp:426] elu6_d0 -> sum4_d0 (in-place)
+I1115 20:27:44.392004  1977 net.cpp:160] Setting up elu6_d0
+I1115 20:27:44.392007  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.392014  1977 layer_factory.hpp:78] Creating layer embedconv
+I1115 20:27:44.392020  1977 net.cpp:109] Creating Layer embedconv
+I1115 20:27:44.392024  1977 net.cpp:470] embedconv <- sum4_d0
+I1115 20:27:44.392029  1977 net.cpp:439] embedconv -> embedconv
+I1115 20:27:44.394799  1977 net.cpp:160] Setting up embedconv
+I1115 20:27:44.394812  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.394822  1977 layer_factory.hpp:78] Creating layer elu7_d0
+I1115 20:27:44.394827  1977 net.cpp:109] Creating Layer elu7_d0
+I1115 20:27:44.394830  1977 net.cpp:470] elu7_d0 <- embedconv
+I1115 20:27:44.394834  1977 net.cpp:426] elu7_d0 -> embedconv (in-place)
+I1115 20:27:44.394840  1977 net.cpp:160] Setting up elu7_d0
+I1115 20:27:44.394843  1977 net.cpp:168] Top shape: 1 28 18 160 160 (12902400)
+I1115 20:27:44.394850  1977 layer_factory.hpp:78] Creating layer outputconv
+I1115 20:27:44.394855  1977 net.cpp:109] Creating Layer outputconv
+I1115 20:27:44.394857  1977 net.cpp:470] outputconv <- embedconv
+I1115 20:27:44.394863  1977 net.cpp:439] outputconv -> psd_score
+I1115 20:27:44.397588  1977 net.cpp:160] Setting up outputconv
+I1115 20:27:44.397601  1977 net.cpp:168] Top shape: 1 1 18 160 160 (460800)
+I1115 20:27:44.397611  1977 layer_factory.hpp:78] Creating layer Sigmoid1
+I1115 20:27:44.397617  1977 net.cpp:109] Creating Layer Sigmoid1
+I1115 20:27:44.397621  1977 net.cpp:470] Sigmoid1 <- psd_score
+I1115 20:27:44.397625  1977 net.cpp:439] Sigmoid1 -> output
+I1115 20:27:44.397814  1977 net.cpp:160] Setting up Sigmoid1
+I1115 20:27:44.397822  1977 net.cpp:168] Top shape: 1 1 18 160 160 (460800)
+I1115 20:27:44.397826  1977 net.cpp:249] Sigmoid1 does not need backward computation.
+I1115 20:27:44.397835  1977 net.cpp:249] outputconv does not need backward computation.
+I1115 20:27:44.397838  1977 net.cpp:249] elu7_d0 does not need backward computation.
+I1115 20:27:44.397841  1977 net.cpp:249] embedconv does not need backward computation.
+I1115 20:27:44.397845  1977 net.cpp:249] elu6_d0 does not need backward computation.
+I1115 20:27:44.397847  1977 net.cpp:249] scale6_d0 does not need backward computation.
+I1115 20:27:44.397850  1977 net.cpp:249] bn6_d0 does not need backward computation.
+I1115 20:27:44.397852  1977 net.cpp:249] sum4_d0 does not need backward computation.
+I1115 20:27:44.397856  1977 net.cpp:249] conv6_d0 does not need backward computation.
+I1115 20:27:44.397860  1977 net.cpp:249] elu5_d0 does not need backward computation.
+I1115 20:27:44.397862  1977 net.cpp:249] scale5_d0 does not need backward computation.
+I1115 20:27:44.397866  1977 net.cpp:249] bn5_d0 does not need backward computation.
+I1115 20:27:44.397868  1977 net.cpp:249] conv5_d0 does not need backward computation.
+I1115 20:27:44.397873  1977 net.cpp:249] conv4_d0_elu4_d0_0_split does not need backward computation.
+I1115 20:27:44.397877  1977 net.cpp:249] elu4_d0 does not need backward computation.
+I1115 20:27:44.397881  1977 net.cpp:249] scale4_d0 does not need backward computation.
+I1115 20:27:44.397882  1977 net.cpp:249] bn4_d0 does not need backward computation.
+I1115 20:27:44.397886  1977 net.cpp:249] conv4_d0 does not need backward computation.
+I1115 20:27:44.397888  1977 net.cpp:249] elu3_d0 does not need backward computation.
+I1115 20:27:44.397891  1977 net.cpp:249] scale3_d0 does not need backward computation.
+I1115 20:27:44.397894  1977 net.cpp:249] bn3_d0 does not need backward computation.
+I1115 20:27:44.397897  1977 net.cpp:249] merge_d0 does not need backward computation.
+I1115 20:27:44.397900  1977 net.cpp:249] deconv_d0 does not need backward computation.
+I1115 20:27:44.397904  1977 net.cpp:249] elu6_d1 does not need backward computation.
+I1115 20:27:44.397907  1977 net.cpp:249] scale6_d1 does not need backward computation.
+I1115 20:27:44.397909  1977 net.cpp:249] bn6_d1 does not need backward computation.
+I1115 20:27:44.397912  1977 net.cpp:249] sum4_d1 does not need backward computation.
+I1115 20:27:44.397917  1977 net.cpp:249] conv6_d1 does not need backward computation.
+I1115 20:27:44.397920  1977 net.cpp:249] elu5_d1 does not need backward computation.
+I1115 20:27:44.397923  1977 net.cpp:249] scale5_d1 does not need backward computation.
+I1115 20:27:44.397925  1977 net.cpp:249] bn5_d1 does not need backward computation.
+I1115 20:27:44.397928  1977 net.cpp:249] conv5_d1 does not need backward computation.
+I1115 20:27:44.397933  1977 net.cpp:249] conv4_d1_elu4_d1_0_split does not need backward computation.
+I1115 20:27:44.397935  1977 net.cpp:249] elu4_d1 does not need backward computation.
+I1115 20:27:44.397938  1977 net.cpp:249] scale4_d1 does not need backward computation.
+I1115 20:27:44.397941  1977 net.cpp:249] bn4_d1 does not need backward computation.
+I1115 20:27:44.397943  1977 net.cpp:249] conv4_d1 does not need backward computation.
+I1115 20:27:44.397948  1977 net.cpp:249] elu3_d1 does not need backward computation.
+I1115 20:27:44.397950  1977 net.cpp:249] scale3_d1 does not need backward computation.
+I1115 20:27:44.397953  1977 net.cpp:249] bn3_d1 does not need backward computation.
+I1115 20:27:44.397955  1977 net.cpp:249] merge_d1 does not need backward computation.
+I1115 20:27:44.397959  1977 net.cpp:249] deconv_d1 does not need backward computation.
+I1115 20:27:44.397963  1977 net.cpp:249] elu6_d2 does not need backward computation.
+I1115 20:27:44.397965  1977 net.cpp:249] scale6_d2 does not need backward computation.
+I1115 20:27:44.397967  1977 net.cpp:249] bn6_d2 does not need backward computation.
+I1115 20:27:44.397970  1977 net.cpp:249] sum4_d2 does not need backward computation.
+I1115 20:27:44.397974  1977 net.cpp:249] conv6_d2 does not need backward computation.
+I1115 20:27:44.397977  1977 net.cpp:249] elu5_d2 does not need backward computation.
+I1115 20:27:44.397984  1977 net.cpp:249] scale5_d2 does not need backward computation.
+I1115 20:27:44.397986  1977 net.cpp:249] bn5_d2 does not need backward computation.
+I1115 20:27:44.397989  1977 net.cpp:249] conv5_d2 does not need backward computation.
+I1115 20:27:44.397992  1977 net.cpp:249] conv4_d2_elu4_d2_0_split does not need backward computation.
+I1115 20:27:44.397995  1977 net.cpp:249] elu4_d2 does not need backward computation.
+I1115 20:27:44.397999  1977 net.cpp:249] scale4_d2 does not need backward computation.
+I1115 20:27:44.398001  1977 net.cpp:249] bn4_d2 does not need backward computation.
+I1115 20:27:44.398005  1977 net.cpp:249] conv4_d2 does not need backward computation.
+I1115 20:27:44.398008  1977 net.cpp:249] elu3_d2 does not need backward computation.
+I1115 20:27:44.398011  1977 net.cpp:249] scale3_d2 does not need backward computation.
+I1115 20:27:44.398015  1977 net.cpp:249] bn3_d2 does not need backward computation.
+I1115 20:27:44.398017  1977 net.cpp:249] merge_d2 does not need backward computation.
+I1115 20:27:44.398021  1977 net.cpp:249] deconv_d2 does not need backward computation.
+I1115 20:27:44.398025  1977 net.cpp:249] elu6_d3 does not need backward computation.
+I1115 20:27:44.398027  1977 net.cpp:249] scale6_d3 does not need backward computation.
+I1115 20:27:44.398030  1977 net.cpp:249] bn6_d3 does not need backward computation.
+I1115 20:27:44.398033  1977 net.cpp:249] sum4_d3 does not need backward computation.
+I1115 20:27:44.398036  1977 net.cpp:249] conv6_d3 does not need backward computation.
+I1115 20:27:44.398039  1977 net.cpp:249] elu5_d3 does not need backward computation.
+I1115 20:27:44.398042  1977 net.cpp:249] scale5_d3 does not need backward computation.
+I1115 20:27:44.398046  1977 net.cpp:249] bn5_d3 does not need backward computation.
+I1115 20:27:44.398048  1977 net.cpp:249] conv5_d3 does not need backward computation.
+I1115 20:27:44.398051  1977 net.cpp:249] conv4_d3_elu4_d3_0_split does not need backward computation.
+I1115 20:27:44.398054  1977 net.cpp:249] elu4_d3 does not need backward computation.
+I1115 20:27:44.398057  1977 net.cpp:249] scale4_d3 does not need backward computation.
+I1115 20:27:44.398061  1977 net.cpp:249] bn4_d3 does not need backward computation.
+I1115 20:27:44.398063  1977 net.cpp:249] conv4_d3 does not need backward computation.
+I1115 20:27:44.398066  1977 net.cpp:249] elu3_d3 does not need backward computation.
+I1115 20:27:44.398069  1977 net.cpp:249] scale3_d3 does not need backward computation.
+I1115 20:27:44.398072  1977 net.cpp:249] bn3_d3 does not need backward computation.
+I1115 20:27:44.398074  1977 net.cpp:249] merge_d3 does not need backward computation.
+I1115 20:27:44.398078  1977 net.cpp:249] deconv_d3 does not need backward computation.
+I1115 20:27:44.398082  1977 net.cpp:249] elu2_d4 does not need backward computation.
+I1115 20:27:44.398083  1977 net.cpp:249] scale2_d4 does not need backward computation.
+I1115 20:27:44.398087  1977 net.cpp:249] bn2_d4 does not need backward computation.
+I1115 20:27:44.398089  1977 net.cpp:249] sum0_d4 does not need backward computation.
+I1115 20:27:44.398093  1977 net.cpp:249] conv2_d4 does not need backward computation.
+I1115 20:27:44.398097  1977 net.cpp:249] elu1_d4 does not need backward computation.
+I1115 20:27:44.398099  1977 net.cpp:249] scale1_d4 does not need backward computation.
+I1115 20:27:44.398102  1977 net.cpp:249] bn1_d4 does not need backward computation.
+I1115 20:27:44.398105  1977 net.cpp:249] conv1_d4 does not need backward computation.
+I1115 20:27:44.398108  1977 net.cpp:249] conv0_d4_elu0_d4_0_split does not need backward computation.
+I1115 20:27:44.398111  1977 net.cpp:249] elu0_d4 does not need backward computation.
+I1115 20:27:44.398114  1977 net.cpp:249] scale0_d4 does not need backward computation.
+I1115 20:27:44.398118  1977 net.cpp:249] bn0_d4 does not need backward computation.
+I1115 20:27:44.398120  1977 net.cpp:249] conv0_d4 does not need backward computation.
+I1115 20:27:44.398123  1977 net.cpp:249] pool_d4 does not need backward computation.
+I1115 20:27:44.398128  1977 net.cpp:249] sum0_d3_elu2_d3_0_split does not need backward computation.
+I1115 20:27:44.398133  1977 net.cpp:249] elu2_d3 does not need backward computation.
+I1115 20:27:44.398136  1977 net.cpp:249] scale2_d3 does not need backward computation.
+I1115 20:27:44.398139  1977 net.cpp:249] bn2_d3 does not need backward computation.
+I1115 20:27:44.398142  1977 net.cpp:249] sum0_d3 does not need backward computation.
+I1115 20:27:44.398145  1977 net.cpp:249] conv2_d3 does not need backward computation.
+I1115 20:27:44.398149  1977 net.cpp:249] elu1_d3 does not need backward computation.
+I1115 20:27:44.398152  1977 net.cpp:249] scale1_d3 does not need backward computation.
+I1115 20:27:44.398154  1977 net.cpp:249] bn1_d3 does not need backward computation.
+I1115 20:27:44.398159  1977 net.cpp:249] conv1_d3 does not need backward computation.
+I1115 20:27:44.398161  1977 net.cpp:249] conv0_d3_elu0_d3_0_split does not need backward computation.
+I1115 20:27:44.398165  1977 net.cpp:249] elu0_d3 does not need backward computation.
+I1115 20:27:44.398169  1977 net.cpp:249] scale0_d3 does not need backward computation.
+I1115 20:27:44.398171  1977 net.cpp:249] bn0_d3 does not need backward computation.
+I1115 20:27:44.398175  1977 net.cpp:249] conv0_d3 does not need backward computation.
+I1115 20:27:44.398177  1977 net.cpp:249] pool_d3 does not need backward computation.
+I1115 20:27:44.398181  1977 net.cpp:249] sum0_d2_elu2_d2_0_split does not need backward computation.
+I1115 20:27:44.398186  1977 net.cpp:249] elu2_d2 does not need backward computation.
+I1115 20:27:44.398190  1977 net.cpp:249] scale2_d2 does not need backward computation.
+I1115 20:27:44.398192  1977 net.cpp:249] bn2_d2 does not need backward computation.
+I1115 20:27:44.398195  1977 net.cpp:249] sum0_d2 does not need backward computation.
+I1115 20:27:44.398200  1977 net.cpp:249] conv2_d2 does not need backward computation.
+I1115 20:27:44.398202  1977 net.cpp:249] elu1_d2 does not need backward computation.
+I1115 20:27:44.398206  1977 net.cpp:249] scale1_d2 does not need backward computation.
+I1115 20:27:44.398210  1977 net.cpp:249] bn1_d2 does not need backward computation.
+I1115 20:27:44.398212  1977 net.cpp:249] conv1_d2 does not need backward computation.
+I1115 20:27:44.398216  1977 net.cpp:249] conv0_d2_elu0_d2_0_split does not need backward computation.
+I1115 20:27:44.398219  1977 net.cpp:249] elu0_d2 does not need backward computation.
+I1115 20:27:44.398222  1977 net.cpp:249] scale0_d2 does not need backward computation.
+I1115 20:27:44.398224  1977 net.cpp:249] bn0_d2 does not need backward computation.
+I1115 20:27:44.398227  1977 net.cpp:249] conv0_d2 does not need backward computation.
+I1115 20:27:44.398231  1977 net.cpp:249] pool_d2 does not need backward computation.
+I1115 20:27:44.398234  1977 net.cpp:249] sum0_d1_elu2_d1_0_split does not need backward computation.
+I1115 20:27:44.398237  1977 net.cpp:249] elu2_d1 does not need backward computation.
+I1115 20:27:44.398241  1977 net.cpp:249] scale2_d1 does not need backward computation.
+I1115 20:27:44.398243  1977 net.cpp:249] bn2_d1 does not need backward computation.
+I1115 20:27:44.398247  1977 net.cpp:249] sum0_d1 does not need backward computation.
+I1115 20:27:44.398250  1977 net.cpp:249] conv2_d1 does not need backward computation.
+I1115 20:27:44.398253  1977 net.cpp:249] elu1_d1 does not need backward computation.
+I1115 20:27:44.398257  1977 net.cpp:249] scale1_d1 does not need backward computation.
+I1115 20:27:44.398259  1977 net.cpp:249] bn1_d1 does not need backward computation.
+I1115 20:27:44.398262  1977 net.cpp:249] conv1_d1 does not need backward computation.
+I1115 20:27:44.398265  1977 net.cpp:249] conv0_d1_elu0_d1_0_split does not need backward computation.
+I1115 20:27:44.398269  1977 net.cpp:249] elu0_d1 does not need backward computation.
+I1115 20:27:44.398272  1977 net.cpp:249] scale0_d1 does not need backward computation.
+I1115 20:27:44.398274  1977 net.cpp:249] bn0_d1 does not need backward computation.
+I1115 20:27:44.398277  1977 net.cpp:249] conv0_d1 does not need backward computation.
+I1115 20:27:44.398283  1977 net.cpp:249] pool_d1 does not need backward computation.
+I1115 20:27:44.398288  1977 net.cpp:249] sum0_d0_elu2_d0_0_split does not need backward computation.
+I1115 20:27:44.398290  1977 net.cpp:249] elu2_d0 does not need backward computation.
+I1115 20:27:44.398293  1977 net.cpp:249] scale2_d0 does not need backward computation.
+I1115 20:27:44.398296  1977 net.cpp:249] bn2_d0 does not need backward computation.
+I1115 20:27:44.398299  1977 net.cpp:249] sum0_d0 does not need backward computation.
+I1115 20:27:44.398303  1977 net.cpp:249] conv2_d0 does not need backward computation.
+I1115 20:27:44.398306  1977 net.cpp:249] elu1_d0 does not need backward computation.
+I1115 20:27:44.398309  1977 net.cpp:249] scale1_d0 does not need backward computation.
+I1115 20:27:44.398313  1977 net.cpp:249] bn1_d0 does not need backward computation.
+I1115 20:27:44.398315  1977 net.cpp:249] conv1_d0 does not need backward computation.
+I1115 20:27:44.398319  1977 net.cpp:249] conv0_d0_elu0_d0_0_split does not need backward computation.
+I1115 20:27:44.398322  1977 net.cpp:249] elu0_d0 does not need backward computation.
+I1115 20:27:44.398325  1977 net.cpp:249] scale0_d0 does not need backward computation.
+I1115 20:27:44.398329  1977 net.cpp:249] bn0_d0 does not need backward computation.
+I1115 20:27:44.398331  1977 net.cpp:249] conv0_d0 does not need backward computation.
+I1115 20:27:44.398335  1977 net.cpp:249] elui does not need backward computation.
+I1115 20:27:44.398339  1977 net.cpp:249] inputconv does not need backward computation.
+I1115 20:27:44.398341  1977 net.cpp:249] input does not need backward computation.
+I1115 20:27:44.398344  1977 net.cpp:292] This network produces output output
+I1115 20:27:44.398406  1977 net.cpp:306] Network initialization done.
+I1115 20:27:44.398409  1977 net.cpp:307] Memory required for data: 3035635200
+I1115 20:27:44.399152  1977 hdf5.cpp:32] Datatype class: H5T_FLOAT
+tests/psd_net/net.prototxt

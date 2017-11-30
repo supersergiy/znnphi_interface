@@ -1,13 +1,14 @@
-FROM seunglab/icpc:2016v4 
-
+FROM seunglab/icpc:2017v3 
 
 WORKDIR /opt
 RUN apt-get update 
 RUN apt-get install -y python python-pip git vim python-tk \
-		       screen wget vim cpio
+		       screen wget vim 
+
+#install Docker
+RUN wget -qO- https://get.docker.com/ | sh && groupadd docker; usermod -aG docker root && newgrp docker 
 
 #get znet and kaffe repos
-RUN pwd 
 RUN git clone https://github.com/supersergiy/znnphi_interface.git
 RUN git clone https://github.com/torms3/kaffe.git
 RUN mkdir /opt/.tmp
@@ -25,5 +26,7 @@ RUN pip install -r requirements.txt
 RUN tar -xzf lib.tar.gz
 RUN tar -xzf znets.tar.gz
 RUN mv /opt/.screenrc /root/
-RUN git config --global user.email "popovych@princeton.edu" && git config credential.helper store
-RUN wget -qO- https://get.docker.com/ | sh && sudo groupadd docker; sudo usermod -aG docker root && newgrp docker 
+RUN cd /opt/znnphi_interface \
+    && git config --global user.email "popovych@princeton.edu" \
+    && git config credential.helper store
+

@@ -119,10 +119,10 @@ def allocate_deconv_lines(lparam):
 
     param_str = generate_param_string(allocation_params)
 
-    if lparam["group"] == 1:
-        return allocate_deconv_as_conv(lparam, param_str)
-    elif lparam["group"] == lparam["ofm"] and lparam["ifm"] == lparam["ofm"]:
+    if lparam["group"] == lparam["ofm"] and lparam["ifm"] == lparam["ofm"]:
         return allocate_deconv_as_interpolation(lparam, param_str)
+    elif lparam["group"] == 1:
+        return allocate_deconv_as_conv(lparam, param_str)
     else:
         raise Exception("No suitable implementation for {}".format(lparam["name"]))
 
@@ -134,7 +134,6 @@ def allocate_deconv_as_interpolation(lparam, param_str):
     lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                               l["kernel"], l["kernel_size"]))
 
-
     #initialize weights
     kernel = l["kernel_data"]
     lines += fill_tensor(l["kernel"], kernel.flatten())
@@ -144,7 +143,6 @@ def allocate_deconv_as_interpolation(lparam, param_str):
     bias = l["bias_data"]
     assert( bias is None or np.sum(np.abs(bias)) == 0 )
     lines += zero_out_tensor(l["bias"])
-
 
     lines.append('layers["{}"] = new znn::phi::InterpolationLayer({});'.format(l["name"],
                                                                                param_str))
@@ -173,8 +171,8 @@ def allocate_deconv_as_conv(lparam, param_str):
         lines += fill_tensor('{}_bias'.format(l["name"]), bias.flatten() )
 
     #allocate layer
-    lines.append('layers["{}"] = new znn::phi::DeconvAsConvLayer({});'.format(l["name"],
-                                                                        param_str))
+    #ouch, this is a little ugly with the lib path, but sacrafices have to made to keep it dynamic
+    lines.append('layers["{}"] = new znn::phi::DeconvAsConvLayer({}, lib_path=this->lib_path);'.format(l["name"], param_str))
     if "additive_conv" in l and l["additive_conv"]:
         lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                                   l["scale"], l["scale_size"]))

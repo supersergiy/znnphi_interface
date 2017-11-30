@@ -6,11 +6,11 @@ from random import randint
 
 n = int(sys.argv[1])
 
-in_path      = "/home/ubuntu/inference_data/img.h5"
+in_path      = "/import/data/img.h5"
 out_path     = "./{}patches.h5".format(n)
 
 in_data  = h5py.File(in_path)["main"][...]
-out_data = np.zeros((n, 1, 18, 192, 192))
+out_data = np.zeros((n, 1, 22, 224, 224))
 in_shape = in_data.shape
 
 for i in range(n):
@@ -18,7 +18,7 @@ for i in range(n):
     y = randint(0, in_shape[-2] - 192)
     z = randint(0, in_shape[-3] - 18)
 
-    out_data[i] = in_data[z:z+18, y:y+192, x:x+192] / 256.0
+    out_data[i] = in_data[z:z+22, y:y+224, x:x+224] / 256.0
 
 out_file = h5py.File(out_path)
 out_file.create_dataset('/main', data=out_data)

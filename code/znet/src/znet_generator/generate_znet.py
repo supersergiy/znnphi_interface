@@ -6,12 +6,12 @@ from layers import allocate_layer_lines, forward_layer_lines
 from layers import generate_param_string
 from layers import conv
 
-def allocate_all_layers_lines(net, cores):
+def allocate_all_layers_lines(net, cores, ht):
     lines = []
     tensors, layer_info, layer_order, misc = net
 
     for (n,l) in iteritems(layer_info):
-        lines += allocate_layer_lines(l, cores)
+        lines += allocate_layer_lines(l, cores, ht)
 
     lines.append('')
     return lines
@@ -29,33 +29,45 @@ def allocate_featuremaps_lines(net):
 def generate_python_interface_misc(net):
     tensors, layer_info, layer_order, misc = net
     lines = []
-    #input
-    lines.append('input_size = {};'.format(tensors['user_input'].size))
-    #output
-    out_dim = 5
-    out_strides = [4]  #sizeof float
 
-    #go from the outer most dimension backward,
-    #then reverse
+    lines.append('input_size = {};'.format(tensors['user_input'].size))
+
+    in_dim    = tensors['user_input'].dim
+    out_dim   = tensors['output'].dim
+    in_ndim   = len(in_dim)
+    out_ndim  = len(out_dim)
+
+    lines.append('in_dim  = {};'.format(in_ndim))
+    lines.append('out_dim = {};'.format(out_ndim))
+
+    lines.append('size_t tmp_in_shape[]  = {{ {} }};'.format(', '.join(map(str, in_dim))))
+    lines.append('size_t tmp_out_shape[] = {{ {} }};'.format(', '.join(map(str, out_dim))))
+
+    lines.append('in_shape.assign(tmp_in_shape, tmp_in_shape + {});'.format(in_ndim))
+    lines.append('out_shape.assign(tmp_out_shape, tmp_out_shape + {});'.format(out_ndim))
+
+    # Fill in the strides array for numpy output export
+    out_strides = [4]  #sizeof float
+    #go from the outer most dimension backward, then reverse
     for i in range(1, 5): #4 more dimensions
-        out_strides.append(out_strides[-1]*tensors['user_output'].dim[-i])
+        out_strides.append(out_strides[-1] * out_dim[-i])
     out_strides = list(reversed(out_strides))
 
-    lines.append('out_dim = {};'.format(out_dim))
-    lines.append('size_t tmp_shape[] = {{ {} }};'.format(', '.join(map(str, tensors['user_output'].dim))))
-    lines.append('out_shape.assign(tmp_shape, tmp_shape + {});'.format(out_dim))
-
-    lines.append('size_t tmp_strides[] = {{ {} }};'.format(', '.join(map(str, out_strides))))
-    lines.append('out_strides.assign(tmp_strides, tmp_strides + {});'.format(out_dim))
-
+    lines.append('size_t tmp_out_strides[] = {{ {} }};'.format(', '.join(map(str, out_strides))))
+    lines.append('out_strides.assign(tmp_out_strides, tmp_out_strides + {});'.format(out_ndim))
     lines.append('')
+
+    return lines
+def set_constants_lines():
+    lines = []
+    lines.append('this->lib_path = lib_path;')
     return lines
 
-def constructor_body_lines(net, cores):
+def constructor_body_lines(net, cores, ht):
     lines = []
     tensors, layer_info, layer_order, misc = net
-
-    lines += allocate_all_layers_lines(net, cores)
+    lines += set_constants_lines()
+    lines += allocate_all_layers_lines(net, cores, ht)
     lines += allocate_featuremaps_lines(net)
     lines += generate_python_interface_misc(net)
     lines.append('')
@@ -69,9 +81,12 @@ def forward_all_layers_lines(net):
     for lname in layer_order:
        l = layer_info[lname]
        #lines.append('std::cout << "Running {}!\\n";'.format(l["name"]))
+       #lines += forward_layer_lines(l)
+       #lines += forward_layer_lines(l)
        #lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
        #if l["type"] in ["pad"]:
        #lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
+       #lines.append("std::cout << \"{}\" << std::endl;".format(lname))
        lines += forward_layer_lines(l)
 
        #lines += print_tensor_part_lines(l["top"])
@@ -92,7 +107,7 @@ def forward_body_lines(net):
     lines.append('')
     return lines
 
-def generate_znet(net, out_path, cores):
+def generate_znet(net, out_path, cores, ht):
     lines = []
     #includes
     lines.append('#include <iostream>')
@@ -105,8 +120,8 @@ def generate_znet(net, out_path, cores):
 
     #constructor
     print "   Generating constructors..."
-    constructor_signature = 'znn::phi::Znet::Znet(std::string weights_path)'
-    constructor_body      = constructor_body_lines(net, cores)
+    constructor_signature = 'znn::phi::Znet::Znet(std::string weights_path, std::string lib_path)'
+    constructor_body      = constructor_body_lines(net, cores, ht)
     constructor           = generate_function(constructor_signature, constructor_body)
     lines += constructor
 

@@ -61,7 +61,6 @@ public:
         kernels_ = k;
         biases_  = b;
         scale_   = s;
-
         launcher->launch(&(fns[0]));
     }
 

@@ -15,16 +15,20 @@ ofms    = params["ofms"]
 inputs  = params["inputs"]
 layers  = params["layers"]
 
+print layers
+
 count = 0
 for in_d in inputs:
 	for k_d in kernels:
 		for ofm in ofms:
+			print "creating net..."
 			count += 1
 			bad_param = False
 			for i in range(len(k_d)):
 				if (in_d[FIRST_SPACIAL_D + i] < k_d[i]):
 				 	bad_param = True
 		        if bad_param:
+                                print "bad param"
 				continue
 			layer_str = "_".join(map(str, layers))
 			in_str    = "_".join(map(str, in_d))
@@ -38,6 +42,7 @@ for in_d in inputs:
 				for i in range(len(in_d)):
 					base = base.replace("[IN{}]".format(i + 1), str(in_d[i]))
 				out_f.write(base)
+			        print layers	
 
                                 for i in range(len(layers)):
                                     l = layers[i]
@@ -54,7 +59,7 @@ for in_d in inputs:
                                     else:
                                         l_spec = l_spec.replace("[TOP_TENSOR]", "tensor_{}".format(i))
 
-                                    if l == "conv":
+                                    if l in ["conv", "deconv"]:
                                         for i in range(len(k_d)):
                                             l_spec = l_spec.replace("[K{}]".format(i + 1), str(k_d[i]))
                                         l_spec = l_spec.replace("[OFM]", str(ofm))

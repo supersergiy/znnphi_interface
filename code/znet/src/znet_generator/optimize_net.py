@@ -178,10 +178,33 @@ def consume_elu(layer_info, lname, next_name):
     l["activation"] = "elu"
 
 def handle_padding(net):
-    tensors, layer_info, layer_order, misc = net
+    handle_conv_padding(net)
+    handle_deconv_padding(net)
 
-    handle_implicit_paddings(net)
-    insert_explicit_paddings(net)
+def handle_deconv_padding(net):
+    tensors, layer_info, layer_order, misc = net
+    for lname in list(layer_order):
+        l  = layer_info[lname]
+        lt = l["type"]
+        if lt == "deconv" and l["pad"] != [0, 0, 0]:
+            #change the output dims of deconv to have the full output range
+            #insert a crop right after
+            crop_param = generate_crop_param(l)
+            #create the in between tensor of size: precrop
+            tensors[crop_param["bot"][0]] = Tensor(crop_param["bot_dim"])
+
+            #rewire deconv to send input to cropper
+            l["top"] = crop_param["bot"][0]
+
+            remove_padding_from_deconv(net, lname)
+
+            #add crop layer
+            insert_layer(net, crop_param, prev_lname=l["next"][0])
+
+
+def handle_conv_padding(net):
+    insert_implicit_conv_pads(net)
+    insert_explicit_conv_pads(net)
 
 
 def remove_padding_from_conv(net, conv_name):
@@ -190,11 +213,20 @@ def remove_padding_from_conv(net, conv_name):
 
     l["id"]  += 2 * l["pad"][0]
     l["ihw"] += 2 * l["pad"][1]
+    l["pad"] = [0, 0, 0]
+
+def remove_padding_from_deconv(net, deconv_name):
+    tensors, layer_info, layer_order, misc = net
+    l = layer_info[deconv_name]
+
+    l["top_dim"][2] += 2 * l["pad"][0]
+    l["top_dim"][3] += 2 * l["pad"][1]
+    l["top_dim"][4] += 2 * l["pad"][1]
 
     l["pad"] = [0, 0, 0]
 
 
-def handle_implicit_paddings(net):
+def insert_implicit_conv_pads(net):
     tensors, layer_info, layer_order, misc = net
     count = 0
 
@@ -208,7 +240,7 @@ def handle_implicit_paddings(net):
                 next_l = layer_info[next_name]
                 if next_l["pad"][0] != 0 or next_l["pad"][1] != 0:
                     count += 1
-                    print "Output paddiing for {}!".format(l["name"])
+                    print "Output paddinig for {}!".format(l["name"])
                     l["output_pad"] = copy.copy(next_l["pad"])
                     l["top_dim"][2] += 2 * l["output_pad"][0]
                     l["top_dim"][3] += 2 * l["output_pad"][1]
@@ -218,7 +250,37 @@ def handle_implicit_paddings(net):
                     remove_padding_from_conv(net, next_name)
                     set_layer_dim(next_l, tensors[l["top"]])
 
+def generate_crop_param(deconv_lparam):
+    assert deconv_lparam["type"] == "deconv"
+    l = deconv_lparam
+
+    crop_param   = {}
+    crop_name = "{}_crop".format(l["name"])
+    crop_param["name"]  = crop_name
+    crop_param["type"]  = "crop"
+
+    crop_param["bn"]    = l["bn"]
+    crop_param["ofm"]   = l["ofm"]
+    crop_param["ifm"]   = l["ofm"]
+
+    crop_param["id"]    = l["stride"][0] * (l["id"]  - 1) + l["kernel_dim"][2]
+    crop_param["ihw"]   = l["stride"][1] * (l["ihw"] - 1) + l["kernel_dim"][3]
+    crop_param["od"]    = l["stride"][0] * (l["id"]  - 1) + l["kernel_dim"][2] - 2*l["pad"][0]
+    crop_param["ohw"]   = l["stride"][1] * (l["ihw"] - 1) + l["kernel_dim"][3] - 2*l["pad"][1]
+
+    crop_param["top_dim"] = copy.deepcopy(l["top_dim"])
+    crop_param["bot_dim"] = [ crop_param["bn"], crop_param["ifm"], crop_param["id"], crop_param["ihw"], crop_param["ihw"] ]
+
+    crop_param["z_offset"]  = l["pad"][0]
+    crop_param["xy_offset"] = l["pad"][1]
+
+    crop_param["bot"] = ["{}_precrop".format(l["top"])]
+    crop_param["top"] = l["top"]
+
+    return crop_param
+
 def generate_pad_param(conv_lparam):
+    assert conv_lparam["type"] == "conv"
     l = conv_lparam
     padder_name = "{}_padder".format(conv_lparam["name"])
 
@@ -240,17 +302,15 @@ def generate_pad_param(conv_lparam):
     pad_param["top_dim"] = padded_dim
 
     pad_param["bot"] = l["bot"]
-    pad_param["top"] = "{}_padded".format(l["bot"])
+    pad_param["top"] = "{}_padded".format(l["name"])
     return pad_param
 
-def insert_explicit_paddings(net):
+def insert_explicit_conv_pads(net):
     tensors, layer_info, layer_order, misc = net
-
     for lname in list(layer_order):
         l = layer_info[lname]
         if l["type"] == "conv" and (l["pad"][0] != 0 or l["pad"][1] != 0):
             pad_param = generate_pad_param(l)
-
             #alocate the padder out tensor
             tensors[pad_param["top"]] = Tensor(pad_param["top_dim"])
 
@@ -300,8 +360,6 @@ def eliminate_adds(net):
             if len(l["next"]) == 1 and layer_info[l["next"][0]]["type"] == "eltwise": #TODO: this works only for summing eltwise
                 next_name = l["next"][0]
                 next_l = layer_info[next_name]
-                if next_name == "Sum11":
-                    continue
                 # make sure that this conv executes before the thing that's added to it
                 # otherwise we can't consume this add with this conv
                 can_consume = True

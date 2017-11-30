@@ -54,7 +54,7 @@ class znet:
         try:
             import znet
         except:
-            raise("Problem loading the network object. Please make sure there's a \
+            raise Exception("Problem loading the network object. Please make sure there's a \
                    znet.so file present at {}".format(net_path))
         self.net = znet.znet(os.path.join(self.real_secret_path, "weights/"), lib_path)
 

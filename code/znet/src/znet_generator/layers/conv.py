@@ -126,6 +126,7 @@ def allocate_conv_lines(lparam):
 
     cores = l.get("cores", 2)
     ht    = l.get("ht",    2)
+    cpu_offset = l.get("cpu_offset", 0)
 
     lines = []
 
@@ -133,14 +134,15 @@ def allocate_conv_lines(lparam):
     params = (l["bn"], l["ifm"], l["ofm"], l["id"], l["ihw"],
               l["kernel_dim"][2], l["kernel_dim"][3],
               0, out_padd, 0, 0, out_padhw,
-              activate, add_or_overwrite, cores, ht)
+              activate, add_or_overwrite, cores, ht, cpu_offset)
 
     params_template  = '"'
     params_template += 'BN={} IFM={} OFM={} ID={} IHW={} KD={} KHW={} '
     params_template += 'OUT_D_SKIP={} OUT_PADD={} '
     params_template += 'OUT_H_SKIP={} OUT_W_SKIP={} OUT_PADHW={} '
     params_template += 'OUT_STRIDE_D=1 OUT_STRIDE_HW=1 '
-    params_template += 'ACTIVATION={} ADDOROVERWRITE={} CORES={} HT={}'
+    params_template += 'ACTIVATION={} ADDOROVERWRITE={} CORES={} HT={} '
+    params_template += 'CPU_OFFSET={}'
     params_template += '"'
 
     params_str = params_template.format(*params)

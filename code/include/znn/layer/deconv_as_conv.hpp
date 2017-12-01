@@ -24,6 +24,7 @@ private:
    int kd, khw;
    int stride_d, stride_hw;
    int out_padd, out_padhw;
+   int cpu_offset, cores, ht;
 
    bool activation,  add_or_overwrite;
 
@@ -80,16 +81,21 @@ public:
       ss << "ACTIVATION="     << activation << " ";
       ss << "AddOrOverwrite=" << add_or_overwrite << " ";
       
-      ss << "CORES=" << 2 << " ";
-      ss << "HT=" << 2 << " ";
+      ss << "CORES=" << cores << " ";
+      ss << "HT=" << ht  << " ";
+      ss << "CPU_OFFSET=" << cpu_offset  << " ";
 
       return ss.str();
    }
 
    DeconvAsConvLayer(int _bn, int _ifm, int _ofm, int _id, int _ihw, int _kd, int _khw, 
      int _stride_d, int _stride_hw, int _out_padd, int _out_padhw, bool _activation, bool _add_or_overwrite, 
-     const float *kernel, const std::string &lib_path)
+     const float *kernel, const std::string &lib_path, int _cores, int _ht, int _cpu_offset)
    {   
+      cores = _cores;
+      ht = _ht;
+      cpu_offset = _cpu_offset;
+
       bn = _bn; 
       ifm = _ifm;
       ofm = _ofm;

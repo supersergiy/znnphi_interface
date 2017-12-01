@@ -40,7 +40,7 @@ def create_conv_wrapper(args):
                                   args["out_d_skip"], args["out_padd"],
                                   args["out_h_skip"], args["out_w_skip"], args["out_padhw"],
                                   args["out_stride_d"], args["out_stride_hw"],
-                                  args["activation"], args["addoroverwrite"]])
+                                  args["activation"], args["addoroverwrite"], args["cpu_offset"]])
     pid = os.getpid()
     wrapper_name = ".tmp/{}.cpp".format(pid)
 

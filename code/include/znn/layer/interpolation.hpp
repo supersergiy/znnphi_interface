@@ -23,10 +23,9 @@ private:
    int stride_d, stride_hw;
 
 public:
-   InterpolationLayer(int _bn, int _ifm, int _ofm, int _id, int _ihw, int _kd, int _khw, 
-               int _stride_d, int _stride_hw, int _padd, int _padhw, bool _activation, bool _add_or_overwrite, 
-               float* kernel=NULL): bn(_bn), ifm(_ifm), ofm(_ofm), id(_id), ihw(_ihw),
-                                    kd(_kd), khw(_khw), stride_d(_stride_d), stride_hw(_stride_hw)
+   InterpolationLayer(int _bn, int _ifm, int _ofm, int _id, int _ihw, int _kd, int _khw, int _stride_d, int _stride_hw, 
+                      int _padd, int _padhw, bool _activation, bool _add_or_overwrite, float* kernel, int _cores, int _ht, int _cpu_offset): 
+                            bn(_bn), ifm(_ifm), ofm(_ofm), id(_id), ihw(_ihw), kd(_kd), khw(_khw), stride_d(_stride_d), stride_hw(_stride_hw)
    {
       assert( bn > 0);
       assert(ofm > 0);

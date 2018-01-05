@@ -24,7 +24,7 @@ lib_path  = os.path.join(znet_path, "lib")
 z = pznet.znet()
 
 print "Creating net..."
-z.create_net(net_path, weights_path, znet_path, cores, ht, cpu_offset)
+#z.create_net(net_path, weights_path, znet_path, cores, ht, cpu_offset)
 print "Running net..."
 z.load_net(znet_path, lib_path)
 

@@ -51,6 +51,7 @@ class znet:
             os.makedirs(lib_path)
         target_files = os.path.join(net_path, '*')
         os.system("cp -r {} {}".format(target_files, self.real_secret_path))
+	import pdb; pdb.set_trace()
         try:
             import znet
         except:

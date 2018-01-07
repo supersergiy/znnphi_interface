@@ -9,15 +9,18 @@ RUN apt-get install -y python python-pip git vim python-tk \
 RUN wget -qO- https://get.docker.com/ | sh && groupadd docker; usermod -aG docker root && newgrp docker 
 
 #get znet and kaffe repos
+RUN pwd
 RUN git clone https://github.com/supersergiy/znnphi_interface.git
 RUN git clone https://github.com/torms3/kaffe.git
 RUN mkdir /opt/.tmp
 
 RUN cd kaffe && git checkout cpu_inference
 
-ENV LD_LIBRARY_PATH /opt/intel/lib/intel64
-ENV ZNNPHI_PATH /opt/znnphi_interface 
-ENV PYTHONPATH /opt/znnphi_interface/code/znet/src/python:/opt/kaffe 
+#Using this instead of ENV so that can work within screen
+RUN echo "export LD_LIBRARY_PATH=/opt/intel/lib/intel64" >> ~/.bashrc
+RUN echo "export ZNNPHI_PATH=/opt/znnphi_interface" >> ~/.bashrc 
+RUN echo "export PYTHONPATH=/opt/znnphi_interface/code/znet/src/python:/opt/kaffe" >> ~/.bashrc
+#RUN source ~/.bashrc
 
 ADD ./pz_files/ /opt
 RUN mv intel.tar.gz / && cd / && tar -xzf intel.tar.gz

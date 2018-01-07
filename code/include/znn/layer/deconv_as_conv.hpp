@@ -90,7 +90,7 @@ public:
 
    DeconvAsConvLayer(int _bn, int _ifm, int _ofm, int _id, int _ihw, int _kd, int _khw, 
      int _stride_d, int _stride_hw, int _out_padd, int _out_padhw, bool _activation, bool _add_or_overwrite, 
-     const float *kernel, const std::string &lib_path, int _cores, int _ht, int _cpu_offset)
+     const float *kernel, int _cores, int _ht, int _cpu_offset, const std::string &lib_path)
    {   
       cores = _cores;
       ht = _ht;

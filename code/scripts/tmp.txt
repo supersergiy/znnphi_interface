@@ -2,7 +2,7 @@ make: Entering directory '/opt/znnphi_interface/code/znet'
 rm -rf out
 mkdir -p out
 mkdir -p out/weights
-python src/znet_generator/main.py /opt/znnphi_interface/code/znet/src/python/pznet/.tmp/net.json /tests/pni_unet/weights.h5 src/generated/znet.cpp 2 1 0
+python src/znet_generator/main.py /opt/znnphi_interface/code/znet/src/python/pznet/.tmp/net.json /tests/rs_unet_cremi/weights.h5 src/generated/znet.cpp 2 2 2
 Parsing the network spec...
 Loading the weights...
 Optimizing the net...
@@ -145,28 +145,16 @@ Output paddinig for Conv9!
 Output paddinig for Conv12!
 Output paddinig for Conv15!
 Output paddinig for Conv18!
-Output paddinig for Conv22!
-Output paddinig for Conv26!
+Output paddinig for Conv21!
+Output paddinig for Conv24!
+Output paddinig for Conv27!
 Output paddinig for Conv30!
-Output paddinig for Conv34!
-Output paddinig for Conv38!
+Output paddinig for Conv33!
 Generating the network...
    Generating constructors...
    Generating foward pass...
 Done!
-In file included from /opt/znnphi_interface/code/include/znn/layer/layers.hpp(12),
-                 from src/generated/znet.cpp(3):
-/opt/znnphi_interface/code/include/znn/layer/interpolation.hpp(27): error: default argument not at end of parameter list
-                        int _padd, int _padhw, bool _activation, bool _add_or_overwrite, float* kernel=NULL, int _cores, int _ht, int _cpu_offset): 
-                                                                                                       ^
-
-compilation aborted for src/generated/znet.cpp (code 2)
-Makefile:92: recipe for target 'out/znet.o' failed
-make: *** [out/znet.o] Error 2
+icpc: command line warning #10006: ignoring unknown option '-Wdate-time'
+icpc: warning #10315: specifying -lm before files may supersede the Intel(R) math library and affect performance
+icpc: command line remark #10411: option '-openmp' is deprecated and will be removed in a future release. Please use the replacement option '-qopenmp'
 make: Leaving directory '/opt/znnphi_interface/code/znet'
-Creating net...
-Running net...
-Traceback (most recent call last):
-  File "run_single_test.py", line 29, in <module>
-    sys.exti(0)
-AttributeError: 'module' object has no attribute 'exti'

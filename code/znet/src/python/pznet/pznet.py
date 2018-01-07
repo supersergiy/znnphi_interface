@@ -51,12 +51,12 @@ class znet:
             os.makedirs(lib_path)
         target_files = os.path.join(net_path, '*')
         os.system("cp -r {} {}".format(target_files, self.real_secret_path))
-	import pdb; pdb.set_trace()
         try:
             import znet
         except:
-            raise Exception("Problem loading the network object. Please make sure there's a \
-                   znet.so file present at {}".format(net_path))
+            raise Exception("Problem loading the network object. " + 
+                            "Please make sure there's a znet.so file present at {}".format(net_path))
+
         self.net = znet.znet(os.path.join(self.real_secret_path, "weights/"), lib_path)
 
     def get_in_shape(self):

@@ -23,18 +23,18 @@ class znet:
 
         sys.path.append(self.real_secret_path)
 
-    def create_net(self, prototxt_path, h5_weights_path, output_path, cores=2, ht=2):
+    def create_net(self, prototxt_path, h5_weights_path, output_path, cores=2, ht=2, cpu_offset=0):
         json_net_path = os.path.join(self.real_secret_path, 'net.json')
         convert_prototxt_to_json(prototxt_path, json_net_path)
 
         znnphi_path = os.environ["ZNNPHI_PATH"]
         mothership_folder = '{}/code/znet'.format(znnphi_path)
 
-        make_command  = 'make -C {} py N={} W={} O={} CORES={} HT={}'.format(mothership_folder,
+        make_command  = 'make -C {} py N={} W={} O={} CORES={} HT={} CPU_OFFSET={}'.format(mothership_folder,
                                                              json_net_path,
                                                              h5_weights_path,
                                                              self.real_secret_path,
-                                                             cores, ht)
+                                                             cores, ht, cpu_offset)
         os.system(make_command) #compiles the znet.so and copies it to the working folder along with the weights
 
         #copy results to the output folder
@@ -44,11 +44,19 @@ class znet:
         os.system("cp {} {}/net.prototxt".format(prototxt_path, output_path))
         os.system("cp {} {}/weights.h5".format(h5_weights_path, output_path))
 
-    def load_net(self, net_path, lib_path="{}/lib/".format(os.environ["ZNNPHI_PATH"])):
+    def load_net(self, net_path, lib_path=None):
+        if lib_path is None:
+            lib_path = os.path.join(net_path, "lib")
         if not os.path.exists(lib_path):
             os.makedirs(lib_path)
-        os.system("cp -r {}/* {}".format(net_path, self.real_secret_path))
-        import znet
+        target_files = os.path.join(net_path, '*')
+        os.system("cp -r {} {}".format(target_files, self.real_secret_path))
+        try:
+            import znet
+        except:
+            raise Exception("Problem loading the network object. " + 
+                            "Please make sure there's a znet.so file present at {}".format(net_path))
+
         self.net = znet.znet(os.path.join(self.real_secret_path, "weights/"), lib_path)
 
     def get_in_shape(self):

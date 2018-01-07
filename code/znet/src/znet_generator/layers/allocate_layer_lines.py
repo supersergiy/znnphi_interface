@@ -13,9 +13,10 @@ from crop    import allocate_crop_lines
 from block_input    import allocate_block_input_lines
 from unblock_output import allocate_unblock_output_lines
 
-def allocate_layer_lines(lparams, cores, ht):
+def allocate_layer_lines(lparams, cores, ht, cpu_offset):
    lparams["cores"] = cores
    lparams["ht"]    = ht
+   lparams["cpu_offset"] = cpu_offset
    lt = lparams["type"]
 
    if lt == "conv":

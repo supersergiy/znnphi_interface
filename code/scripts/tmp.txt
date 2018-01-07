@@ -1,0 +1,160 @@
+make: Entering directory '/opt/znnphi_interface/code/znet'
+rm -rf out
+mkdir -p out
+mkdir -p out/weights
+python src/znet_generator/main.py /opt/znnphi_interface/code/znet/src/python/pznet/.tmp/net.json /tests/rs_unet_cremi/weights.h5 src/generated/znet.cpp 2 2 2
+Parsing the network spec...
+Loading the weights...
+Optimizing the net...
+Removing Sum1!
+Removing Sum2!
+Removing Sum3!
+Removing Sum4!
+Removing Sum5!
+Removing Sum6!
+Removing Merge1!
+Removing Sum7!
+Removing Merge2!
+Removing Sum8!
+Removing Merge3!
+Removing Sum9!
+Removing Merge4!
+Removing Sum10!
+Removing Merge5!
+Removing Sum11!
+Removing ELU1!
+Removing BN1!
+Removing Scale1!
+Removing ELU2!
+Removing BN2!
+Removing Scale2!
+Removing ELU3!
+Removing BN3!
+Removing Scale3!
+Removing ELU4!
+Removing BN4!
+Removing Scale4!
+Removing ELU5!
+Removing BN5!
+Removing Scale5!
+Removing ELU6!
+Removing BN6!
+Removing Scale6!
+Removing ELU7!
+Removing BN7!
+Removing Scale7!
+Removing ELU8!
+Removing BN8!
+Removing Scale8!
+Removing ELU9!
+Removing BN9!
+Removing Scale9!
+Removing ELU10!
+Removing BN10!
+Removing Scale10!
+Removing ELU11!
+Removing BN11!
+Removing Scale11!
+Removing ELU12!
+Removing BN12!
+Removing Scale12!
+Removing ELU13!
+Removing BN13!
+Removing Scale13!
+Removing ELU14!
+Removing BN14!
+Removing Scale14!
+Removing ELU15!
+Removing BN15!
+Removing Scale15!
+Removing ELU16!
+Removing BN16!
+Removing Scale16!
+Removing ELU17!
+Removing BN17!
+Removing Scale17!
+Removing ELU18!
+Removing BN18!
+Removing Scale18!
+Removing ELU19!
+Removing BN19!
+Removing Scale19!
+Removing ELU20!
+Removing BN20!
+Removing Scale20!
+Removing ELU21!
+Removing BN21!
+Removing Scale21!
+Removing ELU22!
+Removing BN22!
+Removing Scale22!
+Removing ELU23!
+Removing BN23!
+Removing Scale23!
+Removing ELU24!
+Removing BN24!
+Removing Scale24!
+Removing ELU25!
+Removing BN25!
+Removing Scale25!
+Removing ELU26!
+Removing BN26!
+Removing Scale26!
+Removing ELU27!
+Removing BN27!
+Removing Scale27!
+Removing ELU28!
+Removing BN28!
+Removing Scale28!
+Removing ELU29!
+Removing BN29!
+Removing Scale29!
+Removing ELU30!
+Removing BN30!
+Removing Scale30!
+Removing ELU31!
+Removing BN31!
+Removing Scale31!
+Removing ELU32!
+Removing BN32!
+Removing Scale32!
+Removing ELU33!
+Removing BN33!
+Removing Scale33!
+Removing ELU34!
+Removing BN34!
+Removing Scale34!
+Removing ELU35!
+Removing BN35!
+Removing Scale35!
+Removing ELU36!
+Removing BN36!
+Removing Scale36!
+Removing ELU37!
+Removing BN37!
+Removing Scale37!
+Removing ELU38!
+Removing BN38!
+Removing Scale38!
+Removing ELU39!
+Removing ELU40!
+Output paddinig for Conv1!
+Output paddinig for Conv3!
+Output paddinig for Conv6!
+Output paddinig for Conv9!
+Output paddinig for Conv12!
+Output paddinig for Conv15!
+Output paddinig for Conv18!
+Output paddinig for Conv21!
+Output paddinig for Conv24!
+Output paddinig for Conv27!
+Output paddinig for Conv30!
+Output paddinig for Conv33!
+Generating the network...
+   Generating constructors...
+   Generating foward pass...
+Done!
+icpc: command line warning #10006: ignoring unknown option '-Wdate-time'
+icpc: warning #10315: specifying -lm before files may supersede the Intel(R) math library and affect performance
+icpc: command line remark #10411: option '-openmp' is deprecated and will be removed in a future release. Please use the replacement option '-qopenmp'
+make: Leaving directory '/opt/znnphi_interface/code/znet'

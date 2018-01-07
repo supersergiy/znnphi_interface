@@ -114,8 +114,9 @@ def allocate_deconv_lines(lparam):
                          l["kernel_dim"][2], l["kernel_dim"][3],
                          l["stride"][0],  l["stride"][1],
                          0, 0, activate, add_or_overwrite,
-                         'tensors["{}"]->data()'.format(l["kernel"]))
-                         #'tensors["{}"]->data()'.format(l["bias"]))
+                         'tensors["{}"]->data()'.format(l["kernel"]),
+                         l["cores"], l["ht"], l["cpu_offset"])
+              #           #'tensors["{}"]->data()'.format(l["bias"]))
 
     param_str = generate_param_string(allocation_params)
 

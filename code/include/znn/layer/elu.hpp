@@ -34,7 +34,7 @@ public:
    void range_elu(float const* __restrict i, float* __restrict o, int num) 
    {
       for (int n = 0; n < num; n++) {
-         o[n] = i[n];
+         o[n] = i[n] ;
          if (i[n] < 0.0) {
             o[n] = exp(i[n]) - 1.0;
          }

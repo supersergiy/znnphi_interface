@@ -30,6 +30,16 @@ def read_in_weights(net, weights_path):
                     raise Exception("wtf")
                 l["scale_data"] *= scale_factor 
                 l["bias_data"]  *= scale_factor 
+        elif l["type"] in ["bias"]:
+            lweights = weights[lname].values()
+
+            l["bias_data"]  = lweights[0][:]
+            l["scale_data"] = np.ones(l["bias_data"].shape)
+            l["type"] = "scale" # hashtag polymorph
+
+            if len(lweights) > 2: 
+               import pdb; pdb.set_trace()
+
         elif l["type"] in ["bnorm"]:
             lweights = weights[lname].values()
 

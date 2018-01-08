@@ -134,7 +134,6 @@ def allocate_deconv_as_interpolation(lparam, param_str):
     #allocate weights
     lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                               l["kernel"], l["kernel_size"]))
-
     #initialize weights
     kernel = l["kernel_data"]
     lines += fill_tensor(l["kernel"], kernel.flatten())

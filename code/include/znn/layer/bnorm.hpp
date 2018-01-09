@@ -35,13 +35,18 @@ public:
 
       memset(means,  0, rounded_fm*sizeof(float));
       memset(stdev, 0, rounded_fm*sizeof(float));
-
-      /*SIMD_FLOAT simd_i, simd_mean, simd_stdev;
+      
+      double my_means[rounded_fm], my_stdev[rounded_fm];
+      memset(my_means,  0, rounded_fm*sizeof(double));
+      memset(my_stdev, 0, rounded_fm*sizeof(double));
+      SIMD_FLOAT simd_i, simd_mean, simd_stdev;
 
       for (int b = 0; b < bn; ++b) {
          for (int f = 0; f < rounded_fm/SIMD_WIDTH; f++) {
             for (int n = 0; n < id*ihw*ihw; n++) {
-               means[f*SIMD_WIDTH + s] += i_array[b][f][n][s] / (id*ihw*ihw); 
+               for (int s = 0; s < SIMD_WIDTH; s++) {
+                  my_means[f*SIMD_WIDTH + s] += i_array[b][f][n][s] / (id*ihw*ihw); 
+               }
             }
          }
       }
@@ -49,16 +54,17 @@ public:
          for (int f = 0; f < rounded_fm/SIMD_WIDTH; f++) {
             for (int n = 0; n < id*ihw*ihw; n++) {
                for (int s = 0; s < SIMD_WIDTH; s++) {
-                  stdev[f*SIMD_WIDTH + s] += (means[f*SIMD_WIDTH + s] - i_array[b][f][n][s]) * (means[f*SIMD_WIDTH + s] - i_array[b][f][n][s]); 
+                  my_stdev[f*SIMD_WIDTH + s] += (my_means[f*SIMD_WIDTH + s] - i_array[b][f][n][s]) * (my_means[f*SIMD_WIDTH + s] - i_array[b][f][n][s]); 
                } 
             }
          }
       }
       for (int n = 0; n < rounded_fm; n++) {
-         stdev[n] = std::sqrt(stdev[n] / (id*ihw*ihw)); 
-      }*/
+         stdev[n] = std::sqrt(my_stdev[n] / (id*ihw*ihw)); 
+         means[n] = my_means[n];
+      }
       
-      SIMD_FLOAT simd_i, simd_mean, simd_stdev;
+      /*SIMD_FLOAT simd_i, simd_mean, simd_stdev;
       SIMD_FLOAT simd_delta1, simd_delta2;
 
       size_t counter = 0;
@@ -82,7 +88,7 @@ public:
       }
       for (int n = 0; n < rounded_fm; n++) {
          stdev[n] = std::sqrt(stdev[n] / counter); 
-      }
+      }*/
 
    }
    void forward(float const* __restrict i, float* __restrict o, 
@@ -97,12 +103,6 @@ public:
       for (int n = 0; n < rounded_fm; n++) {
          bias[n]  = -1.0 * dynamic_mean[n] / (dynamic_stdev[n] + 0.000001);
          scale[n] =  1.0 / (dynamic_stdev[n] + 0.000001); 
-         if (n == 0) {
-             std::cout << "Mean: " << dynamic_mean[n] << std::endl;
-             std::cout << "stdev: " << dynamic_stdev[n] << std::endl;
-             std::cout << "bias: " << bias[n] << std::endl;
-             std::cout << "scale: " << scale[n] << std::endl; 
-         }
       }
 
       typedef float const (*in_tp)[rounded_fm/SIMD_WIDTH][id*ihw*ihw][SIMD_WIDTH];

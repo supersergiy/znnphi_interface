@@ -36,28 +36,6 @@ public:
       memset(means,  0, rounded_fm*sizeof(float));
       memset(stdev, 0, rounded_fm*sizeof(float));
 
-      /*SIMD_FLOAT simd_i, simd_mean, simd_stdev;
-
-      for (int b = 0; b < bn; ++b) {
-         for (int f = 0; f < rounded_fm/SIMD_WIDTH; f++) {
-            for (int n = 0; n < id*ihw*ihw; n++) {
-               means[f*SIMD_WIDTH + s] += i_array[b][f][n][s] / (id*ihw*ihw); 
-            }
-         }
-      }
-      for (int b = 0; b < bn; ++b) {
-         for (int f = 0; f < rounded_fm/SIMD_WIDTH; f++) {
-            for (int n = 0; n < id*ihw*ihw; n++) {
-               for (int s = 0; s < SIMD_WIDTH; s++) {
-                  stdev[f*SIMD_WIDTH + s] += (means[f*SIMD_WIDTH + s] - i_array[b][f][n][s]) * (means[f*SIMD_WIDTH + s] - i_array[b][f][n][s]); 
-               } 
-            }
-         }
-      }
-      for (int n = 0; n < rounded_fm; n++) {
-         stdev[n] = std::sqrt(stdev[n] / (id*ihw*ihw)); 
-      }*/
-      
       SIMD_FLOAT simd_i, simd_mean, simd_stdev;
       SIMD_FLOAT simd_delta1, simd_delta2;
 
@@ -83,20 +61,23 @@ public:
       for (int n = 0; n < rounded_fm; n++) {
          stdev[n] = std::sqrt(stdev[n] / counter); 
       }
-
    }
    void forward(float const* __restrict i, float* __restrict o, 
      float const* __restrict dummy1, float const* __restrict dummy2)
    {
       float dynamic_mean[rounded_fm]; 
       float dynamic_stdev[rounded_fm];
-      get_featuremap_statistics(i, dynamic_mean, dynamic_stdev);
-
+      //get_featuremap_statistics(i, dynamic_mean, dynamic_stdev);
+      std::cout << o[0] << std::endl;
+      for (int n = 0; n < bn*rounded_fm*id*ihw*ihw; n++) {
+          o[n] = i[n];
+      }
+      return;
       float bias[rounded_fm]; 
       float scale[rounded_fm];
       for (int n = 0; n < rounded_fm; n++) {
-         bias[n]  = -1.0 * dynamic_mean[n] / (dynamic_stdev[n] + 0.000001);
-         scale[n] =  1.0 / (dynamic_stdev[n] + 0.000001); 
+         bias[n]  = -1.0 * dynamic_mean[n] / (dynamic_stdev[n] + 0.0000000001);
+         scale[n] =  1.0 / (dynamic_stdev[n] + 0.0000000001); 
          if (n == 0) {
              std::cout << "Mean: " << dynamic_mean[n] << std::endl;
              std::cout << "stdev: " << dynamic_stdev[n] << std::endl;
@@ -109,7 +90,7 @@ public:
       typedef float (*out_tp)[rounded_fm/SIMD_WIDTH][id*ihw*ihw][SIMD_WIDTH];
       SIMD_FLOAT simd_i, simd_o, simd_b, simd_s;
       
-      out_tp o_array = reinterpret_cast<out_tp>(o);
+      /*out_tp o_array = reinterpret_cast<out_tp>(o);
       in_tp i_array = reinterpret_cast<in_tp>(i);
       for (int b = 0; b < bn; ++b) {
          for (int f = 0; f < rounded_fm/SIMD_WIDTH; f++) {
@@ -121,7 +102,7 @@ public:
                SIMD_STORE(o_array[b][f][n], simd_o); 
             }
          }
-      }
+      }*/     
    }
 };
 

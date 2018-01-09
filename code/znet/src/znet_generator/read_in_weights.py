@@ -60,7 +60,7 @@ def read_in_weights(net, weights_path):
 
             l["bias_data"]  = -1.0*np.divide(mean_data, std_data)
             l["scale_data"] = 1.0  / std_data
-
+#
 
 
     lines.append('')

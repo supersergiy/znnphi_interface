@@ -94,6 +94,8 @@ def expand_convs(net):
                 next_name = l["next"][0]
                 next_l    = layer_info[next_name]
                 while next_l["type"] in ["scale", "bnorm", "elu"]:
+                    if next_l["type"] == "bnorm" and next_l["static_bnorm"] == False:
+                        break
                     if next_l["type"] in ["scale", "bnorm"]:
                         consume_scale(layer_info, lname, next_name)
                     else:#if next_l["type"] == "elu":
@@ -384,12 +386,6 @@ def eliminate_adds(net):
 
                 #rename the input for the layers that use the sum output
                 substitute_tensor(net, next_l["top"], l["top"], lname)
-
-                #for sum_receiver in next_l["next"]:
-                    #TODO: check if it's another sum, then handle differently
-
-                #    layer_info[sum_receiver]["bot"] = l["top"]
-
 
                 #remove eltwise
                 delete_layer(net, next_name, lname)

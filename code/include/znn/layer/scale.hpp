@@ -33,19 +33,19 @@ public:
    {
       typedef float const (*in_tp)[rounded_fm/SIMD_WIDTH][id*ihw*ihw][SIMD_WIDTH];
       typedef float (*out_tp)[rounded_fm/SIMD_WIDTH][id*ihw*ihw][SIMD_WIDTH];
-
+      
       out_tp o_array = reinterpret_cast<out_tp>(o);
       in_tp i_array = reinterpret_cast<in_tp>(i);
-      SIMD_FLOAT simd_i, simd_o, simd_b, simd_s;
+      SIMD_FLOAT simd_i, simd_o, simd_s, simd_b;
+
       for (int b = 0; b < bn; ++b) {
          for (int f = 0; f < rounded_fm/SIMD_WIDTH; f++) {
-				simd_s = SIMD_LOAD(&(scale[f*SIMD_WIDTH]));
-				simd_b = SIMD_LOAD(&(bias[f*SIMD_WIDTH]));
+            simd_s = SIMD_LOAD(&(scale[f*SIMD_WIDTH]));
+            simd_b = SIMD_LOAD(&(bias[f*SIMD_WIDTH]));
             for (int n = 0; n < id*ihw*ihw; n++) {
-					simd_i = SIMD_LOAD(i_array[b][f][n]);
-					simd_o = SIMD_FMADD(simd_i, simd_s, simd_b);	
-					SIMD_STORE(o_array[b][f][n], simd_o); 
-					   //o_array[b][f][n][s] = i_array[b][f][n][s] * scale[f*SIMD_WIDTH + s] + bias[f*SIMD_WIDTH + s];
+               simd_i = SIMD_LOAD(i_array[b][f][n]);
+               simd_o = SIMD_FMADD(simd_i, simd_s, simd_b); 
+               SIMD_STORE(o_array[b][f][n], simd_o); 
             }
          }
       }

@@ -33,11 +33,11 @@ public:
    {
       typedef float const (*in_tp)[rounded_fm/SIMD_WIDTH][id*ihw*ihw][SIMD_WIDTH];
       typedef float (*out_tp)[rounded_fm/SIMD_WIDTH][id*ihw*ihw][SIMD_WIDTH];
-      
+
       out_tp o_array = reinterpret_cast<out_tp>(o);
       in_tp i_array = reinterpret_cast<in_tp>(i);
       SIMD_FLOAT simd_i, simd_o, simd_s, simd_b;
-
+      
       for (int b = 0; b < bn; ++b) {
          for (int f = 0; f < rounded_fm/SIMD_WIDTH; f++) {
             simd_s = SIMD_LOAD(&(scale[f*SIMD_WIDTH]));

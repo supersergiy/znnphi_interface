@@ -7,6 +7,7 @@ def set_bnorm_dim(params, bot_tensor):
     top_dim = copy.copy(bot_tensor.dim)
     params["top_dim"] = top_dim
 
+
     params["bn"]  = bot_tensor.dim[0]
     params["ifm"] = bot_tensor.dim[1]
     params["ofm"] = bot_tensor.dim[1]

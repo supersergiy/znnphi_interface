@@ -1,15 +1,15 @@
 FROM seunglab/icpc:2017v3 
+RUN pwd
 
 WORKDIR /opt
 RUN apt-get update 
-RUN apt-get install -y python python-pip git vim python-tk \
-		       screen wget vim 
+RUN apt-get install -y python python-pip git python-tk \
+        		       screen wget vim 
 
 #install Docker
 RUN wget -qO- https://get.docker.com/ | sh && groupadd docker; usermod -aG docker root && newgrp docker 
 
 #get znet and kaffe repos
-RUN pwd
 RUN git clone https://github.com/supersergiy/znnphi_interface.git
 RUN git clone https://github.com/torms3/kaffe.git
 RUN mkdir /opt/.tmp
@@ -32,4 +32,7 @@ RUN mv /opt/.screenrc /root/
 RUN cd /opt/znnphi_interface \
     && git config --global user.email "popovych@princeton.edu" \
     && git config credential.helper store
+
+RUN git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime \
+    && sh ~/.vim_runtime/install_awesome_vimrc.sh
 

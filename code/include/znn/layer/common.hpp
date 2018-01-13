@@ -1,9 +1,8 @@
 #pragma once
+#include <znn/intrin.hpp>
 
 namespace znn {
 namespace phi {
-
-#define SIMD_WIDTH 8
 
 int roundToSimd(int n)
 {

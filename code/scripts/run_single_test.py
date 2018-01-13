@@ -7,9 +7,10 @@ import sys
 
 cores = 2
 ht    = 2
-cpu_offset = 0
-
+cpu_offset   = 0
+architecture = 'AVX512'
 base = sys.argv[1]
+
 create = True
 if len(sys.argv) > 2:
     create = False
@@ -29,7 +30,8 @@ z = pznet.znet()
 
 if create:
     print "Creating net..."
-    z.create_net(net_path, weights_path, znet_path, cores, ht, cpu_offset)
+    z.create_net(net_path, weights_path, znet_path, architecture, cores, ht, cpu_offset)
+#sys.exit(1)
 print "Running net..."
 z.load_net(znet_path, lib_path)
 

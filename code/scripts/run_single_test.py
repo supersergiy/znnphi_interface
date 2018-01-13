@@ -7,7 +7,7 @@ import sys
 
 cores = 2
 ht    = 2
-cpu_offset = 2
+cpu_offset = 0
 
 base = sys.argv[1]
 create = True

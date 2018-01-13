@@ -1,9 +1,9 @@
 import copy
-from common import round_to_simd, generate_param_string, S, fill_tensor, zero_out_tensor
+from common import round_to_simd, generate_param_string, fill_tensor, zero_out_tensor
 import numpy as np
 
 def set_bias_dim(params, bot_tensor):
-    top_dim = copy.copy(bot_tensor.dim) 
+    top_dim = copy.copy(bot_tensor.dim)
     params["top_dim"] = top_dim
 
     params["bn"]  = bot_tensor.dim[0]
@@ -12,11 +12,12 @@ def set_bias_dim(params, bot_tensor):
     params["id"]  = bot_tensor.dim[2]
     params["ihw"] = bot_tensor.dim[3]
 
-    params["scale_size"]  = round_to_simd(params["ifm"]) 
-    params["bias_size"] = round_to_simd(params["ifm"])
+    params["scale_size"]  = round_to_simd(params["ifm"], params["arch"])
+    params["bias_size"] = round_to_simd(params["ifm"], params["arch"])
 
-def parse_bias(json_param):
+def parse_bias(json_param, arch):
     params = {}
+    params["arch"] = arch
     params["name"] = json_param["name"]
     params["top"]  = json_param["top"][0]
     params["bot"]  = json_param["bottom"][0]

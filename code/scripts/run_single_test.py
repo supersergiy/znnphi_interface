@@ -31,7 +31,6 @@ z = pznet.znet()
 if create:
     print "Creating net..."
     z.create_net(net_path, weights_path, znet_path, architecture, cores, ht, cpu_offset)
-#sys.exit(1)
 print "Running net..."
 z.load_net(znet_path, lib_path)
 

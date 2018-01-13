@@ -100,7 +100,7 @@ src/generated/znet.cpp:  $(shell find src/znet_generator -type f -name "*.py") $
 	rm -rf out
 	${MKDIR_P} out
 	${MKDIR_P} out/weights
-	python src/znet_generator/main.py $(N) $(W) src/generated/znet.cpp $(CORES) $(HT) $(CPU_OFFSET)
+	python src/znet_generator/main.py $(N) $(W) src/generated/znet.cpp $(ARCH) $(CORES) $(HT) $(CPU_OFFSET)
 
 out/znet.o: src/generated/znet.cpp 
 	$(CXX) $(CXXFLAGS) $(ARCH_FLAGS) -fPIC -c $^ -o $@

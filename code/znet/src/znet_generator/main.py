@@ -7,16 +7,14 @@ import sys
 net_path     = sys.argv[1]
 weights_path = sys.argv[2]
 out_path     = sys.argv[3]
-cores        = sys.argv[4]
-ht           = sys.argv[5]
-cpu_offset   = sys.argv[6]
-
-SIMD_WIDTH = 8
-S = SIMD_WIDTH
+arch         = sys.argv[4]
+cores        = sys.argv[5]
+ht           = sys.argv[6]
+cpu_offset   = sys.argv[7]
 
 if __name__ == "__main__":
     print "Parsing the network spec..."
-    net = parse_net(net_path)
+    net = parse_net(net_path, arch)
     if weights_path == 't':
         generate_template_znet(net, out_path)
     else:

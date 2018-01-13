@@ -10,8 +10,9 @@ def set_pool_dim(params, bot_tensor):
     params["top_dim"] = top_dim
     params["bot_dim"] = bot_tensor.dim
 
-def parse_pool(json_param):
+def parse_pool(json_param, arch):
     params = {}
+    params["arch"] = arch
     params["name"] = json_param["name"]
     params["top"]  = json_param["top"][0]
     params["bot"]  = json_param["bottom"][0]

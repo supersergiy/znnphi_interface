@@ -61,8 +61,8 @@ def compile_dl(args):
     target_name = wrapper_path.replace(".cpp", ".so")
     print out_path
 
-    compile_command = 'make -s -C {} {} O={}'.format(my_path, target_name, out_path)
-    compile_command  += ' 2> /dev/null'
+    compile_command = 'make -s -C {} {} O={} ARCH={}'.format(my_path, target_name, out_path, args['arch'])
+    #compile_command  += ' 2> /dev/null'
     os.system(compile_command)
     check_call(['rm', "-f", wrapper_path], stderr=STDOUT)
 

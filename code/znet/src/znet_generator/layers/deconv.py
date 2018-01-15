@@ -70,9 +70,10 @@ def block_kernel(kernel, lparam):
     blocked_kernel = np.array([0.0]*lparam['kernel_size'])
     simd_width = get_simd_width(lparam["arch"])
 
-    def h5ker_to_znnphiker(ifm, ofm, kz, kx, ky, S):
-        total_ifms = round_to_simd(kdim[0], lparams["arch"])
-        total_ofms = round_to_simd(kdim[1], lparams["arch"])
+    def h5ker_to_znnphiker(ifm, ofm, kz, kx, ky):
+        S = get_simd_width(lparam["arch"])
+        total_ifms = round_to_simd(kdim[0], lparam["arch"])
+        total_ofms = round_to_simd(kdim[1], lparam["arch"])
 
         offset = ofm/S
         offset *= total_ifms/S
@@ -177,7 +178,7 @@ def allocate_deconv_as_conv(lparam, param_str):
 
     #allocate layer
     #ouch, this is a little ugly with the lib path, but sacrafices have to made to keep it dynamic
-    lines.append('layers["{}"] = new znn::phi::DeconvAsConvLayer({}, lib_path=this->lib_path);'.format(l["name"], param_str))
+    lines.append('layers["{}"] = new znn::phi::DeconvAsConvLayer({}, "{}", lib_path=this->lib_path);'.format(l["name"], param_str, l["arch"]))
     if "additive_conv" in l and l["additive_conv"]:
         lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                                   l["scale"], l["scale_size"]))

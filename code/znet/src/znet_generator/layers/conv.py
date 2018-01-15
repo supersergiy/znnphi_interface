@@ -138,15 +138,16 @@ def allocate_conv_lines(lparam):
               round_to_simd(l["ofm"], l["arch"]), l["id"], l["ihw"],
               l["kernel_dim"][2], l["kernel_dim"][3],
               0, out_padd, 0, 0, out_padhw,
-              activate, add_or_overwrite, cores, ht, cpu_offset)
+              activate, add_or_overwrite, l["arch"],
+              cores, ht, cpu_offset)
 
     params_template  = '"'
     params_template += 'BN={} IFM={} OFM={} ID={} IHW={} KD={} KHW={} '
     params_template += 'OUT_D_SKIP={} OUT_PADD={} '
     params_template += 'OUT_H_SKIP={} OUT_W_SKIP={} OUT_PADHW={} '
     params_template += 'OUT_STRIDE_D=1 OUT_STRIDE_HW=1 '
-    params_template += 'ACTIVATION={} ADDOROVERWRITE={} CORES={} HT={} '
-    params_template += 'CPU_OFFSET={}'
+    params_template += 'ACTIVATION={} ADDOROVERWRITE={} ARCH={} '
+    params_template += 'CORES={} HT={} CPU_OFFSET={}'
     params_template += '"'
 
     params_str = params_template.format(*params)

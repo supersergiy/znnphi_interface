@@ -6,7 +6,7 @@
 #include <type_traits>
 #include <math.h>
 
-#ifdef ZNN_AVX512
+#ifdef ZNN_AVX512_adafd
    #define _LOG_E_BASE_2 1.44269504089
    #define SIMD_EXP_M_INPL(a, m) SIMD_MUL_MASK(a, m, a, SIMD_SET1(_LOG_E_BASE_2));\
                                     SIMD_E2A23_MASK(a, m, a)
@@ -39,6 +39,7 @@ namespace propagation
 /*******************************************************************************
 *
 * Kernel shape is:
+        Activation = false;
 *      k[D][H][W][IN_FMAP][OUT_FMAP] with IN_FMAP=OUT_FMAP=SIMD_WIDTH
 *
 * input and output shapes are
@@ -127,7 +128,6 @@ struct sub_image_1d
             }
         }
         
-
 
         ZNN_PRAGMA(unroll(RW))
         for (long_t rw = 0; rw < RW; ++rw)

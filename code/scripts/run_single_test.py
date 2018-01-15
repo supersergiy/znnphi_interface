@@ -68,7 +68,6 @@ for i in range(1):
         import pdb; pdb.set_trace()
     else:
         print "Congrats! All pass. Error == {}".format(error)
-        import pdb; pdb.set_trace()
 #out_file = h5py.File(output_path)
 #out_file.create_dataset("data", data=out_a)
 

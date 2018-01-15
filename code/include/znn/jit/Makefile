@@ -23,7 +23,7 @@ ZNN_TUNE	=
 SSE_FLAGS   =   -DZNN_SSE -msse $(ZNN_TUNE)                                               
 AVX_FLAGS   =   -DZNN_AVX -xAVX $(ZNN_TUNE)                                               
 AVX2_FLAGS  =   -DZNN_AVX2 -march=core-avx2 $(ZNN_TUNE)                                   
-AVX512_FLAGS    =   -DZNN_AVX512 -xMIC-AVX512 $(ZNN_TUNE)                                 
+AVX512_FLAGS    =   -DZNN_AVX512 -march=core-avx512 $(ZNN_TUNE)                                 
 KNC_FLAGS   =   -DZNN_KNC -mmic $(ZNN_TUNE)
 CORES_FLAG  =   -DZNN_NUM_CORES=2
 
@@ -71,14 +71,22 @@ else
 	LAYER_EXISTS=0
 endif
 
+ifeq ($(strip $(ARCH)),AVX512)                                                                                                                                                                             
+	ARCH_FLAGS=$(AVX512_FLAGS)                                                                                                                                                                             
+else ifeq ($(strip $(ARCH)),AVX2)
+	ARCH_FLAGS=$(AVX2_FLAGS) 
+else                                                                                                                                                                                                       
+$(error Unsupported or unspecified architecture: ARCH==$(ARCH). Please set Makefile ARCH parameter to one of [AVX2, AVX512].)                                                                              
+endif     
+
 ZNNJIT_PATH = $(ZNNPHI_PATH)/code/include/znn/jit
 
 FORCE:
 
 $(ZNNJIT_PATH)/.tmp/%.so: $(ZNNJIT_PATH)/.tmp/%.cpp FORCE
 ifeq ($(LAYER_EXISTS),0)
-	$(CXX)         -c $(CXXFLAGS)  $(AVX2_FLAGS) $(PARAM_DEFS) -o $<.o $<
-	$(CXX)         $(DLFLAGS) $(CXXLDFLAGS) $(AVX2_FLAGS) -o $@ $<.o -ldl
+	$(CXX)         -c $(CXXFLAGS)  $(ARCH_FLAGS) $(PARAM_DEFS) -o $<.o $<
+	$(CXX)         $(DLFLAGS) $(CXXLDFLAGS) $(ARCH_FLAGS) -o $@ $<.o -ldl
 	$(RM)   $<.o
 	$(MV)   $@ $(O)
 else 
@@ -88,12 +96,12 @@ endif
 all: clean test_jit.bin 
 
 test_jit.bin: FORCE
-	$(ECHO) $(CXX) $(CXXFLAGS) $(AVX2_FLAGS) ./test/test_jit.cpp -o $@ 
-	$(CXX) $(CXXFLAGS) $(AVX2_FLAGS) ./test/test_jit.cpp -o $@ 
+	$(ECHO) $(CXX) $(CXXFLAGS) $(ARCH_FLAGS) ./test/test_jit.cpp -o $@ 
+	$(CXX) $(CXXFLAGS) $(ARCH_FLAGS) ./test/test_jit.cpp -o $@ 
 
 client.bin: FORCE
-	$(ECHO) $(CXX) $(CXXFLAGS) $(AVX2_FLAGS) ./client.cpp -o $@ 
-	$(CXX) $(CXXFLAGS) $(AVX2_FLAGS) ./client.cpp -o $@ 
+	$(ECHO) $(CXX) $(CXXFLAGS) $(ARCH_FLAGS) ./client.cpp -o $@ 
+	$(CXX) $(CXXFLAGS) $(ARCH2_FLAGS) ./client.cpp -o $@ 
 clean:
 	$(RM) -rf ./*.o ./*.so ./*.S *.bin 
 

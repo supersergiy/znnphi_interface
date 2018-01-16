@@ -23,7 +23,7 @@ ZNN_TUNE	=
 SSE_FLAGS   =   -DZNN_SSE -msse $(ZNN_TUNE)                                               
 AVX_FLAGS   =   -DZNN_AVX -xAVX $(ZNN_TUNE)                                               
 AVX2_FLAGS  =   -DZNN_AVX2 -march=core-avx2 $(ZNN_TUNE)                                   
-AVX512_FLAGS    =   -DZNN_AVX512 -march=core-avx512 $(ZNN_TUNE)                                 
+AVX512_FLAGS    =   -DZNN_AVX512 -xCORE-AVX512$(ZNN_TUNE)                                 
 KNC_FLAGS   =   -DZNN_KNC -mmic $(ZNN_TUNE)
 CORES_FLAG  =   -DZNN_NUM_CORES=2
 

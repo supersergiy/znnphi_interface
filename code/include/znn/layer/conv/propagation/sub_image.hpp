@@ -89,7 +89,7 @@ struct sub_image_1d
         SIMD_FLOAT vout[RW], vwt; // Expected to be in the register file
 
         // load initial values to vout
-        ZNN_PRAGMA(unroll(RW))
+        ZNN_PRAGMA(unroll_and_jam(RW))
         for (long_t rw = 0; rw < RW; ++rw)
         {
             vout[rw] = load_or_set_initial_value<Bias, AddOrOverwrite>(o + rw * IW::out_stride, b, scale);
@@ -111,7 +111,7 @@ struct sub_image_1d
                              s) *
                                 SIMD_WIDTH);
 
-                        ZNN_PRAGMA(unroll(RW))
+                        ZNN_PRAGMA(unroll_and_jam(RW))
                         for (long_t rw = 0; rw < RW; ++rw)
                         {
                             vout[rw] = SIMD_FMADD(
@@ -129,7 +129,7 @@ struct sub_image_1d
         }
         
 
-        ZNN_PRAGMA(unroll(RW))
+        ZNN_PRAGMA(unroll_and_jam(RW))
         for (long_t rw = 0; rw < RW; ++rw)
         {
             /*if (Activation) 
@@ -162,10 +162,10 @@ struct sub_image_2d
     {
         SIMD_FLOAT vout[RH][RW], vwt; // Expected to be in the register file
 
-        ZNN_PRAGMA(unroll(RH))
+        ZNN_PRAGMA(unroll_and_jam(RH))
         for (long_t rh = 0; rh < RH; ++rh)
         {
-            ZNN_PRAGMA(unroll(RW))
+            ZNN_PRAGMA(unroll_and_jam(RW))
             for (long_t rw = 0; rw < RW; ++rw)
             {
                 vout[rh][rw] = load_or_set_initial_value<Bias, AddOrOverwrite>(
@@ -189,10 +189,10 @@ struct sub_image_2d
                              s) *
                                 SIMD_WIDTH);
 
-                        ZNN_PRAGMA(unroll(RH))
+                        ZNN_PRAGMA(unroll_and_jam(RH))
                         for (long_t rh = 0; rh < RH; ++rh)
                         {
-                            ZNN_PRAGMA(unroll(RW))
+                            ZNN_PRAGMA(unroll_and_jam(RW))
                             for (long_t rw = 0; rw < RW; ++rw)
                             {
                                 vout[rh][rw] = SIMD_FMADD(
@@ -248,13 +248,13 @@ struct sub_image_3d
     {
         SIMD_FLOAT vout[RD][RH][RW], vwt; // Expected to be in the register file
          
-        znn_pragma(unroll(rd))
+        znn_pragma(unroll_and_jam(rd))
         for (long_t rd = 0; rd < rd; ++rd)
         {
-            znn_pragma(unroll(rh))
+            znn_pragma(unroll_and_jam(rh))
             for (long_t rh = 0; rh < rh; ++rh)
             {
-                znn_pragma(unroll(rw))
+                znn_pragma(unroll_and_jam(rw))
                 for (long_t rw = 0; rw < rw; ++rw)
                 {
                     vout[rd][rh][rw] = load_or_set_initial_value<Bias, AddOrOverwrite>(
@@ -281,13 +281,13 @@ struct sub_image_3d
                              s) *
                                 SIMD_WIDTH);
 
-                        ZNN_PRAGMA(unroll(RD))
+                        ZNN_PRAGMA(unroll_and_jam(RD))
                         for (long_t rd = 0; rd < RD; ++rd)
                         {
-                            ZNN_PRAGMA(unroll(RH))
+                            ZNN_PRAGMA(unroll_and_jam(RH))
                             for (long_t rh = 0; rh < RH; ++rh)
                             {
-                                ZNN_PRAGMA(unroll(RW))
+                                ZNN_PRAGMA(unroll_and_jam(RW))
                                 for (long_t rw = 0; rw < RW; ++rw)
                                 {
                                     vout[rd][rh][rw] = SIMD_FMADD(

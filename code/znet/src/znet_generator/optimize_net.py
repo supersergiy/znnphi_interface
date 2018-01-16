@@ -1,7 +1,8 @@
 from tensor import Tensor
 import numpy as np
 import copy
-from   layers import set_layer_dim
+from   layers import set_layer_dim, round_to_simd
+
 
 #TODO: fix this shitty code
 def generate_layer_order_info(net):
@@ -376,7 +377,7 @@ def eliminate_adds(net):
                     raise Exception("Double additive layer")
 
                 l["additive_conv"]  = True
-                l["scale_data"]     = [1] * l["ofm"]
+                l["scale_data"]     = [1] * round_to_simd(l["ofm"], l["arch"])
 
                 #set the top of the current layer to the thing to add to
                 if next_l["bot"][0] == l["top"]:

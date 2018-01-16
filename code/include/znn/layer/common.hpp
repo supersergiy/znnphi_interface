@@ -6,8 +6,7 @@ namespace phi {
 
 int roundToSimd(int n)
 {
-   const int S = SIMD_WIDTH;
-   return ((n + S - 1) / S) * S;
+   return ((n + SIMD_WIDTH - 1) / SIMD_WIDTH) * SIMD_WIDTH;
 }
 
 }

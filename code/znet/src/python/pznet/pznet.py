@@ -41,7 +41,7 @@ class znet:
         if not os.path.exists(output_path):
             os.makedirs(output_path)
         os.system("cp -r  {}/* {}".format(self.tmp_folder_path, output_path))
-        os.system("rm -rf {}/*   ".format(self.tmp_folder_path)
+        os.system("rm -rf {}/*   ".format(self.tmp_folder_path))
         os.system("cp {} {}/net.prototxt".format(prototxt_path, output_path))
         os.system("cp {} {}/weights.h5".format(h5_weights_path, output_path))
 

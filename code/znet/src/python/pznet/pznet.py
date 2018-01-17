@@ -50,15 +50,15 @@ class znet:
             lib_path = os.path.join(net_path, "lib")
         if not os.path.exists(lib_path):
             os.makedirs(lib_path)
-        target_files = os.path.join(net_path, '*')
-        os.system("cp -r {} {}".format(target_files, self.tmp_folder_path))
+
+        sys.path.append(net_path)
         try:
             import znet
         except:
             raise Exception("Problem loading the network object. " +
                             "Please make sure there's a znet.so file present at {}".format(net_path))
 
-        self.net = znet.znet(os.path.join(self.tmp_folder_path, "weights/"), lib_path)
+        self.net = znet.znet(os.path.join(net_path, "weights/"), lib_path)
 
     def get_in_shape(self):
         ret = self.net.get_in_shape()

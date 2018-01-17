@@ -6,17 +6,17 @@
 #include <type_traits>
 #include <math.h>
 
-#ifdef ZNN_AVX512_adafd
+#ifdef ZNN_AVX512
    #define _LOG_E_BASE_2 1.44269504089
-   #define SIMD_EXP_M_INPL(a, m) SIMD_MUL_MASK(a, m, a, SIMD_SET1(_LOG_E_BASE_2));\
-                                    SIMD_E2A23_MASK(a, m, a)
+   #define SIMD_EXP_M_INPL(a, m)asdf SIMD_E2A23_MASK(a, m, SIMD_MUL_MASK(a, m, a, SIMD_SET1(_LOG_E_BASE_2)))
 
    #define SIMD_SUBCONST_M_INPL(a, c, m) SIMD_SUB_MASK(a, m, a, SIMD_SET1(c))
 
-   #define SIMD_ELU(v) { SIMD_MASK ltz;\
-                         ltz =  SIMD_LT(v, SIMD_SET1(0.0));\
-                         SIMD_EXP_M_INPL(v, ltz);\
-                         SIMD_SUBCONST_M_INPL(v, 1.0, ltz); }
+   #define ELU(v) { SIMD_MASK ltz;\
+                    ltz =  SIMD_LT(v, SIMD_SET1(0.0));\
+                    v = SIMD_EXP_M_INPL(v, ltz);\
+                    v = SIMD_SUBCONST_M_INPL(v, 1.0, ltz); }
+
 #else
    #define ELU(base) {\
                         ZNN_PRAGMA(SIMD_WIDTH)\
@@ -89,7 +89,7 @@ struct sub_image_1d
         SIMD_FLOAT vout[RW], vwt; // Expected to be in the register file
 
         // load initial values to vout
-        ZNN_PRAGMA(unroll_and_jam(RW))
+        ZNN_PRAGMA(unroll(RW))
         for (long_t rw = 0; rw < RW; ++rw)
         {
             vout[rw] = load_or_set_initial_value<Bias, AddOrOverwrite>(o + rw * IW::out_stride, b, scale);
@@ -111,7 +111,7 @@ struct sub_image_1d
                              s) *
                                 SIMD_WIDTH);
 
-                        ZNN_PRAGMA(unroll_and_jam(RW))
+                        ZNN_PRAGMA(unroll(RW))
                         for (long_t rw = 0; rw < RW; ++rw)
                         {
                             vout[rw] = SIMD_FMADD(
@@ -129,19 +129,23 @@ struct sub_image_1d
         }
         
 
-        ZNN_PRAGMA(unroll_and_jam(RW))
+        ZNN_PRAGMA(unroll(RW))
         for (long_t rw = 0; rw < RW; ++rw)
         {
-            /*if (Activation) 
+#ifdef ZNN_AVX512
+            if (Activation) 
             {
                 SIMD_ELU(vout[rw]); 
-            }*/
+            }
+#endif
             auto base = o + rw * IW::out_stride;
             SIMD_STORE(base, vout[rw]);
+#ifndef ZNN_AVX512
             if (Activation) 
             {
                ELU(base);
             }
+#endif
         }
     }
 };
@@ -162,10 +166,10 @@ struct sub_image_2d
     {
         SIMD_FLOAT vout[RH][RW], vwt; // Expected to be in the register file
 
-        ZNN_PRAGMA(unroll_and_jam(RH))
+        ZNN_PRAGMA(unroll(RH))
         for (long_t rh = 0; rh < RH; ++rh)
         {
-            ZNN_PRAGMA(unroll_and_jam(RW))
+            ZNN_PRAGMA(unroll(RW))
             for (long_t rw = 0; rw < RW; ++rw)
             {
                 vout[rh][rw] = load_or_set_initial_value<Bias, AddOrOverwrite>(
@@ -189,10 +193,10 @@ struct sub_image_2d
                              s) *
                                 SIMD_WIDTH);
 
-                        ZNN_PRAGMA(unroll_and_jam(RH))
+                        ZNN_PRAGMA(unroll(RH))
                         for (long_t rh = 0; rh < RH; ++rh)
                         {
-                            ZNN_PRAGMA(unroll_and_jam(RW))
+                            ZNN_PRAGMA(unroll(RW))
                             for (long_t rw = 0; rw < RW; ++rw)
                             {
                                 vout[rh][rw] = SIMD_FMADD(
@@ -217,16 +221,20 @@ struct sub_image_2d
             ZNN_PRAGMA(unroll(RW))
             for (long_t rw = 0; rw < RW; ++rw)
             {
-                /*if (Activation) 
+#ifdef ZNN_AVX512
+                if (Activation) 
                 {
                     SIMD_ELU(vout[rh][rw]); 
-                }*/
+                }
+#endif
                 auto base = o + rh * IH::out_stride + rw * IW::out_stride;
                 SIMD_STORE(base, vout[rh][rw]);
+#ifndef ZNN_AVX512
                 if (Activation) 
                 {
                    ELU(base);
                 }
+#endif
             }
         }
     }
@@ -248,13 +256,13 @@ struct sub_image_3d
     {
         SIMD_FLOAT vout[RD][RH][RW], vwt; // Expected to be in the register file
          
-        znn_pragma(unroll_and_jam(rd))
+        znn_pragma(unroll(rd))
         for (long_t rd = 0; rd < rd; ++rd)
         {
-            znn_pragma(unroll_and_jam(rh))
+            znn_pragma(unroll(rh))
             for (long_t rh = 0; rh < rh; ++rh)
             {
-                znn_pragma(unroll_and_jam(rw))
+                znn_pragma(unroll(rw))
                 for (long_t rw = 0; rw < rw; ++rw)
                 {
                     vout[rd][rh][rw] = load_or_set_initial_value<Bias, AddOrOverwrite>(
@@ -281,13 +289,13 @@ struct sub_image_3d
                              s) *
                                 SIMD_WIDTH);
 
-                        ZNN_PRAGMA(unroll_and_jam(RD))
+                        ZNN_PRAGMA(unroll(RD))
                         for (long_t rd = 0; rd < RD; ++rd)
                         {
-                            ZNN_PRAGMA(unroll_and_jam(RH))
+                            ZNN_PRAGMA(unroll(RH))
                             for (long_t rh = 0; rh < RH; ++rh)
                             {
-                                ZNN_PRAGMA(unroll_and_jam(RW))
+                                ZNN_PRAGMA(unroll(RW))
                                 for (long_t rw = 0; rw < RW; ++rw)
                                 {
                                     vout[rd][rh][rw] = SIMD_FMADD(
@@ -317,17 +325,20 @@ struct sub_image_3d
                 ZNN_PRAGMA(unroll(RW))
                 for (long_t rw = 0; rw < RW; ++rw)
                 {
-                    /*if (Activation) 
+#ifdef ZNN_AVX512
+                    if (Activation) 
                     {
                         SIMD_ELU(vout[rd][rh][rw]); 
-                    }*/
+                    }
+#endif
                     auto base = o + rd * ID::out_stride + rh * IH::out_stride + rw * IW::out_stride; 
                     SIMD_STORE(base, vout[rd][rh][rw]);
-
+#ifndef ZNN_AVX512
                     if (Activation) 
                     {
                        ELU(base);
                     }
+#endif
                 }
             }
         }

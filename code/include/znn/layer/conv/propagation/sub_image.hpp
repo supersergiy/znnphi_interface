@@ -6,7 +6,7 @@
 #include <type_traits>
 #include <math.h>
 
-#ifdef ZNN_AVX512
+#ifdef ZNN_KNL
    #define _LOG_E_BASE_2 1.44269504089
    #define SIMD_EXP_M_INPL(a, m)asdf SIMD_E2A23_MASK(a, m, SIMD_MUL_MASK(a, m, a, SIMD_SET1(_LOG_E_BASE_2)))
 
@@ -132,7 +132,7 @@ struct sub_image_1d
         ZNN_PRAGMA(unroll(RW))
         for (long_t rw = 0; rw < RW; ++rw)
         {
-#ifdef ZNN_AVX512
+#ifdef ZNN_KNL
             if (Activation) 
             {
                 SIMD_ELU(vout[rw]); 
@@ -140,7 +140,7 @@ struct sub_image_1d
 #endif
             auto base = o + rw * IW::out_stride;
             SIMD_STORE(base, vout[rw]);
-#ifndef ZNN_AVX512
+#ifndef ZNN_KNL
             if (Activation) 
             {
                ELU(base);
@@ -221,7 +221,7 @@ struct sub_image_2d
             ZNN_PRAGMA(unroll(RW))
             for (long_t rw = 0; rw < RW; ++rw)
             {
-#ifdef ZNN_AVX512
+#ifdef ZNN_KNL
                 if (Activation) 
                 {
                     SIMD_ELU(vout[rh][rw]); 
@@ -229,7 +229,7 @@ struct sub_image_2d
 #endif
                 auto base = o + rh * IH::out_stride + rw * IW::out_stride;
                 SIMD_STORE(base, vout[rh][rw]);
-#ifndef ZNN_AVX512
+#ifndef ZNN_KNL
                 if (Activation) 
                 {
                    ELU(base);
@@ -325,7 +325,7 @@ struct sub_image_3d
                 ZNN_PRAGMA(unroll(RW))
                 for (long_t rw = 0; rw < RW; ++rw)
                 {
-#ifdef ZNN_AVX512
+#ifdef ZNN_KNL
                     if (Activation) 
                     {
                         SIMD_ELU(vout[rd][rh][rw]); 
@@ -333,7 +333,7 @@ struct sub_image_3d
 #endif
                     auto base = o + rd * ID::out_stride + rh * IH::out_stride + rw * IW::out_stride; 
                     SIMD_STORE(base, vout[rd][rh][rw]);
-#ifndef ZNN_AVX512
+#ifndef ZNN_KNL
                     if (Activation) 
                     {
                        ELU(base);

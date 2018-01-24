@@ -10,6 +10,7 @@ RUN apt-get install -y python python-pip git python-tk \
 RUN git clone https://github.com/supersergiy/znnphi_interface.git
 RUN git clone https://github.com/torms3/kaffe.git
 RUN git clone https://bitbucket.org/poozh/ond-winograd.git 
+RUN git clone https://bitbucket.org/poozh/ond-winograd.git 
 RUN mkdir /opt/.tmp
 
 RUN cd kaffe && git checkout cpu_inference

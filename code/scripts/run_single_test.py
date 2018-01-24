@@ -10,6 +10,10 @@ ht    = 2
 cpu_offset = 2
 
 base = sys.argv[1]
+create = True
+if len(sys.argv) > 2:
+    create = False
+
 test_name = filter(None, base.split('/'))[-1]
 
 net_path = os.path.join(base, "net.prototxt")
@@ -23,8 +27,9 @@ znet_path = "/opt/znets/{}_{}cores".format(test_name, cores)
 lib_path  = os.path.join(znet_path, "lib")
 z = pznet.znet()
 
-print "Creating net..."
-z.create_net(net_path, weights_path, znet_path, cores, ht, cpu_offset)
+if create:
+    print "Creating net..."
+    z.create_net(net_path, weights_path, znet_path, cores, ht, cpu_offset)
 print "Running net..."
 z.load_net(znet_path, lib_path)
 

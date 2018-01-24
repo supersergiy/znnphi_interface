@@ -116,7 +116,7 @@ def allocate_deconv_lines(lparam):
                          0, 0, activate, add_or_overwrite,
                          'tensors["{}"]->data()'.format(l["kernel"]),
                          l["cores"], l["ht"], l["cpu_offset"])
-                         #'tensors["{}"]->data()'.format(l["bias"]))
+              #           #'tensors["{}"]->data()'.format(l["bias"]))
 
     param_str = generate_param_string(allocation_params)
 
@@ -134,7 +134,6 @@ def allocate_deconv_as_interpolation(lparam, param_str):
     #allocate weights
     lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                               l["kernel"], l["kernel_size"]))
-
     #initialize weights
     kernel = l["kernel_data"]
     lines += fill_tensor(l["kernel"], kernel.flatten())

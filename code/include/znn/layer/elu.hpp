@@ -3,6 +3,7 @@
 #include <iostream>
 #include <assert.h>
 #include <math.h>
+#include <znn/util/kernel_launcher.hpp>
 
 namespace znn 
 {
@@ -15,10 +16,11 @@ struct EluLayer: public Layer{
 private:
    int bn, fm, id, ihw;
    int rounded_fm;
-
+   int num_elem, num_threads;
+   kernel_launcher launcher;
 public:
    EluLayer(int _bn, int _fm, int _id, int _ihw): bn(_bn), 
-   fm(_fm), id(_id), ihw(_ihw)
+   fm(_fm), id(_id), ihw(_ihw), launcher(2, 1), num_threads(2)
    {   
       assert( bn > 0);
       assert( fm > 0);
@@ -26,40 +28,30 @@ public:
       assert(ihw > 0);
 
       rounded_fm = ((fm + SIMD_WIDTH - 1) / SIMD_WIDTH) * SIMD_WIDTH;
+      num_elem = bn * rounded_fm * id * ihw * ihw;
+   }
+
+   void range_elu(float const* __restrict i, float* __restrict o, int num) 
+   {
+      for (int n = 0; n < num; n++) {
+         o[n] = i[n] ;
+         if (i[n] < 0.0) {
+            o[n] = exp(i[n]) - 1.0;
+         }
+      }
    }
 
    void forward(float const* __restrict i, float* __restrict o, 
      float const* __restrict scale, float const* __restrict bias)
    {
-      typedef float const (*in_tp)[rounded_fm/SIMD_WIDTH][id][ihw][ihw][SIMD_WIDTH];
-      typedef float (*out_tp)[rounded_fm/SIMD_WIDTH][id][ihw][ihw][SIMD_WIDTH];
-      in_tp i_array = reinterpret_cast<in_tp>(i);
-      out_tp o_array = reinterpret_cast<out_tp>(o);
-
-      for (int b = 0; b < bn; ++b) {
-         for (int f = 0; f < rounded_fm/SIMD_WIDTH; f++) {
-            for (int d = 0; d < id; ++d) {
-               for (int h = 0; h < ihw; ++h) {
-                  for (int w = 0; w < ihw; ++w) {
-                     for (int s = 0; s < SIMD_WIDTH; ++s) {
-                        if (f*SIMD_WIDTH + s < fm) {
-                           //std::cout << b << " " << f << " " << d << " " << h << " " << w << " " << s << std::endl;
-                           //std::cout << "i before: " << i_array[b][f][d][h][w][s] << std::endl;
-                           o_array[b][f][d][h][w][s] = i_array[b][f][d][h][w][s];
-                           //o_array[b][f][d][h][w][s] = i_array[b][f][d][h][w][s];
-                           //std::cout << "i after: " << i_array[b][f][d][h][w][s] << std::endl;
-                           if (i_array[b][f][d][h][w][s] < 0.0) {
-                              o_array[b][f][d][h][w][s] = exp(i_array[b][f][d][h][w][s]) - 1.0;
-                              //std::cout << "o: " << o_array[b][f][d][h][w][s] << std::endl;
-                           }
-                        }
-                        //o_array[b][f][d][h][w][s] = 1.0 ;
-                     }
-                  }
-               }
-            }
-         }
-      }
+      std::vector<std::function<void()>> fns;
+      for (int n = 0; n < num_threads; n++) {
+         int offset = n * num_elem / num_threads;
+         fns.push_back([this, offset, i, o]() {
+            this->range_elu(i + offset, o + offset, this->num_elem / this->num_threads);
+         });
+      } 
+      launcher.launch(&(fns[0]));
    }
 };
 

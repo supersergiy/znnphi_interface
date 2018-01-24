@@ -18,20 +18,20 @@ for test_folder in test_list:
    out_path     = os.path.join(test_folder, "out.h5")
    print model_path
    net = caffe.Net(model_path, caffe.TEST)
-   
-   if not os.path.isfile(in_path):   
+
+   if not os.path.isfile(in_path):
       print "Generating input file..."
       in_file = h5py.File(in_path, 'w')
       in_file.create_dataset('/main', data=np.ones(net.blobs['input'].data.shape))
       print "Dataset '/main' created!"
       in_file.close()
 
-   if not os.path.isfile(weights_path):   
+   if not os.path.isfile(weights_path):
       print "Generating weights file..."
       weights_file = h5py.File(weights_path, 'w')
       for p in net.params.keys():
          for i in range(len(net.params[p])):
             #net.params[p][i].data[:] = 1.0
-            weights_file.create_dataset('/data/{}/{}'.format(p, i), data=net.params[p][i].data[:]) 
+            weights_file.create_dataset('/data/{}/{}'.format(p, i), data=net.params[p][i].data[:])
 
       weights_file.close()

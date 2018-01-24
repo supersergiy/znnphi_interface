@@ -5,6 +5,7 @@ from pool    import parse_pool
 from bnorm   import parse_bnorm 
 from elu     import parse_elu
 from scale   import parse_scale
+from bias    import parse_bias
 from eltwise import parse_eltwise
 from slc     import parse_slc
 from crop    import parse_crop
@@ -50,6 +51,8 @@ def parse_layer(l):
       lparams = parse_elu(l)
    elif lt == "Scale":
       lparams = parse_scale(l)
+   elif lt == "Bias":
+      lparams = parse_bias(l)
    elif lt == "Slice":
       lparams = parse_slc(l)
    elif lt == "Eltwise":

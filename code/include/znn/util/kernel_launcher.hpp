@@ -25,6 +25,7 @@ private:
     std::function<void()>* kernels;
     cpu_set_t              old_set_;
     long_t                 num_threads_;
+    long_t 		   cpu_offset;
 
 private:
     void thread_loop(long_t id, long_t core)

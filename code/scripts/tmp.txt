@@ -1,239 +1,161 @@
 /usr/local/lib/python2.7/dist-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
   from ._conv import register_converters as _register_converters
+make: Entering directory '/opt/znnphi_interface/code/znet'
+rm -rf out
+mkdir -p out
+mkdir -p out/weights
+python src/znet_generator/main.py /opt/znnphi_interface/code/znet/src/python/pznet/.tmp/net.json /tests/conv2/weights.h5 src/generated/znet.cpp AVX512 4 1 0
+/usr/local/lib/python2.7/dist-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
+  from ._conv import register_converters as _register_converters
+Parsing the network spec...
+Loading the weights...
+Optimizing the net...
+Removing Elu1!
+Generating the network...
+   Generating constructors...
+   Generating foward pass...
+Done!
+icpc: command line warning #10006: ignoring unknown option '-Wdate-time'
+icpc: warning #10315: specifying -lm before files may supersede the Intel(R) math library and affect performance
+icpc: command line remark #10411: option '-openmp' is deprecated and will be removed in a future release. Please use the replacement option '-qopenmp'
+make: Leaving directory '/opt/znnphi_interface/code/znet'
 Creating net...
 Running net...
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=28 OFM=36 ID=18 IHW=82 KD=1 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_false_1_2_2_2_18_28_82_1_3_36_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=28 OFM=28 ID=18 IHW=162 KD=1 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_false_1_2_2_2_18_28_162_1_3_28_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=48 OFM=64 ID=18 IHW=22 KD=1 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_false_1_2_2_2_18_48_22_1_3_64_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=36 OFM=48 ID=18 IHW=42 KD=1 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_false_1_2_2_2_18_36_42_1_3_48_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=36 OFM=36 ID=18 IHW=82 KD=1 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_false_1_2_2_2_18_36_82_1_3_36_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=64 OFM=80 ID=18 IHW=12 KD=1 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_false_1_2_2_2_18_64_12_1_3_80_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=64 OFM=64 ID=18 IHW=22 KD=1 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_false_1_2_2_2_18_64_22_1_3_64_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=48 OFM=48 ID=18 IHW=42 KD=1 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_false_1_2_2_2_18_48_42_1_3_48_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=28 OFM=28 ID=18 IHW=162 KD=1 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_false_1_2_2_2_18_28_162_1_3_28_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=28 OFM=28 ID=18 IHW=162 KD=1 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_false_1_2_2_2_18_28_162_1_3_28_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=64 OFM=64 ID=20 IHW=22 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=true CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_true_1_2_2_2_20_64_22_3_3_64_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=48 OFM=48 ID=20 IHW=42 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=true CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_true_1_2_2_2_20_48_42_3_3_48_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=36 OFM=36 ID=20 IHW=82 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=true CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_true_1_2_2_2_20_36_82_3_3_36_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=36 OFM=36 ID=20 IHW=82 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_false_1_2_2_2_20_36_82_3_3_36_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=64 OFM=64 ID=20 IHW=22 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=true CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_true_1_2_2_2_20_64_22_3_3_64_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=36 OFM=36 ID=20 IHW=82 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=true CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_true_1_2_2_2_20_36_82_3_3_36_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=1 OFM=28 ID=18 IHW=164 KD=1 KHW=5 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_false_1_2_2_2_18_1_164_1_5_28_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=28 OFM=28 ID=18 IHW=162 KD=1 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=true CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_true_1_2_2_2_18_28_162_1_3_28_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=28 OFM=1 ID=18 IHW=164 KD=1 KHW=5 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_false_1_2_2_2_18_28_164_1_5_1_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=80 OFM=64 ID=18 IHW=10 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 CPU_OFFSET=2 
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_0_1_1_2_2_2_18_80_10_1_1_64_0_0_0_0_1_2_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=80 OFM=64 ID=18 IHW=10 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=0 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 CPU_OFFSET=2 
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_0_1_1_2_2_2_18_80_10_1_1_64_0_0_0_0_1_2_1.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=80 OFM=64 ID=18 IHW=10 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=1 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 CPU_OFFSET=2 
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_0_1_1_2_2_2_18_80_10_1_1_64_0_1_0_0_1_2_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=80 OFM=64 ID=18 IHW=10 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=1 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 CPU_OFFSET=2 
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_0_1_1_2_2_2_18_80_10_1_1_64_0_1_0_0_1_2_1.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=64 OFM=48 ID=18 IHW=20 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 CPU_OFFSET=2 
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_0_1_1_2_2_2_18_64_20_1_1_48_0_0_0_0_1_2_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=64 OFM=48 ID=18 IHW=20 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=0 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 CPU_OFFSET=2 
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_0_1_1_2_2_2_18_64_20_1_1_48_0_0_0_0_1_2_1.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=64 OFM=48 ID=18 IHW=20 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=1 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 CPU_OFFSET=2 
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_0_1_1_2_2_2_18_64_20_1_1_48_0_1_0_0_1_2_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=64 OFM=48 ID=18 IHW=20 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=1 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 CPU_OFFSET=2 
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_0_1_1_2_2_2_18_64_20_1_1_48_0_1_0_0_1_2_1.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=48 OFM=36 ID=18 IHW=40 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 CPU_OFFSET=2 
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_0_1_1_2_2_2_18_48_40_1_1_36_0_0_0_0_1_2_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=48 OFM=36 ID=18 IHW=40 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=0 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 CPU_OFFSET=2 
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_0_1_1_2_2_2_18_48_40_1_1_36_0_0_0_0_1_2_1.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=48 OFM=36 ID=18 IHW=40 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=1 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 CPU_OFFSET=2 
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_0_1_1_2_2_2_18_48_40_1_1_36_0_1_0_0_1_2_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=48 OFM=36 ID=18 IHW=40 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=1 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 CPU_OFFSET=2 
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_0_1_1_2_2_2_18_48_40_1_1_36_0_1_0_0_1_2_1.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=36 OFM=28 ID=18 IHW=80 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 CPU_OFFSET=2 
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_0_1_1_2_2_2_18_36_80_1_1_28_0_0_0_0_1_2_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=36 OFM=28 ID=18 IHW=80 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=0 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 CPU_OFFSET=2 
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_0_1_1_2_2_2_18_36_80_1_1_28_0_0_0_0_1_2_1.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=36 OFM=28 ID=18 IHW=80 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=1 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 CPU_OFFSET=2 
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_0_1_1_2_2_2_18_36_80_1_1_28_0_1_0_0_1_2_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=36 OFM=28 ID=18 IHW=80 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=1 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=1 CORES=2 HT=2 CPU_OFFSET=2 
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_0_1_1_2_2_2_18_36_80_1_1_28_0_1_0_0_1_2_1.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=48 OFM=48 ID=20 IHW=42 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_false_1_2_2_2_20_48_42_3_3_48_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=64 OFM=64 ID=20 IHW=22 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_false_1_2_2_2_20_64_22_3_3_64_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=80 OFM=80 ID=20 IHW=12 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_false_1_2_2_2_20_80_12_3_3_80_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=48 OFM=48 ID=20 IHW=42 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_false_1_2_2_2_20_48_42_3_3_48_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=64 OFM=64 ID=20 IHW=22 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_false_1_2_2_2_20_64_22_3_3_64_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=28 OFM=28 ID=18 IHW=162 KD=1 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_false_1_2_2_2_18_28_162_1_3_28_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=36 OFM=36 ID=20 IHW=82 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_false_1_2_2_2_20_36_82_3_3_36_0_0_0_0_1_1_0.so
-1 2
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=80 OFM=80 ID=20 IHW=12 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=true CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_true_1_2_2_2_20_80_12_3_3_80_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=48 OFM=48 ID=20 IHW=42 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=true CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_true_1_2_2_2_20_48_42_3_3_48_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=28 OFM=28 ID=18 IHW=162 KD=1 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=true CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_true_1_2_2_2_18_28_162_1_3_28_0_0_0_0_1_1_0.so
-/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/psd_net_2cores/lib BN=1 IFM=28 OFM=28 ID=18 IHW=162 KD=1 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=false ADDOROVERWRITE=false CORES=2 HT=2 CPU_OFFSET=2
-dl_filename: /opt/znets/psd_net_2cores/lib/conv_false_false_1_2_2_2_18_28_162_1_3_28_0_0_0_0_1_1_0.so
-1 2
-1 2
-1 2
-Copying 1843200 bytes into the user input. 
-Starting Forward Pass
-Mean: -0.644218
-stdev: 0.199392
-bias: 3.23091
-scale: 5.01524
-Mean: 0.0981848
-stdev: 0.864686
-bias: -0.11355
-scale: 1.15649
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-Mean: -nan
-stdev: -nan
-bias: nan
-scale: -nan
-average:1.79694
-Forward Finished
-Traceback (most recent call last):
-  File "./run_single_test.py", line 34, in <module>
-    reference_a = reference_file["main"][:]
-  File "h5py/_objects.pyx", line 54, in h5py._objects.with_phil.wrapper
-  File "h5py/_objects.pyx", line 55, in h5py._objects.with_phil.wrapper
-  File "/usr/local/lib/python2.7/dist-packages/h5py/_hl/group.py", line 167, in __getitem__
-    oid = h5o.open(self.id, self._e(name), lapl=self._lapl)
-  File "h5py/_objects.pyx", line 54, in h5py._objects.with_phil.wrapper
-  File "h5py/_objects.pyx", line 55, in h5py._objects.with_phil.wrapper
-  File "h5py/h5o.pyx", line 190, in h5py.h5o.open
-KeyError: "Unable to open object (object 'main' doesn't exist)"
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/conv2_4cores/lib BN=1 IFM=32 OFM=32 ID=24 IHW=226 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=true ADDOROVERWRITE=false ARCH=AVX512 CORES=4 HT=1 CPU_OFFSET=0
+../../../../code/include/znn/layer/conv/propagation/sub_image.hpp(222): error: identifier "SIMD_ELU" is undefined
+                      SIMD_ELU(vout[rh][rw]); 
+                      ^
+          detected during:
+            instantiation of "void znn::phi::propagation::sub_image_2d<Bias, Activation, AddOrOverwrite, IFMs, ID, IH, IW, CD, CH, CW, RH, RW>::execute(const float *, float *, const float *, const float *, const float *) [with Bias=true, Activation=true, AddOrOverwrite=false, IFMs=16L, ID=znn::phi::propagation::image_traits<11L, 817216L, 802816L>, IH=znn::phi::propagation::image_traits<224L, 3616L, 3584L>, IW=znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      CD=znn::phi::propagation::conv_traits<3L, 9L, 1L>, CH=znn::phi::propagation::conv_traits<3L, 3L, 1L>, CW=znn::phi::propagation::conv_traits<3L, 1L, 1L>, RH=2L, RW=12L]" at line 36 of "../../../../code/include/znn/layer/conv/propagation/full_image.hpp"
+            instantiation of "void znn::phi::propagation::full_image<First, Activation, AddToOutput, IFMs, ID, IH, IW, CD, CH, CW>::loop_over_w<D,H>(const float *, float *, const float *, const float *, const float *) [with First=true, Activation=true, AddToOutput=false, IFMs=16L, ID=znn::phi::propagation::image_traits<11L, 817216L, 802816L>, IH=znn::phi::propagation::image_traits<224L, 3616L, 3584L>, IW=znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      CD=znn::phi::propagation::conv_traits<3L, 9L, 1L>, CH=znn::phi::propagation::conv_traits<3L, 3L, 1L>, CW=znn::phi::propagation::conv_traits<3L, 1L, 1L>, D=1L, H=2L]" at line 60 of "../../../../code/include/znn/layer/conv/propagation/full_image.hpp"
+            instantiation of "void znn::phi::propagation::full_image<First, Activation, AddToOutput, IFMs, ID, IH, IW, CD, CH, CW>::loop_over_h<D,ClangFormatIgnore>(const float *, float *, const float *, const float *, const float *) [with First=true, Activation=true, AddToOutput=false, IFMs=16L, ID=znn::phi::propagation::image_traits<11L, 817216L, 802816L>, IH=znn::phi::propagation::image_traits<224L, 3616L, 3584L>, IW=znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      CD=znn::phi::propagation::conv_traits<3L, 9L, 1L>, CH=znn::phi::propagation::conv_traits<3L, 3L, 1L>, CW=znn::phi::propagation::conv_traits<3L, 1L, 1L>, D=1L, ClangFormatIgnore=1L]" at line 87 of "../../../../code/include/znn/layer/conv/propagation/full_image.hpp"
+            instantiation of "void znn::phi::propagation::full_image<First, Activation, AddToOutput, IFMs, ID, IH, IW, CD, CH, CW>::execute(const float *, float *, const float *, const float *, const float *) [with First=true, Activation=true, AddToOutput=false, IFMs=16L, ID=znn::phi::propagation::image_traits<11L, 817216L, 802816L>, IH=znn::phi::propagation::image_traits<224L, 3616L, 3584L>, IW=znn::phi::propagation::image_traits<224L, 16L, 16L>, CD=znn::phi::propagation::conv_traits<3L, 9L,
+                      1L>, CH=znn::phi::propagation::conv_traits<3L, 3L, 1L>, CW=znn::phi::propagation::conv_traits<3L, 1L, 1L>]" at line 76 of "../../../../code/include/znn/layer/conv/propagation/sub_layer.hpp"
+            instantiation of "void znn::phi::propagation::sub_layer<P>::execute_single(const float *, float *, const float *, const float *, const float *) [with P=znn::phi::propagation::problem_t<1L, znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L, 3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      znn::phi::propagation::conv_traits<3L, 9L, 1L>, znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, znn::phi::propagation::sub_problem_t<0L, 1L, 0L, 1L, 0L, 11L, 0L, 224L, 0L, 224L>, true, false>]" at line 109 of "../../../../code/include/znn/layer/conv/propagation/sub_layer.hpp"
+            [ 6 instantiation contexts not shown ]
+            instantiation of "std::enable_if_t<<expression>, void> znn::phi::propagation::split_scheduler<P, N>::schedule_part<K>(znn::phi::long_t={int64_t={long}}, znn::phi::long_t={int64_t={long}}, znn::phi::propagation::exec_vector &) [with P=znn::phi::propagation::problem_t<4L, znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L,
+                      3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>, znn::phi::propagation::conv_traits<3L, 9L, 1L>, znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, znn::phi::propagation::sub_problem_t<0L, 1L, 0L, 2L, 0L, 22L, 0L, 224L, 0L, 224L>, true, false>, N=2L, K=0L]" at line 61 of "../../../../code/include/znn/layer/conv/propagation/full_layer/schedule.hpp"
+            instantiation of "void znn::phi::propagation::split_scheduler<P, N>::schedule(znn::phi::long_t={int64_t={long}}, znn::phi::propagation::exec_vector &) [with P=znn::phi::propagation::problem_t<4L, znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L, 3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      znn::phi::propagation::conv_traits<3L, 9L, 1L>, znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, znn::phi::propagation::sub_problem_t<0L, 1L, 0L, 2L, 0L, 22L, 0L, 224L, 0L, 224L>, true, false>, N=2L]" at line 74 of "../../../../code/include/znn/layer/conv/propagation/full_layer/schedule.hpp"
+            instantiation of "void znn::phi::propagation::scheduler<P>::schedule(znn::phi::long_t={int64_t={long}}, znn::phi::propagation::exec_vector &) [with P=znn::phi::propagation::problem_t<4L, znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L, 3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      znn::phi::propagation::conv_traits<3L, 9L, 1L>, znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, znn::phi::propagation::sub_problem_t<0L, 1L, 0L, 2L, 0L, 22L, 0L, 224L, 0L, 224L>, true, false>]" at line 43 of "../../../../code/include/znn/layer/conv/propagation/full_layer.hpp"
+            instantiation of "znn::phi::propagation::full_layer<Threads, P, Activation, AddToOutput>::full_layer(znn::phi::kernel_launcher *) [with Threads=4L, P=znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L, 3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>, znn::phi::propagation::conv_traits<3L, 9L, 1L>,
+                      znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, Activation=true, AddToOutput=false]" at line 77 of "../../../../code/include/znn/layer/conv_template.hpp"
+            instantiation of "znn::phi::ConvTemplate<Cores, HT, B, IFM, OFM, ID, IHW, KD, KHW, OUT_D_SKIP, OUT_PADD, OUT_H_SKIP, OUT_W_SKIP, OUT_PADHW, OUT_STRIDE_D, OUT_STRIDE_HW, Activation, AddOrOverwrite, CPU_OFFSET>::ConvTemplate() [with Cores=4L, HT=1L, B=1L, IFM=32L, OFM=32L, ID=24L, IHW=226L, KD=3L, KHW=3L, OUT_D_SKIP=0L, OUT_PADD=0L, OUT_H_SKIP=0L, OUT_W_SKIP=0L, OUT_PADHW=0L, OUT_STRIDE_D=1L, OUT_STRIDE_HW=1L, Activation=true, AddOrOverwrite=false, CPU_OFFSET=0L]" at line 11 of
+                      "/opt/znnphi_interface/code/include/znn/jit/.tmp/1986.cpp"
+
+../../../../code/include/znn/layer/conv/propagation/sub_image.hpp(222): error: identifier "SIMD_ELU" is undefined
+                      SIMD_ELU(vout[rh][rw]); 
+                      ^
+          detected during:
+            instantiation of "void znn::phi::propagation::sub_image_2d<Bias, Activation, AddOrOverwrite, IFMs, ID, IH, IW, CD, CH, CW, RH, RW>::execute(const float *, float *, const float *, const float *, const float *) [with Bias=true, Activation=true, AddOrOverwrite=false, IFMs=16L, ID=znn::phi::propagation::image_traits<11L, 817216L, 802816L>, IH=znn::phi::propagation::image_traits<224L, 3616L, 3584L>, IW=znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      CD=znn::phi::propagation::conv_traits<3L, 9L, 1L>, CH=znn::phi::propagation::conv_traits<3L, 3L, 1L>, CW=znn::phi::propagation::conv_traits<3L, 1L, 1L>, RH=2L, RW=8L]" at line 44 of "../../../../code/include/znn/layer/conv/propagation/full_image.hpp"
+            instantiation of "void znn::phi::propagation::full_image<First, Activation, AddToOutput, IFMs, ID, IH, IW, CD, CH, CW>::loop_over_w<D,H>(const float *, float *, const float *, const float *, const float *) [with First=true, Activation=true, AddToOutput=false, IFMs=16L, ID=znn::phi::propagation::image_traits<11L, 817216L, 802816L>, IH=znn::phi::propagation::image_traits<224L, 3616L, 3584L>, IW=znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      CD=znn::phi::propagation::conv_traits<3L, 9L, 1L>, CH=znn::phi::propagation::conv_traits<3L, 3L, 1L>, CW=znn::phi::propagation::conv_traits<3L, 1L, 1L>, D=1L, H=2L]" at line 60 of "../../../../code/include/znn/layer/conv/propagation/full_image.hpp"
+            instantiation of "void znn::phi::propagation::full_image<First, Activation, AddToOutput, IFMs, ID, IH, IW, CD, CH, CW>::loop_over_h<D,ClangFormatIgnore>(const float *, float *, const float *, const float *, const float *) [with First=true, Activation=true, AddToOutput=false, IFMs=16L, ID=znn::phi::propagation::image_traits<11L, 817216L, 802816L>, IH=znn::phi::propagation::image_traits<224L, 3616L, 3584L>, IW=znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      CD=znn::phi::propagation::conv_traits<3L, 9L, 1L>, CH=znn::phi::propagation::conv_traits<3L, 3L, 1L>, CW=znn::phi::propagation::conv_traits<3L, 1L, 1L>, D=1L, ClangFormatIgnore=1L]" at line 87 of "../../../../code/include/znn/layer/conv/propagation/full_image.hpp"
+            instantiation of "void znn::phi::propagation::full_image<First, Activation, AddToOutput, IFMs, ID, IH, IW, CD, CH, CW>::execute(const float *, float *, const float *, const float *, const float *) [with First=true, Activation=true, AddToOutput=false, IFMs=16L, ID=znn::phi::propagation::image_traits<11L, 817216L, 802816L>, IH=znn::phi::propagation::image_traits<224L, 3616L, 3584L>, IW=znn::phi::propagation::image_traits<224L, 16L, 16L>, CD=znn::phi::propagation::conv_traits<3L, 9L,
+                      1L>, CH=znn::phi::propagation::conv_traits<3L, 3L, 1L>, CW=znn::phi::propagation::conv_traits<3L, 1L, 1L>]" at line 76 of "../../../../code/include/znn/layer/conv/propagation/sub_layer.hpp"
+            instantiation of "void znn::phi::propagation::sub_layer<P>::execute_single(const float *, float *, const float *, const float *, const float *) [with P=znn::phi::propagation::problem_t<1L, znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L, 3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      znn::phi::propagation::conv_traits<3L, 9L, 1L>, znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, znn::phi::propagation::sub_problem_t<0L, 1L, 0L, 1L, 0L, 11L, 0L, 224L, 0L, 224L>, true, false>]" at line 109 of "../../../../code/include/znn/layer/conv/propagation/sub_layer.hpp"
+            [ 6 instantiation contexts not shown ]
+            instantiation of "std::enable_if_t<<expression>, void> znn::phi::propagation::split_scheduler<P, N>::schedule_part<K>(znn::phi::long_t={int64_t={long}}, znn::phi::long_t={int64_t={long}}, znn::phi::propagation::exec_vector &) [with P=znn::phi::propagation::problem_t<4L, znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L,
+                      3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>, znn::phi::propagation::conv_traits<3L, 9L, 1L>, znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, znn::phi::propagation::sub_problem_t<0L, 1L, 0L, 2L, 0L, 22L, 0L, 224L, 0L, 224L>, true, false>, N=2L, K=0L]" at line 61 of "../../../../code/include/znn/layer/conv/propagation/full_layer/schedule.hpp"
+            instantiation of "void znn::phi::propagation::split_scheduler<P, N>::schedule(znn::phi::long_t={int64_t={long}}, znn::phi::propagation::exec_vector &) [with P=znn::phi::propagation::problem_t<4L, znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L, 3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      znn::phi::propagation::conv_traits<3L, 9L, 1L>, znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, znn::phi::propagation::sub_problem_t<0L, 1L, 0L, 2L, 0L, 22L, 0L, 224L, 0L, 224L>, true, false>, N=2L]" at line 74 of "../../../../code/include/znn/layer/conv/propagation/full_layer/schedule.hpp"
+            instantiation of "void znn::phi::propagation::scheduler<P>::schedule(znn::phi::long_t={int64_t={long}}, znn::phi::propagation::exec_vector &) [with P=znn::phi::propagation::problem_t<4L, znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L, 3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      znn::phi::propagation::conv_traits<3L, 9L, 1L>, znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, znn::phi::propagation::sub_problem_t<0L, 1L, 0L, 2L, 0L, 22L, 0L, 224L, 0L, 224L>, true, false>]" at line 43 of "../../../../code/include/znn/layer/conv/propagation/full_layer.hpp"
+            instantiation of "znn::phi::propagation::full_layer<Threads, P, Activation, AddToOutput>::full_layer(znn::phi::kernel_launcher *) [with Threads=4L, P=znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L, 3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>, znn::phi::propagation::conv_traits<3L, 9L, 1L>,
+                      znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, Activation=true, AddToOutput=false]" at line 77 of "../../../../code/include/znn/layer/conv_template.hpp"
+            instantiation of "znn::phi::ConvTemplate<Cores, HT, B, IFM, OFM, ID, IHW, KD, KHW, OUT_D_SKIP, OUT_PADD, OUT_H_SKIP, OUT_W_SKIP, OUT_PADHW, OUT_STRIDE_D, OUT_STRIDE_HW, Activation, AddOrOverwrite, CPU_OFFSET>::ConvTemplate() [with Cores=4L, HT=1L, B=1L, IFM=32L, OFM=32L, ID=24L, IHW=226L, KD=3L, KHW=3L, OUT_D_SKIP=0L, OUT_PADD=0L, OUT_H_SKIP=0L, OUT_W_SKIP=0L, OUT_PADHW=0L, OUT_STRIDE_D=1L, OUT_STRIDE_HW=1L, Activation=true, AddOrOverwrite=false, CPU_OFFSET=0L]" at line 11 of
+                      "/opt/znnphi_interface/code/include/znn/jit/.tmp/1986.cpp"
+
+../../../../code/include/znn/layer/conv/propagation/sub_image.hpp(222): error: identifier "SIMD_ELU" is undefined
+                      SIMD_ELU(vout[rh][rw]); 
+                      ^
+          detected during:
+            instantiation of "void znn::phi::propagation::sub_image_2d<Bias, Activation, AddOrOverwrite, IFMs, ID, IH, IW, CD, CH, CW, RH, RW>::execute(const float *, float *, const float *, const float *, const float *) [with Bias=true, Activation=false, AddOrOverwrite=false, IFMs=16L, ID=znn::phi::propagation::image_traits<11L, 817216L, 802816L>, IH=znn::phi::propagation::image_traits<224L, 3616L, 3584L>, IW=znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      CD=znn::phi::propagation::conv_traits<3L, 9L, 1L>, CH=znn::phi::propagation::conv_traits<3L, 3L, 1L>, CW=znn::phi::propagation::conv_traits<3L, 1L, 1L>, RH=2L, RW=12L]" at line 36 of "../../../../code/include/znn/layer/conv/propagation/full_image.hpp"
+            instantiation of "void znn::phi::propagation::full_image<First, Activation, AddToOutput, IFMs, ID, IH, IW, CD, CH, CW>::loop_over_w<D,H>(const float *, float *, const float *, const float *, const float *) [with First=true, Activation=false, AddToOutput=false, IFMs=16L, ID=znn::phi::propagation::image_traits<11L, 817216L, 802816L>, IH=znn::phi::propagation::image_traits<224L, 3616L, 3584L>, IW=znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      CD=znn::phi::propagation::conv_traits<3L, 9L, 1L>, CH=znn::phi::propagation::conv_traits<3L, 3L, 1L>, CW=znn::phi::propagation::conv_traits<3L, 1L, 1L>, D=1L, H=2L]" at line 60 of "../../../../code/include/znn/layer/conv/propagation/full_image.hpp"
+            instantiation of "void znn::phi::propagation::full_image<First, Activation, AddToOutput, IFMs, ID, IH, IW, CD, CH, CW>::loop_over_h<D,ClangFormatIgnore>(const float *, float *, const float *, const float *, const float *) [with First=true, Activation=false, AddToOutput=false, IFMs=16L, ID=znn::phi::propagation::image_traits<11L, 817216L, 802816L>, IH=znn::phi::propagation::image_traits<224L, 3616L, 3584L>, IW=znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      CD=znn::phi::propagation::conv_traits<3L, 9L, 1L>, CH=znn::phi::propagation::conv_traits<3L, 3L, 1L>, CW=znn::phi::propagation::conv_traits<3L, 1L, 1L>, D=1L, ClangFormatIgnore=1L]" at line 87 of "../../../../code/include/znn/layer/conv/propagation/full_image.hpp"
+            instantiation of "void znn::phi::propagation::full_image<First, Activation, AddToOutput, IFMs, ID, IH, IW, CD, CH, CW>::execute(const float *, float *, const float *, const float *, const float *) [with First=true, Activation=false, AddToOutput=false, IFMs=16L, ID=znn::phi::propagation::image_traits<11L, 817216L, 802816L>, IH=znn::phi::propagation::image_traits<224L, 3616L, 3584L>, IW=znn::phi::propagation::image_traits<224L, 16L, 16L>, CD=znn::phi::propagation::conv_traits<3L, 9L,
+                      1L>, CH=znn::phi::propagation::conv_traits<3L, 3L, 1L>, CW=znn::phi::propagation::conv_traits<3L, 1L, 1L>]" at line 84 of "../../../../code/include/znn/layer/conv/propagation/sub_layer.hpp"
+            instantiation of "void znn::phi::propagation::sub_layer<P>::execute_single(const float *, float *, const float *, const float *, const float *) [with P=znn::phi::propagation::problem_t<1L, znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L, 3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      znn::phi::propagation::conv_traits<3L, 9L, 1L>, znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, znn::phi::propagation::sub_problem_t<0L, 1L, 0L, 1L, 0L, 11L, 0L, 224L, 0L, 224L>, true, false>]" at line 109 of "../../../../code/include/znn/layer/conv/propagation/sub_layer.hpp"
+            [ 6 instantiation contexts not shown ]
+            instantiation of "std::enable_if_t<<expression>, void> znn::phi::propagation::split_scheduler<P, N>::schedule_part<K>(znn::phi::long_t={int64_t={long}}, znn::phi::long_t={int64_t={long}}, znn::phi::propagation::exec_vector &) [with P=znn::phi::propagation::problem_t<4L, znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L,
+                      3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>, znn::phi::propagation::conv_traits<3L, 9L, 1L>, znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, znn::phi::propagation::sub_problem_t<0L, 1L, 0L, 2L, 0L, 22L, 0L, 224L, 0L, 224L>, true, false>, N=2L, K=0L]" at line 61 of "../../../../code/include/znn/layer/conv/propagation/full_layer/schedule.hpp"
+            instantiation of "void znn::phi::propagation::split_scheduler<P, N>::schedule(znn::phi::long_t={int64_t={long}}, znn::phi::propagation::exec_vector &) [with P=znn::phi::propagation::problem_t<4L, znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L, 3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      znn::phi::propagation::conv_traits<3L, 9L, 1L>, znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, znn::phi::propagation::sub_problem_t<0L, 1L, 0L, 2L, 0L, 22L, 0L, 224L, 0L, 224L>, true, false>, N=2L]" at line 74 of "../../../../code/include/znn/layer/conv/propagation/full_layer/schedule.hpp"
+            instantiation of "void znn::phi::propagation::scheduler<P>::schedule(znn::phi::long_t={int64_t={long}}, znn::phi::propagation::exec_vector &) [with P=znn::phi::propagation::problem_t<4L, znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L, 3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      znn::phi::propagation::conv_traits<3L, 9L, 1L>, znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, znn::phi::propagation::sub_problem_t<0L, 1L, 0L, 2L, 0L, 22L, 0L, 224L, 0L, 224L>, true, false>]" at line 43 of "../../../../code/include/znn/layer/conv/propagation/full_layer.hpp"
+            instantiation of "znn::phi::propagation::full_layer<Threads, P, Activation, AddToOutput>::full_layer(znn::phi::kernel_launcher *) [with Threads=4L, P=znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L, 3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>, znn::phi::propagation::conv_traits<3L, 9L, 1L>,
+                      znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, Activation=true, AddToOutput=false]" at line 77 of "../../../../code/include/znn/layer/conv_template.hpp"
+            instantiation of "znn::phi::ConvTemplate<Cores, HT, B, IFM, OFM, ID, IHW, KD, KHW, OUT_D_SKIP, OUT_PADD, OUT_H_SKIP, OUT_W_SKIP, OUT_PADHW, OUT_STRIDE_D, OUT_STRIDE_HW, Activation, AddOrOverwrite, CPU_OFFSET>::ConvTemplate() [with Cores=4L, HT=1L, B=1L, IFM=32L, OFM=32L, ID=24L, IHW=226L, KD=3L, KHW=3L, OUT_D_SKIP=0L, OUT_PADD=0L, OUT_H_SKIP=0L, OUT_W_SKIP=0L, OUT_PADHW=0L, OUT_STRIDE_D=1L, OUT_STRIDE_HW=1L, Activation=true, AddOrOverwrite=false, CPU_OFFSET=0L]" at line 11 of
+                      "/opt/znnphi_interface/code/include/znn/jit/.tmp/1986.cpp"
+
+../../../../code/include/znn/layer/conv/propagation/sub_image.hpp(222): error: identifier "SIMD_ELU" is undefined
+                      SIMD_ELU(vout[rh][rw]); 
+                      ^
+          detected during:
+            instantiation of "void znn::phi::propagation::sub_image_2d<Bias, Activation, AddOrOverwrite, IFMs, ID, IH, IW, CD, CH, CW, RH, RW>::execute(const float *, float *, const float *, const float *, const float *) [with Bias=true, Activation=false, AddOrOverwrite=false, IFMs=16L, ID=znn::phi::propagation::image_traits<11L, 817216L, 802816L>, IH=znn::phi::propagation::image_traits<224L, 3616L, 3584L>, IW=znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      CD=znn::phi::propagation::conv_traits<3L, 9L, 1L>, CH=znn::phi::propagation::conv_traits<3L, 3L, 1L>, CW=znn::phi::propagation::conv_traits<3L, 1L, 1L>, RH=2L, RW=8L]" at line 44 of "../../../../code/include/znn/layer/conv/propagation/full_image.hpp"
+            instantiation of "void znn::phi::propagation::full_image<First, Activation, AddToOutput, IFMs, ID, IH, IW, CD, CH, CW>::loop_over_w<D,H>(const float *, float *, const float *, const float *, const float *) [with First=true, Activation=false, AddToOutput=false, IFMs=16L, ID=znn::phi::propagation::image_traits<11L, 817216L, 802816L>, IH=znn::phi::propagation::image_traits<224L, 3616L, 3584L>, IW=znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      CD=znn::phi::propagation::conv_traits<3L, 9L, 1L>, CH=znn::phi::propagation::conv_traits<3L, 3L, 1L>, CW=znn::phi::propagation::conv_traits<3L, 1L, 1L>, D=1L, H=2L]" at line 60 of "../../../../code/include/znn/layer/conv/propagation/full_image.hpp"
+            instantiation of "void znn::phi::propagation::full_image<First, Activation, AddToOutput, IFMs, ID, IH, IW, CD, CH, CW>::loop_over_h<D,ClangFormatIgnore>(const float *, float *, const float *, const float *, const float *) [with First=true, Activation=false, AddToOutput=false, IFMs=16L, ID=znn::phi::propagation::image_traits<11L, 817216L, 802816L>, IH=znn::phi::propagation::image_traits<224L, 3616L, 3584L>, IW=znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      CD=znn::phi::propagation::conv_traits<3L, 9L, 1L>, CH=znn::phi::propagation::conv_traits<3L, 3L, 1L>, CW=znn::phi::propagation::conv_traits<3L, 1L, 1L>, D=1L, ClangFormatIgnore=1L]" at line 87 of "../../../../code/include/znn/layer/conv/propagation/full_image.hpp"
+            instantiation of "void znn::phi::propagation::full_image<First, Activation, AddToOutput, IFMs, ID, IH, IW, CD, CH, CW>::execute(const float *, float *, const float *, const float *, const float *) [with First=true, Activation=false, AddToOutput=false, IFMs=16L, ID=znn::phi::propagation::image_traits<11L, 817216L, 802816L>, IH=znn::phi::propagation::image_traits<224L, 3616L, 3584L>, IW=znn::phi::propagation::image_traits<224L, 16L, 16L>, CD=znn::phi::propagation::conv_traits<3L, 9L,
+                      1L>, CH=znn::phi::propagation::conv_traits<3L, 3L, 1L>, CW=znn::phi::propagation::conv_traits<3L, 1L, 1L>]" at line 84 of "../../../../code/include/znn/layer/conv/propagation/sub_layer.hpp"
+            instantiation of "void znn::phi::propagation::sub_layer<P>::execute_single(const float *, float *, const float *, const float *, const float *) [with P=znn::phi::propagation::problem_t<1L, znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L, 3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      znn::phi::propagation::conv_traits<3L, 9L, 1L>, znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, znn::phi::propagation::sub_problem_t<0L, 1L, 0L, 1L, 0L, 11L, 0L, 224L, 0L, 224L>, true, false>]" at line 109 of "../../../../code/include/znn/layer/conv/propagation/sub_layer.hpp"
+            [ 6 instantiation contexts not shown ]
+            instantiation of "std::enable_if_t<<expression>, void> znn::phi::propagation::split_scheduler<P, N>::schedule_part<K>(znn::phi::long_t={int64_t={long}}, znn::phi::long_t={int64_t={long}}, znn::phi::propagation::exec_vector &) [with P=znn::phi::propagation::problem_t<4L, znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L,
+                      3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>, znn::phi::propagation::conv_traits<3L, 9L, 1L>, znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, znn::phi::propagation::sub_problem_t<0L, 1L, 0L, 2L, 0L, 22L, 0L, 224L, 0L, 224L>, true, false>, N=2L, K=0L]" at line 61 of "../../../../code/include/znn/layer/conv/propagation/full_layer/schedule.hpp"
+            instantiation of "void znn::phi::propagation::split_scheduler<P, N>::schedule(znn::phi::long_t={int64_t={long}}, znn::phi::propagation::exec_vector &) [with P=znn::phi::propagation::problem_t<4L, znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L, 3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      znn::phi::propagation::conv_traits<3L, 9L, 1L>, znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, znn::phi::propagation::sub_problem_t<0L, 1L, 0L, 2L, 0L, 22L, 0L, 224L, 0L, 224L>, true, false>, N=2L]" at line 74 of "../../../../code/include/znn/layer/conv/propagation/full_layer/schedule.hpp"
+            instantiation of "void znn::phi::propagation::scheduler<P>::schedule(znn::phi::long_t={int64_t={long}}, znn::phi::propagation::exec_vector &) [with P=znn::phi::propagation::problem_t<4L, znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L, 3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      znn::phi::propagation::conv_traits<3L, 9L, 1L>, znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, znn::phi::propagation::sub_problem_t<0L, 1L, 0L, 2L, 0L, 22L, 0L, 224L, 0L, 224L>, true, false>]" at line 43 of "../../../../code/include/znn/layer/conv/propagation/full_layer.hpp"
+            instantiation of "znn::phi::propagation::full_layer<Threads, P, Activation, AddToOutput>::full_layer(znn::phi::kernel_launcher *) [with Threads=4L, P=znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L, 3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>, znn::phi::propagation::conv_traits<3L, 9L, 1L>,
+                      znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, Activation=true, AddToOutput=false]" at line 77 of "../../../../code/include/znn/layer/conv_template.hpp"
+            instantiation of "znn::phi::ConvTemplate<Cores, HT, B, IFM, OFM, ID, IHW, KD, KHW, OUT_D_SKIP, OUT_PADD, OUT_H_SKIP, OUT_W_SKIP, OUT_PADHW, OUT_STRIDE_D, OUT_STRIDE_HW, Activation, AddOrOverwrite, CPU_OFFSET>::ConvTemplate() [with Cores=4L, HT=1L, B=1L, IFM=32L, OFM=32L, ID=24L, IHW=226L, KD=3L, KHW=3L, OUT_D_SKIP=0L, OUT_PADD=0L, OUT_H_SKIP=0L, OUT_W_SKIP=0L, OUT_PADHW=0L, OUT_STRIDE_D=1L, OUT_STRIDE_HW=1L, Activation=true, AddOrOverwrite=false, CPU_OFFSET=0L]" at line 11 of
+                      "/opt/znnphi_interface/code/include/znn/jit/.tmp/1986.cpp"
+
+../../../../code/include/znn/layer/conv/propagation/sub_image.hpp(222): error: identifier "SIMD_ELU" is undefined
+                      SIMD_ELU(vout[rh][rw]); 
+                      ^
+          detected during:
+            instantiation of "void znn::phi::propagation::sub_image_2d<Bias, Activation, AddOrOverwrite, IFMs, ID, IH, IW, CD, CH, CW, RH, RW>::execute(const float *, float *, const float *, const float *, const float *) [with Bias=false, Activation=false, AddOrOverwrite=false, IFMs=16L, ID=znn::phi::propagation::image_traits<11L, 817216L, 802816L>, IH=znn::phi::propagation::image_traits<224L, 3616L, 3584L>, IW=znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      CD=znn::phi::propagation::conv_traits<3L, 9L, 1L>, CH=znn::phi::propagation::conv_traits<3L, 3L, 1L>, CW=znn::phi::propagation::conv_traits<3L, 1L, 1L>, RH=2L, RW=12L]" at line 36 of "../../../../code/include/znn/layer/conv/propagation/full_image.hpp"
+            instantiation of "void znn::phi::propagation::full_image<First, Activation, AddToOutput, IFMs, ID, IH, IW, CD, CH, CW>::loop_over_w<D,H>(const float *, float *, const float *, const float *, const float *) [with First=false, Activation=false, AddToOutput=false, IFMs=16L, ID=znn::phi::propagation::image_traits<11L, 817216L, 802816L>, IH=znn::phi::propagation::image_traits<224L, 3616L, 3584L>, IW=znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      CD=znn::phi::propagation::conv_traits<3L, 9L, 1L>, CH=znn::phi::propagation::conv_traits<3L, 3L, 1L>, CW=znn::phi::propagation::conv_traits<3L, 1L, 1L>, D=1L, H=2L]" at line 60 of "../../../../code/include/znn/layer/conv/propagation/full_image.hpp"
+            instantiation of "void znn::phi::propagation::full_image<First, Activation, AddToOutput, IFMs, ID, IH, IW, CD, CH, CW>::loop_over_h<D,ClangFormatIgnore>(const float *, float *, const float *, const float *, const float *) [with First=false, Activation=false, AddToOutput=false, IFMs=16L, ID=znn::phi::propagation::image_traits<11L, 817216L, 802816L>, IH=znn::phi::propagation::image_traits<224L, 3616L, 3584L>, IW=znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      CD=znn::phi::propagation::conv_traits<3L, 9L, 1L>, CH=znn::phi::propagation::conv_traits<3L, 3L, 1L>, CW=znn::phi::propagation::conv_traits<3L, 1L, 1L>, D=1L, ClangFormatIgnore=1L]" at line 87 of "../../../../code/include/znn/layer/conv/propagation/full_image.hpp"
+            instantiation of "void znn::phi::propagation::full_image<First, Activation, AddToOutput, IFMs, ID, IH, IW, CD, CH, CW>::execute(const float *, float *, const float *, const float *, const float *) [with First=false, Activation=false, AddToOutput=false, IFMs=16L, ID=znn::phi::propagation::image_traits<11L, 817216L, 802816L>, IH=znn::phi::propagation::image_traits<224L, 3616L, 3584L>, IW=znn::phi::propagation::image_traits<224L, 16L, 16L>, CD=znn::phi::propagation::conv_traits<3L, 9L,
+                      1L>, CH=znn::phi::propagation::conv_traits<3L, 3L, 1L>, CW=znn::phi::propagation::conv_traits<3L, 1L, 1L>]" at line 88 of "../../../../code/include/znn/layer/conv/propagation/sub_layer.hpp"
+            instantiation of "void znn::phi::propagation::sub_layer<P>::execute_single(const float *, float *, const float *, const float *, const float *) [with P=znn::phi::propagation::problem_t<1L, znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L, 3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      znn::phi::propagation::conv_traits<3L, 9L, 1L>, znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, znn::phi::propagation::sub_problem_t<0L, 1L, 0L, 1L, 0L, 11L, 0L, 224L, 0L, 224L>, true, false>]" at line 109 of "../../../../code/include/znn/layer/conv/propagation/sub_layer.hpp"
+            [ 6 instantiation contexts not shown ]
+            instantiation of "std::enable_if_t<<expression>, void> znn::phi::propagation::split_scheduler<P, N>::schedule_part<K>(znn::phi::long_t={int64_t={long}}, znn::phi::long_t={int64_t={long}}, znn::phi::propagation::exec_vector &) [with P=znn::phi::propagation::problem_t<4L, znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L,
+                      3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>, znn::phi::propagation::conv_traits<3L, 9L, 1L>, znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, znn::phi::propagation::sub_problem_t<0L, 1L, 0L, 2L, 0L, 22L, 0L, 224L, 0L, 224L>, true, false>, N=2L, K=0L]" at line 61 of "../../../../code/include/znn/layer/conv/propagation/full_layer/schedule.hpp"
+            instantiation of "void znn::phi::propagation::split_scheduler<P, N>::schedule(znn::phi::long_t={int64_t={long}}, znn::phi::propagation::exec_vector &) [with P=znn::phi::propagation::problem_t<4L, znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L, 3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      znn::phi::propagation::conv_traits<3L, 9L, 1L>, znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, znn::phi::propagation::sub_problem_t<0L, 1L, 0L, 2L, 0L, 22L, 0L, 224L, 0L, 224L>, true, false>, N=2L]" at line 74 of "../../../../code/include/znn/layer/conv/propagation/full_layer/schedule.hpp"
+            instantiation of "void znn::phi::propagation::scheduler<P>::schedule(znn::phi::long_t={int64_t={long}}, znn::phi::propagation::exec_vector &) [with P=znn::phi::propagation::problem_t<4L, znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L, 3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>,
+                      znn::phi::propagation::conv_traits<3L, 9L, 1L>, znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, znn::phi::propagation::sub_problem_t<0L, 1L, 0L, 2L, 0L, 22L, 0L, 224L, 0L, 224L>, true, false>]" at line 43 of "../../../../code/include/znn/layer/conv/propagation/full_layer.hpp"
+            instantiation of "znn::phi::propagation::full_layer<Threads, P, Activation, AddToOutput>::full_layer(znn::phi::kernel_launcher *) [with Threads=4L, P=znn::phi::propagation::original_problem_t<1L, 39226368L, 35323904L, 2L, 2L, 19613184L, 17661952L, 6912L, 13824L, znn::phi::propagation::image_traits<22L, 817216L, 802816L>, znn::phi::propagation::image_traits<224L, 3616L, 3584L>, znn::phi::propagation::image_traits<224L, 16L, 16L>, znn::phi::propagation::conv_traits<3L, 9L, 1L>,
+                      znn::phi::propagation::conv_traits<3L, 3L, 1L>, znn::phi::propagation::conv_traits<3L, 1L, 1L>>, Activation=true, AddToOutput=false]" at line 77 of "../../../../code/include/znn/layer/conv_template.hpp"
+            instantiation of "znn::phi::ConvTemplate<Cores, HT, B, IFM, OFM, ID, IHW, KD, KHW, OUT_D_SKIP, OUT_PADD, OUT_H_SKIP, OUT_W_SKIP, OUT_PADHW, OUT_STRIDE_D, OUT_STRIDE_HW, Activation, AddOrOverwrite, CPU_OFFSET>::ConvTemplate() [with Cores=4L, HT=1L, B=1L, IFM=32L, OFM=32L, ID=24L, IHW=226L, KD=3L, KHW=3L, OUT_D_SKIP=0L, OUT_PADD=0L, OUT_H_SKIP=0L, OUT_W_SKIP=0L, OUT_PADHW=0L, OUT_STRIDE_D=1L, OUT_STRIDE_HW=1L, Activation=true, AddOrOverwrite=false, CPU_OFFSET=0L]" at line 11 of
+                      "/opt/znnphi_interface/code/include/znn/jit/.tmp/1986.cpp"
+
+compilation aborted for /opt/znnphi_interface/code/include/znn/jit/.tmp/1986.cpp (code 4)
+make: *** [/opt/znnphi_interface/code/include/znn/jit/.tmp/1986.so] Error 4
+dl_filename: Makefile:88:
+Makefile:88:: cannot open shared object file: No such file or directory
+close failed in file object destructor:
+sys.excepthook is missing
+lost sys.stderr

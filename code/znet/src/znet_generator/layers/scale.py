@@ -1,5 +1,5 @@
 import copy
-from common import round_to_simd, generate_param_string, S, fill_tensor, zero_out_tensor
+from common import round_to_simd, generate_param_string, fill_tensor, zero_out_tensor
 import numpy as np
 from conv import block_kernel, block_bias
 
@@ -13,11 +13,12 @@ def set_scale_dim(params, bot_tensor):
     params["id"]  = bot_tensor.dim[2]
     params["ihw"] = bot_tensor.dim[3]
 
-    params["scale_size"]  = round_to_simd(params["ifm"])
-    params["bias_size"] = round_to_simd(params["ifm"])
+    params["scale_size"]  = round_to_simd(params["ifm"], params["arch"])
+    params["bias_size"] = round_to_simd(params["ifm"], params["arch"])
 
-def parse_scale(json_param):
+def parse_scale(json_param, arch):
     params = {}
+    params["arch"] = arch
     params["name"] = json_param["name"]
     params["top"]  = json_param["top"][0]
     params["bot"]  = json_param["bottom"][0]

@@ -27,7 +27,6 @@
 #define SIMD_SUB_MASK(r, m, a, b) _mm512_mask_sub_ps(r, m, a, b)
 #define SIMD_MUL_MASK(r, m, a, b) _mm512_mask_mul_ps(r, m, a, b)
 
-
 #define SIMD_E2A23_MASK(a, m, b) _mm512_mask_exp2a23_ps(a, m, b)
 #define SIMD_LT(a, b) _mm512_cmp_ps_mask(a, b, _CMP_LT_OQ)
 #define SIMD_CMP(a, b) _mm512_cmp_ps_mask(a, b, _CMP_EQ_OQ)

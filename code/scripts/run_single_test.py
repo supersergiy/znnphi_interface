@@ -8,7 +8,7 @@ import sys
 cores = 4
 ht    = 1
 cpu_offset   = 0
-architecture = 'AVX512'
+architecture = 'AVX2'
 base = sys.argv[1]
 
 create = True

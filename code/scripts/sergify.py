@@ -25,7 +25,7 @@ parser.add_option("-o", dest="output_path", default="./generated_netwrok",
                         help="The output folder for the generated network")
 
 parser.add_option("--arch", dest="architecture", default="AVX2",
-                        help="The output folder for the generated network")
+        help="The cpu architexture: {AVX2, AVX512}")
 (options, args) = parser.parse_args()
 
 if not options.prototxt_path:

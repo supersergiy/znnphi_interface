@@ -24,6 +24,8 @@ parser.add_option("--ht",
 parser.add_option("-o", dest="output_path", default="./generated_netwrok",
                         help="The output folder for the generated network")
 
+parser.add_option("--arch", dest="architecture", default="AVX2",
+                        help="The output folder for the generated network")
 (options, args) = parser.parse_args()
 
 if not options.prototxt_path:
@@ -36,10 +38,11 @@ net_path  = options.prototxt_path
 znet_path = os.path.abspath(options.output_path)
 n_cores   = options.n_cores
 n_ht      = options.n_ht
+arch	  = options.architecture
 
 z = pznet.znet()
 print "Creating the network..."
-z.create_net(net_path, weights_path, znet_path, n_cores, n_ht)
+z.create_net(net_path, weights_path, znet_path, arch, n_cores, n_ht)
 print "Compiling layers..."
 z.load_net(znet_path, os.path.join(znet_path, "lib"))
 print "Your network has been sergified! You can find it at {}".format(znet_path)

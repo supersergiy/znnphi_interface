@@ -8,9 +8,6 @@ def forward_layer_lines(lparams):
    params = ''
    if lt in ["conv", "deconv"]:
        params = conv_forward_params(l)
-   if lt in ["aadeconv"]:
-       params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
-       params += 'tensors["{}"]->data(), tensors["{}"]->data()'.format(l["kernel"], l["bias"])
    elif lt in ["pool", "block_input", "unblock_output", "elu", "pad", "sigmoid", "slc"]:
        params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
        params += 'NULL, NULL'
@@ -23,15 +20,18 @@ def forward_layer_lines(lparams):
    elif lt in ["eltwise"]:
        params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"][0], l["top"])
        params += 'tensors["{}"]->data(), NULL'.format(l["bot"][1])
+   elif lt in ["neweltwise"]:
+       num_bots_name = 'num_bots_{}'.format(l["name"])
+       num_bots = 'int {} = {};'.format(num_bots_name, len(l["bot"]))
+       bots_pointers = ', '.join(['tensors["{}"]->data()'.format(t_name) for t_name in l["bot"]])
+       bots_array_name = 'bots_{}'.format(l["name"])
+       bots_array = 'void* {}[{}] = {{ {} }};'.format(bots_array_name, num_bots_name, bots_pointers)
+       lines.append(num_bots)
+       lines.append(bots_array)
+       params += '{}, &{}, tensors["{}"]->data(), '.format(bots_array_name, num_bots_name, l["top"])
+       params += 'NULL'
    elif lt in ["input", "dummy_data"]:
-       return lines
+       return [] 
 
    lines.append('layers["{}"]->forward({});'.format(l["name"], params))
    return lines
-
-   '''elif lt == "deconv":
-   elif lt == "Sigmoid":
-   elif lt == "Eltwise":
-      #TODO: do I need to reset dimensions here?
-   else:
-      raise Exception("Unsupported Layer: {}".format(lt))'''

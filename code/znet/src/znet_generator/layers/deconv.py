@@ -1,5 +1,6 @@
 import copy
-from common import round_to_simd, generate_param_string, S, fill_tensor, zero_out_tensor
+from common import round_to_simd, generate_param_string, \
+                   fill_tensor, zero_out_tensor, get_simd_width
 import numpy as np
 
 def set_deconv_dim(params, bot_tensor):
@@ -12,8 +13,8 @@ def set_deconv_dim(params, bot_tensor):
     params["kernel_dim"] += params["json_kernel_size"]
 
     params["kernel_size"]  = params["kernel_dim"][2] * params["kernel_dim"][3] * params["kernel_dim"][4]
-    params["kernel_size"] *= round_to_simd(params["kernel_dim"][0])
-    params["kernel_size"] *= round_to_simd(params["kernel_dim"][1])
+    params["kernel_size"] *= round_to_simd(params["kernel_dim"][0], params["arch"])
+    params["kernel_size"] *= round_to_simd(params["kernel_dim"][1], params["arch"])
     params["kernel_size"] /= params["group"]
 
     top_dim = [-1, -1, -1, -1, -1]
@@ -26,8 +27,9 @@ def set_deconv_dim(params, bot_tensor):
     params["top_dim"] = top_dim
     params["bot_dim"] = bot_tensor.dim
 
-def parse_deconv(json_param):
+def parse_deconv(json_param, arch):
     params = {}
+    params["arch"] = arch
     params["name"] = json_param["name"]
     params["top"]  = json_param["top"][0]
     params["bot"]  = json_param["bottom"][0]
@@ -55,8 +57,8 @@ def parse_deconv(json_param):
     params["bias"]   = "{}_bias".format(params["name"])
 
     params["bias_dim"] = [params["ofm"]]
-    params["bias_size"] = round_to_simd(params["bias_dim"][0])
-    params["scale_size"] = round_to_simd(params["ofm"])
+    params["bias_size"] = round_to_simd(params["bias_dim"][0], params["arch"])
+    params["scale_size"] = round_to_simd(params["ofm"], params["arch"])
 
     params["scale"] = "{}_scale".format(params["name"])
 
@@ -66,9 +68,12 @@ def block_kernel(kernel, lparam):
     kdim = lparam["kernel_dim"]
     kernel = kernel.reshape(kdim)
     blocked_kernel = np.array([0.0]*lparam['kernel_size'])
+    simd_width = get_simd_width(lparam["arch"])
+
     def h5ker_to_znnphiker(ifm, ofm, kz, kx, ky):
-        total_ifms = round_to_simd(kdim[0])
-        total_ofms = round_to_simd(kdim[1])
+        S = get_simd_width(lparam["arch"])
+        total_ifms = round_to_simd(kdim[0], lparam["arch"])
+        total_ofms = round_to_simd(kdim[1], lparam["arch"])
 
         offset = ofm/S
         offset *= total_ifms/S
@@ -110,13 +115,14 @@ def allocate_deconv_lines(lparam):
     else:
         add_or_overwrite = "false"
 
-    allocation_params = (l["bn"], l["ifm"], l["ofm"], l["id"], l["ihw"],
+    allocation_params = (l["bn"], round_to_simd(l["ifm"], l["arch"]),
+                         round_to_simd(l["ofm"], l["arch"]), l["id"], l["ihw"],
                          l["kernel_dim"][2], l["kernel_dim"][3],
                          l["stride"][0],  l["stride"][1],
                          0, 0, activate, add_or_overwrite,
                          'tensors["{}"]->data()'.format(l["kernel"]),
                          l["cores"], l["ht"], l["cpu_offset"])
-                         #'tensors["{}"]->data()'.format(l["bias"]))
+              #           #'tensors["{}"]->data()'.format(l["bias"]))
 
     param_str = generate_param_string(allocation_params)
 
@@ -134,7 +140,6 @@ def allocate_deconv_as_interpolation(lparam, param_str):
     #allocate weights
     lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                               l["kernel"], l["kernel_size"]))
-
     #initialize weights
     kernel = l["kernel_data"]
     lines += fill_tensor(l["kernel"], kernel.flatten())
@@ -173,7 +178,7 @@ def allocate_deconv_as_conv(lparam, param_str):
 
     #allocate layer
     #ouch, this is a little ugly with the lib path, but sacrafices have to made to keep it dynamic
-    lines.append('layers["{}"] = new znn::phi::DeconvAsConvLayer({}, lib_path=this->lib_path);'.format(l["name"], param_str))
+    lines.append('layers["{}"] = new znn::phi::DeconvAsConvLayer({}, "{}", lib_path=this->lib_path);'.format(l["name"], param_str, l["arch"]))
     if "additive_conv" in l and l["additive_conv"]:
         lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                                   l["scale"], l["scale_size"]))

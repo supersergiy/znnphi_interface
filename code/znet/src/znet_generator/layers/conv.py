@@ -1,5 +1,6 @@
 import copy
-from common import round_to_simd, generate_param_string, S, fill_tensor, zero_out_tensor
+from common import round_to_simd, generate_param_string, fill_tensor, \
+                   zero_out_tensor, get_simd_width
 import numpy as np
 
 def set_conv_dim(params, bot_tensor):
@@ -12,8 +13,8 @@ def set_conv_dim(params, bot_tensor):
     params["kernel_dim"] += params["json_kernel_size"]
 
     params["kernel_size"]  = params["kernel_dim"][2] * params["kernel_dim"][3] * params["kernel_dim"][4]
-    params["kernel_size"] *= round_to_simd(params["kernel_dim"][0])
-    params["kernel_size"] *= round_to_simd(params["kernel_dim"][1])
+    params["kernel_size"] *= round_to_simd(params["kernel_dim"][0], params["arch"])
+    params["kernel_size"] *= round_to_simd(params["kernel_dim"][1], params["arch"])
 
     top_dim = [-1, -1, -1, -1, -1]
     top_dim[0] = bot_tensor.dim[0]
@@ -25,8 +26,9 @@ def set_conv_dim(params, bot_tensor):
     params["bot_dim"] = bot_tensor.dim
     params["bot_size"] = bot_tensor.memory_size
 
-def parse_conv(json_param):
+def parse_conv(json_param, arch):
     params = {}
+    params["arch"] = arch
     params["name"] = json_param["name"]
     params["top"]  = json_param["top"][0]
     params["bot"]  = json_param["bottom"][0]
@@ -49,13 +51,13 @@ def parse_conv(json_param):
     params["bias"]   = "{}_bias".format(params["name"])
 
     params["bias_dim"] = [params["ofm"]]
-    params["bias_size"] = round_to_simd(params["bias_dim"][0])
+    params["bias_size"] = round_to_simd(params["bias_dim"][0], params["arch"])
 
     params["activation"]    = None
 
     params["additive_conv"] = False
     params["scale"] = "{}_scale".format(params["name"])
-    params["scale_size"] = round_to_simd(params["ofm"])
+    params["scale_size"] = round_to_simd(params["ofm"], params["arch"])
     params["scale_data"] = None
     return params
 
@@ -63,10 +65,11 @@ def block_kernel(kernel, lparam):
     kdim = lparam["kernel_dim"]
     kernel = kernel.reshape(kdim)
     blocked_kernel = np.array([0.0]*lparam['kernel_size'])
+    simd_width = get_simd_width(lparam["arch"])
 
-    def h5ker_to_znnphiker(ofm, ifm, kz, kx, ky):
-        total_ofms = round_to_simd(kdim[0])
-        total_ifms = round_to_simd(kdim[1])
+    def h5ker_to_znnphiker(ofm, ifm, kz, kx, ky, S):
+        total_ofms = round_to_simd(kdim[0], lparam["arch"])
+        total_ifms = round_to_simd(kdim[1], lparam["arch"])
 
         offset = ofm/S
         offset *= total_ifms/S
@@ -90,7 +93,7 @@ def block_kernel(kernel, lparam):
             for kz in range(kdim[2]):
                 for kx in range(kdim[3]):
                     for ky in range(kdim[4]):
-                        znnphi_index = h5ker_to_znnphiker(ofm, ifm, kz, kx, ky)
+                        znnphi_index = h5ker_to_znnphiker(ofm, ifm, kz, kx, ky, simd_width)
                         blocked_kernel[znnphi_index] = kernel[ofm][ifm][kz][kx][ky]
 
     return blocked_kernel
@@ -131,18 +134,20 @@ def allocate_conv_lines(lparam):
     lines = []
 
     #allocate layer
-    params = (l["bn"], l["ifm"], l["ofm"], l["id"], l["ihw"],
+    params = (l["bn"], round_to_simd(l["ifm"], l["arch"]),
+              round_to_simd(l["ofm"], l["arch"]), l["id"], l["ihw"],
               l["kernel_dim"][2], l["kernel_dim"][3],
               0, out_padd, 0, 0, out_padhw,
-              activate, add_or_overwrite, cores, ht, cpu_offset)
+              activate, add_or_overwrite, l["arch"],
+              cores, ht, cpu_offset)
 
     params_template  = '"'
     params_template += 'BN={} IFM={} OFM={} ID={} IHW={} KD={} KHW={} '
     params_template += 'OUT_D_SKIP={} OUT_PADD={} '
     params_template += 'OUT_H_SKIP={} OUT_W_SKIP={} OUT_PADHW={} '
     params_template += 'OUT_STRIDE_D=1 OUT_STRIDE_HW=1 '
-    params_template += 'ACTIVATION={} ADDOROVERWRITE={} CORES={} HT={} '
-    params_template += 'CPU_OFFSET={}'
+    params_template += 'ACTIVATION={} ADDOROVERWRITE={} ARCH={} '
+    params_template += 'CORES={} HT={} CPU_OFFSET={}'
     params_template += '"'
 
     params_str = params_template.format(*params)

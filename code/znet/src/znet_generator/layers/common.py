@@ -2,11 +2,18 @@ from math import ceil
 import numpy as np
 import os
 
-#TODO: FIX FOR VARIABLE SIMD
-S = 8
+def get_simd_width(arch):
+    if arch == "AVX2":
+        s = 8
+    elif arch == "AVX512":
+        s = 16
+    else:
+        raise Exception("Unsupported architecture")
+    return s
 
-def round_to_simd(n):
-    return int(ceil(float(n) / S) * S);
+def round_to_simd(n, arch):
+    s = get_simd_width(arch)
+    return int(ceil(float(n) / s) * s);
 
 def generate_param_string(allocation_params):
     return ", ".join(["{}"]*len(allocation_params)).format(*allocation_params)

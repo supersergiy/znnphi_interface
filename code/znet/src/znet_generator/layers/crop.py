@@ -1,5 +1,5 @@
 import copy
-from common import round_to_simd, generate_param_string, S, fill_tensor, zero_out_tensor
+from common import round_to_simd, generate_param_string, fill_tensor, zero_out_tensor
 import numpy as np
 from conv import block_kernel, block_bias
 
@@ -18,8 +18,9 @@ def set_crop_dim(params, bot_tensors):
     params["ohw"] = top_dim[3]
 
 
-def parse_crop(json_param):
+def parse_crop(json_param, arch):
     params = {}
+    params["arch"] = "AVX2"
     params["name"] = json_param["name"]
     params["top"]  = json_param["top"][0]
     params["bot"]  = json_param["bottom"]

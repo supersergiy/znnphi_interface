@@ -5,11 +5,16 @@ import numpy as np
 import h5py
 import sys
 
-cores = 2
-ht    = 2
-cpu_offset = 2
-
+cores = 4
+ht    = 1
+cpu_offset   = 0
+architecture = 'AVX512'
 base = sys.argv[1]
+
+create = True
+if len(sys.argv) > 2:
+    create = False
+
 test_name = filter(None, base.split('/'))[-1]
 
 net_path = os.path.join(base, "net.prototxt")
@@ -22,14 +27,16 @@ in_a     = in_file["main"][:]
 znet_path = "/opt/znets/{}_{}cores".format(test_name, cores)
 lib_path  = os.path.join(znet_path, "lib")
 z = pznet.znet()
-
-print "Creating net..."
-z.create_net(net_path, weights_path, znet_path, cores, ht, cpu_offset)
+if create:
+    print "Creating net..."
+    z.create_net(net_path, weights_path, znet_path, architecture, cores, ht, cpu_offset)
+#sys.exit(1)
 print "Running net..."
 z.load_net(znet_path, lib_path)
 
 for i in range(1):
     out_a    = z.forward(in_a)
+
     reference_file = h5py.File(reference_path)
     reference_a = reference_file["main"][:]
     np.set_printoptions(precision=2)
@@ -62,7 +69,6 @@ for i in range(1):
         import pdb; pdb.set_trace()
     else:
         print "Congrats! All pass. Error == {}".format(error)
-        import pdb; pdb.set_trace()
 #out_file = h5py.File(output_path)
 #out_file.create_dataset("data", data=out_a)
 

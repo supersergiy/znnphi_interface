@@ -4,14 +4,14 @@ from operator import mul
 from tensor import Tensor
 from layers import parse_layer, set_layer_dim
 
-def upd_tensor(tensors, name, dim):
+def upd_tensor(tensors, name, dim, arch):
     size = reduce(mul, dim)
     if name not in tensors:
-        tensors[name] = Tensor(dim)
+        tensors[name] = Tensor(dim, arch)
     elif size > tensors[name].size:
         tensors[name].size = size
 
-def parse_net(net_path):
+def parse_net(net_path, arch):
    with open(net_path) as f:
        net = json.load(f)
 
@@ -24,7 +24,7 @@ def parse_net(net_path):
 
    for l in json_layers:
       name = l["name"]
-      layer_info[name] = parse_layer(l)
+      layer_info[name] = parse_layer(l, arch)
       layer_order.append(name)
 
    for name in layer_order:
@@ -39,15 +39,15 @@ def parse_net(net_path):
       set_layer_dim(lparams, bot_tensors)
 
       top_name = lparams["top"]
-      upd_tensor(tensors, top_name, lparams["top_dim"])
+      upd_tensor(tensors, top_name, lparams["top_dim"], arch)
 
    misc["output_tensor_name"] = layer_info[layer_order[-1]]["top"]
 
-   add_block_input(net)
-   add_unblock_output(net)
+   add_block_input(net, arch)
+   add_unblock_output(net, arch)
    return net
 
-def add_block_input(net):
+def add_block_input(net, arch):
     tensors, layer_info, layer_order, misc = net
     block_params = {
                         "type": "block_input",
@@ -58,9 +58,9 @@ def add_block_input(net):
                    }
     layer_order.insert(0, "block_input")
     layer_info["block_input"] = block_params
-    tensors["user_input"] = Tensor(block_params["bot_dim"])
+    tensors["user_input"] = Tensor(block_params["bot_dim"], arch)
 
-def add_unblock_output(net):
+def add_unblock_output(net, arch):
     tensors, layer_info, layer_order, misc = net
     unblock_params = {}
     unblock_params = {
@@ -72,6 +72,6 @@ def add_unblock_output(net):
                    }
     layer_order.append("unblock_output")
     layer_info["unblock_output"] = unblock_params
-    tensors["user_output"] = Tensor(unblock_params["bot_dim"])
+    tensors["user_output"] = Tensor(unblock_params["bot_dim"], arch)
 
 

@@ -1,7 +1,8 @@
 from tensor import Tensor
 import numpy as np
 import copy
-from   layers import set_layer_dim
+from   layers import set_layer_dim, round_to_simd
+
 
 #TODO: fix this shitty code
 def generate_layer_order_info(net):
@@ -78,8 +79,8 @@ def generate_dummy_scale_params(prev_lparam):
 
     param["scale_data"] = [1.0] * param["ifm"]
     param["bias_data"]  = [0.0] * param["ifm"]
-    param["scale_size"] = param["ifm"] * 8 #why not
-    param["bias_size"] = param["ifm"] * 8
+    param["scale_size"] = round_to_simd(param["ifm"], l["arch"])
+    param["bias_size"] = round_to_simd(param["ifm"], l["arch"])
     return param
 
 def expand_convs(net):
@@ -94,6 +95,8 @@ def expand_convs(net):
                 next_name = l["next"][0]
                 next_l    = layer_info[next_name]
                 while next_l["type"] in ["scale", "bnorm", "elu"]:
+                    if next_l["type"] == "bnorm" and next_l["static_bnorm"] == False:
+                        break
                     if next_l["type"] in ["scale", "bnorm"]:
                         consume_scale(layer_info, lname, next_name)
                     else:#if next_l["type"] == "elu":
@@ -191,7 +194,7 @@ def handle_deconv_padding(net):
             #insert a crop right after
             crop_param = generate_crop_param(l)
             #create the in between tensor of size: precrop
-            tensors[crop_param["bot"][0]] = Tensor(crop_param["bot_dim"])
+            tensors[crop_param["bot"][0]] = Tensor(crop_param["bot_dim"], l["arch"])
 
             #rewire deconv to send input to cropper
             l["top"] = crop_param["bot"][0]
@@ -245,7 +248,7 @@ def insert_implicit_conv_pads(net):
                     l["top_dim"][2] += 2 * l["output_pad"][0]
                     l["top_dim"][3] += 2 * l["output_pad"][1]
                     l["top_dim"][4] += 2 * l["output_pad"][1]
-                    tensors[l["top"]] = Tensor(l["top_dim"])
+                    tensors[l["top"]] = Tensor(l["top_dim"], l["arch"])
 
                     remove_padding_from_conv(net, next_name)
                     set_layer_dim(next_l, tensors[l["top"]])
@@ -312,7 +315,7 @@ def insert_explicit_conv_pads(net):
         if l["type"] == "conv" and (l["pad"][0] != 0 or l["pad"][1] != 0):
             pad_param = generate_pad_param(l)
             #alocate the padder out tensor
-            tensors[pad_param["top"]] = Tensor(pad_param["top_dim"])
+            tensors[pad_param["top"]] = Tensor(pad_param["top_dim"], l["arch"])
 
             #rewire conv to take input from padder
             l["bot"] = pad_param["top"]
@@ -374,7 +377,7 @@ def eliminate_adds(net):
                     raise Exception("Double additive layer")
 
                 l["additive_conv"]  = True
-                l["scale_data"]     = [1] * l["ofm"]
+                l["scale_data"]     = [1] * round_to_simd(l["ofm"], l["arch"])
 
                 #set the top of the current layer to the thing to add to
                 if next_l["bot"][0] == l["top"]:
@@ -384,12 +387,6 @@ def eliminate_adds(net):
 
                 #rename the input for the layers that use the sum output
                 substitute_tensor(net, next_l["top"], l["top"], lname)
-
-                #for sum_receiver in next_l["next"]:
-                    #TODO: check if it's another sum, then handle differently
-
-                #    layer_info[sum_receiver]["bot"] = l["top"]
-
 
                 #remove eltwise
                 delete_layer(net, next_name, lname)

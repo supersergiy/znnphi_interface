@@ -25,6 +25,7 @@ private:
    int stride_d, stride_hw;
    int out_padd, out_padhw;
    int cpu_offset, cores, ht;
+   std::string arch;
 
    bool activation,  add_or_overwrite;
 
@@ -80,6 +81,7 @@ public:
 
       ss << "ACTIVATION="     << activation << " ";
       ss << "AddOrOverwrite=" << add_or_overwrite << " ";
+      ss << "ARCH=" << arch << " ";
       
       ss << "CORES=" << cores << " ";
       ss << "HT=" << ht  << " ";
@@ -90,7 +92,7 @@ public:
 
    DeconvAsConvLayer(int _bn, int _ifm, int _ofm, int _id, int _ihw, int _kd, int _khw, 
      int _stride_d, int _stride_hw, int _out_padd, int _out_padhw, bool _activation, bool _add_or_overwrite, 
-     const float *kernel, const std::string &lib_path, int _cores, int _ht, int _cpu_offset)
+     const float *kernel, int _cores, int _ht, int _cpu_offset, const std::string &_arch, const std::string &lib_path)
    {   
       cores = _cores;
       ht = _ht;
@@ -111,6 +113,7 @@ public:
       
       activation = _activation;
       add_or_overwrite = _add_or_overwrite;
+      arch = _arch;
 
       rounded_ifm = ((ifm + SIMD_WIDTH - 1) / SIMD_WIDTH) * SIMD_WIDTH;
       rounded_ofm = ((ofm + SIMD_WIDTH - 1) / SIMD_WIDTH) * SIMD_WIDTH;

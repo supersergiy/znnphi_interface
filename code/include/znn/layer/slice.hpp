@@ -36,9 +36,11 @@ public:
      float const* __restrict dummy1, float const* __restrict dummy2)
    {
       typedef float const (*in_tp)[rounded_ifm/SIMD_WIDTH][id][ihw][ihw][SIMD_WIDTH];
-      typedef float (*out_tp)[rounded_ofm/SIMD_WIDTH][id][ihw][ihw][SIMD_WIDTH];
+      typedef float      (*out_tp)[rounded_ofm/SIMD_WIDTH][id][ihw][ihw][SIMD_WIDTH];
+
       in_tp i_array = reinterpret_cast<in_tp>(i);
       out_tp o_array = reinterpret_cast<out_tp>(o);
+
       for (int b = 0; b < bn; ++b) {
          for (int f = 0; f < rounded_ofm/SIMD_WIDTH; f++) {
             for (int d = 0; d < id; ++d) {

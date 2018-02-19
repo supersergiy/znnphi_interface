@@ -2,15 +2,16 @@ FROM seunglab/icpc:2017v3
 
 WORKDIR /opt
 RUN apt-get update && apt-get upgrade -y
-RUN apt-get install python-software-properties -y && apt-get install apt-file -y \ 
-    && apt-file update && apt-get install software-properties-common -y \
-    && add-apt-repository ppa:ubuntu-toolchain-r/test -y &&  apt-get update \
-    && apt-get install gcc-snapshot -y && apt-get update && pt-get install gcc-7 g++-7 -y
+#RUN apt-get install python-software-properties -y && apt-get install apt-file -y \ 
+#    && apt-file update && apt-get install software-properties-common -y \
+#    && add-apt-repository ppa:ubuntu-toolchain-r/test -y &&  apt-get update \
+#    && apt-get install gcc-snapshot -y && apt-get update && apt-get install gcc-7 g++-7 -y
 RUN apt-get install -y python python-pip git python-tk \
         		       screen wget vim 
 
 
 #get znet and kaffe repos
+RUN ls
 RUN git clone https://github.com/supersergiy/znnphi_interface.git
 RUN git clone https://github.com/torms3/kaffe.git
 RUN git clone https://bitbucket.org/poozh/ond-winograd.git 
@@ -39,4 +40,4 @@ RUN cd /opt/znnphi_interface \
 RUN git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime \ 
     && sh ~/.vim_runtime/install_awesome_vimrc.sh
 
-RUN ln /opt/znnphi_interface/code/scripts/sergify /opt/
+RUN ln /opt/znnphi_interface/code/scripts/sergify.py /opt/

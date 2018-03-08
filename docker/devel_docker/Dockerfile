@@ -21,7 +21,7 @@ RUN git clone https://github.com/supersergiy/znnphi_interface.git
 RUN git clone https://github.com/torms3/kaffe.git
 RUN mkdir /opt/.tmp
 
-RUN cd kaffe && git checkout cpu_inference
+RUN cd kaffe && git checkout smooth_integration 
 
 #Using this instead of ENV so that can work within screen
 RUN echo "export LD_LIBRARY_PATH=/opt/intel/lib/intel64" > /root/.bashrc

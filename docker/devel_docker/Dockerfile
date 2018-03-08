@@ -10,10 +10,14 @@ RUN apt-get install -y python python-pip git python-tk \
         		       screen wget vim 
 
 
+RUN pip install --upgrade
+RUN pip install numpy scikit-image scipy protobuf 
+RUN pip install protobuf_to_dict
+RUN pip install tifffile h5py
+
 #get znet and kaffe repos
 RUN git clone https://github.com/supersergiy/znnphi_interface.git
 RUN git clone https://github.com/torms3/kaffe.git
-RUN git clone https://bitbucket.org/poozh/ond-winograd.git 
 RUN mkdir /opt/.tmp
 
 RUN cd kaffe && git checkout cpu_inference

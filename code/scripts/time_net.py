@@ -6,8 +6,8 @@ import h5py
 import sys
 from time import time
 
-cores = 1
-ht    = 2
+cores = 2
+ht    = 1
 cpu_offset   = 0
 architecture = 'AVX512'
 base = sys.argv[1]
@@ -24,7 +24,7 @@ input_path =  os.path.join(base, "in.h5")
 reference_path =  os.path.join(base, "out.h5")
 
 in_file  = h5py.File(input_path)
-in_a     = in_file["main"][:]
+in_a     = np.random.rand(22,224,224)
 znet_path = "/opt/znets/{}_{}cores".format(test_name, cores)
 lib_path  = os.path.join(znet_path, "lib")
 z = pznet.znet()

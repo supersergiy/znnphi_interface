@@ -3,6 +3,7 @@ from deconv  import allocate_deconv_lines
 from pool    import allocate_pool_lines
 from bnorm   import allocate_bnorm_lines
 from elu     import allocate_elu_lines
+from relu    import allocate_relu_lines
 from sigmoid import allocate_sigmoid_lines
 from pad     import allocate_pad_lines
 from scale   import allocate_scale_lines
@@ -33,6 +34,8 @@ def allocate_layer_lines(lparams, cores, ht, cpu_offset):
       return allocate_bnorm_lines(lparams)
    elif lt == "elu":
       return allocate_elu_lines(lparams)
+   elif lt == "relu":
+      return allocate_relu_lines(lparams)
    elif lt == "scale":
       return allocate_scale_lines(lparams)
    elif lt == "slc":

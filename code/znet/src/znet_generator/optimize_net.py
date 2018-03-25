@@ -94,13 +94,13 @@ def expand_convs(net):
             if lt in ["conv","deconv"] and len(l["next"]) == 1:
                 next_name = l["next"][0]
                 next_l    = layer_info[next_name]
-                while next_l["type"] in ["scale", "bnorm", "elu"]:
+                while next_l["type"] in ["scale", "bnorm", "elu"]:#, relu]:
                     if next_l["type"] == "bnorm" and next_l["static_bnorm"] == False:
                         break
                     if next_l["type"] in ["scale", "bnorm"]:
                         consume_scale(layer_info, lname, next_name)
                     else:#if next_l["type"] == "elu":
-                        consume_elu(layer_info, lname, next_name)
+                        consume_activation(layer_info, lname, next_name)
 
                     substitute_tensor(net, next_l["top"], l["top"], lname)
                     #remove the consumed layer
@@ -176,9 +176,9 @@ def consume_scale(layer_info, lname, next_name):
             if l["type"] in ["conv", "deconv"]:
                 l["scale_data"][ofm] *= scale_multipliers[ofm]
 
-def consume_elu(layer_info, lname, next_name):
+def consume_activation(layer_info, lname, next_name):
     l = layer_info[lname]
-    l["activation"] = "elu"
+    l["activation"] = layer_info["type"]
 
 def handle_padding(net):
     handle_conv_padding(net)

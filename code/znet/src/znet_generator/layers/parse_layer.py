@@ -4,6 +4,7 @@ from deconv  import parse_deconv
 from pool    import parse_pool
 from bnorm   import parse_bnorm
 from elu     import parse_elu
+from relu    import parse_relu
 from scale   import parse_scale
 from bias    import parse_bias
 from eltwise import parse_eltwise
@@ -49,6 +50,8 @@ def parse_layer(l, arch):
       lparams = parse_bnorm(l, arch)
    elif lt == "ELU":
       lparams = parse_elu(l, arch)
+   elif lt == "ReLU":
+      lparams = parse_relu(l, arch)
    elif lt == "Scale":
       lparams = parse_scale(l, arch)
    elif lt == "Bias":

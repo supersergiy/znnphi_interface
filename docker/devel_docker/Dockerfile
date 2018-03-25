@@ -16,7 +16,6 @@ RUN pip install protobuf_to_dict
 RUN pip install tifffile h5py
 
 #get znet and kaffe repos
-RUN ls
 RUN git clone https://github.com/supersergiy/znnphi_interface.git
 RUN git clone https://github.com/torms3/kaffe.git
 RUN mkdir /opt/.tmp

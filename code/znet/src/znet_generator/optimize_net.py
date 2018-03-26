@@ -360,6 +360,30 @@ def conv_to_deconv_kernel(conv_kernel):
     deconv_kernel = np.flip(deconv_kernel, 4)
     return deconv_kernel
 
+def expand_mergecrops(net):
+    tensors, layer_info, layer_order, misc = net
+    count = 0
+
+    for lname in (layer_order):
+        l = layer_info[lname]
+        if l["type"] in ["mergecrop"]:
+            #make a crop
+            crop_param = copy.deepcopy(l)
+            crop_param["type"] = "crop"
+            crop_param["name"] = "{}_crop".format(l["name"])
+            crop_param["bot"] = l["bot"][0]
+            crop_param["top"] = crop_param["name"]
+            crop_param["top_dim"] = l["crop_top_dim"]
+            tensors[crop_param["top"]] = Tensor(crop_param["top_dim"], l["arch"])
+
+            #make me merge
+            l["type"] = "merge"
+            l["bot"][0] = crop_param["top"]
+
+            #add pad layer
+            insert_layer(net, crop_param, prev_lname=l["name"])
+
+
 def eliminate_adds(net):
     tensors, layer_info, layer_order, misc = net
     count = 0
@@ -411,6 +435,7 @@ def optimize_net(net, opt_flags):
         opt_param += ["implicit_pad"]
     generate_layer_order_info(net)
     stride1_deconv_to_conv(net)
+    expand_mergecrops(net)
     if 'add_fuse' in opt_param:
         eliminate_adds(net)
     expand_convs(net, opt_param)

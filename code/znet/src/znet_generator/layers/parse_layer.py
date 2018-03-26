@@ -10,6 +10,8 @@ from bias    import parse_bias
 from eltwise import parse_eltwise
 from slc     import parse_slc
 from crop    import parse_crop
+from merge   import parse_merge
+from mergecrop   import parse_mergecrop
 
 def check_params(lparams):
    necessary_fields = ["top", "bot", "name", "type"]
@@ -40,6 +42,10 @@ def parse_layer(l, arch):
                             # by a blocker layer
    elif lt == "Crop":
       lparams = parse_crop(l, arch)
+   elif lt == "Merge":
+      lparams = parse_merge(l, arch)
+   elif lt == "MergeCrop":
+      lparams = parse_mergecrop(l, arch)
    elif lt == "Convolution":
       lparams = parse_conv(l, arch)
    elif lt == "Deconvolution":

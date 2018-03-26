@@ -17,7 +17,7 @@ def forward_layer_lines(lparams):
    elif lt in ["bnorm", "scale"]:
        params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
        params += 'tensors["{}"]->data(), tensors["{}"]->data()'.format(l["scale"], l["bias"])
-   elif lt in ["eltwise"]:
+   elif lt in ["eltwise", "merge"]:
        params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"][0], l["top"])
        params += 'tensors["{}"]->data(), NULL'.format(l["bot"][1])
    elif lt in ["neweltwise"]:

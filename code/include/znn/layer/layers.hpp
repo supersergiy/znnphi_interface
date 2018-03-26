@@ -13,4 +13,5 @@
 #include <znn/layer/deconv_as_conv.hpp>
 #include <znn/layer/interpolation.hpp>
 #include <znn/layer/crop.hpp>
+#include <znn/layer/merge.hpp>
 #include <znn/jit/jit.hpp>

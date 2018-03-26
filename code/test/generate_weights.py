@@ -22,7 +22,8 @@ for test_folder in test_list:
    if not os.path.isfile(in_path):
       print "Generating input file..."
       in_file = h5py.File(in_path, 'w')
-      in_file.create_dataset('/main', data=np.ones(net.blobs['input'].data.shape))
+      in_data = np.random.random_sample(net.blobs['input'].data.shape)
+      in_file.create_dataset('/main', data=in_data)
       print "Dataset '/main' created!"
       in_file.close()
 
@@ -32,6 +33,9 @@ for test_folder in test_list:
       for p in net.params.keys():
          for i in range(len(net.params[p])):
             #net.params[p][i].data[:] = 1.0
-            weights_file.create_dataset('/data/{}/{}'.format(p, i), data=net.params[p][i].data[:])
+            weights_data = np.random.random_sample(net.params[p][i].data.shape)
+	    weights_data -= 0.5
+            #weights_data /= net.params[p][i].data.shape[0]
+            weights_file.create_dataset('/data/{}/{}'.format(p, i), data=weights_data)
 
       weights_file.close()

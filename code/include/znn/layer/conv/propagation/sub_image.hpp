@@ -20,7 +20,6 @@
 
 #else
    #define ELU(base) {\
-                        std::cout << "NOT DANK\n";\
                         ZNN_PRAGMA(SIMD_WIDTH)\
                         for (long_t i = 0; i < SIMD_WIDTH; i++) {\
                            if (base[i] < 0.0f) {\
@@ -29,7 +28,6 @@
                         }\
                      }
    #define RELU(base) {\
-                        std::cout << "DANK\n";\
                         ZNN_PRAGMA(SIMD_WIDTH)\
                         for (long_t i = 0; i < SIMD_WIDTH; i++) {\
                            if (base[i] < 0.0f) {\

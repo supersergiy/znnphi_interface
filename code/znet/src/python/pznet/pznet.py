@@ -23,18 +23,18 @@ class znet:
 
         sys.path.append(self.tmp_folder_path)
 
-    def create_net(self, prototxt_path, h5_weights_path, output_path, architecture='AVX2', cores=2, ht=2, cpu_offset=0):
+    def create_net(self, prototxt_path, h5_weights_path, output_path, architecture='AVX2', cores=2, ht=2, cpu_offset=0, opt_flags=''):
         json_net_path = os.path.join(self.tmp_folder_path, 'net.json')
         convert_prototxt_to_json(prototxt_path, json_net_path)
 
         znnphi_path = os.environ["ZNNPHI_PATH"]
         mothership_folder = '{}/code/znet'.format(znnphi_path)
 
-        make_command  = 'make -C {} py N={} W={} O={} ARCH={} CORES={} HT={} CPU_OFFSET={}'.format(mothership_folder,
+        make_command  = 'make -C {} py N={} W={} O={} ARCH={} CORES={} HT={} CPU_OFFSET={} PZ_OPT={}'.format(mothership_folder,
                                                              json_net_path,
                                                              h5_weights_path,
                                                              self.tmp_folder_path,
-                                                             architecture, cores, ht, cpu_offset)
+                                                             architecture, cores, ht, cpu_offset, opt_flags)
         os.system(make_command) #compiles the znet.so and copies it to the working folder along with the weights
 
         #copy results to the output folder

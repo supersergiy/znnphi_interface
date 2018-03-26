@@ -83,9 +83,15 @@ def generate_dummy_scale_params(prev_lparam):
     param["bias_size"] = round_to_simd(param["ifm"], l["arch"])
     return param
 
-def expand_convs(net):
+def expand_convs(net, opt_param):
     tensors, layer_info, layer_order, misc = net
     count = 0
+
+    target_expansions = []
+    if 'lin_fuse' in opt_param:
+        target_expansions += ['scale', 'bnorm']
+    if 'act_fuse' in opt_param:
+        target_expansions += ['elu', 'relu']
     for lname in layer_order:
         if lname in layer_info:
             l  = layer_info[lname]
@@ -94,7 +100,7 @@ def expand_convs(net):
             if lt in ["conv","deconv"] and len(l["next"]) == 1:
                 next_name = l["next"][0]
                 next_l    = layer_info[next_name]
-                while next_l["type"] in ["scale", "bnorm", "elu", "relu"]:
+                while next_l["type"] in target_expansions:
                     if next_l["type"] == "bnorm" and next_l["static_bnorm"] == False:
                         break
                     if next_l["type"] in ["scale", "bnorm"]:
@@ -180,8 +186,8 @@ def consume_activation(layer_info, lname, next_name):
     l = layer_info[lname]
     l["activation"] = layer_info[next_name]["type"]
 
-def handle_padding(net):
-    handle_conv_padding(net)
+def handle_padding(net, opt_param):
+    handle_conv_padding(net, opt_param)
     handle_deconv_padding(net)
 
 def handle_deconv_padding(net):
@@ -205,8 +211,9 @@ def handle_deconv_padding(net):
             insert_layer(net, crop_param, prev_lname=l["next"][0])
 
 
-def handle_conv_padding(net):
-    insert_implicit_conv_pads(net)
+def handle_conv_padding(net, opt_param):
+    if 'implicit_pad' in opt_param:
+        insert_implicit_conv_pads(net)
     insert_explicit_conv_pads(net)
 
 
@@ -391,10 +398,21 @@ def eliminate_adds(net):
                 #remove eltwise
                 delete_layer(net, next_name, lname)
 
-def optimize_net(net):
+def optimize_net(net, opt_flags):
+    #parse opt flags
+    opt_param = []
+    if not ',no_lin,' in opt_flags:
+        opt_param += ["lin_fuse"]
+    if not ',no_act,' in opt_flags:
+        opt_param += ["act_fuse"]
+    if not ',no_add,' in opt_flags:
+        opt_param += ["add_fuse"]
+    if not ',no_pad,' in opt_flags:
+        opt_param += ["implicit_pad"]
     generate_layer_order_info(net)
     stride1_deconv_to_conv(net)
-    eliminate_adds(net)
-    expand_convs(net)
-    handle_padding(net)
+    if 'add_fuse' in opt_param:
+        eliminate_adds(net)
+    expand_convs(net, opt_param)
+    handle_padding(net, opt_param)
 

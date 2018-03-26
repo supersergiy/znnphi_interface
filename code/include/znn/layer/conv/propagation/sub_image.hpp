@@ -2,6 +2,7 @@
 
 #include "znn/intrin.hpp"
 #include "znn/types.hpp"
+#include "znn/layer/activation_defs.hpp"
 #include "znn/util/conditional_load.hpp"
 #include <type_traits>
 #include <math.h>
@@ -19,10 +20,20 @@
 
 #else
    #define ELU(base) {\
+                        std::cout << "NOT DANK\n";\
                         ZNN_PRAGMA(SIMD_WIDTH)\
                         for (long_t i = 0; i < SIMD_WIDTH; i++) {\
                            if (base[i] < 0.0f) {\
                               base[i] = std::exp(static_cast<float>(base[i])) - 1.0;\
+                           }\
+                        }\
+                     }
+   #define RELU(base) {\
+                        std::cout << "DANK\n";\
+                        ZNN_PRAGMA(SIMD_WIDTH)\
+                        for (long_t i = 0; i < SIMD_WIDTH; i++) {\
+                           if (base[i] < 0.0f) {\
+                              base[i] = 0;\
                            }\
                         }\
                      }
@@ -54,7 +65,7 @@ namespace propagation
 *******************************************************************************/
 
 template <bool   Bias,                    // load or set to bias
-          bool   Activation,
+          int   Activation,
           bool   AddOrOverwrite,
           long_t IFMs,                    // number of input images
           class ID, class IH, class IW,   // image traits
@@ -73,7 +84,7 @@ struct sub_image_dummy
 };
 
 template <bool   Bias,                  // load or set to bias
-          bool   Activation,
+          int   Activation,
           bool   AddOrOverwrite,
           long_t IFMs,                  // number of input images
           class ID, class IH, class IW, // image traits
@@ -141,9 +152,13 @@ struct sub_image_1d
             auto base = o + rw * IW::out_stride;
             SIMD_STORE(base, vout[rw]);
 #ifndef ZNN_KNL
-            if (Activation) 
+            if (Activation == ELU_ACT) 
             {
                ELU(base);
+            }
+            else if (Activation == RELU_ACT) 
+            {
+               RELU(base);
             }
 #endif
         }
@@ -151,7 +166,7 @@ struct sub_image_1d
 };
 
 template <bool   Bias,                  // load or set to bias
-          bool   Activation,
+          int   Activation,
           bool   AddOrOverwrite,
           long_t IFMs,                  // number of input images
           class ID, class IH, class IW, // image traits
@@ -230,9 +245,13 @@ struct sub_image_2d
                 auto base = o + rh * IH::out_stride + rw * IW::out_stride;
                 SIMD_STORE(base, vout[rh][rw]);
 #ifndef ZNN_KNL
-                if (Activation) 
+                if (Activation == ELU_ACT) 
                 {
                    ELU(base);
+                }
+                else if (Activation == RELU_ACT) 
+                {
+                   RELU(base);
                 }
 #endif
             }
@@ -241,7 +260,7 @@ struct sub_image_2d
 };
 
 template <bool   Bias,                    // load or set to bias
-          bool   Activation,
+          int   Activation,
           bool   AddOrOverwrite,
           long_t IFMs,                    // number of input images
           class ID, class IH, class IW,   // image traits
@@ -334,9 +353,13 @@ struct sub_image_3d
                     auto base = o + rd * ID::out_stride + rh * IH::out_stride + rw * IW::out_stride; 
                     SIMD_STORE(base, vout[rd][rh][rw]);
 #ifndef ZNN_KNL
-                    if (Activation) 
+                    if (Activation == ELU_ACT) 
                     {
                        ELU(base);
+                    }
+                    else if (Activation == RELU_ACT) 
+                    {
+                       RELU(base);
                     }
 #endif
                 }
@@ -346,7 +369,7 @@ struct sub_image_3d
 };
 
 template <bool   Bias,                    // load or set to bias
-          bool   Activation,
+          int   Activation,
           bool   AddOrOverwrite,
           long_t IFMs,                    // number of input images
           class ID, class IH, class IW,   // image traits

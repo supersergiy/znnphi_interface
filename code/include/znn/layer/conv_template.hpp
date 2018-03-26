@@ -14,7 +14,7 @@ template <long_t Cores, long_t HT, long_t B, long_t IFM, long_t OFM, long_t ID,
           long_t OUT_D_SKIP=0, long_t OUT_PADD=0,
           long_t OUT_H_SKIP=0, long_t OUT_W_SKIP=0, long_t OUT_PADHW=0,
           long_t OUT_STRIDE_D=1, long_t OUT_STRIDE_HW=1,
-          bool Activation=false, bool AddOrOverwrite=false,
+          int Activation=NO_ACT, bool AddOrOverwrite=false,
           long_t CPU_OFFSET=0>
 class ConvTemplate: public Layer
 {

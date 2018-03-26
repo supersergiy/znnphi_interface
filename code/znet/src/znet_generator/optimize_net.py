@@ -94,7 +94,7 @@ def expand_convs(net):
             if lt in ["conv","deconv"] and len(l["next"]) == 1:
                 next_name = l["next"][0]
                 next_l    = layer_info[next_name]
-                while next_l["type"] in ["scale", "bnorm", "elu"]:#, relu]:
+                while next_l["type"] in ["scale", "bnorm", "elu", "relu"]:
                     if next_l["type"] == "bnorm" and next_l["static_bnorm"] == False:
                         break
                     if next_l["type"] in ["scale", "bnorm"]:
@@ -178,7 +178,7 @@ def consume_scale(layer_info, lname, next_name):
 
 def consume_activation(layer_info, lname, next_name):
     l = layer_info[lname]
-    l["activation"] = layer_info["type"]
+    l["activation"] = layer_info[next_name]["type"]
 
 def handle_padding(net):
     handle_conv_padding(net)

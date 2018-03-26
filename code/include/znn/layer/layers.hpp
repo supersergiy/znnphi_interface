@@ -6,6 +6,7 @@
 #include <znn/layer/slice.hpp>
 #include <znn/layer/pad.hpp>
 #include <znn/layer/elu.hpp>
+#include <znn/layer/relu.hpp>
 #include <znn/layer/sigmoid.hpp>
 #include <znn/layer/eltwise.hpp>
 #include <znn/layer/dummy.hpp>

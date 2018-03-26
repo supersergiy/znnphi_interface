@@ -11,7 +11,7 @@ namespace propagation
 {
 
 template <bool   First,                 // load or set to bias
-          bool   Activation,
+          int   Activation,
           bool   AddToOutput,
           long_t IFMs,                  // number of input images
           class ID, class IH, class IW, // image traits

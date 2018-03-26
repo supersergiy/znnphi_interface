@@ -5,8 +5,8 @@ import numpy as np
 import h5py
 import sys
 
-cores = 4
-ht    = 1
+cores = 1
+ht    = 2
 cpu_offset   = 0
 architecture = 'AVX2'
 base = sys.argv[1]

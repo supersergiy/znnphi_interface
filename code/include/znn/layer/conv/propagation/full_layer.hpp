@@ -14,7 +14,7 @@ namespace phi
 namespace propagation
 {
 
-template <long_t Threads, class P, bool Activation, bool AddToOutput>
+template <long_t Threads, class P, int Activation, bool AddToOutput>
 struct full_layer
 {
 private:

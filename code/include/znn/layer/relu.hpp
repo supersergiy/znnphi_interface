@@ -1,5 +1,6 @@
 #include <znn/layer/layer.hpp>
 #include <znn/layer/common.hpp>
+#include <znn/intrin.hpp>
 #include <iostream>
 #include <assert.h>
 #include <math.h>
@@ -20,7 +21,7 @@ private:
    kernel_launcher launcher;
 public:
    ReluLayer(int _bn, int _fm, int _id, int _ihw): bn(_bn), 
-   fm(_fm), id(_id), ihw(_ihw), launcher(2, 1), num_threads(2)
+   fm(_fm), id(_id), ihw(_ihw), launcher(1, 1), num_threads(1)
    {   
       assert( bn > 0);
       assert( fm > 0);
@@ -33,16 +34,14 @@ public:
 
    void range_relu(float const* __restrict i, float* __restrict o, int num) 
    {
-      SIMD_MASK ltz
-      SIMD_FLOAT v;
-
-      for (int n = 0; n < num / SIMD_WIDTH; n++) {
-         v = SIMD_LOAD(i + n * SIMD_WIDTH);
-         ltz = SIMD_LT(v, SIMD_SET1(0.0));
-         v = SIMD_MASK_BLEND(v, SIMD_SET1(0.0), ltz);
-         SIMD_STORE(o + n * SIMD_WIDTH,  v);
+      for (int n = 0; n < num; n++) {
+          if (i[n] < 0) {
+              o[n] = 0;
+          }
+          else {
+              o[n] = i[n];
+          }
       }
-
    }
 
    void forward(float const* __restrict i, float* __restrict o, 

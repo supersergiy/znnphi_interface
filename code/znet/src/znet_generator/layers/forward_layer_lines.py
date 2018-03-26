@@ -8,7 +8,7 @@ def forward_layer_lines(lparams):
    params = ''
    if lt in ["conv", "deconv"]:
        params = conv_forward_params(l)
-   elif lt in ["pool", "block_input", "unblock_output", "elu", "pad", "sigmoid", "slc"]:
+   elif lt in ["pool", "block_input", "unblock_output", "elu", "relu", "pad", "sigmoid", "slc"]:
        params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
        params += 'NULL, NULL'
    elif lt in ["crop"]:
@@ -17,7 +17,7 @@ def forward_layer_lines(lparams):
    elif lt in ["bnorm", "scale"]:
        params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"], l["top"])
        params += 'tensors["{}"]->data(), tensors["{}"]->data()'.format(l["scale"], l["bias"])
-   elif lt in ["eltwise"]:
+   elif lt in ["eltwise", "merge"]:
        params += 'tensors["{}"]->data(), tensors["{}"]->data(), '.format(l["bot"][0], l["top"])
        params += 'tensors["{}"]->data(), NULL'.format(l["bot"][1])
    elif lt in ["neweltwise"]:
@@ -31,7 +31,7 @@ def forward_layer_lines(lparams):
        params += '{}, &{}, tensors["{}"]->data(), '.format(bots_array_name, num_bots_name, l["top"])
        params += 'NULL'
    elif lt in ["input", "dummy_data"]:
-       return [] 
+       return []
 
    lines.append('layers["{}"]->forward({});'.format(l["name"], params))
    return lines

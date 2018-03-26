@@ -6,10 +6,12 @@
 #include <znn/layer/slice.hpp>
 #include <znn/layer/pad.hpp>
 #include <znn/layer/elu.hpp>
+#include <znn/layer/relu.hpp>
 #include <znn/layer/sigmoid.hpp>
 #include <znn/layer/eltwise.hpp>
 #include <znn/layer/dummy.hpp>
 #include <znn/layer/deconv_as_conv.hpp>
 #include <znn/layer/interpolation.hpp>
 #include <znn/layer/crop.hpp>
+#include <znn/layer/merge.hpp>
 #include <znn/jit/jit.hpp>

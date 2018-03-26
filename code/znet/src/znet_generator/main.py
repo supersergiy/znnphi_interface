@@ -11,17 +11,15 @@ arch         = sys.argv[4]
 cores        = sys.argv[5]
 ht           = sys.argv[6]
 cpu_offset   = sys.argv[7]
+opt_flags    = sys.argv[8]
 
 if __name__ == "__main__":
     print "Parsing the network spec..."
     net = parse_net(net_path, arch)
-    if weights_path == 't':
-        generate_template_znet(net, out_path)
-    else:
-        print "Loading the weights..."
-        read_in_weights(net, weights_path)
-        print "Optimizing the net..."
-        optimize_net(net)
-        print "Generating the network..."
-        generate_znet(net, out_path, cores, ht, cpu_offset)
-        print "Done!"
+    print "Loading the weights..."
+    read_in_weights(net, weights_path)
+    print "Optimizing the net..."
+    optimize_net(net, opt_flags)
+    print "Generating the network..."
+    generate_znet(net, out_path, cores, ht, cpu_offset)
+    print "Done!"

@@ -110,11 +110,12 @@ def allocate_conv_lines(lparam):
     l = lparam
     if l["pad"][0] != 0 or l["pad"][1] != 0:
         raise Exception("Unhandled padding!")
-
     if "activation" in l and l["activation"] == "elu":
-        activate = "true"
+        activate = 1
+    elif "activation" in l and l["activation"] == "relu":
+        activate = 2
     else:
-        activate = "false"
+        activate = 0
 
     if "additive_conv" in l and l["additive_conv"] == True:
         add_or_overwrite = "true"

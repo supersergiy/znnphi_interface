@@ -32,10 +32,10 @@ private:
     static constexpr long_t ik_stride        = full::ik_stride;
     static constexpr long_t ok_stride        = full::ok_stride;
 
-    static constexpr bool Activation     = P::activation;
+    static constexpr int  Activation     = P::activation;
     static constexpr bool AddOrOverwrite = P::add_or_overwrite;
 
-    template <bool First, bool ApplyActivation>
+    template <bool First, int ApplyActivation>
     using sub_task = full_image<
         First, ApplyActivation, AddOrOverwrite, SIMD_WIDTH, image_traits<sub::d_len, full::image_d::in_stride,
                                         full::image_d::out_stride>,

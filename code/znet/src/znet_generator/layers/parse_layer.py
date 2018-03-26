@@ -4,11 +4,14 @@ from deconv  import parse_deconv
 from pool    import parse_pool
 from bnorm   import parse_bnorm
 from elu     import parse_elu
+from relu    import parse_relu
 from scale   import parse_scale
 from bias    import parse_bias
 from eltwise import parse_eltwise
 from slc     import parse_slc
 from crop    import parse_crop
+from merge   import parse_merge
+from mergecrop   import parse_mergecrop
 
 def check_params(lparams):
    necessary_fields = ["top", "bot", "name", "type"]
@@ -39,6 +42,10 @@ def parse_layer(l, arch):
                             # by a blocker layer
    elif lt == "Crop":
       lparams = parse_crop(l, arch)
+   elif lt == "Merge":
+      lparams = parse_merge(l, arch)
+   elif lt == "MergeCrop":
+      lparams = parse_mergecrop(l, arch)
    elif lt == "Convolution":
       lparams = parse_conv(l, arch)
    elif lt == "Deconvolution":
@@ -49,6 +56,8 @@ def parse_layer(l, arch):
       lparams = parse_bnorm(l, arch)
    elif lt == "ELU":
       lparams = parse_elu(l, arch)
+   elif lt == "ReLU":
+      lparams = parse_relu(l, arch)
    elif lt == "Scale":
       lparams = parse_scale(l, arch)
    elif lt == "Bias":

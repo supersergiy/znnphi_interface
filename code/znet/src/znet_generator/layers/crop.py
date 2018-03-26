@@ -20,7 +20,7 @@ def set_crop_dim(params, bot_tensors):
 
 def parse_crop(json_param, arch):
     params = {}
-    params["arch"] = "AVX2"
+    params["arch"] = arch
     params["name"] = json_param["name"]
     params["top"]  = json_param["top"][0]
     params["bot"]  = json_param["bottom"]

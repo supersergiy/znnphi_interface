@@ -380,7 +380,7 @@ def expand_mergecrops(net):
             l["type"] = "merge"
             l["bot"][0] = crop_param["top"]
 
-            #add pad layer
+            #add the crop layer
             insert_layer(net, crop_param, prev_lname=l["name"])
 
 

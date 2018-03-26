@@ -16,7 +16,7 @@ create = True
 if len(sys.argv) > 2:
     create = False
 
-opt_param_list = [('all', 'all'), ('no_pad', ',no_pad,'), ('no_add', ',no_add,')]#, ('no_act', ',no_act,'), ('only_add', ',no_lin,no_pad,')]
+opt_param_list = [('no_add', ',no_add,')]#, ('no_pad', ',no_pad,'), ('no_add', ',no_add,')]#, ('no_act', ',no_act,'), ('only_add', ',no_lin,no_pad,')]
 
 test_name = filter(None, base.split('/'))[-1]
 

@@ -22,8 +22,8 @@ def read_in_weights(net, weights_path):
         elif l["type"] in ["scale"]:
             lweights = weights[lname].values()
 
-            l["scale_data"] = copy.deepcopy(lweights[0][:])
-            l["bias_data"]  = copy.deepcopy(lweights[1][:])
+            l["scale_data"] = np.ones(lweights[0].shape)
+            l["bias_data"]  = np.zeros(lweights[0].shape)
             l["scale_data"].resize(l["scale_size"])
             l["bias_data"].resize(l["bias_size"])
 
@@ -63,6 +63,9 @@ def read_in_weights(net, weights_path):
 
             l["bias_data"]  = -1.0*np.divide(mean_data, std_data)
             l["scale_data"] = 1.0  / std_data
+
+            l["scale_data"] = np.ones(l["scale_size"])
+            l["bias_data"]  = np.zeros(l["bias_size"])
 
             l["scale_data"].resize(l["scale_size"])
             l["bias_data"].resize(l["bias_size"])

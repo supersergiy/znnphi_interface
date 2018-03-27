@@ -103,7 +103,7 @@ def forward_all_layers_lines(net):
 def forward_body_lines(net):
     tensors, layer_info, layer_order, misc = net
     lines = []
-    lines += timeit(forward_all_layers_lines(net), 1, "average:")
+    lines += timeit(forward_all_layers_lines(net), 10, "average:")
 
     lines.append('')
     return lines

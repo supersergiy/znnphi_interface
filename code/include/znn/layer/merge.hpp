@@ -44,7 +44,7 @@ public:
      float const* __restrict i2, float const* __restrict dummy)
    {
       memcpy(o, i1, sizeof(float)*size_i1);
-      memcpy(o + size_i1, o, sizeof(float)*size_i2); 
+      memcpy(o + size_i1, i2, sizeof(float)*size_i2); 
    }
 };
 

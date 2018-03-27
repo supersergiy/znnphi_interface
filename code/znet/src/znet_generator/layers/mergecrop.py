@@ -4,8 +4,8 @@ import numpy as np
 from conv import block_kernel, block_bias
 
 def set_mergecrop_dim(params, bot_tensors):
-    top_dim = copy.copy(bot_tensors[1].dim)
-    bot_dim = copy.copy(bot_tensors[0].dim)
+    top_dim = copy.copy(bot_tensors[0].dim)
+    bot_dim = copy.copy(bot_tensors[1].dim)
 
     params["bn"]  = top_dim[0]
     params["ifm1"] = bot_tensors[0].dim[1]

@@ -1,0 +1,123 @@
+/usr/local/lib/python2.7/dist-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
+  from ._conv import register_converters as _register_converters
+make: Entering directory '/opt/znnphi_interface/code/znet'
+rm -rf out
+mkdir -p out
+mkdir -p out/weights
+python src/znet_generator/main.py /opt/znnphi_interface/code/znet/src/python/pznet/.tmp/net.json /tests/unet/weights.h5 src/generated/znet.cpp AVX2 1 2 0 all
+/usr/local/lib/python2.7/dist-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
+  from ._conv import register_converters as _register_converters
+Parsing the network spec...
+Loading the weights...
+Optimizing the net...
+Generating the network...
+   Generating constructors...
+Traceback (most recent call last):
+  File "src/znet_generator/main.py", line 24, in <module>
+    generate_znet(net, out_path, cores, ht, cpu_offset)
+  File "/opt/znnphi_interface/code/znet/src/znet_generator/generate_znet.py", line 124, in generate_znet
+    constructor_body      = constructor_body_lines(net, cores, ht, cpu_offset)
+  File "/opt/znnphi_interface/code/znet/src/znet_generator/generate_znet.py", line 70, in constructor_body_lines
+    lines += allocate_all_layers_lines(net, cores, ht, cpu_offset)
+  File "/opt/znnphi_interface/code/znet/src/znet_generator/generate_znet.py", line 14, in allocate_all_layers_lines
+    lines += allocate_layer_lines(l, cores, ht, cpu_offset)
+  File "/opt/znnphi_interface/code/znet/src/znet_generator/layers/allocate_layer_lines.py", line 25, in allocate_layer_lines
+    return allocate_conv_lines(lparams)
+  File "/opt/znnphi_interface/code/znet/src/znet_generator/layers/conv.py", line 165, in allocate_conv_lines
+    blocked_kernel = block_kernel(kernel, l)
+  File "/opt/znnphi_interface/code/znet/src/znet_generator/layers/conv.py", line 97, in block_kernel
+    blocked_kernel[znnphi_index] = kernel[ofm][ifm][kz][kx][ky]
+KeyboardInterrupt
+Makefile:100: recipe for target 'src/generated/znet.cpp' failed
+make: *** [src/generated/znet.cpp] Error 1
+Creating net...
+Running net...
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=128 OFM=128 ID=49 IHW=49 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=0 ADDOROVERWRITE=false ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_false_AVX2_1_1_0_2_49_128_49_3_3_128_0_0_0_0_1_1_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=192 OFM=64 ID=110 IHW=110 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=0 ADDOROVERWRITE=false ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_false_AVX2_1_1_0_2_110_192_110_3_3_64_0_0_0_0_1_1_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=64 OFM=64 ID=108 IHW=108 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=0 ADDOROVERWRITE=false ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_false_AVX2_1_1_0_2_108_64_108_3_3_64_0_0_0_0_1_1_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=768 OFM=256 ID=21 IHW=21 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=0 ADDOROVERWRITE=false ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_false_AVX2_1_1_0_2_21_768_21_3_3_256_0_0_0_0_1_1_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=256 OFM=256 ID=19 IHW=19 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=0 ADDOROVERWRITE=false ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_false_AVX2_1_1_0_2_19_256_19_3_3_256_0_0_0_0_1_1_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=384 OFM=128 ID=51 IHW=51 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=0 ADDOROVERWRITE=false ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_false_AVX2_1_1_0_2_51_384_51_3_3_128_0_0_0_0_1_1_0.so
+2 2
+2 2
+2 2
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=64 OFM=8 ID=106 IHW=106 KD=1 KHW=1 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=0 ADDOROVERWRITE=false ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_false_AVX2_1_1_0_2_106_64_106_1_1_8_0_0_0_0_1_1_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=512 OFM=512 ID=6 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=2 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=0 ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0 
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_0_AVX2_1_1_0_2_6_512_6_1_1_512_0_0_0_0_2_2_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=512 OFM=512 ID=6 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=0 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=2 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=0 ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0 
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_0_AVX2_1_1_0_2_6_512_6_1_1_512_0_0_0_0_2_2_1.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=512 OFM=512 ID=6 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=1 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=2 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=0 ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0 
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_0_AVX2_1_1_0_2_6_512_6_1_1_512_0_1_0_0_2_2_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=512 OFM=512 ID=6 IHW=6 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=1 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=2 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=0 ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0 
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_0_AVX2_1_1_0_2_6_512_6_1_1_512_0_1_0_0_2_2_1.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=512 OFM=512 ID=6 IHW=6 KD=1 KHW=1 OUT_D_SKIP=1 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=2 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=0 ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0 
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_0_AVX2_1_1_0_2_6_512_6_1_1_512_1_0_0_0_2_2_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=512 OFM=512 ID=6 IHW=6 KD=1 KHW=1 OUT_D_SKIP=1 OUT_H_SKIP=0 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=2 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=0 ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0 
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_0_AVX2_1_1_0_2_6_512_6_1_1_512_1_0_0_0_2_2_1.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=512 OFM=512 ID=6 IHW=6 KD=1 KHW=1 OUT_D_SKIP=1 OUT_H_SKIP=1 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=2 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=0 ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0 
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_0_AVX2_1_1_0_2_6_512_6_1_1_512_1_1_0_0_2_2_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=512 OFM=512 ID=6 IHW=6 KD=1 KHW=1 OUT_D_SKIP=1 OUT_H_SKIP=1 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=2 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=0 ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0 
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_0_AVX2_1_1_0_2_6_512_6_1_1_512_1_1_0_0_2_2_1.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=128 OFM=128 ID=47 IHW=47 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=2 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=0 ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0 
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_0_AVX2_1_1_0_2_47_128_47_1_1_128_0_0_0_0_2_2_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=128 OFM=128 ID=47 IHW=47 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=0 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=2 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=0 ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0 
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_0_AVX2_1_1_0_2_47_128_47_1_1_128_0_0_0_0_2_2_1.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=128 OFM=128 ID=47 IHW=47 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=1 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=2 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=0 ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0 
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_0_AVX2_1_1_0_2_47_128_47_1_1_128_0_1_0_0_2_2_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=128 OFM=128 ID=47 IHW=47 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=1 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=2 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=0 ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0 
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_0_AVX2_1_1_0_2_47_128_47_1_1_128_0_1_0_0_2_2_1.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=128 OFM=128 ID=47 IHW=47 KD=1 KHW=1 OUT_D_SKIP=1 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=2 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=0 ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0 
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_0_AVX2_1_1_0_2_47_128_47_1_1_128_1_0_0_0_2_2_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=128 OFM=128 ID=47 IHW=47 KD=1 KHW=1 OUT_D_SKIP=1 OUT_H_SKIP=0 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=2 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=0 ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0 
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_0_AVX2_1_1_0_2_47_128_47_1_1_128_1_0_0_0_2_2_1.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=128 OFM=128 ID=47 IHW=47 KD=1 KHW=1 OUT_D_SKIP=1 OUT_H_SKIP=1 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=2 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=0 ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0 
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_0_AVX2_1_1_0_2_47_128_47_1_1_128_1_1_0_0_2_2_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=128 OFM=128 ID=47 IHW=47 KD=1 KHW=1 OUT_D_SKIP=1 OUT_H_SKIP=1 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=2 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=0 ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0 
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_0_AVX2_1_1_0_2_47_128_47_1_1_128_1_1_0_0_2_2_1.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=256 OFM=256 ID=17 IHW=17 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=2 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=0 ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0 
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_0_AVX2_1_1_0_2_17_256_17_1_1_256_0_0_0_0_2_2_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=256 OFM=256 ID=17 IHW=17 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=0 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=2 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=0 ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0 
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_0_AVX2_1_1_0_2_17_256_17_1_1_256_0_0_0_0_2_2_1.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=256 OFM=256 ID=17 IHW=17 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=1 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=2 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=0 ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0 
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_0_AVX2_1_1_0_2_17_256_17_1_1_256_0_1_0_0_2_2_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=256 OFM=256 ID=17 IHW=17 KD=1 KHW=1 OUT_D_SKIP=0 OUT_H_SKIP=1 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=2 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=0 ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0 
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_0_AVX2_1_1_0_2_17_256_17_1_1_256_0_1_0_0_2_2_1.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=256 OFM=256 ID=17 IHW=17 KD=1 KHW=1 OUT_D_SKIP=1 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=2 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=0 ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0 
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_0_AVX2_1_1_0_2_17_256_17_1_1_256_1_0_0_0_2_2_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=256 OFM=256 ID=17 IHW=17 KD=1 KHW=1 OUT_D_SKIP=1 OUT_H_SKIP=0 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=2 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=0 ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0 
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_0_AVX2_1_1_0_2_17_256_17_1_1_256_1_0_0_0_2_2_1.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=256 OFM=256 ID=17 IHW=17 KD=1 KHW=1 OUT_D_SKIP=1 OUT_H_SKIP=1 OUT_W_SKIP=0 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=2 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=0 ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0 
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_0_AVX2_1_1_0_2_17_256_17_1_1_256_1_1_0_0_2_2_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=256 OFM=256 ID=17 IHW=17 KD=1 KHW=1 OUT_D_SKIP=1 OUT_H_SKIP=1 OUT_W_SKIP=1 OUT_PADHW=0 OUT_PADD=0 OUT_STRIDE_D=2 OUT_STRIDE_HW=2 ACTIVATION=0 AddOrOverwrite=0 ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0 
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_0_AVX2_1_1_0_2_17_256_17_1_1_256_1_1_0_0_2_2_1.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=128 OFM=256 ID=23 IHW=23 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=0 ADDOROVERWRITE=false ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_false_AVX2_1_1_0_2_23_128_23_3_3_256_0_0_0_0_1_1_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=256 OFM=256 ID=10 IHW=10 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=0 ADDOROVERWRITE=false ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_false_AVX2_1_1_0_2_10_256_10_3_3_256_0_0_0_0_1_1_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=64 OFM=128 ID=53 IHW=53 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=0 ADDOROVERWRITE=false ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_false_AVX2_1_1_0_2_53_64_53_3_3_128_0_0_0_0_1_1_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=128 OFM=128 ID=25 IHW=25 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=0 ADDOROVERWRITE=false ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_false_AVX2_1_1_0_2_25_128_25_3_3_128_0_0_0_0_1_1_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=32 OFM=64 ID=112 IHW=112 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=0 ADDOROVERWRITE=false ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_false_AVX2_1_1_0_2_112_32_112_3_3_64_0_0_0_0_1_1_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=64 OFM=64 ID=55 IHW=55 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=0 ADDOROVERWRITE=false ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_false_AVX2_1_1_0_2_55_64_55_3_3_64_0_0_0_0_1_1_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=8 OFM=32 ID=114 IHW=114 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=0 ADDOROVERWRITE=false ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_false_AVX2_1_1_0_2_114_8_114_3_3_32_0_0_0_0_1_1_0.so
+/opt/znnphi_interface/code/include/znn/jit/jit.py LAYER=conv LIB_FOLDER=/opt/znets/unet_1cores/lib BN=1 IFM=256 OFM=512 ID=8 IHW=8 KD=3 KHW=3 OUT_D_SKIP=0 OUT_PADD=0 OUT_H_SKIP=0 OUT_W_SKIP=0 OUT_PADHW=0 OUT_STRIDE_D=1 OUT_STRIDE_HW=1 ACTIVATION=0 ADDOROVERWRITE=false ARCH=AVX2 CORES=1 HT=2 CPU_OFFSET=0
+dl_filename: /opt/znets/unet_1cores/lib/conv_0_false_AVX2_1_1_0_2_8_256_8_3_3_512_0_0_0_0_1_1_0.so
+Copying 5926176 bytes into the user input. 
+Starting Forward Pass
+average:22.666
+Forward Finished
+Traceback (most recent call last):
+  File "./run_single_test.py", line 44, in <module>
+    diff_a = reference_a - out_a
+ValueError: operands could not be broadcast together with shapes (1,3,28,28,28) (1,3,106,106,106) 

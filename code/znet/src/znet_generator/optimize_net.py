@@ -425,14 +425,14 @@ def eliminate_adds(net):
 def optimize_net(net, opt_flags):
     #parse opt flags
     opt_param = []
-    if not ',no_lin,' in opt_flags:
+    '''if not ',no_lin,' in opt_flags:
         opt_param += ["lin_fuse"]
     if not ',no_act,' in opt_flags:
         opt_param += ["act_fuse"]
     if not ',no_add,' in opt_flags:
         opt_param += ["add_fuse"]
     if not ',no_pad,' in opt_flags:
-        opt_param += ["implicit_pad"]
+        opt_param += ["implicit_pad"]'''
     generate_layer_order_info(net)
     stride1_deconv_to_conv(net)
     expand_mergecrops(net)

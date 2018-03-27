@@ -23,7 +23,7 @@ class znet:
 
         sys.path.append(self.tmp_folder_path)
 
-    def create_net(self, prototxt_path, h5_weights_path, output_path, architecture='AVX2', cores=2, ht=2, cpu_offset=0, opt_flags=''):
+    def create_net(self, prototxt_path, h5_weights_path, output_path, architecture='AVX2', cores=2, ht=2, cpu_offset=0, opt_flags='all'):
         json_net_path = os.path.join(self.tmp_folder_path, 'net.json')
         convert_prototxt_to_json(prototxt_path, json_net_path)
 

@@ -35,7 +35,6 @@ def parse_net(net_path, arch):
              bot_tensors = [tensors[k] for k in lparams["bot"]]
          else:
              bot_tensors = tensors[lparams["bot"]]
-
       set_layer_dim(lparams, bot_tensors)
 
       top_name = lparams["top"]

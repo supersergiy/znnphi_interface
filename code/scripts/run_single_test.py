@@ -26,6 +26,7 @@ in_file  = h5py.File(input_path)
 in_a     = in_file["main"][:]
 znet_path = "/opt/znets/{}_{}cores".format(test_name, cores)
 lib_path  = os.path.join(znet_path, "lib")
+lib_path  = "/opt/znets/lib"
 z = pznet.znet()
 if create:
     print "Creating net..."

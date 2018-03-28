@@ -40,7 +40,7 @@ reference_path =  os.path.join(base, "out.h5")
 
 in_file  = h5py.File(input_path)
 in_a     = in_file["main"][:]
-znet_path = "/opt/znets/{}_{}cores_{}".format(test_name, cores, opt)
+znet_path = "/opt/znets/{}_{}cores".format(test_name, cores)
 lib_path  = os.path.join(znet_path, "lib")
 lib_path  = "/opt/znets/lib"
 z = pznet.znet()

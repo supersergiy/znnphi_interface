@@ -21,7 +21,7 @@ private:
    kernel_launcher launcher;
 public:
    ReluLayer(int _bn, int _fm, int _id, int _ihw): bn(_bn), 
-   fm(_fm), id(_id), ihw(_ihw), launcher(1, 1), num_threads(1)
+   fm(_fm), id(_id), ihw(_ihw), launcher(2, 1), num_threads(2)
    {   
       assert( bn > 0);
       assert( fm > 0);

@@ -5,14 +5,30 @@ import numpy as np
 import h5py
 import sys
 
-cores = 1
+cores = 2
 ht    = 2
 cpu_offset   = 0
 architecture = 'AVX2'
 base = sys.argv[1]
+opt = sys.argv[2]
+
+if opt == 'no_opt':
+    opt_f = ",no_lin,no_add,no_act,no_pad,"
+elif opt == 'no_add':
+    opt_f = ",no_add,"
+elif opt == 'no_pad':
+    opt_f = ",no_pad,"
+elif opt == 'no_lin':
+    opt_f = ",no_lin,"
+elif opt == 'no_act':
+    opt_f = ",no_act,"
+elif opt == 'full_opt':
+    opt_f = "full_opt"
+else:
+    raise Exception("Unknown optimization")
 
 create = True
-if len(sys.argv) > 2:
+if len(sys.argv) > 3:
     create = False
 
 test_name = filter(None, base.split('/'))[-1]
@@ -24,13 +40,13 @@ reference_path =  os.path.join(base, "out.h5")
 
 in_file  = h5py.File(input_path)
 in_a     = in_file["main"][:]
-znet_path = "/opt/znets/{}_{}cores".format(test_name, cores)
+znet_path = "/opt/znets/{}_{}cores_{}".format(test_name, cores, opt)
 lib_path  = os.path.join(znet_path, "lib")
 lib_path  = "/opt/znets/lib"
 z = pznet.znet()
 if create:
     print "Creating net..."
-    z.create_net(net_path, weights_path, znet_path, architecture, cores, ht, cpu_offset)
+    z.create_net(net_path, weights_path, znet_path, architecture, cores, ht, cpu_offset, opt_f)
 #sys.exit(1)
 print "Running net..."
 z.load_net(znet_path, lib_path)

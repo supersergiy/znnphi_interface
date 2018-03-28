@@ -26,13 +26,12 @@ def read_in_weights(net, weights_path):
             l["bias_data"]  = np.zeros(lweights[0].shape)
             l["scale_data"].resize(l["scale_size"])
             l["bias_data"].resize(l["bias_size"])
-
-            if len(lweights) > 2:
+            '''if len(lweights) > 2:
                 scale_factor = lweights[2][:]
                 if scale_factor.size != 1:
                     raise Exception("wtf")
                 l["scale_data"] *= scale_factor
-                l["bias_data"]  *= scale_factor
+                l["bias_data"]  *= scale_factor'''
         elif l["type"] in ["bias"]:
             lweights = weights[lname].values()
 

@@ -80,10 +80,10 @@ for i in range(1):
 
     if np.isnan(error):
         print "Not congrats! Error == {}".format(error)
-        import pdb; pdb.set_trace()
+        #import pdb; pdb.set_trace()
     elif error > 0.010:
         print "Not congrats! Error == {}".format(error)
-        import pdb; pdb.set_trace()
+        #import pdb; pdb.set_trace()
     else:
         print "Congrats! All pass. Error == {}".format(error)
 #out_file = h5py.File(output_path)

@@ -5,8 +5,9 @@ import numpy as np
 import sys
 import os
 import glob
+from time import time 
 
-caffe.set_device(2)
+caffe.set_device(1)
 caffe.set_mode_gpu()
 
 file_spec = sys.argv[1]
@@ -23,6 +24,16 @@ for test_folder in test_list:
    in_data = h5py.File(in_path)["main"][:]
    net.blobs["input"].data[:] = in_data
    net.forward()
+   net.forward()
+   s = time()
+   net.forward()
+   net.forward()
+   net.forward()
+   net.forward()
+   net.forward()
+   e = time()
+
+   print ("{} sec".format((e - s) / 5))
    out_data = net.blobs["output"].data[...]
 
    out_file = h5py.File(out_path)

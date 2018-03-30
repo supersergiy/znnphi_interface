@@ -6,11 +6,12 @@ import sys
 import os
 import glob
 
-caffe.set_device(2)
+caffe.set_device(1)
 caffe.set_mode_gpu()
 
 file_spec = sys.argv[1]
 test_list = glob.glob(file_spec)
+print file_spec
 for test_folder in test_list:
    model_path   = os.path.join(test_folder, "net.prototxt")
    weights_path = os.path.join(test_folder, "weights.h5")
@@ -23,6 +24,7 @@ for test_folder in test_list:
       print "Generating input file..."
       in_file = h5py.File(in_path, 'w')
       in_data = np.random.random_sample(net.blobs['input'].data.shape)
+      #in_data = np.zeros(net.blobs['input'].data.shape)
       in_file.create_dataset('/main', data=in_data)
       print "Dataset '/main' created!"
       in_file.close()
@@ -31,11 +33,34 @@ for test_folder in test_list:
       print "Generating weights file..."
       weights_file = h5py.File(weights_path, 'w')
       for p in net.params.keys():
-         for i in range(len(net.params[p])):
+          	
+          for i in range(len(net.params[p])):
             #net.params[p][i].data[:] = 1.0
-            weights_data = np.random.random_sample(net.params[p][i].data.shape)
-	    weights_data -= 0.5
-            #weights_data /= net.params[p][i].data.shape[0]
-            weights_file.create_dataset('/data/{}/{}'.format(p, i), data=weights_data)
+            '''if 'Co' in p:
+	      weights_data = np.random.random_sample(net.params[p][i].data.shape)
+              #weights_data = np.ones(net.params[p][i].data.shape)
+	      weights_data -= 0.5
+            if 'sc' in p or 'Sc':
+	      #weights_data = np.random.random_sample(net.params[p][i].data.shape)
+              weights_data = np.ones(net.params[p][i].data.shape)
+	      #weights_data -= 0.5'''
+            '''if 'bn' in p or 'ba' in p or 'Ba' in p:
+	      #weights_data = np.random.random_sample(net.params[p][i].data.shape)
+              weights_data = np.ones(net.params[p][i].data.shape)
+              if i == 1:
+                 weights_data = np.zeros(net.params[p][i].data.shape)
+              if i == 2:
+                 weights_data = np.ones(net.params[p][i].data.shape)'''
+	    if i == 0: 
+		    #weights_data = np.ones(net.params[p][i].data.shape)
+		    weights_data = np.random.random_sample(net.params[p][i].data.shape) 
+		    #weights_data /= net.params[p][i].data.shape[0]
+		    weights_data -= 0.5
+		    ##weights_data /= 100
+		    #weights_data = np.zeros(net.params[p][i].data.shape)
+	    elif i == 1: 
+		    weights_data = np.zeros(net.params[p][i].data.shape)
+	    #weights_data = np.zeros(net.params[p][i].data.shape)
+	    weights_file.create_dataset('/data/{}/{}'.format(p, i), data=weights_data)
 
       weights_file.close()

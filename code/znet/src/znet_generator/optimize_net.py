@@ -371,15 +371,20 @@ def expand_mergecrops(net):
             crop_param = copy.deepcopy(l)
             crop_param["type"] = "crop"
             crop_param["name"] = "{}_crop".format(l["name"])
-            crop_param["bot"] = l["bot"][0]
+            crop_param["bot"] = [l["bot"][1]]
             crop_param["top"] = crop_param["name"]
             crop_param["top_dim"] = l["crop_top_dim"]
+            crop_param["ihw"] = l["ihw2"]
+            crop_param["id"]  = l["id2"]
+            crop_param["ifm"]  = l["ifm2"]
+            crop_param["ofm"]  = l["ifm2"]
+            crop_param["ohw"] = l["ihw1"]
+            crop_param["od"]  = l["id1"]
             tensors[crop_param["top"]] = Tensor(crop_param["top_dim"], l["arch"])
 
             #make me merge
             l["type"] = "merge"
-            l["bot"][0] = crop_param["top"]
-
+            l["bot"][1] = crop_param["top"]
             #add the crop layer
             insert_layer(net, crop_param, prev_lname=l["name"])
 

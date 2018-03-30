@@ -47,6 +47,8 @@ def allocate_layer_lines(lparams, cores, ht, cpu_offset):
       return allocate_pad_lines(lparams)
    elif lt == "crop":
       return allocate_crop_lines(lparams)
+   elif lt == "merge":
+      return allocate_merge_lines(lparams)
    elif lt == "sigmoid":
       return allocate_sigmoid_lines(lparams)
    elif lt == "input":

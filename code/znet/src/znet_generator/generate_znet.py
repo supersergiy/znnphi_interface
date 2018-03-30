@@ -11,6 +11,7 @@ def allocate_all_layers_lines(net, cores, ht, cpu_offset):
     tensors, layer_info, layer_order, misc = net
 
     for (n,l) in iteritems(layer_info):
+        print (n)
         lines += allocate_layer_lines(l, cores, ht, cpu_offset)
 
     lines.append('')
@@ -102,7 +103,7 @@ def forward_all_layers_lines(net):
 def forward_body_lines(net):
     tensors, layer_info, layer_order, misc = net
     lines = []
-    lines += timeit(forward_all_layers_lines(net), 1, "average:")
+    lines += timeit(forward_all_layers_lines(net), 10, "average:")
 
     lines.append('')
     return lines

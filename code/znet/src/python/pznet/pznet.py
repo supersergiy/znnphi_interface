@@ -23,18 +23,31 @@ class znet:
 
         sys.path.append(self.tmp_folder_path)
 
-    def create_net(self, prototxt_path, h5_weights_path, output_path, architecture='AVX2', cores=2, ht=2, cpu_offset=0, opt_flags='all'):
+    def create_net(self, prototxt_path, h5_weights_path, output_path,
+            architecture='AVX2', core_options={'conv': (2, 2)},
+                   cpu_offset=0, opt_mode='full_opt'):
+
         json_net_path = os.path.join(self.tmp_folder_path, 'net.json')
         convert_prototxt_to_json(prototxt_path, json_net_path)
 
         znnphi_path = os.environ["ZNNPHI_PATH"]
         mothership_folder = '{}/code/znet'.format(znnphi_path)
 
-        make_command  = 'make -C {} py N={} W={} O={} ARCH={} CORES={} HT={} CPU_OFFSET={} PZ_OPT={}'.format(mothership_folder,
-                                                             json_net_path,
-                                                             h5_weights_path,
-                                                             self.tmp_folder_path,
-                                                             architecture, cores, ht, cpu_offset, opt_flags)
+        final_cores = deepcopy(core_options)
+        if 'act' not in final_cores or final_cores['act'][0] < 0:
+            final_cores['act'][0] = final_cores['conv'][0]
+        if 'act' not in final_cores or final_cores['act'][1] < 0:
+            final_cores['act'][1] = final_cores['conv'][1]
+        if 'lin' not in final_cores or final_cores['lin'][0] < 0:
+            final_cores['lin'][0] = final_cores['conv'][0]
+        if 'lin' not in final_cores or final_cores['lin'][1] < 0:
+            final_cores['lin'][1] = final_cores['conv'][1]
+
+        format_s  = 'make -C {} py N={} W={} O={} ARCH={} CONV_CORES={} CONV_HT={} '
+        fomrat_s += 'ACT_CORES={} ACT_HT={} LIN_CORES={} LIN_HT={} CPU_OFFSET={} PZ_OPT={}'
+        make_command = format_s.format(mothership_folder, json_net_path, h5_weights_path, self.tmp_folder_path,
+                                       architecture, conv_cores, conv_ht, act_cores, act_ht, lin_cores, lin_ht,
+                                       cpu_offset, opt_flags)
         os.system(make_command) #compiles the znet.so and copies it to the working folder along with the weights
 
         #copy results to the output folder

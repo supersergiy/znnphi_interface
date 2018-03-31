@@ -6,13 +6,13 @@ from layers import allocate_layer_lines, forward_layer_lines
 from layers import generate_param_string
 from layers import conv
 
-def allocate_all_layers_lines(net, cores, ht, cpu_offset):
+def allocate_all_layers_lines(net, core_options, cpu_offset):
     lines = []
     tensors, layer_info, layer_order, misc = net
 
     for (n,l) in iteritems(layer_info):
         print (n)
-        lines += allocate_layer_lines(l, cores, ht, cpu_offset)
+        lines += allocate_layer_lines(l, core_options, cpu_offset)
 
     lines.append('')
     return lines
@@ -64,20 +64,20 @@ def set_constants_lines():
     lines.append('this->lib_path = lib_path;')
     return lines
 
-def constructor_body_lines(net, cores, ht, cpu_offset):
+def constructor_body_lines(net, core_options, cpu_offset):
     lines = []
     tensors, layer_info, layer_order, misc = net
     lines += set_constants_lines()
-    lines += allocate_all_layers_lines(net, cores, ht, cpu_offset)
+    lines += allocate_all_layers_lines(net, core_options, cpu_offset)
     lines += allocate_featuremaps_lines(net)
     lines += generate_python_interface_misc(net)
     lines.append('')
     return lines
 
-def forward_all_layers_lines(net):
+def forward_all_layers_lines(net, ignore):
     tensors, layer_info, layer_order, misc = net
     lines = []
-    lines.append('std::cout << "Starting Forward Pass\\n";')
+    #lines.append('std::cout << "Starting Forward Pass\\n";')
     count = 1
     for lname in layer_order:
        l = layer_info[lname]
@@ -88,7 +88,8 @@ def forward_all_layers_lines(net):
        #if l["type"] in ["pad"]:
        #lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
        #lines.append("std::cout << \"{}\" << std::endl;".format(lname))
-       lines += forward_layer_lines(l)
+       if not l["type"] in ignore:
+           lines += forward_layer_lines(l)
 
        #lines += print_tensor_part_lines(l["top"])
        #lines += print_tensor_lines(l["bot"])
@@ -100,15 +101,15 @@ def forward_all_layers_lines(net):
     return lines
 
 
-def forward_body_lines(net):
+def forward_body_lines(net, ignore):
     tensors, layer_info, layer_order, misc = net
     lines = []
-    lines += timeit(forward_all_layers_lines(net), 10, "average:")
+    lines += forward_all_layers_lines(net, ignore)
 
     lines.append('')
     return lines
 
-def generate_znet(net, out_path, cores, ht, cpu_offset):
+def generate_znet(net, out_path, core_options, cpu_offset, ignore):
     lines = []
     #includes
     lines.append('#include <iostream>')
@@ -122,7 +123,7 @@ def generate_znet(net, out_path, cores, ht, cpu_offset):
     #constructor
     print "   Generating constructors..."
     constructor_signature = 'znn::phi::Znet::Znet(std::string weights_path, std::string lib_path)'
-    constructor_body      = constructor_body_lines(net, cores, ht, cpu_offset)
+    constructor_body      = constructor_body_lines(net, cpu_options, cpu_offset)
     constructor           = generate_function(constructor_signature, constructor_body)
     lines += constructor
 
@@ -130,7 +131,7 @@ def generate_znet(net, out_path, cores, ht, cpu_offset):
     print "   Generating foward pass..."
     forward_signature = 'void znn::phi::Znet::forward(void)'
     forward_body      = forward_body_lines(net)
-    forward           = generate_function(forward_signature, forward_body)
+    forward           = generate_function(forward_signature, forward_body, ingore)
     lines += forward
 
     f = open(out_path, 'w')

@@ -427,17 +427,35 @@ def eliminate_adds(net):
                 #remove eltwise
                 delete_layer(net, next_name, lname)
 
-def optimize_net(net, opt_flags):
-    #parse opt flags
+def opt_mode_to_param(opt):
+    if opt == 'no_opt':
+        opt_f = ",no_lin,no_add,no_act,no_pad,"
+    elif opt == 'no_add':
+        opt_f = ",no_add,"
+    elif opt == 'no_pad':
+        opt_f = ",no_pad,"
+    elif opt == 'no_lin':
+        opt_f = ",no_lin,"
+    elif opt == 'no_act':
+        opt_f = ",no_act,"
+    elif opt == 'full_opt':
+        opt_f = "full_opt"
+    else:
+        raise Exception("Unknown optimization")
+
     opt_param = []
-    if not ',no_lin,' in opt_flags:
+    if not ',no_lin,' in opt_f:
         opt_param += ["lin_fuse"]
-    if not ',no_act,' in opt_flags:
+    if not ',no_act,' in opt_f:
         opt_param += ["act_fuse"]
-    if not ',no_add,' in opt_flags:
+    if not ',no_add,' in opt_f:
         opt_param += ["add_fuse"]
-    if not ',no_pad,' in opt_flags:
+    if not ',no_pad,' in opt_f:
         opt_param += ["implicit_pad"]
+
+def optimize_net(net, opt_mode):
+    #parse opt flags
+    opt_param = opt_mode_to_param(opt_mode)
     generate_layer_order_info(net)
     stride1_deconv_to_conv(net)
     expand_mergecrops(net)

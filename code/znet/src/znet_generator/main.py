@@ -3,15 +3,41 @@ from parse_net       import parse_net
 from read_in_weights import read_in_weights
 from optimize_net    import optimize_net
 import sys
+from optparse import OptionParser
 
-net_path     = sys.argv[1]
-weights_path = sys.argv[2]
-out_path     = sys.argv[3]
-arch         = sys.argv[4]
-cores        = sys.argv[5]
-ht           = sys.argv[6]
-cpu_offset   = sys.argv[7]
-opt_flags    = sys.argv[8]
+parser = OptionParser()
+
+parser.add_option("-n", "--net_path", dest="net_path")
+parser.add_option("-w", "--weights_path", dest="weights_path")
+parser.add_option("-o", "--out_path", dest="out_path")
+parser.add_option("-i", "--input_mode", dest="input_mode", default="read")
+parser.add_option("-O", dest="optimization", default="full_opt")
+parser.add_option("--conv_cores", dest="conv_cores")
+parser.add_option("--conv_ht", dest="conv_ht")
+parser.add_option("--act_cores", dest="act_cores")
+parser.add_option("--act_ht", dest="act_ht")
+parser.add_option("--lin_cores", dest="lin_cores")
+parser.add_option("--lin_ht", dest="lin_ht")
+parser.add_option("--architecture", dest="architecture", default="AVX2",
+        help="The cpu architexture: {AVX2, AVX512}")
+parser.add_option("--no_run_conv", dest="no_run", default=[], action="append_const", const="conv")
+
+(options, args) = parser.parse_args()
+
+net_path     = options.net_path
+weights_path = options.weights_path
+out_path     = options.out_path
+arch         = options.architecture
+cpu_offset   = options.cpu_offset
+opt_mode     = options.opt_mode
+no_run       = options.no_run
+
+core_options = {
+                "conv": (options.conv_cores, options.conv_ht),
+                "elu": (options.act_cores, options.act_ht),#translating to layer type here TODO
+                "relu": (options.act_cores, options.act_ht),
+                "scale": (options.lin_cores, options.lin_ht)
+               }
 
 if __name__ == "__main__":
     print "Parsing the network spec..."
@@ -19,7 +45,7 @@ if __name__ == "__main__":
     print "Loading the weights..."
     read_in_weights(net, weights_path)
     print "Optimizing the net..."
-    optimize_net(net, opt_flags)
+    optimize_net(net, opt_mode)
     print "Generating the network..."
-    generate_znet(net, out_path, cores, ht, cpu_offset)
+    generate_znet(net, out_path, core_options, cpu_offset, no_run)
     print "Done!"

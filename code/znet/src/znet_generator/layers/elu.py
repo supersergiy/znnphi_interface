@@ -24,6 +24,7 @@ def parse_elu(json_param, arch):
 def allocate_elu_lines(lparam):
     l = lparam
     allocation_params = lparam["top_dim"][0:4]
+    allocation_params += [lparam["cores"], lparam["ht"]]
 
     param_str = generate_param_string(allocation_params)
     lines = []

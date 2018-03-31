@@ -17,7 +17,7 @@ private:
    int rounded_fm;
 
 public:
-   ScaleLayer(int _bn, int _fm, int _id, int _ihw): bn(_bn), id(_id), ihw(_ihw)
+   ScaleLayer(int _bn, int _fm, int _id, int _ihw, int _cores, int _ht): bn(_bn), id(_id), ihw(_ihw)
    {   
       fm = _fm;
       rounded_fm = ((fm + SIMD_WIDTH - 1) / SIMD_WIDTH) * SIMD_WIDTH;

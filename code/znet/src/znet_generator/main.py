@@ -11,7 +11,8 @@ parser.add_option("-n", "--net_path", dest="net_path")
 parser.add_option("-w", "--weights_path", dest="weights_path")
 parser.add_option("-o", "--out_path", dest="out_path")
 parser.add_option("-i", "--input_mode", dest="input_mode", default="read")
-parser.add_option("-O", dest="optimization", default="full_opt")
+parser.add_option("-O", dest="opt_mode", default="full_opt")
+parser.add_option("--cpu_offset", dest="cpu_offset", default=0)
 parser.add_option("--conv_cores", dest="conv_cores")
 parser.add_option("--conv_ht", dest="conv_ht")
 parser.add_option("--act_cores", dest="act_cores")
@@ -34,6 +35,7 @@ no_run       = options.no_run
 
 core_options = {
                 "conv": (options.conv_cores, options.conv_ht),
+                "deconv": (options.conv_cores, options.conv_ht),
                 "elu": (options.act_cores, options.act_ht),#translating to layer type here TODO
                 "relu": (options.act_cores, options.act_ht),
                 "scale": (options.lin_cores, options.lin_ht)

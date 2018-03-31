@@ -35,9 +35,9 @@ input_mode   = options.input_mode
 N            = options.num_iter
 
 core_options = {}
-core_options["conv"] = (options.conv_cores, options.conv_ht)
-core_options["act"]  = (options.act_cores, options.act_ht)
-core_options["lin"]  = (options.lin_cores, options.lin_ht)
+core_options["conv"] = [options.conv_cores, options.conv_ht]
+core_options["act"]  = [options.act_cores, options.act_ht]
+core_options["lin"]  = [options.lin_cores, options.lin_ht]
 
 test_name = filter(None, base.split('/'))[-1]
 
@@ -45,7 +45,8 @@ net_path = os.path.join(base, "net.prototxt")
 weights_path = os.path.join(base, "weights.h5")
 input_path =  os.path.join(base, "in.h5")
 
-znet_path = "/opt/znets/{}_{}cores_{}".format(test_name, cores, optimization)
+z = pznet.znet()
+znet_path = "/opt/znets/{}_{}cores_{}".format(test_name, core_options["conv"][0], optimization)
 lib_path  = os.path.join(znet_path, "lib")
 if recompile:
     print ("Recompiling...")
@@ -53,7 +54,6 @@ if recompile:
 
 if options.run:
     print "Loading net..."
-    z = pznet.znet()
     z.load_net(znet_path, lib_path)
 
     in_shape = z.in_shape()

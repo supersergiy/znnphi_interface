@@ -452,6 +452,7 @@ def opt_mode_to_param(opt):
         opt_param += ["add_fuse"]
     if not ',no_pad,' in opt_f:
         opt_param += ["implicit_pad"]
+    return opt_param
 
 def optimize_net(net, opt_mode):
     #parse opt flags

@@ -20,8 +20,8 @@ def parse_pool(json_param, arch):
 
     #TODO: there's a bug with converting pooling param to JSON
     #      will need to un-hardcode this
-    params["kernel_dim"] = [2, 2, 2]
-    params["stride"]     = [2, 2, 2]
+    params["kernel_dim"] = json_param["pooling_param"]["kernel_size"]
+    params["stride"]     = json_param["pooling_param"]["kernel_size"]
 
 
     return params

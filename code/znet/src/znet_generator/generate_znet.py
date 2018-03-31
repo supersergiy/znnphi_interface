@@ -123,15 +123,15 @@ def generate_znet(net, out_path, core_options, cpu_offset, ignore):
     #constructor
     print "   Generating constructors..."
     constructor_signature = 'znn::phi::Znet::Znet(std::string weights_path, std::string lib_path)'
-    constructor_body      = constructor_body_lines(net, cpu_options, cpu_offset)
+    constructor_body      = constructor_body_lines(net, core_options, cpu_offset)
     constructor           = generate_function(constructor_signature, constructor_body)
     lines += constructor
 
     #forward pass
     print "   Generating foward pass..."
     forward_signature = 'void znn::phi::Znet::forward(void)'
-    forward_body      = forward_body_lines(net)
-    forward           = generate_function(forward_signature, forward_body, ingore)
+    forward_body      = forward_body_lines(net, ignore)
+    forward           = generate_function(forward_signature, forward_body)
     lines += forward
 
     f = open(out_path, 'w')

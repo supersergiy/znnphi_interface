@@ -3,6 +3,7 @@ import os
 import sys
 import inspect
 import time
+from copy import deepcopy
 
 TMP_DIR = "/opt/.tmp"
 
@@ -24,7 +25,7 @@ class znet:
         sys.path.append(self.tmp_folder_path)
 
     def create_net(self, prototxt_path, h5_weights_path, output_path,
-            architecture='AVX2', core_options={'conv': (2, 2)},
+            architecture='AVX2', core_options={'conv': [2, 2]},
                    cpu_offset=0, opt_mode='full_opt'):
 
         json_net_path = os.path.join(self.tmp_folder_path, 'net.json')
@@ -44,10 +45,12 @@ class znet:
             final_cores['lin'][1] = final_cores['conv'][1]
 
         format_s  = 'make -C {} py N={} W={} O={} ARCH={} CONV_CORES={} CONV_HT={} '
-        fomrat_s += 'ACT_CORES={} ACT_HT={} LIN_CORES={} LIN_HT={} CPU_OFFSET={} PZ_OPT={}'
+        format_s += 'ACT_CORES={} ACT_HT={} LIN_CORES={} LIN_HT={} CPU_OFFSET={} PZ_OPT={}'
         make_command = format_s.format(mothership_folder, json_net_path, h5_weights_path, self.tmp_folder_path,
-                                       architecture, conv_cores, conv_ht, act_cores, act_ht, lin_cores, lin_ht,
-                                       cpu_offset, opt_flags)
+                                       architecture, final_cores["conv"][0], final_cores["conv"][1],
+                                       final_cores["act"][0], final_cores["act"][1], final_cores["lin"][0],
+                                       final_cores["lin"][1],
+                                       cpu_offset, opt_mode)
         os.system(make_command) #compiles the znet.so and copies it to the working folder along with the weights
 
         #copy results to the output folder

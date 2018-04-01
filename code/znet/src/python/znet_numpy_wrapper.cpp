@@ -37,11 +37,11 @@ class ZnetNumpyWrapper {
             std::cerr << "Expected " << zn->input_size << " elements, but got " << in_info.size << std::endl;
             exit(EXIT_FAILURE);
          }
-         std::cerr << "Copying " << zn->input_size*sizeof(float) << " bytes into the user input. " << std::endl;
+         //std::cerr << "Copying " << zn->input_size*sizeof(float) << " bytes into the user input. " << std::endl;
          std::memcpy(zn->tensors["user_input"]->data(), in_ptr, zn->input_size*sizeof(float));
 
          zn->forward();
-         std::cout << "Forward Finished\n";
+         //std::cout << "Forward Finished\n";
          auto out_data = zn->tensors["user_output"]->data();
 
          return py::array(py::buffer_info(out_data, sizeof(float),

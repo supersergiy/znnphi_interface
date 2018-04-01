@@ -5,6 +5,9 @@ from optimize_net    import optimize_net
 import sys
 from optparse import OptionParser
 
+def str2bool(v):
+  return v.lower() in ("yes", "true", "t", "1")
+
 parser = OptionParser()
 
 parser.add_option("-n", "--net_path", dest="net_path")
@@ -22,7 +25,7 @@ parser.add_option("--lin_ht", dest="lin_ht")
 parser.add_option("--architecture", dest="architecture", default="AVX2",
         help="The cpu architexture: {AVX2, AVX512}")
 parser.add_option("--ignore", dest="ignore", default="")
-parser.add_option("--time_each", dest="time_each", default=False)
+parser.add_option("--time_each", dest="time_each", default="False")
 
 (options, args) = parser.parse_args()
 
@@ -32,8 +35,8 @@ out_path     = options.out_path
 arch         = options.architecture
 cpu_offset   = options.cpu_offset
 opt_mode     = options.opt_mode
-ignroe       = options.ignore
-time_each    = options.time_each
+ignore       = options.ignore
+time_each    = str2bool(options.time_each)
 
 core_options = {
                 "conv": (options.conv_cores, options.conv_ht),
@@ -42,7 +45,6 @@ core_options = {
                 "relu": (options.act_cores, options.act_ht),
                 "scale": (options.lin_cores, options.lin_ht)
                }
-
 if __name__ == "__main__":
     print "Parsing the network spec..."
     net = parse_net(net_path, arch)

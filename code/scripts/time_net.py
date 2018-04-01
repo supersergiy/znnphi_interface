@@ -11,7 +11,7 @@ parser = OptionParser()
 
 parser.add_option("-b", "--base", dest="base_path")
 parser.add_option("-i", "--input_mode", dest="input_mode", default="read")
-parser.add_option("--iter", dest="num_iter", default=20)
+parser.add_option("--iter", dest="num_iter", default=20, type="int")
 parser.add_option("-c", "--cores", dest="conv_cores", default=2)
 parser.add_option("-O", dest="optimization", default="full_opt")
 parser.add_option("--ht", dest="conv_ht", default=2)
@@ -22,8 +22,7 @@ parser.add_option("--lin_ht", dest="lin_ht", default=-1)
 parser.add_option("--recompile", action="store_true", dest="recompile", default=False)
 parser.add_option("--time_each", action="store_true", dest="time_each", default=False)
 parser.add_option("--dont_run", action="store_false", dest="run", default=True)
-parser.add_option("--dont_run", action="store_false", dest="run", default=True)
-parser.add_option("--ignore", action="append", dest="ignore", default=[])
+parser.add_option("--ignore", action="append", dest="ignore", default=["ignore"])
 
 parser.add_option("--arch", dest="architecture", default="AVX2",
         help="The cpu architexture: {AVX2, AVX512}")
@@ -52,16 +51,17 @@ input_path =  os.path.join(base, "in.h5")
 
 z = pznet.znet()
 znet_path = "/opt/znets/{}_{}cores_{}".format(test_name, core_options["conv"][0], optimization)
-lib_path  = os.path.join(znet_path, "lib")
+lib_path  = "/opt/znets/lib"#os.path.join(znet_path, "lib")
 if recompile:
     print ("Recompiling...")
-    z.create_net(net_path, weights_path, znet_path, architecture, core_options, cpu_offset, optimization, ignore)
+    z.create_net(net_path, weights_path, znet_path, architecture, core_options, cpu_offset,
+                opt_mode=optimization, ignore=ignore, time_each=time_each)
 
 if options.run:
     print "Loading net..."
     z.load_net(znet_path, lib_path)
 
-    in_shape = z.in_shape()
+    in_shape = z.get_in_shape()
     if input_mode == 'read':
         in_file  = h5py.File(input_path)
         in_a     = in_file["main"][:]

@@ -20,6 +20,7 @@ parser.add_option("--act_ht", dest="act_ht", default=-1)
 parser.add_option("--lin_cores", dest="lin_cores", default=-1)
 parser.add_option("--lin_ht", dest="lin_ht", default=-1)
 parser.add_option("--recompile", action="store_true", dest="recompile", default=False)
+parser.add_option("--time_each", action="store_true", dest="time_each", default=False)
 parser.add_option("--dont_run", action="store_false", dest="run", default=True)
 parser.add_option("--dont_run", action="store_false", dest="run", default=True)
 parser.add_option("--ignore", action="append", dest="ignore", default=[])
@@ -36,6 +37,7 @@ optimization = options.optimization
 input_mode   = options.input_mode
 N            = options.num_iter
 ignore       = ','.join(options.ignore)
+time_each    = options.time_each
 
 core_options = {}
 core_options["conv"] = [options.conv_cores, options.conv_ht]

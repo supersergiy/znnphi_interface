@@ -22,6 +22,7 @@ parser.add_option("--lin_ht", dest="lin_ht")
 parser.add_option("--architecture", dest="architecture", default="AVX2",
         help="The cpu architexture: {AVX2, AVX512}")
 parser.add_option("--ignore", dest="ignore", default="")
+parser.add_option("--time_each", dest="time_each", default=False)
 
 (options, args) = parser.parse_args()
 
@@ -32,6 +33,7 @@ arch         = options.architecture
 cpu_offset   = options.cpu_offset
 opt_mode     = options.opt_mode
 ignroe       = options.ignore
+time_each    = options.time_each
 
 core_options = {
                 "conv": (options.conv_cores, options.conv_ht),
@@ -49,5 +51,5 @@ if __name__ == "__main__":
     print "Optimizing the net..."
     optimize_net(net, opt_mode)
     print "Generating the network..."
-    generate_znet(net, out_path, core_options, cpu_offset, ignore)
+    generate_znet(net, out_path, core_options, cpu_offset, ignore, time_each)
     print "Done!"

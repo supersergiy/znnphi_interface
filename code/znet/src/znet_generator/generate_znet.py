@@ -74,7 +74,7 @@ def constructor_body_lines(net, core_options, cpu_offset):
     lines.append('')
     return lines
 
-def forward_all_layers_lines(net, ignore):
+def forward_all_layers_lines(net, ignore, time_each=False):
     tensors, layer_info, layer_order, misc = net
     lines = []
     #lines.append('std::cout << "Starting Forward Pass\\n";')
@@ -84,12 +84,14 @@ def forward_all_layers_lines(net, ignore):
        #lines.append('std::cout << "Running {}!\\n";'.format(l["name"]))
        #lines += forward_layer_lines(l)
        #lines += forward_layer_lines(l)
-       #lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
        #if l["type"] in ["pad"]:
        #lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
        #lines.append("std::cout << \"{}\" << std::endl;".format(lname))
        if not l["type"] in ignore:
-           lines += forward_layer_lines(l)
+           if time_each:
+               lines += timeit(forward_layer_lines(l), 1, l["name"] + ": ")
+           else:
+               lines += forward_layer_lines(l)
 
        #lines += print_tensor_part_lines(l["top"])
        #lines += print_tensor_lines(l["bot"])
@@ -101,15 +103,15 @@ def forward_all_layers_lines(net, ignore):
     return lines
 
 
-def forward_body_lines(net, ignore):
+def forward_body_lines(net, ignore, time_each):
     tensors, layer_info, layer_order, misc = net
     lines = []
-    lines += forward_all_layers_lines(net, ignore)
+    lines += forward_all_layers_lines(net, ignore, time_each)
 
     lines.append('')
     return lines
 
-def generate_znet(net, out_path, core_options, cpu_offset, ignore):
+def generate_znet(net, out_path, core_options, cpu_offset, ignore, time_each):
     lines = []
     #includes
     lines.append('#include <iostream>')
@@ -130,7 +132,7 @@ def generate_znet(net, out_path, core_options, cpu_offset, ignore):
     #forward pass
     print "   Generating foward pass..."
     forward_signature = 'void znn::phi::Znet::forward(void)'
-    forward_body      = forward_body_lines(net, ignore)
+    forward_body      = forward_body_lines(net, ignore, time_each)
     forward           = generate_function(forward_signature, forward_body)
     lines += forward
 

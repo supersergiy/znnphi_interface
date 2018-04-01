@@ -21,6 +21,8 @@ parser.add_option("--lin_cores", dest="lin_cores", default=-1)
 parser.add_option("--lin_ht", dest="lin_ht", default=-1)
 parser.add_option("--recompile", action="store_true", dest="recompile", default=False)
 parser.add_option("--dont_run", action="store_false", dest="run", default=True)
+parser.add_option("--dont_run", action="store_false", dest="run", default=True)
+parser.add_option("--ignore", action="append", dest="ignore", default=[])
 
 parser.add_option("--arch", dest="architecture", default="AVX2",
         help="The cpu architexture: {AVX2, AVX512}")
@@ -33,6 +35,7 @@ recompile    = options.recompile
 optimization = options.optimization
 input_mode   = options.input_mode
 N            = options.num_iter
+ignore       = ','.join(options.ignore)
 
 core_options = {}
 core_options["conv"] = [options.conv_cores, options.conv_ht]
@@ -50,7 +53,7 @@ znet_path = "/opt/znets/{}_{}cores_{}".format(test_name, core_options["conv"][0]
 lib_path  = os.path.join(znet_path, "lib")
 if recompile:
     print ("Recompiling...")
-    z.create_net(net_path, weights_path, znet_path, architecture, core_options, cpu_offset, optimization)
+    z.create_net(net_path, weights_path, znet_path, architecture, core_options, cpu_offset, optimization, ignore)
 
 if options.run:
     print "Loading net..."

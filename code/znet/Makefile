@@ -102,7 +102,7 @@ src/generated/znet.cpp:  $(shell find src/znet_generator -type f -name "*.py") $
 	${MKDIR_P} out/weights
 	python src/znet_generator/main.py --net_path $(N) --weights_path $(W) --out_path src/generated/znet.cpp \
 		--architecture $(ARCH) --conv_cores $(CONV_CORES) --conv_ht $(CONV_HT) --act_cores $(ACT_CORES) --act_ht $(ACT_HT) \
-		--lin_cores $(LIN_CORES) --lin_ht $(LIN_HT) --cpu_offset $(CPU_OFFSET) -O $(PZ_OPT)
+		--lin_cores $(LIN_CORES) --lin_ht $(LIN_HT) --cpu_offset $(CPU_OFFSET) -O $(PZ_OPT) --ignore $(IGNORE)
 
 out/znet.o: src/generated/znet.cpp 
 	$(CXX) $(CXXFLAGS) $(ARCH_FLAGS) -fPIC -c $^ -o $@

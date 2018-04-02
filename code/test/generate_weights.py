@@ -10,29 +10,49 @@ caffe.set_device(1)
 caffe.set_mode_gpu()
 
 def init_weights(t, shape, weights_index, mode):
-  if t == 'conv':
-    if weights_indes == 0: #kernel
+  if t == 'deconv': 
+    if weights_index == 0: #kernel
+      
+      if shape[3] == 4: #this means it's a bilinear
+        fan_in  = 1  * (shape[2] * shape[3] * shape[4])
+        fan_out = 1 * (shape[2] * shape[3] * shape[4])
+      else:
+        fan_in  = shape[0]  * (shape[2] * shape[3] * shape[4])
+        fan_out = shape[1] * (shape[2] * shape[3] * shape[4])
+      std_dev = np.sqrt(2.0 / (fan_in + fan_out))
+      results = np.random.normal(size=shape, scale=std_dev) #std_var/ (shape[2] * shape[3] * shape[4])
+      return results
+    elif weights_index == 1: #bias
+      return np.zeros(shape)
+  elif t == 'conv': 
+    if weights_index == 0: #kernel
       if mode == 'identity':
-        return np.ones(shape) / shape[1]
+        result = np.ones(shape) / (shape[0] * shape[2] * shape[3] * shape[4])
       elif mode == 'random': #xavier
-        return np.random.normal(size=shape, scale=np.sqrt((shape[0] + shape[1]) / 2))
+        #std_var = np.sqrt((shape[0] + shape[1]) / 2)
+        fan_in = shape[0]  * (shape[2] * shape[3] * shape[4])
+        fan_out = shape[1] * (shape[2] * shape[3] * shape[4])
+	std_dev = np.sqrt(2.0 / (fan_in + fan_out))
+        result = np.random.normal(size=shape, scale=std_dev) 
+      return result
     elif weights_index == 1: #bias
       return np.zeros(shape)
   elif t == 'bn':
-    if weights_indes == 0: #scale
-      return np.ones(shape) 
-    elif weights_index == 1: #mean
+    if weights_index == 0: #variance
       return np.zeros(shape) 
-    elif weights_indes == 2: #var
+    elif weights_index == 1: #mean
+      return np.ones(shape) 
+    elif weights_index == 2: #scale
       return np.ones(shape) 
   elif t == 'scale':
-    if weights_indes == 0: #mult
+    if weights_index == 0: #mult
       return np.ones(shape) 
     elif weights_index == 1: #bias
       return np.zeros(shape) 
 
 file_spec = sys.argv[1]
 test_list = glob.glob(file_spec)
+init_mode = 'random'
 
 for test_folder in test_list:
    model_path   = os.path.join(test_folder, "net.prototxt")
@@ -46,7 +66,7 @@ for test_folder in test_list:
       print "Generating input file..."
       in_file = h5py.File(in_path, 'w')
       in_data = np.random.random_sample(net.blobs['input'].data.shape)
-      #in_data = np.zeros(net.blobs['input'].data.shape)
+      #in_data = np.ones(net.blobs['input'].data.shape)
       in_file.create_dataset('/main', data=in_data)
       print "Dataset '/main' created!"
       in_file.close()
@@ -56,11 +76,13 @@ for test_folder in test_list:
       weights_file = h5py.File(weights_path, 'w')
       for p in net.params.keys():
           for i in range(len(net.params[p])):
-            if "bn" in p.lower() or "batc" in p.lower():
+	    if "deconv" in p.lower():
+              layer_type = 'deconv'
+            elif "bn" in p.lower() or "batc" in p.lower():
               layer_type = 'bn'
-            elif "sc" in p.lower():
+            elif "sca" in p.lower():
               layer_type = 'scale'
-            elif "con" in p.lower():
+            elif "con" in p.lower() or "aff" in p.lower():
               layer_type = 'conv'
             else:
               raise Exception("Don't know layer type: {}".format(p))

@@ -35,7 +35,7 @@ for test_folder in test_list:
 
    print ("{} sec".format((e - s) / 5))
    out_data = net.blobs["output"].data[...]
-
+   print ("mean: {}".format(np.mean(out_data)))
    out_file = h5py.File(out_path)
    out_file.create_dataset('/main', data=out_data)
    out_file.close()

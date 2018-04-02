@@ -430,6 +430,8 @@ def eliminate_adds(net):
 def opt_mode_to_param(opt):
     if opt == 'no_opt':
         opt_f = ",no_lin,no_add,no_act,no_pad,"
+    elif opt == 'lin':
+        opt_f = ",no_padd,no_act,"
     elif opt == 'no_add':
         opt_f = ",no_add,"
     elif opt == 'no_pad':

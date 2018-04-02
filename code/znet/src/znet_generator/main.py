@@ -43,7 +43,8 @@ core_options = {
                 "deconv": (options.conv_cores, options.conv_ht),
                 "elu": (options.act_cores, options.act_ht),#translating to layer type here TODO
                 "relu": (options.act_cores, options.act_ht),
-                "scale": (options.lin_cores, options.lin_ht)
+                "scale": (options.lin_cores, options.lin_ht),
+                "bnorm": (options.lin_cores, options.lin_ht)
                }
 if __name__ == "__main__":
     print "Parsing the network spec..."

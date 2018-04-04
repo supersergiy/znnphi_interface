@@ -21,11 +21,11 @@ parser.add_option("--arch", dest="architecture", default="AVX2",
 
 bases_elu = ["/tests/pni_unet",
              "/tests/unet_sym_bn_elu",
-             "/tests/unet_paper_elu"]
-
-bases_relu = ["/tests/pni_unet_relu",
+             "/tests/unet_paper_bn_elu"]
+bases_relu = [
+              "/tests/pni_unet_relu",
               "/tests/unet_sym_bn",
-              "/tests/unet_papaer_bn"]
+              "/tests/unet_paper_bn"]
 
 opts = ["full_opt", "no_pad", "no_act", "lin", "no_add", "no_opt"]
 

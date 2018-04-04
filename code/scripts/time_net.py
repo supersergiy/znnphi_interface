@@ -52,7 +52,8 @@ if __name__ == "__main__":
     parser = OptionParser()
 
     parser.add_option("-b", "--base", dest="base_path")
-    parser.add_option("-i", "--input_mode", dest="input_mode", default="read")
+    parser.add_option("-i", "--input_mode", dest="input_mode", default="random")
+    parser.add_option("-o", "--output_path", dest="output_path", default=None)
     parser.add_option("--iter", dest="num_iter", default=20, type="int")
     parser.add_option("-O", dest="optimization", default="full_opt")
     parser.add_option("-c", "--cores", dest="conv_cores", default=2)
@@ -79,7 +80,6 @@ if __name__ == "__main__":
     N            = options.num_iter
     ignore       = ','.join(options.ignore)
     time_each    = options.time_each
-
     core_options = {}
     core_options["conv"] = [options.conv_cores, options.conv_ht]
     core_options["act"]  = [options.act_cores, options.act_ht]
@@ -87,4 +87,8 @@ if __name__ == "__main__":
 
     average_time = timing_test(base=base, N=N, recompile=recompile, architecture=architecture, cpu_offset=cpu_offset, core_options=core_options,
                                optimization=optimization, ignore=ignore, time_each=time_each, input_mode=input_mode, run=options.run)
-    print (average_time)
+    if not options.output_path is None:
+        of = file(options.output_path, 'a')
+        of.write("{} {} {}: {}\n".format(architecture, base, optimization, average_time))
+    else:
+        print (average_time)

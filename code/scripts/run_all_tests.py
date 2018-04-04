@@ -19,19 +19,13 @@ parser.add_option("--arch", dest="architecture", default="AVX2",
         help="The cpu architexture: {AVX2, AVX512}")
 (options, args) = parser.parse_args()
 
-bases_elu = ["/tests/pni_unet", "/tests/pni_unet_no_bn",
-             "/tests/unet_sym_elu", "/tests/unet_sym_bn_elu",
-             "/tests/unet_paper_elu", "/tests/unet_paper_bn_elu",
-             "/tests/pni_unet", "/tests/pni_unet_no_bn",
-             "/tests/unet_sym_elu", "/tests/unet_sym_bn_elu",
-             "/tests/unet_paper_elu", "/tests/unet_paper_bn_elu"]
+bases_elu = ["/tests/pni_unet",
+             "/tests/unet_sym_bn_elu",
+             "/tests/unet_paper_elu"]
 
-bases_relu = ["/tests/pni_unet_relu", "/tests/pni_unet_no_bn_relu",
-              "/tests/unet_sym", "/tests/unet_sym_bn",
-              "/tests/unet_paper", "/tests/unet_papaer_bn",
-              "/tests/pni_unet_relu", "/tests/pni_unet_no_bn_relu",
-              "/tests/unet_sym", "/tests/unet_sym_bn",
-              "/tests/unet_paper", "/tests/unet_papaer_bn"]
+bases_relu = ["/tests/pni_unet_relu",
+              "/tests/unet_sym_bn",
+              "/tests/unet_papaer_bn"]
 
 opts = ["full_opt", "no_pad", "no_act", "lin", "no_add", "no_opt"]
 

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import pznet
 import os
 import numpy as np
@@ -7,9 +7,9 @@ import sys
 
 cores = 2
 
-base = sys.argv[1] 
+base = sys.argv[1]
 test_name = base.split('/')[-1]
- 
+
 net_path = os.path.join(base, "net.prototxt")
 weights_path = os.path.join(base, "weights.h5")
 input_path =  os.path.join(base, "in.h5")

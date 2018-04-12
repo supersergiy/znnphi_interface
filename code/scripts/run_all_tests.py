@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 from time_net import timing_test
 from optparse import OptionParser
 import os

@@ -47,12 +47,12 @@ core_options = {
                 "bnorm": (options.lin_cores, options.lin_ht)
                }
 if __name__ == "__main__":
-    print "Parsing the network spec..."
+    print ("Parsing the network spec...")
     net = parse_net(net_path, arch)
-    print "Loading the weights..."
+    print ("Loading the weights...")
     read_in_weights(net, weights_path)
-    print "Optimizing the net..."
+    print ("Optimizing the net...")
     optimize_net(net, opt_mode)
-    print "Generating the network..."
+    print ("Generating the network...")
     generate_znet(net, out_path, core_options, cpu_offset, ignore, time_each)
-    print "Done!"
+    print ("Done!")

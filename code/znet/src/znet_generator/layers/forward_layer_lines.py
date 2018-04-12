@@ -1,4 +1,4 @@
-from conv import conv_forward_params
+from .conv import conv_forward_params
 
 def forward_layer_lines(lparams):
    lt = lparams["type"]

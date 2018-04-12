@@ -28,7 +28,7 @@ def print_tensor_lines(tname):
 
 def indent_lines(lines, indent):
     for i in range(indent):
-	lines = list(map(lambda c: "\t" + c, lines))
+        lines = list(map(lambda c: "\t" + c, lines))
     return lines
 
 def timeit(code_lines, n=1, title=""):

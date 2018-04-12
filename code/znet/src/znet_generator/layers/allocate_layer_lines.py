@@ -1,19 +1,19 @@
-from conv    import allocate_conv_lines
-from deconv  import allocate_deconv_lines
-from pool    import allocate_pool_lines
-from bnorm   import allocate_bnorm_lines
-from elu     import allocate_elu_lines
-from relu    import allocate_relu_lines
-from sigmoid import allocate_sigmoid_lines
-from pad     import allocate_pad_lines
-from scale   import allocate_scale_lines
-from slc     import allocate_slc_lines
-from eltwise import allocate_eltwise_lines
-from merge   import allocate_merge_lines
-from crop    import allocate_crop_lines
+from .conv    import allocate_conv_lines
+from .deconv  import allocate_deconv_lines
+from .pool    import allocate_pool_lines
+from .bnorm   import allocate_bnorm_lines
+from .elu     import allocate_elu_lines
+from .relu    import allocate_relu_lines
+from .sigmoid import allocate_sigmoid_lines
+from .pad     import allocate_pad_lines
+from .scale   import allocate_scale_lines
+from .slc     import allocate_slc_lines
+from .eltwise import allocate_eltwise_lines
+from .merge   import allocate_merge_lines
+from .crop    import allocate_crop_lines
 
-from block_input    import allocate_block_input_lines
-from unblock_output import allocate_unblock_output_lines
+from .block_input    import allocate_block_input_lines
+from .unblock_output import allocate_unblock_output_lines
 
 def allocate_layer_lines(lparams, core_options, cpu_offset):
    lparams["cpu_offset"] = cpu_offset

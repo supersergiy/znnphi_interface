@@ -44,8 +44,8 @@ core_options["act"]  = [options.act_cores, options.act_ht]
 core_options["lin"]  = [options.lin_cores, options.lin_ht]
 
 z = pznet.znet()
-print "Creating the network..."
+print ("Creating the network...")
 z.create_net(net_path, weights_path, znet_path, arch, core_options=core_options)
-print "Compiling layers..."
+print ("Compiling layers...")
 z.load_net(znet_path, os.path.join(znet_path, "lib"))
-print "Your network has been sergified! You can find it at {}".format(znet_path)
+print ("Your network has been sergified! You can find it at {}".format(znet_path))

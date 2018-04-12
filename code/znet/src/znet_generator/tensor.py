@@ -6,7 +6,9 @@ class Tensor:
     def __init__(self, dim, arch):
         self.dim  = copy.deepcopy(dim)
 
-        self.size = reduce(mul, dim)
+        self.size = 1
+        for d in dim:
+            self.size *= d
 
         self.memory_size = 1
 

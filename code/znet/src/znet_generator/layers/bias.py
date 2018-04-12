@@ -1,5 +1,5 @@
 import copy
-from common import round_to_simd, generate_param_string, fill_tensor, zero_out_tensor
+from .common import round_to_simd, generate_param_string, fill_tensor, zero_out_tensor
 import numpy as np
 
 def set_bias_dim(params, bot_tensor):

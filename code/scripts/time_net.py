@@ -23,7 +23,7 @@ def timing_test(base, N, recompile, architecture, core_options, cpu_offset, opti
                     opt_mode=optimization, ignore=ignore, time_each=time_each)
 
     if run:
-        print "Loading net..."
+        print ("Loading net...")
         z.load_net(znet_path, lib_path)
 
         in_shape = z.get_in_shape()
@@ -32,7 +32,7 @@ def timing_test(base, N, recompile, architecture, core_options, cpu_offset, opti
             in_a     = in_file["main"][:]
 
 
-        print "Running net..."
+        print ("Running net...")
         durations = []
         for i in range(N):
             if input_mode == 'random':

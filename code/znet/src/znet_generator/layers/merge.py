@@ -1,7 +1,7 @@
 import copy
-from common import round_to_simd, generate_param_string, fill_tensor, zero_out_tensor
+from .common import round_to_simd, generate_param_string, fill_tensor, zero_out_tensor
 import numpy as np
-from conv import block_kernel, block_bias
+from .conv import block_kernel, block_bias
 
 def set_merge_dim(params, bot_tensors):
     top_dim = copy.copy(bot_tensors[1].dim)

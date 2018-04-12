@@ -1,0 +1,10 @@
+setup.py
+/opt/znnphi_interface/code/znet/src/python/pznet/__init__.py
+/opt/znnphi_interface/code/znet/src/python/pznet/common.py
+/opt/znnphi_interface/code/znet/src/python/pznet/protobuf_to_dict.py
+/opt/znnphi_interface/code/znet/src/python/pznet/pznet.py
+/opt/znnphi_interface/code/znet/src/python/pznet/znet_caffe_pb2.py
+PZnet.egg-info/PKG-INFO
+PZnet.egg-info/SOURCES.txt
+PZnet.egg-info/dependency_links.txt
+PZnet.egg-info/top_level.txt

@@ -12,31 +12,31 @@ def read_in_weights(net, weights_path):
 
     for (lname, l) in iteritems(layer_info):
         if l["type"] in ["conv", "deconv"]:
-            lweights = weights[lname].values()
-            l["kernel_data"] = lweights[0][:]
+            lweights = weights[lname]
+            l["kernel_data"] = lweights['0'][:]
 
             if len(lweights) > 1:
-                l["bias_data"] = lweights[1][:]
+                l["bias_data"] = lweights['1'][:]
             else:
                 l["bias_data"] = None
         elif l["type"] in ["scale"]:
-            lweights = weights[lname].values()
+            lweights = weights[lname]
 
-            l["scale_data"] = copy.deepcopy(lweights[0][:])
-            l["bias_data"]  = copy.deepcopy(lweights[1][:])
+            l["scale_data"] = copy.deepcopy(lweights['0'][:])
+            l["bias_data"]  = copy.deepcopy(lweights['1'][:])
             l["scale_data"].resize(l["scale_size"])
             l["bias_data"].resize(l["bias_size"])
 
             if len(lweights) > 2:
-                scale_factor = lweights[2][:]
+                scale_factor = lweights['2'][:]
                 if scale_factor.size != 1:
                     raise Exception("wtf")
                 l["scale_data"] *= scale_factor
                 l["bias_data"]  *= scale_factor
         elif l["type"] in ["bias"]:
-            lweights = weights[lname].values()
+            lweights = weights[lname]
 
-            l["bias_data"]  = lweights[0][:]
+            l["bias_data"]  = lweights['0'][:]
             l["scale_data"] = np.ones(l["bias_data"].shape)
             l["type"] = "scale" # hashtag polymorph
 
@@ -44,13 +44,13 @@ def read_in_weights(net, weights_path):
                import pdb; pdb.set_trace()
 
         elif l["type"] in ["bnorm"]:
-            lweights = weights[lname].values()
+            lweights = weights[lname]
 
-            mean_data = lweights[0][:]
-            var_data  = lweights[1][:]
+            mean_data = lweights['0'][:]
+            var_data  = lweights['1'][:]
 
             if len(lweights) > 2:
-                scale_factor = lweights[2][:]
+                scale_factor = lweights['2'][:]
                 if scale_factor.size != 1:
                     import pdb; pdb.set_trace()
                     raise Exception("wtf")

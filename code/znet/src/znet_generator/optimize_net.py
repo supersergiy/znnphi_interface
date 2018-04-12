@@ -132,7 +132,7 @@ def delete_layer(net, layer_name, prev_layer):
     tensors, layer_info, layer_order, misc = net
     l = layer_info[layer_name]
 
-    print "Removing {}!".format(layer_name)
+    print ("Removing {}!".format(layer_name))
     for prev_name in l["prev"]:
         layer_info[prev_name]["next"].remove(layer_name)
 
@@ -250,7 +250,7 @@ def insert_implicit_conv_pads(net):
                 next_l = layer_info[next_name]
                 if next_l["pad"][0] != 0 or next_l["pad"][1] != 0:
                     count += 1
-                    print "Output paddinig for {}!".format(l["name"])
+                    print ("Output paddinig for {}!".format(l["name"]))
                     l["output_pad"] = copy.copy(next_l["pad"])
                     l["top_dim"][2] += 2 * l["output_pad"][0]
                     l["top_dim"][3] += 2 * l["output_pad"][1]

@@ -1,12 +1,12 @@
 import copy
-from common import generate_param_string
+from .common import generate_param_string
 
 def set_pool_dim(params, bot_tensor):
 
     top_dim = copy.copy(bot_tensor.dim)
-    top_dim[2] /= params["kernel_dim"][0]
-    top_dim[3] /= params["kernel_dim"][1]
-    top_dim[4] /= params["kernel_dim"][2]
+    top_dim[2] = int(top_dim[2] / params["kernel_dim"][0])
+    top_dim[3] = int(top_dim[3] / params["kernel_dim"][1])
+    top_dim[4] = int(top_dim[4] / params["kernel_dim"][2])
     params["top_dim"] = top_dim
     params["bot_dim"] = bot_tensor.dim
 

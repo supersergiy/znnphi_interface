@@ -1,5 +1,5 @@
 import copy
-from common import generate_param_string
+from .common import generate_param_string
 
 def set_relu_dim(params, bot_tensor):
     top_dim = copy.copy(bot_tensor.dim)

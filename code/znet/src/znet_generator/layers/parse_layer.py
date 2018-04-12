@@ -1,17 +1,17 @@
-from conv    import parse_conv
-from deconv  import parse_deconv
-from deconv  import parse_deconv
-from pool    import parse_pool
-from bnorm   import parse_bnorm
-from elu     import parse_elu
-from relu    import parse_relu
-from scale   import parse_scale
-from bias    import parse_bias
-from eltwise import parse_eltwise
-from slc     import parse_slc
-from crop    import parse_crop
-from merge   import parse_merge
-from mergecrop   import parse_mergecrop
+from .conv    import parse_conv
+from .deconv  import parse_deconv
+from .deconv  import parse_deconv
+from .pool    import parse_pool
+from .bnorm   import parse_bnorm
+from .elu     import parse_elu
+from .relu    import parse_relu
+from .scale   import parse_scale
+from .bias    import parse_bias
+from .eltwise import parse_eltwise
+from .slc     import parse_slc
+from .crop    import parse_crop
+from .merge   import parse_merge
+from .mergecrop   import parse_mergecrop
 
 def check_params(lparams):
    necessary_fields = ["top", "bot", "name", "type"]

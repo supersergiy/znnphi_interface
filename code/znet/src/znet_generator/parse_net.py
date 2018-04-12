@@ -5,7 +5,10 @@ from tensor import Tensor
 from layers import parse_layer, set_layer_dim
 
 def upd_tensor(tensors, name, dim, arch):
-    size = reduce(mul, dim)
+    size = 1
+    for d in dim:
+        size *= d
+
     if name not in tensors:
         tensors[name] = Tensor(dim, arch)
     elif size > tensors[name].size:

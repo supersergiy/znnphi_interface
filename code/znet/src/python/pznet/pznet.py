@@ -1,4 +1,4 @@
-from common import convert_prototxt_to_json
+from .common import convert_prototxt_to_json
 import os
 import sys
 import inspect

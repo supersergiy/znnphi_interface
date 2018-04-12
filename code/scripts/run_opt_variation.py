@@ -30,11 +30,11 @@ in_a     = in_file["main"][:]
 z = pznet.znet()
 
 if create:
-    print "Creating nets..."
+    print ("Creating nets...")
     for name_prefix, opt_flags in opt_param_list:
         znet_path = "/opt/znets/{}_{}cores_opt_{}".format(test_name, cores, name_prefix)
         z.create_net(net_path, weights_path, znet_path, architecture, cores, ht, cpu_offset, opt_flags=opt_flags)
-print "Running nets..."
+print ("Running nets...")
 #system.exit(1)
 for name_prefix, opt_flags in opt_param_list:
     znet_path = "/opt/znets/{}_{}cores_opt_{}".format(test_name, cores, name_prefix)
@@ -47,5 +47,6 @@ for name_prefix, opt_flags in opt_param_list:
         z.forward(in_a)
     e = time()
     print ("{}: {}sec".format(name_prefix, (e - s) / N))
+
 
 

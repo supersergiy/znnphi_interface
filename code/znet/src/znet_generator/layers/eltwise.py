@@ -1,5 +1,5 @@
 import copy
-from common import generate_param_string
+from .common import generate_param_string
 
 def set_eltwise_dim(params, bot_tensors):
     bot_tensor = bot_tensors[0]

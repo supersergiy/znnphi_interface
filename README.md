@@ -5,6 +5,6 @@ To compile your network run:
 
 You'll need to change some parameters depending on where your files are stored(docker -v params and sergify.py -n -w and -o)
 
-For more information on `sergify.py` you can run 
+For more information on `sergify.py` params you can run 
 
 ```sudo docker run -it  seunglab/pznet:devel /opt/znnphi_interface/code/scripts/sergify.py -h```

@@ -17,7 +17,6 @@ def parse_pool(json_param, arch):
     params["top"]  = json_param["top"][0]
     params["bot"]  = json_param["bottom"][0]
     params["type"] = "pool"
-    params["mode"] = json_param["pooling_param"]["pool"]
 
     #TODO: there's a bug with converting pooling param to JSON
     #      will need to un-hardcode this
@@ -35,14 +34,8 @@ def allocate_pool_lines(lparam):
                    l["stride"][0], l["stride"][1])
     param_str = generate_param_string(pool_params)
     lines = []
-    if l["mode"] == 0:
-        lines.append('layers["{}"] = new znn::phi::MaxPoolingLayer({});'.format(l["name"],
+    lines.append('layers["{}"] = new znn::phi::MaxPoolingLayer({});'.format(l["name"],
                                                                             param_str))
-    elif l["mode"] == 1:
-        lines.append('layers["{}"] = new znn::phi::AvgPoolingLayer({});'.format(l["name"],
-                                                                            param_str))
-    else:
-        raise Exception("Unsupported pooling mode: {} {}".format(l["name"], l["mode"]))
     return lines
 
 

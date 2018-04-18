@@ -10,7 +10,7 @@ namespace phi
 
 //TODO: make this template style
 //template <long_t Threads, class P>
-struct MaxPoolingLayer: public Layer{
+struct AvgPoolingLayer: public Layer{
 private:
    int bn, fm, id, ihw;
    int rounded_fm;
@@ -20,7 +20,7 @@ private:
    int od, ohw;
 
 public:
-   MaxPoolingLayer(int _bn, int _fm, int _id, int _ihw, int _kd, int _khw, 
+   AvgPoolingLayer(int _bn, int _fm, int _id, int _ihw, int _kd, int _khw, 
      int _stride_d, int _stride_hw): bn(_bn), 
    fm(_fm), id(_id), ihw(_ihw),
    kd(_kd), khw(_khw),
@@ -43,7 +43,6 @@ public:
 
       od  = id  / kd;
       ohw = ihw / khw;
-      std::cout << kd << " " << khw << std::endl;
    }
 
    void forward(float const* __restrict i, float* __restrict o, 
@@ -61,18 +60,16 @@ public:
                for (int s = 0; s < SIMD_WIDTH; ++s) {
                   for (int h = 0; h < ihw; h += stride_hw) {
                      for (int w = 0; w < ihw; w += stride_hw) {
-                        auto max = i_array[b][f][d][h][w][s]; 
+                        auto avg = 0.0; 
                         for (int pd = 0; pd < kd; pd++) { 
                            for (int ph = 0; ph < khw; ph++) { 
                               for (int pw = 0; pw < khw; pw++) { 
-                                 if (max < i_array[b][f][d + pd][h + ph][w + pw][s]) {
-                                    max = i_array[b][f][d + pd][h + ph][w + pw][s];
-                                 }
+                                 avg += i_array[b][f][d + pd][h + ph][w + pw][s];
                               }                              
                            }
                         }
-
-                        o_array[b][f][d/stride_d][h/stride_hw][w/stride_hw][s] = max;
+                        avg /= kd * khw * khw;
+                        o_array[b][f][d/stride_d][h/stride_hw][w/stride_hw][s] = avg;
                      }
                   }
                }

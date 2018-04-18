@@ -8,7 +8,7 @@ from time import time
 from optparse import OptionParser
 
 def timing_test(base, N, recompile, architecture, core_options, cpu_offset, optimization, ignore, time_each, input_mode, run):
-    test_name = filter(None, base.split('/'))[-1]
+    test_name = list(filter(None, base.split('/')))[-1]
 
     net_path = os.path.join(base, "net.prototxt")
     weights_path = os.path.join(base, "weights.h5")

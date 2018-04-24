@@ -9,7 +9,6 @@ def read_in_weights(net, weights_path):
 
     #initialize weights
     weights = h5py.File(weights_path) ['data']
-
     for (lname, l) in iteritems(layer_info):
         if l["type"] in ["conv", "deconv"]:
             lweights = weights[lname]
@@ -28,7 +27,7 @@ def read_in_weights(net, weights_path):
             l["bias_data"].resize(l["bias_size"])
 
             if len(lweights) > 2:
-                scale_factor = lweights['2'][:]
+                scale_factor = lweights['2']
                 if scale_factor.size != 1:
                     raise Exception("wtf")
                 l["scale_data"] *= scale_factor
@@ -50,7 +49,7 @@ def read_in_weights(net, weights_path):
             var_data  = lweights['1'][:]
 
             if len(lweights) > 2:
-                scale_factor = lweights['2'][:]
+                scale_factor = lweights['2']
                 if scale_factor.size != 1:
                     import pdb; pdb.set_trace()
                     raise Exception("wtf")

@@ -51,7 +51,7 @@ def correctness_test(base, N, recompile, architecture, core_options, cpu_offset,
 
     max_d = np.max(np.abs(diff_a))
     #i = np.argmax(np.abs(diff_a.flatten()))
-    max_rel_d = max_d / fr[i]
+    max_rel_d = max_d / fr
     print ("Max rel d: {}".format(max_rel_d))
     print ("Max d: {}".format(max_d))
     print ("Average d: {}".format(np.average(rel_d)))

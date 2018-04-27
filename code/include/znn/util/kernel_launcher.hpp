@@ -76,7 +76,7 @@ public:
 
         pthread_barrier_init(&barrier, NULL, static_cast<int>(n_cpus * n_hwt));
 
-        for (long_t c = 0; c < n_cpus; ++c)
+        for (long_t c = cpu_offset; c < cpu_offset + n_cpus; ++c)
         {
             for (long_t h = 0; h < n_hwt; ++h)
             {

@@ -10,7 +10,7 @@ def convert_prototxt_to_json(path_to_prototxt, path_to_json):
     net = znet_caffe_pb2.NetParameter()
     Merge((open(path_to_prototxt, 'r')).read(), net)
 
-    with open(path_to_json, 'w', encoding="utf8") as f:
+    with open(path_to_json, 'w') as f:
         net_dict = protobuf_to_dict(net)
         json.dump(net_dict, f, indent=3)
 

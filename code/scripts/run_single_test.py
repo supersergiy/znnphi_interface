@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 import pznet
 import os
 import numpy as np

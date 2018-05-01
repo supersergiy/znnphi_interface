@@ -76,7 +76,7 @@ CXXLDFLAGS	=	$(OPT_LDFLAGS)
 LD_FLAGS    =  -lpthread -openmp  
 #-L/opt/intel/mkl/lib/intel64 -Wl,--start-group -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5 -Wl,--end-group -lmkl_avx2 -lznnphiconv 
 
-PY_INTERFACE_FLAGS = `python3-config --cflags --ldflags` -Isrc/python/pybind11/include -fPIC 
+PY_INTERFACE_FLAGS = `python-config --cflags --ldflags` -Isrc/python/pybind11/include -fPIC 
 
 
 ifeq ($(strip $(ARCH)),AVX512)
@@ -87,6 +87,10 @@ else
 $(error Unsupported or unspecified architecture: ARCH==$(ARCH). Please set Makefile ARCH parameter to one of [AVX2, AVX512].) 
 endif
 
+ifeq ($(strip $(ARCH)),AVX512)
+else ifeq ($(strip $(ARCH)),AVX2)
+else
+endif
 .PHONY: bin, py, rerun, gen, FORCE
 
 #NET_NAME = small_layer
@@ -100,7 +104,7 @@ src/generated/znet.cpp:  $(shell find src/znet_generator -type f -name "*.py") $
 	rm -rf out
 	${MKDIR_P} out
 	${MKDIR_P} out/weights
-	python3 src/znet_generator/main.py --net_path $(N) --weights_path $(W) --out_path src/generated/znet.cpp \
+	python src/znet_generator/main.py --net_path $(N) --weights_path $(W) --out_path src/generated/znet.cpp \
 		--architecture $(ARCH) --conv_cores $(CONV_CORES) --conv_ht $(CONV_HT) --act_cores $(ACT_CORES) --act_ht $(ACT_HT) \
 		--lin_cores $(LIN_CORES) --lin_ht $(LIN_HT) --cpu_offset $(CPU_OFFSET) -O $(PZ_OPT) --ignore $(IGNORE) \
 		--time_each $(TIME_EACH)

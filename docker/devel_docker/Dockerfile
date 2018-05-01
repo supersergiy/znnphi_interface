@@ -1,14 +1,20 @@
 FROM seunglab/icpc:2017v3 
 
 WORKDIR /opt
-RUN apt-get update && apt-get upgrade -y
+RUN apt-get update -y
+RUN apt-get upgrade -y
 #RUN apt-get install python-software-properties -y && apt-get install apt-file -y \ 
 #    && apt-file update && apt-get install software-properties-common -y \
 #    && add-apt-repository ppa:ubuntu-toolchain-r/test -y &&  apt-get update \
 #    && apt-get install gcc-snapshot -y && apt-get update && apt-get install gcc-7 g++-7 -y
-RUN apt-get install -y python python-pip git python-tk \
+RUN apt-get install -y python python3 python-pip python3-pip git python-tk \
         		       screen wget vim 
 
+
+RUN pip3 install --upgrade
+RUN pip3 install numpy scikit-image scipy protobuf 
+RUN pip3 install protobuf_to_dict
+RUN pip3 install tifffile h5py
 
 RUN pip install --upgrade
 RUN pip install numpy scikit-image scipy protobuf 
@@ -16,6 +22,7 @@ RUN pip install protobuf_to_dict
 RUN pip install tifffile h5py
 
 #get znet and kaffe repos
+RUN ls
 RUN git clone https://github.com/supersergiy/znnphi_interface.git
 RUN git clone https://github.com/torms3/kaffe.git
 RUN mkdir /opt/.tmp
@@ -31,7 +38,6 @@ RUN . /root/.bashrc
 ADD ./pz_files/ /opt
 RUN mv intel.tar.gz / && cd / && tar -xzf intel.tar.gz
 
-RUN pip install -r requirements.txt
 RUN tar -xzf lib.tar.gz
 RUN tar -xzf znets.tar.gz
 RUN mv /opt/.screenrc /root/

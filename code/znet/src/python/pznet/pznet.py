@@ -45,7 +45,7 @@ class znet:
             final_cores['lin'][1] = final_cores['conv'][1]
 
         format_s  = 'make -C {} py N={} W={} O={} ARCH={} CONV_CORES={} CONV_HT={} '
-        format_s += 'ACT_CORES={} ACT_HT={} LIN_CORES={} LIN_HT={} CPU_OFFSET={} PZ_OPT={}'
+        format_s += 'ACT_CORES={} ACT_HT={} LIN_CORES={} LIN_HT={} CPU_OFFSET={} PZ_OPT={} '
         format_s += 'IGNORE={} TIME_EACH={} PYTHON_V={}'
         make_command = format_s.format(mothership_folder, json_net_path, h5_weights_path, self.tmp_folder_path,
                                        architecture, final_cores["conv"][0], final_cores["conv"][1],

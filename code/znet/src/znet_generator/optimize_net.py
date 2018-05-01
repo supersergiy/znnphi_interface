@@ -443,7 +443,7 @@ def opt_mode_to_param(opt):
     elif opt == 'full_opt':
         opt_f = "full_opt"
     else:
-        raise Exception("Unknown optimization")
+        raise Exception("Unknown optimization: {}".format(opt))
 
     opt_param = []
     if not ',no_lin,' in opt_f:

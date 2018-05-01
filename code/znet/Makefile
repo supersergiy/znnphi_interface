@@ -76,8 +76,13 @@ CXXLDFLAGS	=	$(OPT_LDFLAGS)
 LD_FLAGS    =  -lpthread -openmp  
 #-L/opt/intel/mkl/lib/intel64 -Wl,--start-group -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5 -Wl,--end-group -lmkl_avx2 -lznnphiconv 
 
-PY_INTERFACE_FLAGS = `python3-config --cflags --ldflags` -Isrc/python/pybind11/include -fPIC 
-
+ifeq ($(strip $(PYTHON_V)),3)
+	PY_INTERFACE_FLAGS = `python3-config --cflags --ldflags` -Isrc/python/pybind11/include -fPIC 
+else ifeq ($(strip $(PYTHON_V)),2)
+	PY_INTERFACE_FLAGS = `python-config --cflags --ldflags` -Isrc/python/pybind11/include -fPIC 
+else
+$(error Unsupported or unspecified python_v: $(PYTHON_V). Please set Makefile PYTHON_V parameter to one of [1, 2].) 
+endif
 
 ifeq ($(strip $(ARCH)),AVX512)
 	ARCH_FLAGS=$(AVX512_FLAGS)

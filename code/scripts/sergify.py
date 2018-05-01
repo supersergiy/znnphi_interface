@@ -8,6 +8,7 @@ from optparse import OptionParser
 
 parser = OptionParser()
 
+parser.add_option("--python_v", dest="python_v", default=2)
 parser.add_option("-n", "--net", dest="prototxt_path",
                           help="path to the caffe .prototxt file", metavar="FILE")
 parser.add_option("-w", "--weights", dest="weights_path",
@@ -32,7 +33,7 @@ if not options.prototxt_path:
     parser.error("Network prototxt path not given")
 if not options.weights_path:
     parser.error("Weights path not given")
-
+python_v     = options.python_v
 weights_path = options.weights_path
 net_path  = options.prototxt_path
 znet_path = os.path.abspath(options.output_path)
@@ -45,7 +46,7 @@ core_options["lin"]  = [options.lin_cores, options.lin_ht]
 
 z = pznet.znet()
 print ("Creating the network...")
-z.create_net(net_path, weights_path, znet_path, arch, core_options=core_options)
+z.create_net(net_path, weights_path, znet_path, arch, core_options=core_options, python_v=python_v)
 print ("Compiling layers...")
 z.load_net(znet_path, os.path.join(znet_path, "lib"))
 print ("Your network has been sergified! You can find it at {}".format(znet_path))

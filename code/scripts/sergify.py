@@ -8,7 +8,6 @@ from optparse import OptionParser
 
 parser = OptionParser()
 
-parser.add_option("--python_v", dest="python_v", default=2)
 parser.add_option("-n", "--net", dest="prototxt_path",
                           help="path to the caffe .prototxt file", metavar="FILE")
 parser.add_option("-w", "--weights", dest="weights_path",
@@ -33,7 +32,7 @@ if not options.prototxt_path:
     parser.error("Network prototxt path not given")
 if not options.weights_path:
     parser.error("Weights path not given")
-python_v     = options.python_v
+python_v     = 3
 weights_path = options.weights_path
 net_path  = options.prototxt_path
 znet_path = os.path.abspath(options.output_path)

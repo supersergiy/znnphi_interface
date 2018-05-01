@@ -21,420 +21,427 @@
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv1",
-         "top": [
-            "Conv1"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 16,
+            "bias_filler": {
+               "type": "constant"
+            },
             "stride": [
                1,
                1,
                1
             ],
+            "weight_filler": {
+               "type": "msra"
+            },
             "kernel_size": [
                1,
                5,
                5
             ],
-            "bias_term": false,
-            "bias_filler": {
-               "type": "constant"
-            },
             "pad": [
                0,
                2,
                2
             ],
-            "weight_filler": {
-               "type": "msra"
-            }
+            "num_output": 16,
+            "bias_term": false
          },
          "bottom": [
             "input"
+         ],
+         "top": [
+            "Conv1"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN1",
-         "top": [
-            "BN1"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Conv1"
+         ],
+         "top": [
+            "BN1"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale1",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN1"
          ],
+         "name": "Scale1",
          "top": [
             "BN1"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU1",
          "bottom": [
             "BN1"
          ],
+         "name": "ReLU1",
          "top": [
             "BN1"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv2",
-         "top": [
-            "Conv2"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 16,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 16,
+            "bias_term": false
          },
          "bottom": [
             "BN1"
+         ],
+         "top": [
+            "Conv2"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN2",
-         "top": [
-            "BN2"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Conv2"
+         ],
+         "top": [
+            "BN2"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale2",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN2"
          ],
+         "name": "Scale2",
          "top": [
             "BN2"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU2",
          "bottom": [
             "BN2"
          ],
+         "name": "ReLU2",
          "top": [
             "BN2"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv3",
-         "top": [
-            "Conv3"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 16,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 16,
+            "bias_term": false
          },
          "bottom": [
             "BN2"
+         ],
+         "top": [
+            "Conv3"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN3",
-         "top": [
-            "BN3"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Conv3"
+         ],
+         "top": [
+            "BN3"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale3",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN3"
          ],
+         "name": "Scale3",
          "top": [
             "BN3"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU3",
          "bottom": [
             "BN3"
          ],
+         "name": "ReLU3",
          "top": [
             "BN3"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv4",
-         "top": [
-            "Conv4"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 16,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 16,
+            "bias_term": false
          },
          "bottom": [
             "BN3"
+         ],
+         "top": [
+            "Conv4"
          ]
       },
       {
          "type": "Eltwise",
-         "name": "Sum1",
          "bottom": [
             "Conv4",
             "Conv2"
          ],
+         "name": "Sum1",
          "top": [
             "Sum1"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN4",
-         "top": [
-            "BN4"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Sum1"
+         ],
+         "top": [
+            "BN4"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale4",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN4"
          ],
+         "name": "Scale4",
          "top": [
             "BN4"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU4",
          "bottom": [
             "BN4"
          ],
+         "name": "ReLU4",
          "top": [
             "BN4"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv5",
-         "top": [
-            "Conv5"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 16,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 16,
+            "bias_term": false
          },
          "bottom": [
             "BN4"
+         ],
+         "top": [
+            "Conv5"
          ]
       },
       {
          "type": "Pooling",
+         "bottom": [
+            "Conv5"
+         ],
          "name": "Pooling1",
+         "top": [
+            "Pooling1"
+         ],
          "pooling_param": {
+            "pool": 0,
             "stride": [
                1,
                2,
@@ -444,391 +451,391 @@
                1,
                2,
                2
-            ],
-            "pool": 0
-         },
-         "bottom": [
-            "Conv5"
-         ],
-         "top": [
-            "Pooling1"
-         ]
+            ]
+         }
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN5",
-         "top": [
-            "BN5"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Pooling1"
+         ],
+         "top": [
+            "BN5"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale5",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN5"
          ],
+         "name": "Scale5",
          "top": [
             "BN5"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU5",
          "bottom": [
             "BN5"
          ],
+         "name": "ReLU5",
          "top": [
             "BN5"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv6",
-         "top": [
-            "Conv6"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 32,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 32,
+            "bias_term": false
          },
          "bottom": [
             "BN5"
+         ],
+         "top": [
+            "Conv6"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN6",
-         "top": [
-            "BN6"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Conv6"
+         ],
+         "top": [
+            "BN6"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale6",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN6"
          ],
+         "name": "Scale6",
          "top": [
             "BN6"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU6",
          "bottom": [
             "BN6"
          ],
+         "name": "ReLU6",
          "top": [
             "BN6"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv7",
-         "top": [
-            "Conv7"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 32,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 32,
+            "bias_term": false
          },
          "bottom": [
             "BN6"
+         ],
+         "top": [
+            "Conv7"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN7",
-         "top": [
-            "BN7"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Conv7"
+         ],
+         "top": [
+            "BN7"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale7",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN7"
          ],
+         "name": "Scale7",
          "top": [
             "BN7"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU7",
          "bottom": [
             "BN7"
          ],
+         "name": "ReLU7",
          "top": [
             "BN7"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv8",
-         "top": [
-            "Conv8"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 32,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 32,
+            "bias_term": false
          },
          "bottom": [
             "BN7"
+         ],
+         "top": [
+            "Conv8"
          ]
       },
       {
          "type": "Eltwise",
-         "name": "Sum2",
          "bottom": [
             "Conv8",
             "Conv6"
          ],
+         "name": "Sum2",
          "top": [
             "Sum2"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN8",
-         "top": [
-            "BN8"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Sum2"
+         ],
+         "top": [
+            "BN8"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale8",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN8"
          ],
+         "name": "Scale8",
          "top": [
             "BN8"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU8",
          "bottom": [
             "BN8"
          ],
+         "name": "ReLU8",
          "top": [
             "BN8"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv9",
-         "top": [
-            "Conv9"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 32,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 32,
+            "bias_term": false
          },
          "bottom": [
             "BN8"
+         ],
+         "top": [
+            "Conv9"
          ]
       },
       {
          "type": "Pooling",
+         "bottom": [
+            "Conv9"
+         ],
          "name": "Pooling2",
+         "top": [
+            "Pooling2"
+         ],
          "pooling_param": {
+            "pool": 0,
             "stride": [
                1,
                2,
@@ -838,391 +845,391 @@
                1,
                2,
                2
-            ],
-            "pool": 0
-         },
-         "bottom": [
-            "Conv9"
-         ],
-         "top": [
-            "Pooling2"
-         ]
+            ]
+         }
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN9",
-         "top": [
-            "BN9"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Pooling2"
+         ],
+         "top": [
+            "BN9"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale9",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN9"
          ],
+         "name": "Scale9",
          "top": [
             "BN9"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU9",
          "bottom": [
             "BN9"
          ],
+         "name": "ReLU9",
          "top": [
             "BN9"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv10",
-         "top": [
-            "Conv10"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 64,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 64,
+            "bias_term": false
          },
          "bottom": [
             "BN9"
+         ],
+         "top": [
+            "Conv10"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN10",
-         "top": [
-            "BN10"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Conv10"
+         ],
+         "top": [
+            "BN10"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale10",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN10"
          ],
+         "name": "Scale10",
          "top": [
             "BN10"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU10",
          "bottom": [
             "BN10"
          ],
+         "name": "ReLU10",
          "top": [
             "BN10"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv11",
-         "top": [
-            "Conv11"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 64,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 64,
+            "bias_term": false
          },
          "bottom": [
             "BN10"
+         ],
+         "top": [
+            "Conv11"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN11",
-         "top": [
-            "BN11"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Conv11"
+         ],
+         "top": [
+            "BN11"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale11",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN11"
          ],
+         "name": "Scale11",
          "top": [
             "BN11"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU11",
          "bottom": [
             "BN11"
          ],
+         "name": "ReLU11",
          "top": [
             "BN11"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv12",
-         "top": [
-            "Conv12"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 64,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 64,
+            "bias_term": false
          },
          "bottom": [
             "BN11"
+         ],
+         "top": [
+            "Conv12"
          ]
       },
       {
          "type": "Eltwise",
-         "name": "Sum3",
          "bottom": [
             "Conv12",
             "Conv10"
          ],
+         "name": "Sum3",
          "top": [
             "Sum3"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN12",
-         "top": [
-            "BN12"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Sum3"
+         ],
+         "top": [
+            "BN12"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale12",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN12"
          ],
+         "name": "Scale12",
          "top": [
             "BN12"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU12",
          "bottom": [
             "BN12"
          ],
+         "name": "ReLU12",
          "top": [
             "BN12"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv13",
-         "top": [
-            "Conv13"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 64,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 64,
+            "bias_term": false
          },
          "bottom": [
             "BN12"
+         ],
+         "top": [
+            "Conv13"
          ]
       },
       {
          "type": "Pooling",
+         "bottom": [
+            "Conv13"
+         ],
          "name": "Pooling3",
+         "top": [
+            "Pooling3"
+         ],
          "pooling_param": {
+            "pool": 0,
             "stride": [
                1,
                2,
@@ -1232,1821 +1239,1815 @@
                1,
                2,
                2
-            ],
-            "pool": 0
-         },
-         "bottom": [
-            "Conv13"
-         ],
-         "top": [
-            "Pooling3"
-         ]
+            ]
+         }
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN13",
-         "top": [
-            "BN13"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Pooling3"
+         ],
+         "top": [
+            "BN13"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale13",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN13"
          ],
+         "name": "Scale13",
          "top": [
             "BN13"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU13",
          "bottom": [
             "BN13"
          ],
+         "name": "ReLU13",
          "top": [
             "BN13"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv14",
-         "top": [
-            "Conv14"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 128,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 128,
+            "bias_term": false
          },
          "bottom": [
             "BN13"
+         ],
+         "top": [
+            "Conv14"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN14",
-         "top": [
-            "BN14"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Conv14"
+         ],
+         "top": [
+            "BN14"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale14",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN14"
          ],
+         "name": "Scale14",
          "top": [
             "BN14"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU14",
          "bottom": [
             "BN14"
          ],
+         "name": "ReLU14",
          "top": [
             "BN14"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv15",
-         "top": [
-            "Conv15"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 128,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 128,
+            "bias_term": false
          },
          "bottom": [
             "BN14"
+         ],
+         "top": [
+            "Conv15"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN15",
-         "top": [
-            "BN15"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Conv15"
+         ],
+         "top": [
+            "BN15"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale15",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN15"
          ],
+         "name": "Scale15",
          "top": [
             "BN15"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU15",
          "bottom": [
             "BN15"
          ],
+         "name": "ReLU15",
          "top": [
             "BN15"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv16",
-         "top": [
-            "Conv16"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 128,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 128,
+            "bias_term": false
          },
          "bottom": [
             "BN15"
+         ],
+         "top": [
+            "Conv16"
          ]
       },
       {
          "type": "Eltwise",
-         "name": "Sum4",
          "bottom": [
             "Conv16",
             "Conv14"
          ],
+         "name": "Sum4",
          "top": [
             "Sum4"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN16",
-         "top": [
-            "BN16"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Sum4"
+         ],
+         "top": [
+            "BN16"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale16",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN16"
          ],
+         "name": "Scale16",
          "top": [
             "BN16"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU16",
          "bottom": [
             "BN16"
          ],
+         "name": "ReLU16",
          "top": [
             "BN16"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv17",
-         "top": [
-            "Conv17"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 128,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 128,
+            "bias_term": false
          },
          "bottom": [
             "BN16"
+         ],
+         "top": [
+            "Conv17"
          ]
       },
       {
+         "type": "Deconvolution",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "Deconvolution1",
-         "top": [
-            "Deconvolution1"
-         ],
-         "type": "Deconvolution",
          "convolution_param": {
-            "num_output": 128,
-            "group": 128,
-            "kernel_size": [
-               1,
-               4,
-               4
-            ],
-            "bias_term": false,
             "stride": [
                1,
                2,
                2
+            ],
+            "weight_filler": {
+               "type": "bilinear"
+            },
+            "kernel_size": [
+               1,
+               4,
+               4
             ],
             "pad": [
                0,
                1,
                1
             ],
-            "weight_filler": {
-               "type": "bilinear"
-            }
+            "num_output": 128,
+            "bias_term": false,
+            "group": 128
          },
          "bottom": [
             "Conv17"
+         ],
+         "top": [
+            "Deconvolution1"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv18",
-         "top": [
-            "Conv18"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 64,
+            "bias_filler": {
+               "type": "constant"
+            },
             "stride": [
                1,
                1,
                1
             ],
+            "weight_filler": {
+               "type": "msra"
+            },
             "kernel_size": [
                1,
                1,
                1
             ],
-            "bias_term": false,
-            "bias_filler": {
-               "type": "constant"
-            },
             "pad": [
                0,
                0,
                0
             ],
-            "weight_filler": {
-               "type": "msra"
-            }
+            "num_output": 64,
+            "bias_term": false
          },
          "bottom": [
             "Deconvolution1"
+         ],
+         "top": [
+            "Conv18"
          ]
       },
       {
          "type": "Eltwise",
-         "name": "Merge1",
          "bottom": [
             "Conv18",
             "Conv13"
          ],
+         "name": "Merge1",
          "top": [
             "Merge1"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN17",
-         "top": [
-            "BN17"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Merge1"
+         ],
+         "top": [
+            "BN17"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale17",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN17"
          ],
+         "name": "Scale17",
          "top": [
             "BN17"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU17",
          "bottom": [
             "BN17"
          ],
+         "name": "ReLU17",
          "top": [
             "BN17"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv19",
-         "top": [
-            "Conv19"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 64,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 64,
+            "bias_term": false
          },
          "bottom": [
             "BN17"
+         ],
+         "top": [
+            "Conv19"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN18",
-         "top": [
-            "BN18"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Conv19"
+         ],
+         "top": [
+            "BN18"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale18",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN18"
          ],
+         "name": "Scale18",
          "top": [
             "BN18"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU18",
          "bottom": [
             "BN18"
          ],
+         "name": "ReLU18",
          "top": [
             "BN18"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv20",
-         "top": [
-            "Conv20"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 64,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 64,
+            "bias_term": false
          },
          "bottom": [
             "BN18"
+         ],
+         "top": [
+            "Conv20"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN19",
-         "top": [
-            "BN19"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Conv20"
+         ],
+         "top": [
+            "BN19"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale19",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN19"
          ],
+         "name": "Scale19",
          "top": [
             "BN19"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU19",
          "bottom": [
             "BN19"
          ],
+         "name": "ReLU19",
          "top": [
             "BN19"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv21",
-         "top": [
-            "Conv21"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 64,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 64,
+            "bias_term": false
          },
          "bottom": [
             "BN19"
+         ],
+         "top": [
+            "Conv21"
          ]
       },
       {
          "type": "Eltwise",
-         "name": "Sum5",
          "bottom": [
             "Conv21",
             "Conv19"
          ],
+         "name": "Sum5",
          "top": [
             "Sum5"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN20",
-         "top": [
-            "BN20"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Sum5"
+         ],
+         "top": [
+            "BN20"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale20",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN20"
          ],
+         "name": "Scale20",
          "top": [
             "BN20"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU20",
          "bottom": [
             "BN20"
          ],
+         "name": "ReLU20",
          "top": [
             "BN20"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv22",
-         "top": [
-            "Conv22"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 64,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 64,
+            "bias_term": false
          },
          "bottom": [
             "BN20"
+         ],
+         "top": [
+            "Conv22"
          ]
       },
       {
+         "type": "Deconvolution",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "Deconvolution2",
-         "top": [
-            "Deconvolution2"
-         ],
-         "type": "Deconvolution",
          "convolution_param": {
-            "num_output": 64,
-            "group": 64,
-            "kernel_size": [
-               1,
-               4,
-               4
-            ],
-            "bias_term": false,
             "stride": [
                1,
                2,
                2
+            ],
+            "weight_filler": {
+               "type": "bilinear"
+            },
+            "kernel_size": [
+               1,
+               4,
+               4
             ],
             "pad": [
                0,
                1,
                1
             ],
-            "weight_filler": {
-               "type": "bilinear"
-            }
+            "num_output": 64,
+            "bias_term": false,
+            "group": 64
          },
          "bottom": [
             "Conv22"
+         ],
+         "top": [
+            "Deconvolution2"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv23",
-         "top": [
-            "Conv23"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 32,
+            "bias_filler": {
+               "type": "constant"
+            },
             "stride": [
                1,
                1,
                1
             ],
+            "weight_filler": {
+               "type": "msra"
+            },
             "kernel_size": [
                1,
                1,
                1
             ],
-            "bias_term": false,
-            "bias_filler": {
-               "type": "constant"
-            },
             "pad": [
                0,
                0,
                0
             ],
-            "weight_filler": {
-               "type": "msra"
-            }
+            "num_output": 32,
+            "bias_term": false
          },
          "bottom": [
             "Deconvolution2"
+         ],
+         "top": [
+            "Conv23"
          ]
       },
       {
          "type": "Eltwise",
-         "name": "Merge2",
          "bottom": [
             "Conv23",
             "Conv9"
          ],
+         "name": "Merge2",
          "top": [
             "Merge2"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN21",
-         "top": [
-            "BN21"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Merge2"
+         ],
+         "top": [
+            "BN21"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale21",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN21"
          ],
+         "name": "Scale21",
          "top": [
             "BN21"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU21",
          "bottom": [
             "BN21"
          ],
+         "name": "ReLU21",
          "top": [
             "BN21"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv24",
-         "top": [
-            "Conv24"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 32,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 32,
+            "bias_term": false
          },
          "bottom": [
             "BN21"
+         ],
+         "top": [
+            "Conv24"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN22",
-         "top": [
-            "BN22"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Conv24"
+         ],
+         "top": [
+            "BN22"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale22",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN22"
          ],
+         "name": "Scale22",
          "top": [
             "BN22"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU22",
          "bottom": [
             "BN22"
          ],
+         "name": "ReLU22",
          "top": [
             "BN22"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv25",
-         "top": [
-            "Conv25"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 32,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 32,
+            "bias_term": false
          },
          "bottom": [
             "BN22"
+         ],
+         "top": [
+            "Conv25"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN23",
-         "top": [
-            "BN23"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Conv25"
+         ],
+         "top": [
+            "BN23"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale23",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN23"
          ],
+         "name": "Scale23",
          "top": [
             "BN23"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU23",
          "bottom": [
             "BN23"
          ],
+         "name": "ReLU23",
          "top": [
             "BN23"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv26",
-         "top": [
-            "Conv26"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 32,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 32,
+            "bias_term": false
          },
          "bottom": [
             "BN23"
+         ],
+         "top": [
+            "Conv26"
          ]
       },
       {
          "type": "Eltwise",
-         "name": "Sum6",
          "bottom": [
             "Conv26",
             "Conv24"
          ],
+         "name": "Sum6",
          "top": [
             "Sum6"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN24",
-         "top": [
-            "BN24"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Sum6"
+         ],
+         "top": [
+            "BN24"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale24",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN24"
          ],
+         "name": "Scale24",
          "top": [
             "BN24"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU24",
          "bottom": [
             "BN24"
          ],
+         "name": "ReLU24",
          "top": [
             "BN24"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv27",
-         "top": [
-            "Conv27"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 32,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 32,
+            "bias_term": false
          },
          "bottom": [
             "BN24"
+         ],
+         "top": [
+            "Conv27"
          ]
       },
       {
+         "type": "Deconvolution",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "Deconvolution3",
-         "top": [
-            "Deconvolution3"
-         ],
-         "type": "Deconvolution",
          "convolution_param": {
-            "num_output": 32,
-            "group": 32,
-            "kernel_size": [
-               1,
-               4,
-               4
-            ],
-            "bias_term": false,
             "stride": [
                1,
                2,
                2
+            ],
+            "weight_filler": {
+               "type": "bilinear"
+            },
+            "kernel_size": [
+               1,
+               4,
+               4
             ],
             "pad": [
                0,
                1,
                1
             ],
-            "weight_filler": {
-               "type": "bilinear"
-            }
+            "num_output": 32,
+            "bias_term": false,
+            "group": 32
          },
          "bottom": [
             "Conv27"
+         ],
+         "top": [
+            "Deconvolution3"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv28",
-         "top": [
-            "Conv28"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 16,
+            "bias_filler": {
+               "type": "constant"
+            },
             "stride": [
                1,
                1,
                1
             ],
+            "weight_filler": {
+               "type": "msra"
+            },
             "kernel_size": [
                1,
                1,
                1
             ],
-            "bias_term": false,
-            "bias_filler": {
-               "type": "constant"
-            },
             "pad": [
                0,
                0,
                0
             ],
-            "weight_filler": {
-               "type": "msra"
-            }
+            "num_output": 16,
+            "bias_term": false
          },
          "bottom": [
             "Deconvolution3"
+         ],
+         "top": [
+            "Conv28"
          ]
       },
       {
          "type": "Eltwise",
-         "name": "Merge3",
          "bottom": [
             "Conv28",
             "Conv5"
          ],
+         "name": "Merge3",
          "top": [
             "Merge3"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN25",
-         "top": [
-            "BN25"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Merge3"
+         ],
+         "top": [
+            "BN25"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale25",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN25"
          ],
+         "name": "Scale25",
          "top": [
             "BN25"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU25",
          "bottom": [
             "BN25"
          ],
+         "name": "ReLU25",
          "top": [
             "BN25"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv29",
-         "top": [
-            "Conv29"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 16,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 16,
+            "bias_term": false
          },
          "bottom": [
             "BN25"
+         ],
+         "top": [
+            "Conv29"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN26",
-         "top": [
-            "BN26"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Conv29"
+         ],
+         "top": [
+            "BN26"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale26",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN26"
          ],
+         "name": "Scale26",
          "top": [
             "BN26"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU26",
          "bottom": [
             "BN26"
          ],
+         "name": "ReLU26",
          "top": [
             "BN26"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv30",
-         "top": [
-            "Conv30"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 16,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 16,
+            "bias_term": false
          },
          "bottom": [
             "BN26"
+         ],
+         "top": [
+            "Conv30"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN27",
-         "top": [
-            "BN27"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Conv30"
+         ],
+         "top": [
+            "BN27"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale27",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN27"
          ],
+         "name": "Scale27",
          "top": [
             "BN27"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU27",
          "bottom": [
             "BN27"
          ],
+         "name": "ReLU27",
          "top": [
             "BN27"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv31",
-         "top": [
-            "Conv31"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 16,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 16,
+            "bias_term": false
          },
          "bottom": [
             "BN27"
+         ],
+         "top": [
+            "Conv31"
          ]
       },
       {
          "type": "Eltwise",
-         "name": "Sum7",
          "bottom": [
             "Conv31",
             "Conv29"
          ],
+         "name": "Sum7",
          "top": [
             "Sum7"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN28",
-         "top": [
-            "BN28"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Sum7"
+         ],
+         "top": [
+            "BN28"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale28",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN28"
          ],
+         "name": "Scale28",
          "top": [
             "BN28"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU28",
          "bottom": [
             "BN28"
          ],
+         "name": "ReLU28",
          "top": [
             "BN28"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
             }
          ],
          "name": "Conv32",
-         "top": [
-            "Conv32"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 16,
-            "stride": [
-               1,
-               1,
-               1
-            ],
-            "kernel_size": [
-               3,
-               3,
-               3
-            ],
-            "bias_term": false,
             "bias_filler": {
                "type": "constant"
             },
-            "pad": [
+            "stride": [
                1,
                1,
                1
             ],
             "weight_filler": {
                "type": "msra"
-            }
+            },
+            "kernel_size": [
+               3,
+               3,
+               3
+            ],
+            "pad": [
+               1,
+               1,
+               1
+            ],
+            "num_output": 16,
+            "bias_term": false
          },
          "bottom": [
             "BN28"
+         ],
+         "top": [
+            "Conv32"
          ]
       },
       {
+         "type": "BatchNorm",
          "param": [
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             },
             {
-               "decay_mult": 0.0,
-               "lr_mult": 0.0
+               "lr_mult": 0.0,
+               "decay_mult": 0.0
             }
          ],
          "name": "BN29",
-         "top": [
-            "BN29"
-         ],
-         "type": "BatchNorm",
          "batch_norm_param": {
             "use_global_stats": false
          },
          "bottom": [
             "Conv32"
+         ],
+         "top": [
+            "BN29"
          ]
       },
       {
          "type": "Scale",
-         "name": "Scale29",
-         "scale_param": {
-            "bias_term": true
-         },
          "bottom": [
             "BN29"
          ],
+         "name": "Scale29",
          "top": [
             "BN29"
-         ]
+         ],
+         "scale_param": {
+            "bias_term": true
+         }
       },
       {
          "type": "ReLU",
-         "name": "ReLU29",
          "bottom": [
             "BN29"
          ],
+         "name": "ReLU29",
          "top": [
             "BN29"
          ]
       },
       {
+         "type": "Convolution",
          "param": [
             {
                "lr_mult": 1.0
@@ -3056,60 +3057,59 @@
             }
          ],
          "name": "affinity_score",
-         "top": [
-            "affinity_score"
-         ],
-         "type": "Convolution",
          "convolution_param": {
-            "num_output": 16,
+            "bias_filler": {
+               "type": "constant"
+            },
             "stride": [
                1,
                1,
                1
             ],
+            "weight_filler": {
+               "type": "msra"
+            },
             "kernel_size": [
                1,
                5,
                5
             ],
-            "bias_term": true,
-            "bias_filler": {
-               "type": "constant"
-            },
             "pad": [
                0,
                2,
                2
             ],
-            "weight_filler": {
-               "type": "msra"
-            }
+            "num_output": 16,
+            "bias_term": true
          },
          "bottom": [
             "BN29"
+         ],
+         "top": [
+            "affinity_score"
          ]
       },
       {
          "type": "Sigmoid",
-         "name": "Sigmoid1",
          "bottom": [
             "affinity_score"
          ],
+         "name": "Sigmoid1",
          "top": [
             "Sigmoid1"
          ]
       },
       {
          "type": "Slice",
+         "bottom": [
+            "Sigmoid1"
+         ],
          "name": "affinity",
          "slice_param": {
             "slice_point": [
                3
             ]
          },
-         "bottom": [
-            "Sigmoid1"
-         ],
          "top": [
             "output",
             "Slice1"

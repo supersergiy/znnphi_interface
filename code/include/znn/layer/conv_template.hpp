@@ -74,7 +74,7 @@ public:
     ConvTemplate() 
     {
         kl = new kernel_launcher(Cores, HT, CPU_OFFSET);
-        plan = new full_layer<Cores * HT, orig_prob, Activation, AddOrOverwrite>(kl);
+        plan = new full_layer<Cores * HT, orig_prob, Activation, AddOrOverwrite>(kl, CPU_OFFSET);
     }
      
     ~ConvTemplate() 

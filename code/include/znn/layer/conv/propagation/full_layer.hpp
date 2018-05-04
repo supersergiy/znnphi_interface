@@ -35,7 +35,7 @@ private:
     float const* scale_;
 
 public:
-    full_layer(kernel_launcher* l)
+    full_layer(kernel_launcher* l, long_t CPU_OFFSET)
         : launcher(l)
         , fns(Threads)
         , executables(Threads)

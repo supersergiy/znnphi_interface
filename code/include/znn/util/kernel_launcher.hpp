@@ -35,7 +35,6 @@ private:
 
         cpu_set_t set;
         CPU_ZERO(&set);
-
         CPU_SET(static_cast<int>(core), &set);
         sched_setaffinity(0, sizeof(set), &set);
 
@@ -64,14 +63,14 @@ private:
 
 public:
     kernel_launcher(long_t n_cpus, long_t n_hwt, long_t cpu_offset = 0)
-        : kernels(nullptr)
-        , num_threads_(n_cpus * n_hwt)
+        : num_threads_(n_cpus * n_hwt)
     {
         sched_getaffinity(0, sizeof(old_set_), &old_set_);
         cpu_set_t set;
         CPU_ZERO(&set);
+        long_t base_core = cpu_offset * n_hwt; 
 
-        CPU_SET(static_cast<int>(0), &set);
+        CPU_SET(static_cast<int>(base_core), &set);
         sched_setaffinity(0, sizeof(set), &set);
 
         pthread_barrier_init(&barrier, NULL, static_cast<int>(n_cpus * n_hwt));
@@ -83,8 +82,8 @@ public:
                 if (c + h > 0)
                 {
                     long_t id   = c * n_hwt + h;
-                    long_t core = c + cpu_offset + h * ZNN_NUM_CORES;
-
+                    long_t core = (cpu_offset + c) * n_hwt + h;
+    
                     std::thread t(&kernel_launcher::thread_loop, this, id,
                                   core);
                     t.detach();
@@ -107,6 +106,8 @@ public:
         }
         else if (kernels[0])
         {
+        pthread_barrier_wait(&barrier);
+        pthread_barrier_wait(&barrier);
             kernels[0]();
         }
 

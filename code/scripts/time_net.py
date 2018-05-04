@@ -56,6 +56,7 @@ if __name__ == "__main__":
     parser.add_option("-o", "--output_path", dest="output_path", default=None)
     parser.add_option("--iter", dest="num_iter", default=20, type="int")
     parser.add_option("-O", dest="optimization", default="full_opt")
+    parser.add_option("--cpu_offset", dest="cpu_offset", default=0)
     parser.add_option("-c", "--cores", dest="conv_cores", default=2)
     parser.add_option("--ht", dest="conv_ht", default=2)
     parser.add_option("--act_cores", dest="act_cores", default=-1)
@@ -71,7 +72,7 @@ if __name__ == "__main__":
             help="The cpu architexture: {AVX2, AVX512}")
     (options, args) = parser.parse_args()
 
-    cpu_offset   = 0
+    cpu_offset   = options.cpu_offset
     architecture = options.architecture
     base         = options.base_path
     recompile    = options.recompile

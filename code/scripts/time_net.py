@@ -15,7 +15,7 @@ def timing_test(base, N, recompile, architecture, core_options, cpu_offset, opti
     input_path =  os.path.join(base, "in.h5")
 
     z = pznet.znet()
-    znet_path = "/opt/znets/{}_{}cores_{}".format(test_name, core_options["conv"][0], optimization)
+    znet_path = "/opt/znets/{}_{}cores_{}ht_{}off_{}".format(test_name, core_options["conv"][0], core_options["conv"][1], cpu_offset, optimization)
     lib_path  = "/opt/znets/lib"#os.path.join(znet_path, "lib")
     if recompile:
         print ("Recompiling...")

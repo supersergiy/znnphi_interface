@@ -19,28 +19,23 @@ parser.add_option("--arch", dest="architecture", default="AVX2",
         help="The cpu architexture: {AVX2, AVX512}")
 (options, args) = parser.parse_args()
 
-bases_elu = ["/tests/pni_unet",
-             "/tests/unet_sym_bn_elu",
-             "/tests/unet_paper_bn_elu"]
-bases_relu = [
-              "/tests/pni_unet_relu",
-              "/tests/unet_sym_bn",
-              "/tests/unet_paper_bn"]
+bases = [
+            "/tests/basic_block_f8"
+            "/tests/basic_block_f16",
+            "/tests/basic_block_f24",
+            "/tests/basic_block_f32",
+            "/tests/basic_block_f64",
+            "/tests/basic_block_f96",
+            "/tests/basic_block_f128"
+        ]
+opts = ["full_opt"]#, "no_pad", "no_act", "lin", "no_add", "no_opt"]
 
-opts = ["full_opt", "no_pad", "no_act", "lin", "no_add", "no_opt"]
 
-
-for b in bases_elu:
+for b in bases:
     for o in opts:
-        run_format  = "./time_net.py -b {} -O {} --act_cores {} --act_ht {} --cores {} --ht {} --recompile --arch {} -o {} --iter {}"
-        run_str     = run_format.format(b, o, options.act_cores, options.act_ht, options.conv_cores,
+        run_format  = "./time_net.py -b {} -O {} --cores {} --ht {} --recompile --arch {} -o {} --iter {}"
+        run_str     = run_format.format(b, o, options.conv_cores,
                                         options.conv_ht, options.architecture, options.output_path, options.num_iter)
 
         os.system(run_str)
 
-for b in bases_relu:
-    for o in opts:
-        run_format  = "./time_net.py -b {} -O {} --act_cores {} --act_ht {} --cores {} --ht {} --recompile --arch {} -o {} --iter {}"
-        run_str     = run_format.format(b, o, options.act_cores, options.act_ht, options.conv_cores,
-                                        options.conv_ht, options.architecture, options.output_path, options.num_iter)
-        os.system(run_str)

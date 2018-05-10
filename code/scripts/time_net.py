@@ -89,7 +89,7 @@ if __name__ == "__main__":
     average_time = timing_test(base=base, N=N, recompile=recompile, architecture=architecture, cpu_offset=cpu_offset, core_options=core_options,
                                optimization=optimization, ignore=ignore, time_each=time_each, input_mode=input_mode, run=options.run)
     if not options.output_path is None:
-        of = file(options.output_path, 'a')
+        of = open(options.output_path, 'a')
         of.write("{} {} {}: {}\n".format(architecture, base, optimization, average_time))
     else:
         print (average_time)

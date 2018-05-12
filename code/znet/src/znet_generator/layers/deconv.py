@@ -15,7 +15,7 @@ def set_deconv_dim(params, bot_tensor):
     params["kernel_size"]  = params["kernel_dim"][2] * params["kernel_dim"][3] * params["kernel_dim"][4]
     params["kernel_size"] *= round_to_simd(params["kernel_dim"][0], params["arch"])
     params["kernel_size"] *= round_to_simd(params["kernel_dim"][1], params["arch"])
-    params["kernel_size"] /= params["group"]
+    params["kernel_size"]  = int(params["kernel_size"] / params["group"])
 
     top_dim = [-1, -1, -1, -1, -1]
     top_dim[0] = bot_tensor.dim[0]
@@ -75,9 +75,9 @@ def block_kernel(kernel, lparam):
         total_ifms = round_to_simd(kdim[0], lparam["arch"])
         total_ofms = round_to_simd(kdim[1], lparam["arch"])
 
-        offset = ofm/S
-        offset *= total_ifms/S
-        offset += ifm/S
+        offset = int(ofm/S)
+        offset *= int(total_ifms/S)
+        offset += int(ifm/S)
         offset *= kdim[2]
         offset += kz
         offset *= kdim[3]

@@ -20,15 +20,16 @@ parser.add_option("--arch", dest="architecture", default="AVX2",
 (options, args) = parser.parse_args()
 
 bases = [
-            "/tests/basic_block_f8"
+            "/tests/basic_block_f8",
             "/tests/basic_block_f16",
             "/tests/basic_block_f24",
             "/tests/basic_block_f32",
-            "/tests/basic_block_f64",
-            "/tests/basic_block_f96",
-            "/tests/basic_block_f128"
+            "/tests/basic_block_f40",
+            "/tests/basic_block_f48",
+            "/tests/basic_block_f56",
+            "/tests/basic_block_f64"
         ]
-opts = ["full_opt"]#, "no_pad", "no_act", "lin", "no_add", "no_opt"]
+opts = ["full_opt", "no_opt"]#, "no_pad", "no_act", "lin", "no_add", "no_opt"]
 
 
 for b in bases:

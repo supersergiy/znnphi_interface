@@ -28,7 +28,7 @@ ZNN_TUNE	=
 SSE_FLAGS	=	-DZNN_SSE -msse $(ZNN_TUNE)
 AVX_FLAGS	=	-DZNN_AVX -mavx $(ZNN_TUNE)
 AVX2_FLAGS	=	-DZNN_AVX2 -march=core-avx2 $(ZNN_TUNE)
-AVX512_FLAGS	=	-DZNN_AVX512 -mavx512f -mavx512pf -mavx512cd -mfma $(ZNN_TUNE)
+AVX512_FLAGS	= -DZNN_AVX512 -xCORE-AVX512 $(ZNN_TUNE)
 KNC_FLAGS	=	-DZNN_AVX512 -mavx512f -mavx512pf -mfma $(ZNN_TUNE)
 
 CORES_FLAG	=
@@ -76,8 +76,21 @@ CXXLDFLAGS	=	$(OPT_LDFLAGS)
 LD_FLAGS    =  -lpthread -openmp  
 #-L/opt/intel/mkl/lib/intel64 -Wl,--start-group -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5 -Wl,--end-group -lmkl_avx2 -lznnphiconv 
 
+ifeq ($(strip $(PYTHON_V)),3)
+	PY_INTERFACE_FLAGS = `python3-config --cflags --ldflags` -Isrc/python/pybind11/include -fPIC 
+else ifeq ($(strip $(PYTHON_V)),2)
+	PY_INTERFACE_FLAGS = `python-config --cflags --ldflags` -Isrc/python/pybind11/include -fPIC 
+else
+$(error Unsupported or unspecified python_v: $(PYTHON_V). Please set Makefile PYTHON_V parameter to one of [1, 2].) 
+endif
 
-PY_INTERFACE_FLAGS = `python-config --cflags --ldflags` -Isrc/python/pybind11/include -fPIC 
+ifeq ($(strip $(ARCH)),AVX512)
+	ARCH_FLAGS=$(AVX512_FLAGS)
+else ifeq ($(strip $(ARCH)),AVX2)
+	ARCH_FLAGS=$(AVX2_FLAGS)
+else
+$(error Unsupported or unspecified architecture: ARCH==$(ARCH). Please set Makefile ARCH parameter to one of [AVX2, AVX512].) 
+endif
 
 .PHONY: bin, py, rerun, gen, FORCE
 
@@ -85,22 +98,27 @@ PY_INTERFACE_FLAGS = `python-config --cflags --ldflags` -Isrc/python/pybind11/in
 #N = nets/${NET_NAME}.json
 #W = nets/${NET_NAME}.h5
 
-
 out/client.o: src/client.cpp 
 	$(CXX) $(CXXFLAGS) -fPIC -c $^ -o $@
-out/znet.o: src/generated/znet.cpp 
-	$(CXX) $(CXXFLAGS) $(AVX2_FLAGS) -fPIC -c $^ -o $@
-out/znet_numpy_wrapper.o: src/python/znet_numpy_wrapper.cpp 
-	$(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) -fPIC -c $^ -o $@
 
 src/generated/znet.cpp:  $(shell find src/znet_generator -type f -name "*.py") $(N) $(W)
 	rm -rf out
 	${MKDIR_P} out
 	${MKDIR_P} out/weights
-	python src/znet_generator/main.py $(N) $(W) src/generated/znet.cpp $(CORES)
+	python3 src/znet_generator/main.py --net_path $(N) --weights_path $(W) --out_path src/generated/znet.cpp \
+		--architecture $(ARCH) --conv_cores $(CONV_CORES) --conv_ht $(CONV_HT) --act_cores $(ACT_CORES) --act_ht $(ACT_HT) \
+		--lin_cores $(LIN_CORES) --lin_ht $(LIN_HT) --cpu_offset $(CPU_OFFSET) -O $(PZ_OPT) --ignore $(IGNORE) \
+		--time_each $(TIME_EACH)
+
+out/znet.o: src/generated/znet.cpp 
+	$(CXX) $(CXXFLAGS) $(ARCH_FLAGS) -fPIC -c $^ -o $@
+
+out/znet_numpy_wrapper.o: src/python/znet_numpy_wrapper.cpp 
+	$(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) -fPIC -c $^ -o $@
 
 py: out/znet.o out/znet_numpy_wrapper.o 
 	$(CXX) $(LD_FLAGS) $^ -shared -o out/znet.so 
+
 ifneq ($(strip $(O)),)
 	${CP} -r out/znet.so $(O)
 	${CP} -r out/weights $(O)

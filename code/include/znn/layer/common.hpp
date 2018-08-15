@@ -1,14 +1,12 @@
 #pragma once
+#include <znn/intrin.hpp>
 
 namespace znn {
 namespace phi {
 
-#define SIMD_WIDTH 8
-
 int roundToSimd(int n)
 {
-   const int S = SIMD_WIDTH;
-   return ((n + S - 1) / S) * S;
+   return ((n + SIMD_WIDTH - 1) / SIMD_WIDTH) * SIMD_WIDTH;
 }
 
 }

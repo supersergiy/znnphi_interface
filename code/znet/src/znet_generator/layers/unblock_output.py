@@ -1,5 +1,5 @@
 import copy
-from common import generate_param_string
+from .common import generate_param_string
 
 def allocate_unblock_output_lines(lparam):
     bot_dim = lparam["bot_dim"]

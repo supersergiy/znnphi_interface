@@ -24,6 +24,8 @@ private:
    int kd, khw;
    int stride_d, stride_hw;
    int out_padd, out_padhw;
+   int cpu_offset, cores, ht;
+   std::string arch;
 
    bool activation,  add_or_overwrite;
 
@@ -69,9 +71,7 @@ public:
       ss << "KD="  << kd/stride_d  << " ";
       ss << "KHW=" << khw/stride_hw << " ";
 
-      ss << "OUT_D_SKIP="  << kd_start << " ";
-      ss << "OUT_H_SKIP="  << kh_start << " ";
-      ss << "OUT_W_SKIP="  << kw_start << " ";
+      ss << "OUT_D_SKIP="  << kd_start << " "; ss << "OUT_H_SKIP="  << kh_start << " "; ss << "OUT_W_SKIP="  << kw_start << " ";
 
       ss << "OUT_PADHW="  << out_padhw << " ";
       ss << "OUT_PADD="   << out_padd << " ";
@@ -81,17 +81,23 @@ public:
 
       ss << "ACTIVATION="     << activation << " ";
       ss << "AddOrOverwrite=" << add_or_overwrite << " ";
+      ss << "ARCH=" << arch << " ";
       
-      ss << "CORES=" << 2 << " ";
-      ss << "HT=" << 2 << " ";
+      ss << "CORES=" << cores << " ";
+      ss << "HT=" << ht  << " ";
+      ss << "CPU_OFFSET=" << cpu_offset  << " ";
 
       return ss.str();
    }
 
    DeconvAsConvLayer(int _bn, int _ifm, int _ofm, int _id, int _ihw, int _kd, int _khw, 
      int _stride_d, int _stride_hw, int _out_padd, int _out_padhw, bool _activation, bool _add_or_overwrite, 
-     const float *kernel)
+     const float *kernel, int _cores, int _ht, int _cpu_offset, const std::string &_arch, const std::string &lib_path)
    {   
+      cores = _cores;
+      ht = _ht;
+      cpu_offset = _cpu_offset;
+
       bn = _bn; 
       ifm = _ifm;
       ofm = _ofm;
@@ -107,6 +113,7 @@ public:
       
       activation = _activation;
       add_or_overwrite = _add_or_overwrite;
+      arch = _arch;
 
       rounded_ifm = ((ifm + SIMD_WIDTH - 1) / SIMD_WIDTH) * SIMD_WIDTH;
       rounded_ofm = ((ofm + SIMD_WIDTH - 1) / SIMD_WIDTH) * SIMD_WIDTH;
@@ -127,7 +134,7 @@ public:
                hbw_array<float> *new_subkernel = new hbw_array<float>(subk_size);
                getSubKernel(kernel, start_d, start_h, start_w, new_subkernel->data());
                kernels.push_back(new_subkernel);
-               convs.push_back(jitMakeLayer("conv", getParamString(start_d, start_h, start_w)));
+               convs.push_back(jitMakeLayer("conv", getParamString(start_d, start_h, start_w), lib_path));
             }
          }
       }

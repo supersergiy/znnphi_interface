@@ -20,7 +20,7 @@ private:
     static_assert(P::threads % N == 0, "threads not divisible by N");
     static constexpr long_t len = sub::b_len / N;
 
-    static constexpr bool activation       = P::activation;
+    static constexpr int activation       = P::activation;
     static constexpr bool add_or_overwrite = P::add_or_overwrite;
 
 
@@ -57,7 +57,7 @@ private:
     static_assert(sub::ofm_len >= N, "ofm too small");
     static_assert(P::threads % N == 0, "threads not divisible by N");
     static constexpr long_t len = sub::ofm_len / N;
-    static constexpr bool activation       = P::activation;
+    static constexpr int activation       = P::activation;
     static constexpr bool add_or_overwrite = P::add_or_overwrite;
 
 public:
@@ -97,7 +97,7 @@ private:
     static constexpr long_t full       = sub::d_len % N;
     static constexpr long_t full_start = sub::d_from + (len + 1) * full;
 
-    static constexpr bool activation       = P::activation;
+    static constexpr int activation       = P::activation;
     static constexpr bool add_or_overwrite = P::add_or_overwrite;
 
 public:
@@ -132,7 +132,7 @@ private:
     static constexpr long_t full       = sub::h_len % N;
     static constexpr long_t full_start = sub::h_from + (len + 1) * full;
 
-    static constexpr bool activation       = P::activation;
+    static constexpr int activation       = P::activation;
     static constexpr bool add_or_overwrite = P::add_or_overwrite;
 
 public:
@@ -168,7 +168,7 @@ private:
     static constexpr long_t full       = sub::w_len % N;
     static constexpr long_t full_start = sub::w_from + (len + 1) * full;
 
-    static constexpr bool activation       = P::activation;
+    static constexpr int activation       = P::activation;
     static constexpr bool add_or_overwrite = P::add_or_overwrite;
 
 public:
@@ -195,7 +195,7 @@ public:
 template <class P, long_t N>
 struct nosplit_t
 {
-    static constexpr bool activation       = P::activation;
+    static constexpr int activation       = P::activation;
     static constexpr bool add_or_overwrite = P::add_or_overwrite;
 
     template <long_t K>

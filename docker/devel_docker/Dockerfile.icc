@@ -1,0 +1,18 @@
+FROM ubuntu
+
+WORKDIR /opt
+
+RUN    apt-get -qq update \
+    && apt-get install wget cpio -y
+
+ADD ./silent_conf /config
+ENV PATH /opt/intel/bin:$PATH
+
+RUN    wget http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11460/parallel_studio_xe_2017_update3.tgz \ 
+    && tar -xzvf parallel_studio_xe_2017_update3.tgz \
+    && cd /opt/parallel_studio_xe_2017_update3/ \
+    && ./install.sh --silent /config/silent.2017.cfg \
+    && cd /opt/ \
+    && rm parallel_studio_xe_2017_update3.tgz  \
+    && rm -rf parallel_studio_xe_2017_update3
+

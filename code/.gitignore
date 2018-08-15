@@ -1,6 +1,8 @@
 bin/
+core
 include/znn/interface/dl_files/
 include/znn/interface/tmp/
+old_tests/
 *.T
 *.so
 *.o

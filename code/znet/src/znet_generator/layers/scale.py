@@ -1,10 +1,10 @@
 import copy
-from common import round_to_simd, generate_param_string, S, fill_tensor, zero_out_tensor
+from .common import round_to_simd, generate_param_string, fill_tensor, zero_out_tensor
 import numpy as np
-from conv import block_kernel, block_bias
+from .conv import block_kernel, block_bias
 
 def set_scale_dim(params, bot_tensor):
-    top_dim = copy.copy(bot_tensor.dim) 
+    top_dim = copy.copy(bot_tensor.dim)
     params["top_dim"] = top_dim
 
     params["bn"]  = bot_tensor.dim[0]
@@ -13,11 +13,12 @@ def set_scale_dim(params, bot_tensor):
     params["id"]  = bot_tensor.dim[2]
     params["ihw"] = bot_tensor.dim[3]
 
-    params["scale_size"]  = round_to_simd(params["ifm"]) 
-    params["bias_size"] = round_to_simd(params["ifm"])
+    params["scale_size"]  = round_to_simd(params["ifm"], params["arch"])
+    params["bias_size"] = round_to_simd(params["ifm"], params["arch"])
 
-def parse_scale(json_param):
+def parse_scale(json_param, arch):
     params = {}
+    params["arch"] = arch
     params["name"] = json_param["name"]
     params["top"]  = json_param["top"][0]
     params["bot"]  = json_param["bottom"][0]
@@ -30,24 +31,25 @@ def parse_scale(json_param):
 
 def allocate_scale_lines(lparam):
     l = lparam
-    allocation_params = lparam["top_dim"][0:4] 
+    allocation_params = lparam["top_dim"][0:4]
+    allocation_params += [lparam["cores"], lparam["ht"]]
 
     param_str = generate_param_string(allocation_params)
     lines = []
     #allocate layer
     lines.append('layers["{}"] = new znn::phi::ScaleLayer({});'.format(l["name"],
                                                                         param_str))
-    #allocate weights 
+    #allocate weights
     lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                                   l["scale"], l["scale_size"]))
 
     lines.append('tensors["{}"] = new znn::phi::hbw_array<float>({});'.format(
                                                   l["bias"], l["bias_size"]))
     #initialize weights
-    scale = l["scale_data"] 
+    scale = l["scale_data"]
     lines += fill_tensor('{}'.format(l["scale"]), scale)
 
-    bias = l["bias_data"] 
+    bias = l["bias_data"]
     lines += fill_tensor('{}'.format(l["bias"]), bias)
     return lines
 

@@ -2,21 +2,22 @@
 
 #include "znn/intrin.hpp"
 #include "znn/types.hpp"
+#include "znn/layer/activation_defs.hpp"
 #include "znn/util/conditional_load.hpp"
 #include <type_traits>
 #include <math.h>
 
-#ifdef ZNN_AVX512
+#ifdef ZNN_KNL
    #define _LOG_E_BASE_2 1.44269504089
-   #define SIMD_EXP_M_INPL(a, m) SIMD_MUL_MASK(a, m, a, SIMD_SET1(_LOG_E_BASE_2));\
-                                    SIMD_E2A23_MASK(a, m, a)
+   #define SIMD_EXP_M_INPL(a, m)asdf SIMD_E2A23_MASK(a, m, SIMD_MUL_MASK(a, m, a, SIMD_SET1(_LOG_E_BASE_2)))
 
    #define SIMD_SUBCONST_M_INPL(a, c, m) SIMD_SUB_MASK(a, m, a, SIMD_SET1(c))
 
-   #define SIMD_ELU(v) { SIMD_MASK ltz;\
-                         ltz =  SIMD_LT(v, SIMD_SET1(0.0));\
-                         SIMD_EXP_M_INPL(v, ltz);\
-                         SIMD_SUBCONST_M_INPL(v, 1.0, ltz); }
+   #define ELU(v) { SIMD_MASK ltz;\
+                    ltz =  SIMD_LT(v, SIMD_SET1(0.0));\
+                    v = SIMD_EXP_M_INPL(v, ltz);\
+                    v = SIMD_SUBCONST_M_INPL(v, 1.0, ltz); }
+
 #else
    #define ELU(base) {\
                         ZNN_PRAGMA(SIMD_WIDTH)\
@@ -26,8 +27,15 @@
                            }\
                         }\
                      }
+   #define RELU(base) {\
+                        ZNN_PRAGMA(SIMD_WIDTH)\
+                        for (long_t i = 0; i < SIMD_WIDTH; i++) {\
+                           if (base[i] < 0.0f) {\
+                              base[i] = 0;\
+                           }\
+                        }\
+                     }
 #endif
-                              //std::cout << 'x';\
 
 
 namespace znn
@@ -40,6 +48,7 @@ namespace propagation
 /*******************************************************************************
 *
 * Kernel shape is:
+        Activation = false;
 *      k[D][H][W][IN_FMAP][OUT_FMAP] with IN_FMAP=OUT_FMAP=SIMD_WIDTH
 *
 * input and output shapes are
@@ -54,7 +63,7 @@ namespace propagation
 *******************************************************************************/
 
 template <bool   Bias,                    // load or set to bias
-          bool   Activation,
+          int   Activation,
           bool   AddOrOverwrite,
           long_t IFMs,                    // number of input images
           class ID, class IH, class IW,   // image traits
@@ -73,7 +82,7 @@ struct sub_image_dummy
 };
 
 template <bool   Bias,                  // load or set to bias
-          bool   Activation,
+          int   Activation,
           bool   AddOrOverwrite,
           long_t IFMs,                  // number of input images
           class ID, class IH, class IW, // image traits
@@ -129,26 +138,33 @@ struct sub_image_1d
         }
         
 
-
         ZNN_PRAGMA(unroll(RW))
         for (long_t rw = 0; rw < RW; ++rw)
         {
-            /*if (Activation) 
+#ifdef ZNN_KNL
+            if (Activation) 
             {
                 SIMD_ELU(vout[rw]); 
-            }*/
+            }
+#endif
             auto base = o + rw * IW::out_stride;
             SIMD_STORE(base, vout[rw]);
-            if (Activation) 
+#ifndef ZNN_KNL
+            if (Activation == ELU_ACT) 
             {
                ELU(base);
             }
+            else if (Activation == RELU_ACT) 
+            {
+               RELU(base);
+            }
+#endif
         }
     }
 };
 
 template <bool   Bias,                  // load or set to bias
-          bool   Activation,
+          int   Activation,
           bool   AddOrOverwrite,
           long_t IFMs,                  // number of input images
           class ID, class IH, class IW, // image traits
@@ -218,23 +234,31 @@ struct sub_image_2d
             ZNN_PRAGMA(unroll(RW))
             for (long_t rw = 0; rw < RW; ++rw)
             {
-                /*if (Activation) 
+#ifdef ZNN_KNL
+                if (Activation) 
                 {
                     SIMD_ELU(vout[rh][rw]); 
-                }*/
+                }
+#endif
                 auto base = o + rh * IH::out_stride + rw * IW::out_stride;
                 SIMD_STORE(base, vout[rh][rw]);
-                if (Activation) 
+#ifndef ZNN_KNL
+                if (Activation == ELU_ACT) 
                 {
                    ELU(base);
                 }
+                else if (Activation == RELU_ACT) 
+                {
+                   RELU(base);
+                }
+#endif
             }
         }
     }
 };
 
 template <bool   Bias,                    // load or set to bias
-          bool   Activation,
+          int   Activation,
           bool   AddOrOverwrite,
           long_t IFMs,                    // number of input images
           class ID, class IH, class IW,   // image traits
@@ -318,17 +342,24 @@ struct sub_image_3d
                 ZNN_PRAGMA(unroll(RW))
                 for (long_t rw = 0; rw < RW; ++rw)
                 {
-                    /*if (Activation) 
+#ifdef ZNN_KNL
+                    if (Activation) 
                     {
                         SIMD_ELU(vout[rd][rh][rw]); 
-                    }*/
+                    }
+#endif
                     auto base = o + rd * ID::out_stride + rh * IH::out_stride + rw * IW::out_stride; 
                     SIMD_STORE(base, vout[rd][rh][rw]);
-
-                    if (Activation) 
+#ifndef ZNN_KNL
+                    if (Activation == ELU_ACT) 
                     {
                        ELU(base);
                     }
+                    else if (Activation == RELU_ACT) 
+                    {
+                       RELU(base);
+                    }
+#endif
                 }
             }
         }
@@ -336,7 +367,7 @@ struct sub_image_3d
 };
 
 template <bool   Bias,                    // load or set to bias
-          bool   Activation,
+          int   Activation,
           bool   AddOrOverwrite,
           long_t IFMs,                    // number of input images
           class ID, class IH, class IW,   // image traits

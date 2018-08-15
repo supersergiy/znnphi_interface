@@ -14,7 +14,7 @@ namespace phi
 namespace propagation
 {
 
-template <long_t Threads, class P, bool Activation, bool AddToOutput>
+template <long_t Threads, class P, int Activation, bool AddToOutput>
 struct full_layer
 {
 private:
@@ -35,7 +35,7 @@ private:
     float const* scale_;
 
 public:
-    full_layer(kernel_launcher* l)
+    full_layer(kernel_launcher* l, long_t CPU_OFFSET)
         : launcher(l)
         , fns(Threads)
         , executables(Threads)
@@ -61,7 +61,6 @@ public:
         kernels_ = k;
         biases_  = b;
         scale_   = s;
-
         launcher->launch(&(fns[0]));
     }
 

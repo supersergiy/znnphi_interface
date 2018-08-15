@@ -60,7 +60,7 @@ struct original_problem_t
 template <long_t Threads,        // available threads
           class OriginalProblem, // original problem
           class SubProblem,      // current problem size
-          bool  Activation,      // weather to apply activation at the end
+          int   Activation,      // weather to apply activation at the end
           bool  AddOrOverwrite>     // weather input adds to output or overwites it
 struct problem_t
 {
@@ -68,7 +68,7 @@ struct problem_t
     using original_problem              = OriginalProblem;
     using sub_problem                   = SubProblem;
 
-    static constexpr bool activation       = Activation;
+    static constexpr int activation       = Activation;
     static constexpr bool add_or_overwrite = AddOrOverwrite;
 };
 

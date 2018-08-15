@@ -14,7 +14,8 @@ template <long_t Cores, long_t HT, long_t B, long_t IFM, long_t OFM, long_t ID,
           long_t OUT_D_SKIP=0, long_t OUT_PADD=0,
           long_t OUT_H_SKIP=0, long_t OUT_W_SKIP=0, long_t OUT_PADHW=0,
           long_t OUT_STRIDE_D=1, long_t OUT_STRIDE_HW=1,
-          bool Activation=false, bool AddOrOverwrite=false>
+          int Activation=NO_ACT, bool AddOrOverwrite=false,
+          long_t CPU_OFFSET=0>
 class ConvTemplate: public Layer
 {
     using Layer::forward;
@@ -72,8 +73,8 @@ private:
 public:
     ConvTemplate() 
     {
-        kl = new kernel_launcher(Cores, HT, 0);
-        plan = new full_layer<Cores * HT, orig_prob, Activation, AddOrOverwrite>(kl);
+        kl = new kernel_launcher(Cores, HT, CPU_OFFSET);
+        plan = new full_layer<Cores * HT, orig_prob, Activation, AddOrOverwrite>(kl, CPU_OFFSET);
     }
      
     ~ConvTemplate() 
@@ -86,13 +87,6 @@ public:
                  float const* __restrict ker, float const* __restrict bi,
                  float const* __restrict scale)
     {
-        
-#ifdef DEBUG
-        std::cout << "Out offset: " << OUT_OFFSET << std::endl;
-        std::cout << "OW: " << OW_TOTAL_STRIDE << std::endl;
-        std::cout << "OH: " << OH_TOTAL_STRIDE << std::endl;
-        std::cout << "OD: " << OD_TOTAL_STRIDE << std::endl;
-#endif
         plan->execute(in, out + OUT_OFFSET, ker, bi, scale);
     }
 };

@@ -48,11 +48,11 @@ for in_d in inputs:
             out_file = h5py.File(output_path,  'w')
             net      = caffe.Net(proto_path, caffe.TEST, weights=weights_path)
 
-	    print in_file['input'][:]
-            net.blobs['input'].data[...] = in_file['input'][:]
+	    print in_file['main'][:]
+            net.blobs['input'].data[...] = in_file['main'][:]
             net.forward()
             last_layer_out = "output"
 	    print net.blobs[last_layer_out].data
-            out_file.create_dataset('data', data=net.blobs[last_layer_out].data)
+            out_file.create_dataset('main', data=net.blobs[last_layer_out].data)
 
 print count

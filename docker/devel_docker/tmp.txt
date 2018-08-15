@@ -1,0 +1,126 @@
+Sending build context to Docker daemon  98.56MB
+Step 1/21 : FROM seunglab/icpc:2017v3
+ ---> 31d1b429281e
+Step 2/21 : WORKDIR /opt
+ ---> Using cache
+ ---> cebd711c33a2
+Step 3/21 : RUN apt-get update
+ ---> Using cache
+ ---> 709bb9d0b0b2
+Step 4/21 : RUN apt-get install -y python python-pip git vim python-tk 		       screen wget vim
+ ---> Using cache
+ ---> 551b170c502c
+Step 5/21 : RUN wget -qO- https://get.docker.com/ | sh && groupadd docker; usermod -aG docker root && newgrp docker
+ ---> Using cache
+ ---> a8eb5e817d1a
+Step 6/21 : RUN pwd
+ ---> Using cache
+ ---> 10ee039c1467
+Step 7/21 : RUN git clone https://github.com/supersergiy/znnphi_interface.git
+ ---> Using cache
+ ---> 633c4de9818a
+Step 8/21 : RUN git clone https://github.com/torms3/kaffe.git
+ ---> Using cache
+ ---> 46cdb8bdfe1e
+Step 9/21 : RUN mkdir /opt/.tmp
+ ---> Using cache
+ ---> b16b2637271a
+Step 10/21 : RUN cd kaffe && git checkout cpu_inference
+ ---> Using cache
+ ---> e05e076f8e41
+Step 11/21 : ENV LD_LIBRARY_PATH /opt/intel/lib/intel64
+ ---> Using cache
+ ---> 92e0ad6d1c6b
+Step 12/21 : ENV ZNNPHI_PATH /opt/znnphi_interface
+ ---> Using cache
+ ---> 1c7edc17a582
+Step 13/21 : ENV PYTHONPATH /opt/znnphi_interface/code/znet/src/python:/opt/kaffe
+ ---> Using cache
+ ---> 3d3b4b3ac745
+Step 14/21 : ADD ./pz_files/ /opt
+ ---> Using cache
+ ---> 6f9611706dcd
+Step 15/21 : RUN mv intel.tar.gz / && cd / && tar -xzf intel.tar.gz
+ ---> Using cache
+ ---> 3ff3d30f53f1
+Step 16/21 : RUN pip install -r requirements.txt
+ ---> Using cache
+ ---> 58f3ee179fb1
+Step 17/21 : RUN tar -xzf lib.tar.gz
+ ---> Using cache
+ ---> 38822af693ea
+Step 18/21 : RUN tar -xzf znets.tar.gz
+ ---> Using cache
+ ---> c7c7b9d3c445
+Step 19/21 : RUN mv /opt/.screenrc /root/
+ ---> Using cache
+ ---> 1c88718d7a1a
+Step 20/21 : RUN cd /opt/znnphi_interface     && git config --global user.email "popovych@princeton.edu"     && git config credential.helper store
+ ---> Using cache
+ ---> 0643d085de3a
+Step 21/21 : RUN printenv
+ ---> Using cache
+ ---> 8edd48029bb2
+Successfully built 8edd48029bb2
+Successfully tagged seunglab/pznet:devel
+The push refers to a repository [docker.io/seunglab/pznet]
+b04becb95c9a: Preparing
+b04697e69212: Preparing
+a7ca503636d8: Preparing
+f6572bf6080a: Preparing
+a6eb64f28ccf: Preparing
+197259fbb9c8: Preparing
+6eadbcff9a72: Preparing
+a2ace5d3f0a9: Preparing
+488e7d86f8db: Preparing
+7d27484b84af: Preparing
+0c557964b628: Preparing
+d4a9c6c79d01: Preparing
+56c36a15932e: Preparing
+641473424e5b: Preparing
+407068ed1c5b: Preparing
+789e2514e470: Preparing
+1bf679b9850a: Preparing
+2f5b0990636a: Preparing
+c9748fbf541d: Preparing
+b3968bc26fbd: Preparing
+aa4e47c45116: Preparing
+788ce2310e2f: Preparing
+56c36a15932e: Waiting
+641473424e5b: Waiting
+407068ed1c5b: Waiting
+789e2514e470: Waiting
+1bf679b9850a: Waiting
+2f5b0990636a: Waiting
+c9748fbf541d: Waiting
+aa4e47c45116: Waiting
+b3968bc26fbd: Waiting
+788ce2310e2f: Waiting
+6eadbcff9a72: Waiting
+d4a9c6c79d01: Waiting
+0c557964b628: Waiting
+488e7d86f8db: Waiting
+a2ace5d3f0a9: Waiting
+a7ca503636d8: Layer already exists
+f6572bf6080a: Layer already exists
+b04697e69212: Layer already exists
+a6eb64f28ccf: Layer already exists
+b04becb95c9a: Layer already exists
+6eadbcff9a72: Layer already exists
+197259fbb9c8: Layer already exists
+488e7d86f8db: Layer already exists
+7d27484b84af: Layer already exists
+a2ace5d3f0a9: Layer already exists
+0c557964b628: Layer already exists
+56c36a15932e: Layer already exists
+d4a9c6c79d01: Layer already exists
+641473424e5b: Layer already exists
+789e2514e470: Layer already exists
+1bf679b9850a: Layer already exists
+2f5b0990636a: Layer already exists
+c9748fbf541d: Layer already exists
+407068ed1c5b: Layer already exists
+b3968bc26fbd: Layer already exists
+aa4e47c45116: Layer already exists
+788ce2310e2f: Layer already exists
+devel: digest: sha256:42a3004dfcbf7b7a5165caf2ddad30bd3f02cf8473ad7cd83bfa4e463c736e05 size: 4941

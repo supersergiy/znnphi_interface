@@ -27,9 +27,9 @@
 #define SIMD_SUB_MASK(r, m, a, b) _mm512_mask_sub_ps(r, m, a, b)
 #define SIMD_MUL_MASK(r, m, a, b) _mm512_mask_mul_ps(r, m, a, b)
 
-
 #define SIMD_E2A23_MASK(a, m, b) _mm512_mask_exp2a23_ps(a, m, b)
 #define SIMD_LT(a, b) _mm512_cmp_ps_mask(a, b, _CMP_LT_OQ)
+#define SIMD_MASK_BLEND(a, b, m) _mm512_mask_blend_ps(a, m, b)
 #define SIMD_CMP(a, b) _mm512_cmp_ps_mask(a, b, _CMP_EQ_OQ)
 #define SIMD_MASK_ADD(r, m, a, b) _mm512_mask_add_ps(r, m, a, b)
 
@@ -71,10 +71,17 @@ using enable_if_t = typename std::enable_if<B, T>::type;
 
 #define SIMD_WIDTH 8
 
-#define SIMD_MUL = _mm256_mul_ps
+#define SIMD_MASK  __mmask8
+
+#define SIMD_LT(a, b) _mm256_cmp_ps(a, b, _CMP_LT_OQ)
+#define SIMD_MASK_BLEND(a, b, m) _mm256_blendv_ps(a, b, m)
+
+#define SIMD_MUL _mm256_mul_ps
 #define SIMD_FMADD _mm256_fmadd_ps
 #define SIMD_FNMADD _mm256_fnmadd_ps
 #define SIMD_FMSUB _mm256_fmsub_ps
+#define SIMD_SUB _mm256_sub_ps
+#define SIMD_ADD _mm256_add_ps
 #define SIMD_FNMSUB _mm256_fnmsub_ps
 #define SIMD_SET1 _mm256_set1_ps
 #define SIMD_LOAD _mm256_load_ps

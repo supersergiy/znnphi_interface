@@ -1,10 +1,10 @@
 import copy
-from common import round_to_simd, generate_param_string, S, fill_tensor, zero_out_tensor
+from .common import round_to_simd, generate_param_string, fill_tensor, zero_out_tensor
 import numpy as np
-from conv import block_kernel, block_bias
+from .conv import block_kernel, block_bias
 
 def set_crop_dim(params, bot_tensors):
-    top_dim = copy.copy(bot_tensors[1].dim) 
+    top_dim = copy.copy(bot_tensors[1].dim)
     bot_dim = copy.copy(bot_tensors[0].dim)
 
     params["top_dim"] = top_dim
@@ -18,13 +18,14 @@ def set_crop_dim(params, bot_tensors):
     params["ohw"] = top_dim[3]
 
 
-def parse_crop(json_param):
+def parse_crop(json_param, arch):
     params = {}
+    params["arch"] = arch
     params["name"] = json_param["name"]
     params["top"]  = json_param["top"][0]
     params["bot"]  = json_param["bottom"]
     params["type"] = "crop"
-    
+
     if json_param["crop_param"]["axis"] != 2:
         raise Exception("Non-spacial cropping not implemented (crop axis != 2)")
 
@@ -42,6 +43,6 @@ def allocate_crop_lines(lparam):
     #allocate layer
     lines.append('layers["{}"] = new znn::phi::CropLayer({});'.format(l["name"],
                                                                         param_str))
-    #allocate weights 
+    #allocate weights
     return lines
 

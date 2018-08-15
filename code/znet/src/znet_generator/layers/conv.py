@@ -20,7 +20,7 @@ def set_conv_dim(params, bot_tensor):
     top_dim[1] = params["ofm"]
     for i in [2, 3, 4]:
 	top_dim[i] = (bot_tensor.dim[i] - params["kernel_dim"][i] +
-		                         2*params["pad"][i - 2]) / params["stride"][i - 2] + 1
+		                         2*params["pad"][i - 2]) // params["stride"][i - 2] + 1
     params["top_dim"] = top_dim
     params["bot_dim"] = bot_tensor.dim
     params["bot_size"] = bot_tensor.memory_size
@@ -68,9 +68,9 @@ def block_kernel(kernel, lparam):
         total_ofms = round_to_simd(kdim[0])
         total_ifms = round_to_simd(kdim[1])
 
-        offset = ofm/S
-        offset *= total_ifms/S
-        offset += ifm/S
+        offset = ofm//S
+        offset *= total_ifms//S
+        offset += ifm//S
         offset *= kdim[2]
         offset += kz
         offset *= kdim[3]

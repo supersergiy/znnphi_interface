@@ -63,9 +63,9 @@ def block_kernel(kernel, lparam):
         total_ifms = round_to_simd(kdim[0])
         total_ofms = round_to_simd(kdim[1])
 
-        offset = ofm/S
-        offset *= total_ifms/S
-        offset += ifm/S
+        offset = ofm//S
+        offset *= total_ifms//S
+        offset += ifm//S
         offset *= kdim[2]
         offset += kz
         offset *= kdim[3]

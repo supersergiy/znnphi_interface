@@ -1,6 +1,0 @@
- layer {
-   name: "sigmoid_[LAYER_NUMBER]"
-   type: "Sigmoid"
-   bottom: "[BOT_TENSOR]"
-   top: "[TOP_TENSOR]"
- }

@@ -1,9 +1,0 @@
-*.pyc
-*.bin
-*.d
-*.swp
-znet
-bin/
-tmp*
-reference/
-

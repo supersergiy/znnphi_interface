@@ -11,4 +11,3 @@ in_a = np.ones((reduce(mul, in_dim)), dtype=np.float)
 out_a = z.forward(in_a)
 print out_a
 print out_a.shape
-

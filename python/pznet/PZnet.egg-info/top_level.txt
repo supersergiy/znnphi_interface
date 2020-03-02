@@ -1,1 +1,0 @@
-/opt/znnphi_interface/code/znet/src/python/pznet

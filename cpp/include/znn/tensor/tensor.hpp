@@ -39,6 +39,7 @@ private:
         std::iota(this->data(), this->data() + this->num_elements(), static_cast<T>(0));
     }
 
+    // hbw: high bandwidth memory on Knight Landing
     void do_seq_init(detail::tensor::hbw_tag)
     {
         std::iota(this->data(), this->data() + this->num_elements(), static_cast<T>(0));

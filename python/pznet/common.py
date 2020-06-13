@@ -1,4 +1,6 @@
 #!/bin/python
+ 
+#!/bin/python
 from google.protobuf.descriptor import FieldDescriptor
 from google.protobuf.text_format import Merge
 from .protobuf_to_dict import protobuf_to_dict, TYPE_CALLABLE_MAP

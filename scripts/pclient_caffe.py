@@ -72,9 +72,8 @@ fr = reference_a.flatten()
 boo = np.argmax(fd)
 if error > 0.1:
     print "Not congrats! Error == {}".format(error)
-    import pdb; pdb.set_trace()
+    breakpoint() 
 else:
     print "Congrats! All pass"
 #out_file = h5py.File(output_path)
 #out_file.create_dataset("data", data=out_a)
-

@@ -8,7 +8,7 @@
 #include <sstream>
 
 #include <znn/layer/layer.hpp>
-#define PYTHON_COMPILE_SCRIPT_REL_P "/code/include/znn/jit/jit.py"
+#define PYTHON_COMPILE_SCRIPT_REL_P "./jit.py"
 
 #define DEBUG 1
 

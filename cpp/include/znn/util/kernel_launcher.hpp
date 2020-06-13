@@ -63,9 +63,9 @@ private:
     }
 
 public:
+    // n_hwt: number of hyper threads?
     kernel_launcher(long_t n_cpus, long_t n_hwt, long_t cpu_offset = 0)
-        : kernels(nullptr)
-        , num_threads_(n_cpus * n_hwt)
+        : kernels(nullptr), num_threads_(n_cpus * n_hwt)
     {
         sched_getaffinity(0, sizeof(old_set_), &old_set_);
         cpu_set_t set;

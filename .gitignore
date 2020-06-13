@@ -106,3 +106,4 @@ tmp/
 data/
 core
 unit_test.sh
+*.data

@@ -21,6 +21,7 @@ parser.add_option("--act_cores", dest="act_cores", default=-1)
 parser.add_option("--act_ht", dest="act_ht", default=-1)
 parser.add_option("--lin_cores", dest="lin_cores", default=-1)
 parser.add_option("--lin_ht", dest="lin_ht", default=-1)
+parser.add_option("--cpu-offset", dest="cpu_offset", default=0)
 parser.add_option("-o", dest="output_path", default="./generated_netwrok",
                         help="The output folder for the generated network")
 
@@ -32,10 +33,9 @@ if not options.prototxt_path:
     parser.error("Network prototxt path not given")
 if not options.weights_path:
     parser.error("Weights path not given")
-python_v     = 3
 weights_path = options.weights_path
-net_path  = options.prototxt_path
-znet_path = os.path.abspath(options.output_path)
+prototxt_path  = options.prototxt_path
+output_znet_path = os.path.abspath(options.output_path)
 arch	  = options.architecture
 
 core_options = {}
@@ -43,9 +43,17 @@ core_options["conv"] = [options.conv_cores, options.conv_ht]
 core_options["act"]  = [options.act_cores, options.act_ht]
 core_options["lin"]  = [options.lin_cores, options.lin_ht]
 
-z = pznet.znet()
 print ("Creating the network...")
-z.create_net(net_path, weights_path, znet_path, arch, core_options=core_options, python_v=python_v)
+z = pznet.znet.from_kaffe_model(
+    prototxt_path, weights_path, output_znet_path,
+    architecture=arch, 
+    core_options={'conv': [options.conv_cores, options.conv_ht]},
+    cpu_offset=options.cpu_offset,
+    opt_mode='full_opt',
+    ignore='',
+    time_each=False
+)
+
 print ("Compiling layers...")
 z.load_net(znet_path, os.path.join(znet_path, "lib"))
 print ("Your network has been sergified! You can find it at {}".format(znet_path))

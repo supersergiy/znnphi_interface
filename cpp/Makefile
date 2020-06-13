@@ -1,6 +1,5 @@
 HERE    	=  .
-BINDIR	=	./bin
-NETDIR	=	./nets
+OUTDIR = /tmp/znet
 
 AT    	=	@
 DOLLAR   = 	$$
@@ -43,8 +42,8 @@ CS_LD_FLAGS		=       -lpthread
 
 FPIC	=	-fPIC
 
-#MKL_INCLUDE_PATH =/opt/intel/mkl/include
-CXXINCLUDES	=	-I$(ZNNPHI_PATH)/code/include -I$(ZNNPHI_PATH)/code/include/znn -I$(ZNNPHI_PATH)/ -I./src/ -I${MKL_INCLUDE_PATH}
+MKL_INCLUDE_PATH =/opt/intel/mkl/include
+CXXINCLUDES	=	-I./include -I./include/znn -I${MKL_INCLUDE_PATH}
 
 #CXXWARN		=	-Wall -Wextra -Wno-format -Wno-unknown-pragmas -Wno-unused-variable -Wno-return-type -Wno-unused-parameter
 CXXERR		=   -fmax-errors=5
@@ -75,13 +74,7 @@ CXXLDFLAGS	=	$(OPT_LDFLAGS)
 LD_FLAGS    =  -lpthread -openmp  
 #-L/opt/intel/mkl/lib/intel64 -Wl,--start-group -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5 -Wl,--end-group -lmkl_avx2 -lznnphiconv 
 
-ifeq ($(strip $(PYTHON_V)),3)
-	PY_INTERFACE_FLAGS = `python3-config --cflags --ldflags` -Isrc/python/pybind11/include -fPIC 
-else ifeq ($(strip $(PYTHON_V)),2)
-	PY_INTERFACE_FLAGS = `python-config --cflags --ldflags` -Isrc/python/pybind11/include -fPIC 
-else
-$(error Unsupported or unspecified python_v: $(PYTHON_V). Please set Makefile PYTHON_V parameter to one of [1, 2].) 
-endif
+PY_INTERFACE_FLAGS = `python3-config --cflags --ldflags` -Isrc/python/pybind11/include -fPIC 
 
 ifeq ($(strip $(ARCH)),AVX512)
 	ARCH_FLAGS=$(AVX512_FLAGS)
@@ -97,40 +90,43 @@ endif
 #N = nets/${NET_NAME}.json
 #W = nets/${NET_NAME}.h5
 
-out/client.o: src/client.cpp 
+out/client.o: ./client.cpp 
 	$(CXX) $(CXXFLAGS) -fPIC -c $^ -o $@
 
-src/generated/znet.cpp:  $(shell find src/znet_generator -type f -name "*.py") $(N) $(W)
-	rm -rf out
-	${MKDIR_P} out
-	${MKDIR_P} out/weights
-	python3 src/znet_generator/main.py --net_path $(N) --weights_path $(W) --out_path src/generated/znet.cpp \
-		--architecture $(ARCH) --conv_cores $(CONV_CORES) --conv_ht $(CONV_HT) --act_cores $(ACT_CORES) --act_ht $(ACT_HT) \
-		--lin_cores $(LIN_CORES) --lin_ht $(LIN_HT) --cpu_offset $(CPU_OFFSET) -O $(PZ_OPT) --ignore $(IGNORE) \
-		--time_each $(TIME_EACH)
+/tmp/znet/generated/znet.cpp:  $(shell find ../python/pznet/generator -type f -name "*.py") $(N) $(W)
+	rm -rf ${OUTDIR}
+	${MKDIR_P} ${OUTDIR}
+	${MKDIR_P} ${OUTDIR}/weights
+	${MKDIR_P} ${OUTDIR}/generated
+	python3 ../python/pznet/generator/main.py --net_path $(N) --weights_path $(W) \ 
+		--out_path ${OUTDIR}/generated/znet.cpp \
+		--architecture $(ARCH) --conv_cores $(CONV_CORES) --conv_ht $(CONV_HT) \
+		--act_cores $(ACT_CORES) --act_ht $(ACT_HT) \
+		--lin_cores $(LIN_CORES) --lin_ht $(LIN_HT) --cpu_offset $(CPU_OFFSET) \
+		-O $(PZ_OPT) --ignore $(IGNORE) --time_each $(TIME_EACH)
 
-out/znet.o: src/generated/znet.cpp 
+${OUTDIR}/znet.o: ${OUTDIR}/generated/znet.cpp 
 	$(CXX) $(CXXFLAGS) $(ARCH_FLAGS) -fPIC -c $^ -o $@
 
-out/znet_numpy_wrapper.o: src/python/znet_numpy_wrapper.cpp 
+${OUTDIR}/znet_numpy_wrapper.o: main.cpp 
 	$(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) -fPIC -c $^ -o $@
 
-py: out/znet.o out/znet_numpy_wrapper.o 
-	$(CXX) $(LD_FLAGS) $^ -shared -o out/znet.so 
+py: ${OUTDIR}/znet.o ${OUTDIR}/znet_numpy_wrapper.o 
+	$(CXX) $(LD_FLAGS) $^ -shared -o ${OUTDIR}/znet.so 
 
 ifneq ($(strip $(O)),)
-	${CP} -r out/znet.so $(O)
-	${CP} -r out/weights $(O)
+	${CP} -r ${OUTDIR}/znet.so $(O)
+	${CP} -r ${OUTDIR}/weights $(O)
 endif
 
-bin: out/client.o out/znet.o 
-	$(CXX) $(CXXFLAGS) $(LD_FLAGS) $^ -o out/znet.bin
-gen: src/generated/znet.cpp 
+bin: ${OUTDIR}/client.o ${OUTDIR}/znet.o 
+	$(CXX) $(CXXFLAGS) $(LD_FLAGS) $^ -o ${OUTDIR}/znet.bin
+gen: ${OUTDIR}/generated/znet.cpp 
 rerun: clean gen bin
-	./out/znet.bin
+	${OUTDIR}/znet.bin
 rerun_py: clean gen py
-	./src/client.py
+	${OUTDIR}/client.py
 all: znet 
 clean:
-	rm -rf out/*.so out/*.o out/*.bin
+	rm -rf ${OUTDIR}/*.so ${OUTDIR}/*.o ${OUTDIR}/*.bin
 remake: clean all

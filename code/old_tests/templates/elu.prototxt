@@ -1,6 +1,0 @@
- layer {
-   name: "elu_[LAYER_NUMBER]"
-   type: "ELU"
-   bottom: "[BOT_TENSOR]"
-   top: "[TOP_TENSOR]"
- }

@@ -1,9 +1,0 @@
-layer {
-  name: "scale_[LAYER_NUMBER]"
-  type: "Scale"
-  bottom: "[BOT_TENSOR]"
-  top: "[TOP_TENSOR]"
-  scale_param {
-    bias_term: true
-  }
-} 

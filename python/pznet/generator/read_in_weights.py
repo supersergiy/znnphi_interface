@@ -8,7 +8,7 @@ def read_in_weights(net, weights_path):
     tensors, layer_info, layer_order, misc = net
 
     #initialize weights
-    weights = h5py.File(weights_path) ['data']
+    weights = h5py.File(weights_path, 'r')['data']
     for (lname, l) in iteritems(layer_info):
         if l["type"] in ["conv", "deconv"]:
             lweights = weights[lname]
@@ -69,5 +69,3 @@ def read_in_weights(net, weights_path):
 
     lines.append('')
     return lines
-
-

@@ -71,7 +71,7 @@ OPT_LDFLAGS		=	$(COMMON_LDFLAGS) $(CS_LD_FLAGS) $(LD_OPTIMIZATION_FLAGS)
 CXXFLAGS	=	$(OPT_FLAGS)
 CXXLDFLAGS	=	$(OPT_LDFLAGS)
 
-LD_FLAGS    =  -lpthread -openmp  
+LD_FLAGS    =  -lpthread -qopenmp  
 #-L/opt/intel/mkl/lib/intel64 -Wl,--start-group -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5 -Wl,--end-group -lmkl_avx2 -lznnphiconv 
 
 PY_INTERFACE_FLAGS = `python3-config --cflags --ldflags` -Isrc/python/pybind11/include -fPIC 
@@ -98,11 +98,11 @@ out/client.o: ./client.cpp
 	${MKDIR_P} ${OUTDIR}
 	${MKDIR_P} ${OUTDIR}/weights
 	${MKDIR_P} ${OUTDIR}/generated
-	python3 ../python/pznet/generator/main.py --net_path $(N) --weights_path $(W) \ 
-		--out_path ${OUTDIR}/generated/znet.cpp \
-		--architecture $(ARCH) --conv_cores $(CONV_CORES) --conv_ht $(CONV_HT) \
-		--act_cores $(ACT_CORES) --act_ht $(ACT_HT) \
-		--lin_cores $(LIN_CORES) --lin_ht $(LIN_HT) --cpu_offset $(CPU_OFFSET) \
+	python3 ../python/pznet/generator/main.py --net-path $(N) --weights-path $(W) \
+		--out-path ${OUTDIR}/generated/znet.cpp \
+		--architecture $(ARCH) --conv-cores $(CONV_CORES) --conv-ht $(CONV_HT) \
+		--act-cores $(ACT_CORES) --act-ht $(ACT_HT) \
+		--lin-cores $(LIN_CORES) --lin-ht $(LIN_HT) --cpu-offset $(CPU_OFFSET) \
 		-O $(PZ_OPT) --ignore $(IGNORE) --time_each $(TIME_EACH)
 
 ${OUTDIR}/znet.o: ${OUTDIR}/generated/znet.cpp 

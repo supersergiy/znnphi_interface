@@ -17,13 +17,14 @@ parser.add_option("-t", "--timelayers",
                           help="Time each layer separately")
 parser.add_option("-c", "--cores", dest="conv_cores", default=2)
 parser.add_option("--ht", dest="conv_ht", default=2)
-parser.add_option("--act_cores", dest="act_cores", default=-1)
-parser.add_option("--act_ht", dest="act_ht", default=-1)
-parser.add_option("--lin_cores", dest="lin_cores", default=-1)
-parser.add_option("--lin_ht", dest="lin_ht", default=-1)
+parser.add_option("--act-cores", dest="act_cores", default=-1)
+parser.add_option("--act-ht", dest="act_ht", default=-1)
+parser.add_option("--lin-cores", dest="lin_cores", default=-1)
+parser.add_option("--lin-ht", dest="lin_ht", default=-1)
 parser.add_option("--cpu-offset", dest="cpu_offset", default=0)
-parser.add_option("-o", dest="output_path", default="./generated_netwrok",
-                        help="The output folder for the generated network")
+parser.add_option("-o", "--output-path", dest="output_path", 
+                  default="./generated_netwrok",
+                  help="The output folder for the generated network")
 
 parser.add_option("--arch", dest="architecture", default="AVX2",
         help="The cpu architexture: {AVX2, AVX512}")

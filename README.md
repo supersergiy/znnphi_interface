@@ -1,4 +1,5 @@
-# Compilation instructions
+# Compile kaffe model (hdf5 and prototxt files)
+
 To compile your network run:
 
 ```

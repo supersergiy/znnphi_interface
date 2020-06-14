@@ -107,3 +107,6 @@ data/
 core
 unit_test.sh
 *.data
+*.so
+*.o
+*generated

@@ -1,26 +1,26 @@
 HERE    	=  .
-OUTDIR = /tmp/znet
+OUTDIR 		= ./out
 
-AT    	=	@
-DOLLAR   = 	$$
+AT    		= @
+DOLLAR   	= $$
 
-CD	     	=	$(AT)cd
-CP			=	$(AT)cp
-ECHO		=	@echo
-CAT		=	$(AT)cat
-IF			=	$(AT)if
-LN			=	$(AT)ln
-MKDIR		=	$(AT)mkdir
-MV			=	$(AT)mv
-SED		=	$(AT)sed
-RM			=	$(AT)rm -f
-TOUCH		=	$(AT)touch
-CHMOD		=	$(AT)chmod
-DATE    	=  $(AT)date
-MKDIR_P  = mkdir -p
+CD	     	= $(AT)cd
+CP			= $(AT)cp
+ECHO		= @echo
+CAT			= $(AT)cat
+IF			= $(AT)if
+LN			= $(AT)ln
+MKDIR		= $(AT)mkdir
+MV			= $(AT)mv
+SED			= $(AT)sed
+RM			= $(AT)rm -f
+TOUCH		= $(AT)touch
+CHMOD		= $(AT)chmod
+DATE    	= $(AT)date
+MKDIR_P  	= mkdir -p
 
 # compilers
-
+#ARCH 		= AVX2
 ZNN_TUNE	=
 
 SSE_FLAGS	=	-DZNN_SSE -msse $(ZNN_TUNE)
@@ -35,12 +35,12 @@ STANDARD_FLAG	=	-std=c++14
 STD_FLAG	=
 
 
-CXX			=	$(AT)icpc -pthread $(STANDARD_FLAG) -fopenmp
+CXX			= $(AT)icpc -pthread $(STANDARD_FLAG) -fopenmp
 OPTIMIZATION_FLAGS	=	-DNDEBUG -O3 -fno-omit-frame-pointer #-fno-rtti -fno-exceptions #-ffast-math 
-CS_FLAGS		=
-CS_LD_FLAGS		=       -lpthread
+CS_FLAGS	=
+CS_LD_FLAGS	= -lpthread
 
-FPIC	=	-fPIC
+FPIC		= -fPIC
 
 MKL_INCLUDE_PATH =/opt/intel/mkl/include
 CXXINCLUDES	=	-I./include -I./include/znn -I${MKL_INCLUDE_PATH}
@@ -93,7 +93,7 @@ endif
 out/client.o: ./client.cpp 
 	$(CXX) $(CXXFLAGS) -fPIC -c $^ -o $@
 
-/tmp/znet/generated/znet.cpp:  $(shell find ../python/pznet/generator -type f -name "*.py") $(N) $(W)
+${OUTDIR}/generated/znet.cpp:  $(shell find ../python/pznet/generator -type f -name "*.py") $(N) $(W)
 	rm -rf ${OUTDIR}
 	${MKDIR_P} ${OUTDIR}
 	${MKDIR_P} ${OUTDIR}/weights
@@ -114,9 +114,10 @@ ${OUTDIR}/znet_numpy_wrapper.o: main.cpp
 py: ${OUTDIR}/znet.o ${OUTDIR}/znet_numpy_wrapper.o 
 	$(CXX) $(LD_FLAGS) $^ -shared -o ${OUTDIR}/znet.so 
 
-ifneq ($(strip $(O)),)
-	${CP} -r ${OUTDIR}/znet.so $(O)
-	${CP} -r ${OUTDIR}/weights $(O)
+ifneq ($(strip ${O}),)
+	${MKDIR_P} ${O}
+	${CP} ${OUTDIR}/znet.so $(O)/
+	${CP} -r ${OUTDIR}/weights $(O)/
 endif
 
 bin: ${OUTDIR}/client.o ${OUTDIR}/znet.o 

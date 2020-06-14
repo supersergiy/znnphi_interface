@@ -1,10 +1,11 @@
 #!/usr/bin/python3
-import pznet
 import os
 import numpy as np
 import h5py
 import sys
 from optparse import OptionParser
+
+from pznet.pznet import PZNet
 
 parser = OptionParser()
 
@@ -22,7 +23,7 @@ parser.add_option("--act-ht", dest="act_ht", default=-1)
 parser.add_option("--lin-cores", dest="lin_cores", default=-1)
 parser.add_option("--lin-ht", dest="lin_ht", default=-1)
 parser.add_option("--cpu-offset", dest="cpu_offset", default=0)
-parser.add_option("-o", "--output-path", dest="output_path", 
+parser.add_option("-o", "--output-znet-path", dest="output_znet_path", 
                   default="./generated_netwrok",
                   help="The output folder for the generated network")
 
@@ -34,10 +35,7 @@ if not options.prototxt_path:
     parser.error("Network prototxt path not given")
 if not options.weights_path:
     parser.error("Weights path not given")
-weights_path = options.weights_path
-prototxt_path  = options.prototxt_path
-output_znet_path = os.path.abspath(options.output_path)
-arch	  = options.architecture
+output_znet_path = os.path.abspath(options.output_znet_path)
 
 core_options = {}
 core_options["conv"] = [options.conv_cores, options.conv_ht]
@@ -45,16 +43,19 @@ core_options["act"]  = [options.act_cores, options.act_ht]
 core_options["lin"]  = [options.lin_cores, options.lin_ht]
 
 print ("Creating the network...")
-z = pznet.znet.from_kaffe_model(
-    prototxt_path, weights_path, output_znet_path,
-    architecture=arch, 
-    core_options={'conv': [options.conv_cores, options.conv_ht]},
+net = PZNet.from_kaffe_model(
+    options.prototxt_path, 
+    options.weights_path, 
+    output_znet_path,
+    architecture=options.architecture, 
+    core_options=core_options,
     cpu_offset=options.cpu_offset,
     opt_mode='full_opt',
     ignore='',
-    time_each=False
+    time_each=options.time_layers
 )
 
 print ("Compiling layers...")
-z.load_net(znet_path, os.path.join(znet_path, "lib"))
-print ("Your network has been sergified! You can find it at {}".format(znet_path))
+breakpoint()
+PZNet(output_znet_path)
+print ("Your network has been sergified! You can find it at {}".format(output_znet_path))

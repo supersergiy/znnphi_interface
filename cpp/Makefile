@@ -112,7 +112,7 @@ ${OUTDIR}/znet.o: ${OUTDIR}/generated/znet.cpp
 
 ${OUTDIR}/znet_numpy_wrapper.o: main.cpp 
 	echo "\n$(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) ${ARCH_FLAGS} -fPIC -c $^ -o $@\n"
-	$(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) ${ARCH_FLAGS} -fPIC -c $^ -o $@
+	$(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) ${ARCH_FLAGS} -fPIC -ipo -c -c $^ -o $@
 
 py: ${OUTDIR}/znet.o ${OUTDIR}/znet_numpy_wrapper.o 
 	echo "\n$(CXX) $(LD_FLAGS) $^ -shared -o ${OUTDIR}/znet.so \n"

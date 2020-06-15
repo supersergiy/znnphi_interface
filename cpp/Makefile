@@ -74,7 +74,8 @@ CXXLDFLAGS	=	$(OPT_LDFLAGS)
 LD_FLAGS    =  -lpthread -qopenmp  
 #-L/opt/intel/mkl/lib/intel64 -Wl,--start-group -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5 -Wl,--end-group -lmkl_avx2 -lznnphiconv 
 
-PY_INTERFACE_FLAGS = `python3-config --cflags --ldflags` -Isrc/python/pybind11/include -fPIC 
+# use conda to install pybind11, so we do not need to include the path anymore.
+PY_INTERFACE_FLAGS = `python3-config --cflags --ldflags` -fPIC 
 
 ifeq ($(strip $(ARCH)),AVX512)
 	ARCH_FLAGS=$(AVX512_FLAGS)
@@ -106,12 +107,15 @@ ${OUTDIR}/generated/znet.cpp:  $(shell find ../python/pznet/generator -type f -n
 		-O $(PZ_OPT) --ignore $(IGNORE) --time_each $(TIME_EACH)
 
 ${OUTDIR}/znet.o: ${OUTDIR}/generated/znet.cpp
+	echo "\n$(CXX) $(CXXFLAGS) $(ARCH_FLAGS) -fPIC -c $^ -o $@\n"
 	$(CXX) $(CXXFLAGS) $(ARCH_FLAGS) -fPIC -c $^ -o $@
 
 ${OUTDIR}/znet_numpy_wrapper.o: main.cpp 
+	echo "\n$(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) ${ARCH_FLAGS} -fPIC -c $^ -o $@\n"
 	$(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) ${ARCH_FLAGS} -fPIC -c $^ -o $@
 
 py: ${OUTDIR}/znet.o ${OUTDIR}/znet_numpy_wrapper.o 
+	echo "\n$(CXX) $(LD_FLAGS) $^ -shared -o ${OUTDIR}/znet.so \n"
 	$(CXX) $(LD_FLAGS) $^ -shared -o ${OUTDIR}/znet.so 
 
 ifneq ($(strip ${O}),)

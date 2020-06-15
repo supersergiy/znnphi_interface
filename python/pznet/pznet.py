@@ -33,14 +33,15 @@ class PZNet:
                 "Please make sure there's a znet.so file" +
                 " present at {}".format(net_path)
             )
-
+        
         self.net = znet.znet(os.path.join(net_path, "weights/"), lib_path)
     
     @classmethod
-    def from_kaffe_model(cls, prototxt_path, h5_weights_path, output_net_path,
-                     architecture='AVX2', core_options={'conv': [2, 2]},
-                     cpu_offset=0, opt_mode='full_opt', ignore='', 
-                     time_each=False):
+    def from_kaffe_model(
+        cls, prototxt_path, h5_weights_path, output_net_path,
+        architecture='AVX2', core_options={'conv': [2, 2]},
+        cpu_offset=0, opt_mode='full_opt', ignore='', 
+        time_each=False):
         """
         The compiled files will be packed inside a zip file.
         """

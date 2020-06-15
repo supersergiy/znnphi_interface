@@ -105,11 +105,11 @@ ${OUTDIR}/generated/znet.cpp:  $(shell find ../python/pznet/generator -type f -n
 		--lin-cores $(LIN_CORES) --lin-ht $(LIN_HT) --cpu-offset $(CPU_OFFSET) \
 		-O $(PZ_OPT) --ignore $(IGNORE) --time_each $(TIME_EACH)
 
-${OUTDIR}/znet.o: ${OUTDIR}/generated/znet.cpp 
+${OUTDIR}/znet.o: ${OUTDIR}/generated/znet.cpp
 	$(CXX) $(CXXFLAGS) $(ARCH_FLAGS) -fPIC -c $^ -o $@
 
 ${OUTDIR}/znet_numpy_wrapper.o: main.cpp 
-	$(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) -fPIC -c $^ -o $@
+	$(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) ${ARCH_FLAGS} -fPIC -c $^ -o $@
 
 py: ${OUTDIR}/znet.o ${OUTDIR}/znet_numpy_wrapper.o 
 	$(CXX) $(LD_FLAGS) $^ -shared -o ${OUTDIR}/znet.so 

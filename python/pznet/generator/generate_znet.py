@@ -11,7 +11,7 @@ def allocate_all_layers_lines(net, core_options, cpu_offset):
     tensors, layer_info, layer_order, misc = net
 
     for (n,l) in iteritems(layer_info):
-        print (n)
+        # print (n)
         lines += allocate_layer_lines(l, core_options, cpu_offset)
 
     lines.append('')

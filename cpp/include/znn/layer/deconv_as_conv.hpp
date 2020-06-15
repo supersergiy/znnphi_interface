@@ -141,7 +141,7 @@ public:
    }
 
    ~DeconvAsConvLayer() {
-      for (int i = 0; i < convs.size(); i++) {
+      for (size_t i = 0; i < convs.size(); i++) {
          delete convs[i];
          delete kernels[i];
       }

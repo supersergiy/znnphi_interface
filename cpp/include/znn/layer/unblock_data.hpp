@@ -37,8 +37,8 @@ public:
 
 //TODO: pragma parallel
         for (int b = 0; b < bn; ++b) {
-            for (size_t d = 0; d < id; d++) {
-                for (size_t c = 0; c < ofm; c++) {
+            for (int d = 0; d < id; d++) {
+                for (int c = 0; c < ofm; c++) {
                     auto s = c % SIMD_WIDTH;
                     auto f = c / SIMD_WIDTH;
 

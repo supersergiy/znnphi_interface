@@ -1,41 +1,41 @@
-HERE    	= .
-AT	=	@
+HERE    = .
+AT		=	@
 DOLLAR  = 	$$
 
-CD	=	$(AT)cd
-CP	=	$(AT)cp
+CD		=	$(AT)cd
+CP		=	$(AT)cp
 ECHO	=	@echo
-CAT	=	$(AT)cat
-IF	=	$(AT)if
-LN	=	$(AT)ln
+CAT		=	$(AT)cat
+IF		=	$(AT)if
+LN		=	$(AT)ln
 MKDIR	=	$(AT)mkdir
-MV	=	$(AT)mv
-SED	=	$(AT)sed
-RM	=	$(AT)rm
+MV		=	$(AT)mv
+SED		=	$(AT)sed
+RM		=	$(AT)rm
 TOUCH	=	$(AT)touch
 CHMOD	=	$(AT)chmod
 DATE    =       $(AT)date
-BASE = ../../../..
+BASE 	= ../../../..
 
 # compilers
 
-ZNN_TUNE	=
-SSE_FLAGS   =   -DZNN_SSE -msse $(ZNN_TUNE)                                               
-AVX_FLAGS   =   -DZNN_AVX -xAVX $(ZNN_TUNE)                                               
-AVX2_FLAGS  =   -DZNN_AVX2 -march=core-avx2 $(ZNN_TUNE)                                   
+ZNN_TUNE		=
+SSE_FLAGS   	=   -DZNN_SSE -msse $(ZNN_TUNE)                                               
+AVX_FLAGS   	=   -DZNN_AVX -xAVX $(ZNN_TUNE)                                               
+AVX2_FLAGS  	=   -DZNN_AVX2 -march=core-avx2 $(ZNN_TUNE)                                   
 AVX512_FLAGS    =   -DZNN_AVX512 -xCORE-AVX512$(ZNN_TUNE)                                 
-KNC_FLAGS   =   -DZNN_KNC -mmic $(ZNN_TUNE)
-CORES_FLAG  =   -DZNN_NUM_CORES=2
+KNC_FLAGS   	=   -DZNN_KNC -mmic $(ZNN_TUNE)
+CORES_FLAG  	=   -DZNN_NUM_CORES=2
 
 STANDARD_FLAG	=	-std=c++14
-STD_FLAG	=
+STD_FLAG		=
 
 CXX             =   $(AT)icpc $(STANDARD_FLAG)                                           
 OPTIMIZATION_FLAGS  =   -DNDEBUG -O3 -ipo -fp-model fast=2 -mkl=sequential -fno-rtti -fno-exceptions 
 CS_FLAGS        =   -mkl=sequential                                                       
 CS_LD_FLAGS     =   -mkl=sequential  -static-intel 
 
-FPIC	=	-fPIC
+FPIC		=	-fPIC
 
 CXXINCLUDES	=	-I$(BASE)/code/include -I$(BASE)/code/include/znn -I$(BASE)
 CXXWARN		=	-Wall -Wextra -Wno-format -Wno-unknown-pragmas

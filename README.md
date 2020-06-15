@@ -1,5 +1,8 @@
 # Compile kaffe model (hdf5 and prototxt files)
 
+set environment variable:
+`export ZNNPHI_PATH="your/pznet/path"`
+
 download the network files:
 ```
 wget https://github.com/seung-lab/DeepEM/releases/download/S1/deploy.prototxt

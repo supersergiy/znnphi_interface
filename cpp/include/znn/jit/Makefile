@@ -14,7 +14,7 @@ SED		=	$(AT)sed
 RM		=	$(AT)rm
 TOUCH	=	$(AT)touch
 CHMOD	=	$(AT)chmod
-DATE    =       $(AT)date
+DATE    =   $(AT)date
 BASE 	= ../../../..
 
 # compilers
@@ -37,7 +37,7 @@ CS_LD_FLAGS     =   -mkl=sequential  -static-intel
 
 FPIC		=	-fPIC
 
-CXXINCLUDES	=	-I$(BASE)/code/include -I$(BASE)/code/include/znn -I$(BASE)
+CXXINCLUDES	=	-I$(BASE)/cpp/include -I$(BASE)/cpp/include/znn 
 CXXWARN		=	-Wall -Wextra -Wno-format -Wno-unknown-pragmas
 CXXERR		=   -fmax-errors=5
 
@@ -79,13 +79,13 @@ else
 $(error Unsupported or unspecified architecture: ARCH==$(ARCH). Please set Makefile ARCH parameter to one of [AVX2, AVX512].)                                                                              
 endif     
 
-ZNNJIT_PATH = $(ZNNPHI_PATH)/code/include/znn/jit
-
 FORCE:
 
-$(ZNNJIT_PATH)/.tmp/%.so: $(ZNNJIT_PATH)/.tmp/%.cpp FORCE
+$/tmp/%.so: /tmp/%.cpp FORCE
 ifeq ($(LAYER_EXISTS),0)
+	echo "\n$(CXX)         -c $(CXXFLAGS)  $(ARCH_FLAGS) $(PARAM_DEFS) -o $<.o $< \n"
 	$(CXX)         -c $(CXXFLAGS)  $(ARCH_FLAGS) $(PARAM_DEFS) -o $<.o $<
+	echo "\n$(CXX)         $(DLFLAGS) $(CXXLDFLAGS) $(ARCH_FLAGS) -o $@ $<.o -ldl \n"
 	$(CXX)         $(DLFLAGS) $(CXXLDFLAGS) $(ARCH_FLAGS) -o $@ $<.o -ldl
 	$(RM)   $<.o
 	$(MV)   $@ $(O)

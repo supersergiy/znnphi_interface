@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 import sys
 import os
 from tempfile import mkstemp
@@ -6,7 +6,7 @@ from subprocess import  STDOUT, check_call
 import subprocess
 
 my_path = sys.path[0]
-#_, wrapper_path = mkstemp(suffix='.cpp')
+_, wrapper_path = mkstemp(suffix='.cpp')
 
 def parse_args():
     args = {}
@@ -27,6 +27,7 @@ def get_out_path(args):
             name += '_' + args[k]
 
     name += ".so"
+    
     return name
 
 def create_wrapper(args):
@@ -59,6 +60,8 @@ def compile_dl(args):
     create_wrapper(args)
 
     target_name = wrapper_path.replace(".cpp", ".so")
+    # this print will be captured in the jit.hpp, 
+    # so we can not add or modify print in this script!
     print(out_path)
 
     compile_command = 'make -s -C {} {} O={} ARCH={}'.format(my_path, target_name, out_path, args['arch'])

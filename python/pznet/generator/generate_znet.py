@@ -118,7 +118,7 @@ def generate_znet(net, out_path, core_options, cpu_offset, ignore, time_each):
     lines.append('#include <chrono>')
     lines.append('#include <znn/layer/layers.hpp>')
     lines.append('#include <cstring>')
-    lines.append('#include <znet.h>')
+    lines.append('#include <znet.hpp>')
     lines.append('#include <common.hpp>')
     lines.append('')
 

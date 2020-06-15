@@ -34,7 +34,8 @@ void *jitGetHandle(std::string params, std::string lib_folder)
    compile_command << znnphi_path << PYTHON_COMPILE_SCRIPT_REL_P << " " << params;
    
 #ifdef DEBUG
-   std::cout << compile_command.str() << std::endl;
+   std::cout<< "lib path: " << lib_folder << std::endl;
+   std::cout << "jit command: " << compile_command.str() << std::endl;
 #else
    compile_command << " 2> /dev/null"; 
 #endif

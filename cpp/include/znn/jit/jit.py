@@ -11,8 +11,6 @@ temp_dir = '/tmp/pznet_jit'
 #temp_dir = os.path.join(my_path, 'tmp')
 if not os.path.isdir(temp_dir):
     os.mkdir(temp_dir)
-else:
-    os.remove(os.path.join(temp_dir, '*'))
 
 wrapper_path = f'{temp_dir}/{os.getpid()}.cpp'
 
@@ -68,8 +66,10 @@ def compile_dl(args):
     # this print will be captured in the jit.hpp, 
     # so we can not add or modify print in this script!
     print(out_path)
-
-    compile_command = f"make -C {my_path} {target_name} O={out_path} ARCH={args['arch']}"
+    
+    # we must keep the -s to make it silent
+    # otherwise, the jit.hpp will capture the make messages...
+    compile_command = f"make -s -C {my_path} {target_name} O={out_path} ARCH={args['arch']}"
     #compile_command  += ' 2> /dev/null'
     os.system(compile_command)
     check_call(['rm', "-f", wrapper_path], stderr=STDOUT)

@@ -56,6 +56,7 @@ net = PZNet.from_kaffe_model(
 )
 
 print ("Compiling layers...")
-breakpoint()
-PZNet(output_znet_path)
-print ("Your network has been sergified! You can find it at {}".format(output_znet_path))
+net = PZNet(output_znet_path)
+print ("Your network has been compiled! You can find it at {}".format(output_znet_path))
+
+

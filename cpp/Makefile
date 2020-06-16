@@ -1,26 +1,26 @@
 HERE    	=  .
-OUTDIR = /tmp/znet
+OUTDIR 		= ./out
 
-AT    	=	@
-DOLLAR   = 	$$
+AT    		= @
+DOLLAR   	= $$
 
-CD	     	=	$(AT)cd
-CP			=	$(AT)cp
-ECHO		=	@echo
-CAT		=	$(AT)cat
-IF			=	$(AT)if
-LN			=	$(AT)ln
-MKDIR		=	$(AT)mkdir
-MV			=	$(AT)mv
-SED		=	$(AT)sed
-RM			=	$(AT)rm -f
-TOUCH		=	$(AT)touch
-CHMOD		=	$(AT)chmod
-DATE    	=  $(AT)date
-MKDIR_P  = mkdir -p
+CD	     	= $(AT)cd
+CP			= $(AT)cp
+ECHO		= @echo
+CAT			= $(AT)cat
+IF			= $(AT)if
+LN			= $(AT)ln
+MKDIR		= $(AT)mkdir
+MV			= $(AT)mv
+SED			= $(AT)sed
+RM			= $(AT)rm -f
+TOUCH		= $(AT)touch
+CHMOD		= $(AT)chmod
+DATE    	= $(AT)date
+MKDIR_P  	= mkdir -p
 
 # compilers
-
+#ARCH 		= AVX2
 ZNN_TUNE	=
 
 SSE_FLAGS	=	-DZNN_SSE -msse $(ZNN_TUNE)
@@ -35,12 +35,12 @@ STANDARD_FLAG	=	-std=c++14
 STD_FLAG	=
 
 
-CXX			=	$(AT)icpc -pthread $(STANDARD_FLAG) -fopenmp
+CXX			= $(AT)icpc -pthread $(STANDARD_FLAG) -fopenmp
 OPTIMIZATION_FLAGS	=	-DNDEBUG -O3 -fno-omit-frame-pointer #-fno-rtti -fno-exceptions #-ffast-math 
-CS_FLAGS		=
-CS_LD_FLAGS		=       -lpthread
+CS_FLAGS	=
+CS_LD_FLAGS	= -lpthread
 
-FPIC	=	-fPIC
+FPIC		= -fPIC
 
 MKL_INCLUDE_PATH =/opt/intel/mkl/include
 CXXINCLUDES	=	-I./include -I./include/znn -I${MKL_INCLUDE_PATH}
@@ -71,10 +71,11 @@ OPT_LDFLAGS		=	$(COMMON_LDFLAGS) $(CS_LD_FLAGS) $(LD_OPTIMIZATION_FLAGS)
 CXXFLAGS	=	$(OPT_FLAGS)
 CXXLDFLAGS	=	$(OPT_LDFLAGS)
 
-LD_FLAGS    =  -lpthread -openmp  
+LD_FLAGS    =  -lpthread -qopenmp  
 #-L/opt/intel/mkl/lib/intel64 -Wl,--start-group -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5 -Wl,--end-group -lmkl_avx2 -lznnphiconv 
 
-PY_INTERFACE_FLAGS = `python3-config --cflags --ldflags` -Isrc/python/pybind11/include -fPIC 
+# use conda to install pybind11, so we do not need to include the path anymore.
+PY_INTERFACE_FLAGS = `python3-config --cflags --ldflags` -fPIC 
 
 ifeq ($(strip $(ARCH)),AVX512)
 	ARCH_FLAGS=$(AVX512_FLAGS)
@@ -93,30 +94,34 @@ endif
 out/client.o: ./client.cpp 
 	$(CXX) $(CXXFLAGS) -fPIC -c $^ -o $@
 
-/tmp/znet/generated/znet.cpp:  $(shell find ../python/pznet/generator -type f -name "*.py") $(N) $(W)
+${OUTDIR}/generated/znet.cpp:  $(shell find ../python/pznet/generator -type f -name "*.py") $(N) $(W)
 	rm -rf ${OUTDIR}
 	${MKDIR_P} ${OUTDIR}
 	${MKDIR_P} ${OUTDIR}/weights
 	${MKDIR_P} ${OUTDIR}/generated
-	python3 ../python/pznet/generator/main.py --net_path $(N) --weights_path $(W) \ 
-		--out_path ${OUTDIR}/generated/znet.cpp \
-		--architecture $(ARCH) --conv_cores $(CONV_CORES) --conv_ht $(CONV_HT) \
-		--act_cores $(ACT_CORES) --act_ht $(ACT_HT) \
-		--lin_cores $(LIN_CORES) --lin_ht $(LIN_HT) --cpu_offset $(CPU_OFFSET) \
+	python3 ../python/pznet/generator/main.py --net-path $(N) --weights-path $(W) \
+		--out-path ${OUTDIR}/generated/znet.cpp \
+		--architecture $(ARCH) --conv-cores $(CONV_CORES) --conv-ht $(CONV_HT) \
+		--act-cores $(ACT_CORES) --act-ht $(ACT_HT) \
+		--lin-cores $(LIN_CORES) --lin-ht $(LIN_HT) --cpu-offset $(CPU_OFFSET) \
 		-O $(PZ_OPT) --ignore $(IGNORE) --time_each $(TIME_EACH)
 
-${OUTDIR}/znet.o: ${OUTDIR}/generated/znet.cpp 
+${OUTDIR}/znet.o: ${OUTDIR}/generated/znet.cpp
+	echo "\n$(CXX) $(CXXFLAGS) $(ARCH_FLAGS) -fPIC -c $^ -o $@\n"
 	$(CXX) $(CXXFLAGS) $(ARCH_FLAGS) -fPIC -c $^ -o $@
 
 ${OUTDIR}/znet_numpy_wrapper.o: main.cpp 
-	$(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) -fPIC -c $^ -o $@
+	echo "\n$(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) ${ARCH_FLAGS} -fPIC -c $^ -o $@\n"
+	$(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) ${ARCH_FLAGS} -fPIC -ipo -c -c $^ -o $@
 
 py: ${OUTDIR}/znet.o ${OUTDIR}/znet_numpy_wrapper.o 
+	echo "\n$(CXX) $(LD_FLAGS) $^ -shared -o ${OUTDIR}/znet.so \n"
 	$(CXX) $(LD_FLAGS) $^ -shared -o ${OUTDIR}/znet.so 
 
-ifneq ($(strip $(O)),)
-	${CP} -r ${OUTDIR}/znet.so $(O)
-	${CP} -r ${OUTDIR}/weights $(O)
+ifneq ($(strip ${O}),)
+	${MKDIR_P} ${O}
+	${CP} ${OUTDIR}/znet.so $(O)/
+	${CP} -r ${OUTDIR}/weights $(O)/
 endif
 
 bin: ${OUTDIR}/client.o ${OUTDIR}/znet.o 

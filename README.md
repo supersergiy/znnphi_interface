@@ -1,6 +1,27 @@
-# Compilation instructions
-To compile your network run:
+# Compile kaffe model (hdf5 and prototxt files)
 
+set environment variable:
+`export ZNNPHI_PATH="your/pznet/path"`
+
+download the network files:
+```
+wget https://github.com/seung-lab/DeepEM/releases/download/S1/deploy.prototxt
+wget https://github.com/seung-lab/DeepEM/releases/download/S1/train_iter_790000.caffemodel.h5
+```
+
+install intel parallel package with license.
+install anaconda3 and setup environment.
+```
+conda create -n environment.yml
+```
+
+compile network:
+```
+python scripts/compile_net.py --net deploy.prototxt --weights train_iter_790000.caffemodel.h5 --cores 4 --ht=2 --output-znet-path /tmp/s1net
+```
+
+
+# Old version usage with docker
 ```
 sudo docker run -it  -v /opt/intel/licenses -v $(pwd):/seungmount  seunglab/pznet:devel /opt/znnphi_interface/code/scripts/sergify.py -n /seungmount/deploy.prototxt -w /seungmount/weights.h5 -o /seungmount/out
 ```

@@ -8,7 +8,7 @@
 #include <sstream>
 
 #include <znn/layer/layer.hpp>
-#define PYTHON_COMPILE_SCRIPT_REL_P "./jit.py"
+#define PYTHON_COMPILE_SCRIPT_REL_P "/cpp/include/znn/jit/jit.py"
 
 #define DEBUG 1
 
@@ -34,11 +34,12 @@ void *jitGetHandle(std::string params, std::string lib_folder)
    compile_command << znnphi_path << PYTHON_COMPILE_SCRIPT_REL_P << " " << params;
    
 #ifdef DEBUG
-   std::cout << compile_command.str() << std::endl;
+   std::cout<< "lib path: " << lib_folder << std::endl;
+   std::cout << "jit compile command: " << compile_command.str() << std::endl;
 #else
    compile_command << " 2> /dev/null"; 
 #endif
-
+    
    FILE* python_out = popen(compile_command.str().c_str(), "r");
 
    if (python_out == NULL) {

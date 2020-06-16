@@ -1,6 +1,8 @@
+#pragma once
+
 #include <string.h>
-#include <znn/tensor/tensor.hpp>
-#include <znn/layer/layer.hpp>
+#include "znn/tensor/tensor.hpp"
+#include "znn/layer/layer.hpp"
 #include <vector>
 
 namespace znn {

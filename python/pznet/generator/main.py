@@ -10,18 +10,18 @@ def str2bool(v):
 
 parser = OptionParser()
 
-parser.add_option("-n", "--net_path", dest="net_path")
-parser.add_option("-w", "--weights_path", dest="weights_path")
-parser.add_option("-o", "--out_path", dest="out_path")
-parser.add_option("-i", "--input_mode", dest="input_mode", default="read")
+parser.add_option("-n", "--net-path", dest="net_path")
+parser.add_option("-w", "--weights-path", dest="weights_path")
+parser.add_option("-o", "--out-path", dest="out_path")
+parser.add_option("-i", "--input-mode", dest="input_mode", default="read")
 parser.add_option("-O", dest="opt_mode", default="full_opt")
-parser.add_option("--cpu_offset", dest="cpu_offset", default=0)
-parser.add_option("--conv_cores", dest="conv_cores")
-parser.add_option("--conv_ht", dest="conv_ht")
-parser.add_option("--act_cores", dest="act_cores")
-parser.add_option("--act_ht", dest="act_ht")
-parser.add_option("--lin_cores", dest="lin_cores")
-parser.add_option("--lin_ht", dest="lin_ht")
+parser.add_option("--cpu-offset", dest="cpu_offset", default=0)
+parser.add_option("--conv-cores", dest="conv_cores")
+parser.add_option("--conv-ht", dest="conv_ht")
+parser.add_option("--act-cores", dest="act_cores")
+parser.add_option("--act-ht", dest="act_ht")
+parser.add_option("--lin-cores", dest="lin_cores")
+parser.add_option("--lin-ht", dest="lin_ht")
 parser.add_option("--architecture", dest="architecture", default="AVX2",
         help="The cpu architexture: {AVX2, AVX512}")
 parser.add_option("--ignore", dest="ignore", default="")
@@ -46,6 +46,7 @@ core_options = {
                 "scale": (options.lin_cores, options.lin_ht),
                 "bnorm": (options.lin_cores, options.lin_ht)
                }
+
 if __name__ == "__main__":
     print ("Parsing the network spec...")
     net = parse_net(net_path, arch)

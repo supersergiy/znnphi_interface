@@ -56,5 +56,3 @@ def generate_function(signature, body_lines):
     lines.append('')
 
     return lines
-
-

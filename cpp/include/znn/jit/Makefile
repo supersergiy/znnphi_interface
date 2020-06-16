@@ -1,43 +1,43 @@
-HERE    	= .
-AT	=	@
+HERE    = .
+AT		=	@
 DOLLAR  = 	$$
 
-CD	=	$(AT)cd
-CP	=	$(AT)cp
+CD		=	$(AT)cd
+CP		=	$(AT)cp
 ECHO	=	@echo
-CAT	=	$(AT)cat
-IF	=	$(AT)if
-LN	=	$(AT)ln
+CAT		=	$(AT)cat
+IF		=	$(AT)if
+LN		=	$(AT)ln
 MKDIR	=	$(AT)mkdir
-MV	=	$(AT)mv
-SED	=	$(AT)sed
-RM	=	$(AT)rm
+MV		=	$(AT)mv
+SED		=	$(AT)sed
+RM		=	$(AT)rm
 TOUCH	=	$(AT)touch
 CHMOD	=	$(AT)chmod
-DATE    =       $(AT)date
-BASE = ../../../..
+DATE    =   $(AT)date
+BASE 	= ../../../..
 
 # compilers
 
-ZNN_TUNE	=
-SSE_FLAGS   =   -DZNN_SSE -msse $(ZNN_TUNE)                                               
-AVX_FLAGS   =   -DZNN_AVX -xAVX $(ZNN_TUNE)                                               
-AVX2_FLAGS  =   -DZNN_AVX2 -march=core-avx2 $(ZNN_TUNE)                                   
+ZNN_TUNE		=
+SSE_FLAGS   	=   -DZNN_SSE -msse $(ZNN_TUNE)                                               
+AVX_FLAGS   	=   -DZNN_AVX -xAVX $(ZNN_TUNE)                                               
+AVX2_FLAGS  	=   -DZNN_AVX2 -march=core-avx2 $(ZNN_TUNE)                                   
 AVX512_FLAGS    =   -DZNN_AVX512 -xCORE-AVX512$(ZNN_TUNE)                                 
-KNC_FLAGS   =   -DZNN_KNC -mmic $(ZNN_TUNE)
-CORES_FLAG  =   -DZNN_NUM_CORES=2
+KNC_FLAGS   	=   -DZNN_KNC -mmic $(ZNN_TUNE)
+CORES_FLAG  	=   -DZNN_NUM_CORES=2
 
 STANDARD_FLAG	=	-std=c++14
-STD_FLAG	=
+STD_FLAG		=
 
 CXX             =   $(AT)icpc $(STANDARD_FLAG)                                           
 OPTIMIZATION_FLAGS  =   -DNDEBUG -O3 -ipo -fp-model fast=2 -mkl=sequential -fno-rtti -fno-exceptions 
 CS_FLAGS        =   -mkl=sequential                                                       
 CS_LD_FLAGS     =   -mkl=sequential  -static-intel 
 
-FPIC	=	-fPIC
+FPIC		=	-fPIC
 
-CXXINCLUDES	=	-I$(BASE)/code/include -I$(BASE)/code/include/znn -I$(BASE)
+CXXINCLUDES	=	-I$(BASE)/cpp/include -I$(BASE)/cpp/include/znn 
 CXXWARN		=	-Wall -Wextra -Wno-format -Wno-unknown-pragmas
 CXXERR		=   -fmax-errors=5
 
@@ -79,13 +79,15 @@ else
 $(error Unsupported or unspecified architecture: ARCH==$(ARCH). Please set Makefile ARCH parameter to one of [AVX2, AVX512].)                                                                              
 endif     
 
-ZNNJIT_PATH = $(ZNNPHI_PATH)/code/include/znn/jit
+#ZNNJIT_PATH = $(ZNNPHI_PATH)/cpp/include/znn/jit
 
 FORCE:
 
-$(ZNNJIT_PATH)/.tmp/%.so: $(ZNNJIT_PATH)/.tmp/%.cpp FORCE
+/tmp/pznet_jit/%.so: /tmp/pznet_jit/%.cpp FORCE
 ifeq ($(LAYER_EXISTS),0)
+	#echo "\n$(CXX)         -c $(CXXFLAGS)  $(ARCH_FLAGS) $(PARAM_DEFS) -o $<.o $< \n"
 	$(CXX)         -c $(CXXFLAGS)  $(ARCH_FLAGS) $(PARAM_DEFS) -o $<.o $<
+	#echo "\n$(CXX)         $(DLFLAGS) $(CXXLDFLAGS) $(ARCH_FLAGS) -o $@ $<.o -ldl \n"
 	$(CXX)         $(DLFLAGS) $(CXXLDFLAGS) $(ARCH_FLAGS) -o $@ $<.o -ldl
 	$(RM)   $<.o
 	$(MV)   $@ $(O)
@@ -103,7 +105,7 @@ client.bin: FORCE
 	$(ECHO) $(CXX) $(CXXFLAGS) $(ARCH_FLAGS) ./client.cpp -o $@ 
 	$(CXX) $(CXXFLAGS) $(ARCH2_FLAGS) ./client.cpp -o $@ 
 clean:
-	$(RM) -rf ./*.o ./*.so ./*.S *.bin 
+	$(RM) -rf ./*.o ./*.so ./*.S *.bin /tmp/*.so /tmp/*.cpp 
 
 remake: clean all
 

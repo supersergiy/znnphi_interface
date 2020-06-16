@@ -35,11 +35,11 @@ void *jitGetHandle(std::string params, std::string lib_folder)
    
 #ifdef DEBUG
    std::cout<< "lib path: " << lib_folder << std::endl;
-   std::cout << "jit command: " << compile_command.str() << std::endl;
+   std::cout << "jit compile command: " << compile_command.str() << std::endl;
 #else
    compile_command << " 2> /dev/null"; 
 #endif
-
+    
    FILE* python_out = popen(compile_command.str().c_str(), "r");
 
    if (python_out == NULL) {

@@ -31,7 +31,7 @@ STANDARD_FLAG	=	-std=c++14
 STD_FLAG		=
 
 CXX             =   $(AT)icpc $(STANDARD_FLAG)                                           
-OPTIMIZATION_FLAGS  =   -DDEBUG -O3 -ipo -fp-model fast=2 -mkl=sequential -fno-rtti -fno-exceptions 
+OPTIMIZATION_FLAGS  =   -DNDEBUG -O3 -ipo -fp-model fast=2 -mkl=sequential -fno-rtti -fno-exceptions 
 CS_FLAGS        =   -mkl=sequential                                                       
 CS_LD_FLAGS     =   -mkl=sequential  -static-intel 
 
@@ -52,7 +52,7 @@ COMMON_FLAGS	=	$(INLINE_DEPFLAGS) $(CXXINCLUDES) $(CXXWARN) $(CXXERR)
 
 DBG_FLAGS		=	$(COMMON_FLAGS) $(CS_FLAGS)
 
-LD_OPTIMIZATION_FLAGS	=	-DDEBUG -O3
+LD_OPTIMIZATION_FLAGS	=	-DNDEBUG -O3
 COMMON_LDFLAGS		=	$(HBW_LD_FLAG)
 
 OPT_FLAGS		=	$(COMMON_FLAGS) $(OPTIMIZATION_FLAGS) $(CS_FLAGS)
@@ -79,13 +79,15 @@ else
 $(error Unsupported or unspecified architecture: ARCH==$(ARCH). Please set Makefile ARCH parameter to one of [AVX2, AVX512].)                                                                              
 endif     
 
+#ZNNJIT_PATH = $(ZNNPHI_PATH)/cpp/include/znn/jit
+
 FORCE:
 
-$/tmp/%.so: /tmp/%.cpp FORCE
+/tmp/pznet_jit/%.so: /tmp/pznet_jit/%.cpp FORCE
 ifeq ($(LAYER_EXISTS),0)
-	echo "\n$(CXX)         -c $(CXXFLAGS)  $(ARCH_FLAGS) $(PARAM_DEFS) -o $<.o $< \n"
+	#echo "\n$(CXX)         -c $(CXXFLAGS)  $(ARCH_FLAGS) $(PARAM_DEFS) -o $<.o $< \n"
 	$(CXX)         -c $(CXXFLAGS)  $(ARCH_FLAGS) $(PARAM_DEFS) -o $<.o $<
-	echo "\n$(CXX)         $(DLFLAGS) $(CXXLDFLAGS) $(ARCH_FLAGS) -o $@ $<.o -ldl \n"
+	#echo "\n$(CXX)         $(DLFLAGS) $(CXXLDFLAGS) $(ARCH_FLAGS) -o $@ $<.o -ldl \n"
 	$(CXX)         $(DLFLAGS) $(CXXLDFLAGS) $(ARCH_FLAGS) -o $@ $<.o -ldl
 	$(RM)   $<.o
 	$(MV)   $@ $(O)
@@ -103,7 +105,7 @@ client.bin: FORCE
 	$(ECHO) $(CXX) $(CXXFLAGS) $(ARCH_FLAGS) ./client.cpp -o $@ 
 	$(CXX) $(CXXFLAGS) $(ARCH2_FLAGS) ./client.cpp -o $@ 
 clean:
-	$(RM) -rf ./*.o ./*.so ./*.S *.bin 
+	$(RM) -rf ./*.o ./*.so ./*.S *.bin /tmp/*.so /tmp/*.cpp 
 
 remake: clean all
 

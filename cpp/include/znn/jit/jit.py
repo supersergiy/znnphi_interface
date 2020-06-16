@@ -6,7 +6,15 @@ from subprocess import  STDOUT, check_call
 import subprocess
 
 my_path = sys.path[0]
-_, wrapper_path = mkstemp(suffix='.cpp')
+#_, wrapper_path = mkstemp(suffix='.cpp')
+temp_dir = '/tmp/pznet_jit'
+#temp_dir = os.path.join(my_path, 'tmp')
+if not os.path.isdir(temp_dir):
+    os.mkdir(temp_dir)
+else:
+    os.remove(os.path.join(temp_dir, '*'))
+
+wrapper_path = f'{temp_dir}/{os.getpid()}.cpp'
 
 def parse_args():
     args = {}
@@ -52,19 +60,16 @@ def create_conv_wrapper(args):
                 out_f.write(l.replace("[LAYER_NAME]",      "Conv").
                               replace("[TEMPLATE_PARAMS]", template_params))
 
-    return
-
 def compile_dl(args):
     out_path = get_out_path(args)
 
     create_wrapper(args)
-
     target_name = wrapper_path.replace(".cpp", ".so")
     # this print will be captured in the jit.hpp, 
     # so we can not add or modify print in this script!
     print(out_path)
 
-    compile_command = 'make -s -C {} {} O={} ARCH={}'.format(my_path, target_name, out_path, args['arch'])
+    compile_command = f"make -C {my_path} {target_name} O={out_path} ARCH={args['arch']}"
     #compile_command  += ' 2> /dev/null'
     os.system(compile_command)
     check_call(['rm', "-f", wrapper_path], stderr=STDOUT)

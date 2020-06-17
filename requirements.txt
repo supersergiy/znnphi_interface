@@ -1,5 +1,5 @@
 numpy
+pybind11
 protobuf
 protobuf-to-dict
 h5py
-tifffile

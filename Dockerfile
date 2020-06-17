@@ -20,33 +20,26 @@ RUN apt-get update && \
         libxext6 \
         libsm6 \
         libxrender1 \
+        hdf5-tools \
+        python3-dev \
+        python3-pip \
         wget && \
-    echo "setting up minicoda..." && \
-    wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/anaconda.sh && \
-    echo "downloaded miniconda, start installing..." && \
-    /bin/bash ~/anaconda.sh -b -p /opt/conda && \
-    rm ~/anaconda.sh && \
-    #/opt/conda/bin/conda init bash && \
-    ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
-    echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
-    echo "conda activate base" >> ~/.bashrc && \
     echo "set up mkl libraries..." && \
     mkdir -p /opt/intel/lib/intel64 && \ 
+    ln -s /usr/bin/python3 /usr/bin/python && \
+    ln -s /usr/bin/pip3 /usr/bin/pip && \
+    pip install -U pip && \
+    pip install -r requirements.txt && \
     # clean up the apt installation
     apt-get clean && \
     apt-get autoremove --purge -y && \
     rm -rf /var/lib/apt/lists/* && \
-    echo "export PATH=/opt/conda/bin:$PATH" >> ~/.bashrc && \
     echo "export PYTHONPATH=${ZNNPHI_PATH}/python:$PYTHONPATH" >> ~/.bashrc && \
-    echo "export LD_LIBRARY_PATH=/opt/intel/lib/intel64:$LD_LIBRARY_PATH" >> ~/.bashrc && \
-    source ~/.bashrc && \
-    
+    echo "export LD_LIBRARY_PATH=/opt/intel/lib/intel64:$LD_LIBRARY_PATH" >> ~/.bashrc 
 
 # echo "activate the conda environment..." && \
-RUN conda env create -f environment.yml && \
-    conda activate pznet && \
-    python -c "from pznet.pznet import PZNet" && \
-    python scripts/compile_net.py --help 
+#RUN python -c "from pznet.pznet import PZNet" && \
+#    python scripts/compile_net.py --help 
 
 
 WORKDIR "${ZNNPHI_PATH}/scripts"

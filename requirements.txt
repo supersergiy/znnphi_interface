@@ -1,6 +1,4 @@
 numpy
-scipy
-scikit-image
 protobuf
 protobuf-to-dict
 h5py

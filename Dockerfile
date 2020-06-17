@@ -7,7 +7,11 @@ ENV LANG C.UTF-8
 # prevent interaction with tzdata
 ENV DEBIAN_FRONTEND noninteractive
 ENV ZNNPHI_PATH "${HOME}/workspace/pznet"
-ENV LD_LIBRARY_PATH "/opt/intel/lib/intel64":$LD_LIBRARY_PATH
+ENV INTEL_LIB_PATH "/opt/intel/lib/intel64"
+ENV INTEL_LIB_URL "https://github.com/seung-lab/pznet/releases/download/v0.2.0"
+ENV PYTHONPATH "${ZNNPHI_PATH}/python"
+ENV LD_LIBRARY_PATH "${INTEL_LIB_PATH}"
+
 
 WORKDIR "${ZNNPHI_PATH}"
 COPY . .
@@ -25,7 +29,13 @@ RUN apt-get update && \
         python3-pip \
         wget && \
     echo "set up mkl libraries..." && \
-    mkdir -p /opt/intel/lib/intel64 && \ 
+    mkdir -p /opt/intel/lib/intel64 && \
+    wget --quiet "${INTEL_LIB_URL}/libimf.so" -O "${INTEL_LIB_PATH}/libimf.so" && \
+    wget --quiet "${INTEL_LIB_URL}/libintlc.so" -O "${INTEL_LIB_PATH}/libintlc.so" && \
+    wget --quiet "${INTEL_LIB_URL}/libintlc.so.5" -O "${INTEL_LIB_PATH}/libintlc.so.5" && \
+    wget --quiet "${INTEL_LIB_URL}/libirng.so" -O "${INTEL_LIB_PATH}/libirng.so" && \
+    wget --quiet "${INTEL_LIB_URL}/libsvml.so" -O "${INTEL_LIB_PATH}/libsvml.so" && \
+    wget --quiet "${INTEL_LIB_URL}/libiomp5.so" -O "${INTEL_LIB_PATH}/libiomp5.so" && \
     ln -s /usr/bin/python3 /usr/bin/python && \
     ln -s /usr/bin/pip3 /usr/bin/pip && \
     pip install -U pip && \
@@ -33,9 +43,7 @@ RUN apt-get update && \
     # clean up the apt installation
     apt-get clean && \
     apt-get autoremove --purge -y && \
-    rm -rf /var/lib/apt/lists/* && \
-    echo "export PYTHONPATH=${ZNNPHI_PATH}/python:$PYTHONPATH" >> ~/.bashrc && \
-    echo "export LD_LIBRARY_PATH=/opt/intel/lib/intel64:$LD_LIBRARY_PATH" >> ~/.bashrc 
+    rm -rf /var/lib/apt/lists/* 
 
 # echo "activate the conda environment..." && \
 #RUN python -c "from pznet.pznet import PZNet" && \

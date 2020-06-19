@@ -36,7 +36,8 @@ STD_FLAG	=
 
 
 CXX			= $(AT)icpc -pthread $(STANDARD_FLAG) -fopenmp
-OPTIMIZATION_FLAGS	=	-DNDEBUG -O3 -fno-omit-frame-pointer #-fno-rtti -fno-exceptions #-ffast-math 
+# add -DNDE-DNDEBUG BUG for debug mode
+OPTIMIZATION_FLAGS	=	-DNDEBUG -O3 -fno-omit-frame-pointer #-fno-rtti -fno-exceptions -ffast-math 
 CS_FLAGS	=
 CS_LD_FLAGS	= -lpthread
 
@@ -58,6 +59,8 @@ COMMON_FLAGS	=	$(INLINE_DEPFLAGS) $(CXXINCLUDES) $(CXXWARN) $(CXXERR) \
 					$(HBW_FLAG) $(CORES_FLAG) -DZNN_NO_CUDA 
 
 DBG_FLAGS		=	$(COMMON_FLAGS) $(CS_FLAGS)
+
+# add -DNDEBUG for debug mode
 LD_OPTIMIZATION_FLAGS	=	-DNDEBUG -O3
 
 OPT_FLAGS		=	$(COMMON_FLAGS) $(OPTIMIZATION_FLAGS) $(CS_FLAGS)
@@ -92,6 +95,7 @@ endif
 #W = nets/${NET_NAME}.h5
 
 out/client.o: ./client.cpp 
+	${ECHO} "\n$(CXX) $(CXXFLAGS) -fPIC -c $^ -o $@ \n"
 	$(CXX) $(CXXFLAGS) -fPIC -c $^ -o $@
 
 ${OUTDIR}/generated/znet.cpp:  $(shell find ../python/pznet/generator -type f -name "*.py") $(N) $(W)
@@ -107,15 +111,15 @@ ${OUTDIR}/generated/znet.cpp:  $(shell find ../python/pznet/generator -type f -n
 		-O $(PZ_OPT) --ignore $(IGNORE) --time_each $(TIME_EACH)
 
 ${OUTDIR}/znet.o: ${OUTDIR}/generated/znet.cpp
-	echo "\n$(CXX) $(CXXFLAGS) $(ARCH_FLAGS) -fPIC -c $^ -o $@\n"
+	${ECHO} "\n $(CXX) $(CXXFLAGS) $(ARCH_FLAGS) -fPIC -c $^ -o $@ \n"
 	$(CXX) $(CXXFLAGS) $(ARCH_FLAGS) -fPIC -c $^ -o $@
 
 ${OUTDIR}/znet_numpy_wrapper.o: main.cpp 
-	echo "\n$(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) ${ARCH_FLAGS} -fPIC -c $^ -o $@\n"
+	${ECHO} "\n $(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) ${ARCH_FLAGS} -fPIC -c $^ -o $@ \n"
 	$(CXX) $(CXXFLAGS) $(PY_INTERFACE_FLAGS) ${ARCH_FLAGS} -fPIC -ipo -c -c $^ -o $@
 
 py: ${OUTDIR}/znet.o ${OUTDIR}/znet_numpy_wrapper.o 
-	echo "\n$(CXX) $(LD_FLAGS) $^ -shared -o ${OUTDIR}/znet.so \n"
+	${ECHO} "\n $(CXX) $(LD_FLAGS) $^ -shared -o ${OUTDIR}/znet.so \n"
 	$(CXX) $(LD_FLAGS) $^ -shared -o ${OUTDIR}/znet.so 
 
 ifneq ($(strip ${O}),)
@@ -125,13 +129,20 @@ ifneq ($(strip ${O}),)
 endif
 
 bin: ${OUTDIR}/client.o ${OUTDIR}/znet.o 
+	${ECHO} "\n $(CXX) $(CXXFLAGS) $(LD_FLAGS) $^ -o ${OUTDIR}/znet.bin \n"
 	$(CXX) $(CXXFLAGS) $(LD_FLAGS) $^ -o ${OUTDIR}/znet.bin
+
 gen: ${OUTDIR}/generated/znet.cpp 
+
 rerun: clean gen bin
 	${OUTDIR}/znet.bin
+
 rerun_py: clean gen py
 	${OUTDIR}/client.py
+
 all: znet 
+
 clean:
 	rm -rf ${OUTDIR}/*.so ${OUTDIR}/*.o ${OUTDIR}/*.bin
+
 remake: clean all

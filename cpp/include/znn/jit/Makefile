@@ -30,8 +30,11 @@ CORES_FLAG  	=   -DZNN_NUM_CORES=2
 STANDARD_FLAG	=	-std=c++14
 STD_FLAG		=
 
-CXX             =   $(AT)icpc $(STANDARD_FLAG)                                           
+CXX             =   $(AT)icpc $(STANDARD_FLAG)                                          
+
+# add -DNDEBUG for debug mode
 OPTIMIZATION_FLAGS  =   -DNDEBUG -O3 -ipo -fp-model fast=2 -mkl=sequential -fno-rtti -fno-exceptions 
+
 CS_FLAGS        =   -mkl=sequential                                                       
 CS_LD_FLAGS     =   -mkl=sequential  -static-intel 
 
@@ -52,7 +55,9 @@ COMMON_FLAGS	=	$(INLINE_DEPFLAGS) $(CXXINCLUDES) $(CXXWARN) $(CXXERR)
 
 DBG_FLAGS		=	$(COMMON_FLAGS) $(CS_FLAGS)
 
+# add -DNDEBUG for debug
 LD_OPTIMIZATION_FLAGS	=	-DNDEBUG -O3
+
 COMMON_LDFLAGS		=	$(HBW_LD_FLAG)
 
 OPT_FLAGS		=	$(COMMON_FLAGS) $(OPTIMIZATION_FLAGS) $(CS_FLAGS)

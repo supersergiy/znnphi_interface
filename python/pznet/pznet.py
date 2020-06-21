@@ -11,12 +11,6 @@ from .common import convert_prototxt_to_json
 
 
 class PZNet:
-    #TODO: create temporary folder on module startup,
-    #      put all the .so's and stuff in it, delete on exit
-
-    #FOR NOW we assume that we always have only one network,
-    #so we can work inside the repo like real scrubs
-
     def __init__(self, net_path, lib_path=None):
         if lib_path is None:
             lib_path = os.path.join(net_path, "lib")

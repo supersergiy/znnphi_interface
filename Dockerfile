@@ -4,9 +4,13 @@ LABEL maintainer = "Jingpeng Wu" \
 
 ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
+
+ENV HOME "/root"
+
 # prevent interaction with tzdata
 ENV DEBIAN_FRONTEND noninteractive
 ENV ZNNPHI_PATH "${HOME}/workspace/pznet"
+
 ENV INTEL_LIB_PATH "/opt/intel/lib/intel64"
 ENV INTEL_LIB_URL "https://github.com/seung-lab/pznet/releases/download/v0.2.0"
 ENV PYTHONPATH "${ZNNPHI_PATH}/python"
@@ -27,6 +31,7 @@ RUN apt-get update && \
         hdf5-tools \
         python3-dev \
         python3-pip \
+        tar \
         wget && \
     echo "set up mkl libraries..." && \
     mkdir -p /opt/intel/lib/intel64 && \

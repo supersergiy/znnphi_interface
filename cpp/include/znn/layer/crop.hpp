@@ -24,7 +24,7 @@ public:
              ofm(_ofm), od(_od), ohw(_ohw), z_offset(_z_offset), xy_offset(_xy_offset)
    {   
       assert( bn > 0);
-      assert( fm > 0);
+      assert( ifm > 0);
       assert( id > 0);
       assert(ihw > 0);
       rounded_ifm = ((ifm + SIMD_WIDTH - 1) / SIMD_WIDTH) * SIMD_WIDTH;

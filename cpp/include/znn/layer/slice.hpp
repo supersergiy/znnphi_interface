@@ -23,7 +23,7 @@ public:
    ifm(_ifm), id(_id), ihw(_ihw), slice_point(_slice_point)
    {   
       assert( bn > 0);
-      assert( fm > 0);
+      assert( ifm > 0);
       assert( id > 0);
       assert(ihw > 0);
 

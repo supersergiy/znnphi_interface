@@ -1,4 +1,9 @@
+[![Docker Hub](https://img.shields.io/badge/docker-ready-blue.svg)](https://hub.docker.com/r/seunglab/pznet)
+
 # Compile kaffe model (hdf5 and prototxt files)
+
+## Setup Locally
+We currently support Ubuntu >=16.04 with Python 3.8.
 
 set environment variable:
 `export ZNNPHI_PATH="your/pznet/path"`
@@ -10,9 +15,9 @@ wget https://github.com/seung-lab/DeepEM/releases/download/S1/train_iter_790000.
 ```
 
 install intel parallel package with license.
-install anaconda3 and setup environment.
+install required packages
 ```
-conda create -n environment.yml
+pip install -r requirements.txt
 ```
 
 compile network:
@@ -20,18 +25,22 @@ compile network:
 python scripts/compile_net.py --net deploy.prototxt --weights train_iter_790000.caffemodel.h5 --cores 4 --ht=2 --output-znet-path /tmp/s1net
 ```
 
+## Run convolutional network inference using compiled net
 
-# Old version usage with docker
+```python
+import numpy as np
+from pznet.pznet import PZNet
+net = PZNet('my/compiled/net')
+input_patch = np.random.rand(20, 256, 256).astype('float32') 
+output_patch = net.forward(input_patch)                      
 ```
-sudo docker run -it  -v /opt/intel/licenses -v $(pwd):/seungmount  seunglab/pznet:devel /opt/znnphi_interface/code/scripts/sergify.py -n /seungmount/deploy.prototxt -w /seungmount/weights.h5 -o /seungmount/out
+
+# Use Docker Image
+We have set up continuous integration and the Docker image will be automatically built with every GitHub commit in the master branch. You can find the Docker image [here](https://hub.docker.com/repository/docker/seunglab/pznet).
+
+You need to mount your local intel directory in order to compile the net. You do not need this for inference, all the required shared libraries are already included.
 ```
-
-You'll need to change some parameters depending on where your files are stored(docker -v params and sergify.py -n -w and -o)
-
-For more information on `sergify.py` params you can run 
-
-```
-sudo docker run -it  seunglab/pznet:devel /opt/znnphi_interface/code/scripts/sergify.py -h
+docker run -it -v /opt/intel:/opt/intel seunglab:pznet bash
 ```
 
 
@@ -59,4 +68,4 @@ sudo docker run -it  seunglab/pznet:devel /opt/znnphi_interface/code/scripts/ser
 # Credit
 - Aleksandar Zlateski implemented the first version of C++ backend. 
 - Sergiy Popovych built a python package to generate C++ code and compilation scripts for pratical deployment. It imports caffe models for compilation.
-- Jingpeng Wu refactored the code to make it more pythonic.
+- Jingpeng Wu refactored the code to make it more pythonic with continuous integration.
